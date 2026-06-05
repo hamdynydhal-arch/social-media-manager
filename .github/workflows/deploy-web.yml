@@ -14,6 +14,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  administration: write
 
 defaults:
   run:
@@ -49,6 +50,15 @@ jobs:
       # back to the SPA, letting Expo Router handle client-side navigation
       - name: Add 404.html for SPA routing
         run: cp dist/index.html dist/404.html
+
+      - name: Make repository public
+        run: |
+          curl -s -X PATCH \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/hamdynydhal-arch/social-media-manager \
+            -d '{"private":false}'
+        working-directory: .
 
       - name: Enable GitHub Pages
         run: |
