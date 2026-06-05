@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "منصة إدارة وسائل التواصل",
+    "slug": "social-media-manager",
+    "version": "1.0.0",
+    "scheme": "social-media-manager",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+
+    "experiments": {
+      "typedRoutes": true
+    },
+
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "تحتاج التطبيق إلى الوصول إلى صورك لرفع المحتوى.",
+          "cameraPermission": "تحتاج التطبيق إلى الكاميرا لالتقاط الصور ومقاطع الفيديو."
+        }
+      ]
+    ],
+
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.socialmanager.app"
+    },
+
+    "android": {
+      "package": "com.socialmanager.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1e3a5f"
+      },
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png",
+      "output": "static"
+    },
+
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      }
+    }
+  }
+}
