@@ -8,10 +8,6 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
 
-    "experiments": {
-      "typedRoutes": true
-    },
-
     "plugins": [
       "expo-router",
       [
@@ -44,6 +40,11 @@
       "bundler": "metro",
       "favicon": "./assets/favicon.png",
       "output": "static"
+    },
+
+    "experiments": {
+      "typedRoutes": true,
+      "baseUrl": "/social-media-manager"
     },
 
     "extra": {
