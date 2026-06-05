@@ -7,8 +7,15 @@ on:
       - claude/vigilant-franklin-v2DyI
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 permissions:
   contents: write
+
+defaults:
+  run:
+    working-directory: ./app
 
 jobs:
   build-and-deploy:
@@ -22,24 +29,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: ./app/package-lock.json
 
       - name: Install dependencies
-        working-directory: ./app
-        # --legacy-peer-deps bypasses React 19 / React 18 peer-dep conflicts
-        run: npm install --legacy-peer-deps
+        run: npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Build static web export
-        working-directory: ./app
         run: npx expo export -p web
         env:
           EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
           EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
 
-      # Without .nojekyll, GitHub Pages (Jekyll) strips _expo/ and breaks all JS
       - name: Disable Jekyll processing
-        run: touch ./app/dist/.nojekyll
+        run: touch dist/.nojekyll
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
