@@ -156,8 +156,6 @@ Deno.serve(async (req: Request) => {
     const isText = TEXT_PLATFORMS.includes(platform);
 
     try {
-      // Mark as publishing
-      await db.from('posts').update({ status: 'publishing' }).eq('id', post.id);
 
       let adaptedText: string | null = post.base_text;
 
@@ -219,6 +217,17 @@ Deno.serve(async (req: Request) => {
       results.push({ id: post.id, platform, ok: false, error: msg });
     }
   }
+
+  // Hand off to publish-worker now that all posts have adapted_text set
+  const workerUrl = `${Deno.env.get('SUPABASE_URL')}/functions/v1/publish-worker`;
+  fetch(workerUrl, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ postGroupId }),
+  }).catch(err => console.error('[process-post-queue] Failed to invoke publish-worker:', err));
 
   return new Response(
     JSON.stringify({ processed: results.length, results }),
