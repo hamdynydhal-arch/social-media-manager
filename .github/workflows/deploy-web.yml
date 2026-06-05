@@ -4,10 +4,9 @@ on:
   push:
     branches:
       - main
-      - claude/vigilant-franklin-v2DyI   # current development branch
-  workflow_dispatch:                      # allow manual trigger from Actions tab
+      - claude/vigilant-franklin-v2DyI
+  workflow_dispatch:
 
-# Grant the GITHUB_TOKEN write access to push to gh-pages branch
 permissions:
   contents: write
 
@@ -19,39 +18,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
-          cache-dependency-path: app/package-lock.json
+          cache-dependency-path: ./app/package-lock.json
 
       - name: Install dependencies
-        working-directory: app
-        run: npm ci
+        working-directory: ./app
+        # --legacy-peer-deps bypasses React 19 / React 18 peer-dep conflicts
+        run: npm install --legacy-peer-deps
 
       - name: Build static web export
-        working-directory: app
+        working-directory: ./app
         run: npx expo export -p web
         env:
-          # Supabase keys are optional for preview mode (PREVIEW_MODE = true in _layout.tsx).
-          # Add these as repository secrets when you connect a real Supabase project:
-          #   Settings → Secrets and variables → Actions → New repository secret
           EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
           EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
 
-      # GitHub Pages ignores folders starting with "_" (Jekyll behaviour).
-      # .nojekyll disables that so _expo/ assets are served correctly.
-      - name: Add .nojekyll to disable Jekyll processing
-        run: touch app/dist/.nojekyll
+      # Without .nojekyll, GitHub Pages (Jekyll) strips _expo/ and breaks all JS
+      - name: Disable Jekyll processing
+        run: touch ./app/dist/.nojekyll
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: app/dist
+          publish_dir: ./app/dist
           publish_branch: gh-pages
-          force_orphan: true        # keeps gh-pages history clean (single commit)
+          force_orphan: true
           user_name: github-actions[bot]
           user_email: github-actions[bot]@users.noreply.github.com
           commit_message: "deploy: ${{ github.sha }}"
