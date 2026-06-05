@@ -7,6 +7,12 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { supabase } from '../src/lib/supabase';
 
+// ─── PREVIEW MODE ────────────────────────────────────────────────────────────
+// Set to true to skip Supabase auth entirely during local UI preview.
+// Flip back to false before connecting a real Supabase project.
+export const PREVIEW_MODE = true;
+// ─────────────────────────────────────────────────────────────────────────────
+
 // Enforce RTL globally on native platforms
 if (Platform.OS !== 'web') {
   I18nManager.forceRTL(true);
@@ -15,7 +21,9 @@ if (Platform.OS !== 'web') {
 
 export default function RootLayout() {
   useEffect(() => {
-    // Listen for auth state changes and redirect accordingly
+    // In preview mode the auth listener is skipped; login.tsx handles navigation.
+    if (PREVIEW_MODE) return;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         if (!session) {
