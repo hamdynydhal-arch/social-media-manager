@@ -1,9 +1,11 @@
-import { View, Text } from 'react-native';
-// Full UnifiedPostForm component coming in Step 3
+import { useRouter } from 'expo-router';
+import UnifiedPostForm from '../../src/components/UnifiedPostForm';
+
 export default function NewPostScreen() {
+  const router = useRouter();
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-gray-400">نموذج النشر — الخطوة 3</Text>
-    </View>
+    <UnifiedPostForm
+      onSuccess={() => router.replace('/(app)/dashboard')}
+    />
   );
 }
