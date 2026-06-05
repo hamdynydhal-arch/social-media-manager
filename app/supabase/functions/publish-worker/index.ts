@@ -32,6 +32,7 @@ import type { Platform, PostRow, PublishResult } from './_types.ts';
 import {
   fetchPost,
   fetchSocialAccount,
+  fetchSocialAccountByPlatform,
   fetchMediaAssets,
   resolveCredentials,
   fetchDuePendingPosts,
@@ -80,7 +81,10 @@ async function processPost(
   try {
     await markPublishing(db, post.id);
 
-    const account    = await fetchSocialAccount(db, post.social_account_id);
+    // Resolve account: prefer explicit FK, fall back to platform match
+    const account = post.social_account_id
+      ? await fetchSocialAccount(db, post.social_account_id)
+      : await fetchSocialAccountByPlatform(db, post.user_id, post.platform);
     const creds      = await resolveCredentials(db, account);
     const mediaAssets = post.media_asset_ids?.length
       ? await fetchMediaAssets(db, post.media_asset_ids)

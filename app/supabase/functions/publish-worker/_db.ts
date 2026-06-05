@@ -53,6 +53,25 @@ export async function fetchSocialAccount(
   return data as SocialAccountRow;
 }
 
+// Resolve account when social_account_id is NULL (legacy or mobile-created posts)
+export async function fetchSocialAccountByPlatform(
+  db: SupabaseClient,
+  userId: string,
+  platform: string,
+): Promise<SocialAccountRow> {
+  const { data, error } = await db
+    .from('social_accounts')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('platform', platform)
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+  if (error) throw new Error(`No active ${platform} account for user ${userId}: ${error.message}`);
+  return data as SocialAccountRow;
+}
+
 export async function fetchMediaAssets(
   db: SupabaseClient,
   assetIds: string[],
