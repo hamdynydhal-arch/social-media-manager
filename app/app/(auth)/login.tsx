@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { supabase } from '../../src/lib/supabase';
@@ -11,10 +11,13 @@ export default function LoginScreen() {
   async function handleGoogleLogin() {
     setLoading(true);
     setError(null);
+    const redirectTo = Platform.OS === 'web'
+      ? 'https://hamdynydhal-arch.github.io/social-media-manager'
+      : 'social-media-manager://';
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'social-media-manager://(app)/dashboard',
+        redirectTo,
         queryParams: { access_type: 'offline', prompt: 'consent' },
       },
     });

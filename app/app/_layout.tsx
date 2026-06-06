@@ -10,7 +10,7 @@ import { supabase } from '../src/lib/supabase';
 // ─── PREVIEW MODE ────────────────────────────────────────────────────────────
 // Set to true to skip Supabase auth entirely during local UI preview.
 // Flip back to false before connecting a real Supabase project.
-export const PREVIEW_MODE = true;
+export const PREVIEW_MODE = false;
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Enforce RTL globally on native platforms
