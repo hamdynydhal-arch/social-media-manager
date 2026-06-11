@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import Home from './pages/Home'
 import Matches from './pages/Matches'
@@ -28,7 +28,7 @@ export default function App() {
   }
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="min-h-dvh bg-slate-950 flex flex-col">
         <header className="sticky top-0 z-30 bg-slate-900/95 backdrop-blur-lg border-b border-slate-800/80 safe-top">
           <div className="flex items-center justify-between px-4 py-3">
@@ -69,6 +69,6 @@ export default function App() {
         <InstallPrompt />
         <NotificationSystem />
       </div>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
