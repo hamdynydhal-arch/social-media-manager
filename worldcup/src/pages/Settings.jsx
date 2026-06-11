@@ -2,11 +2,10 @@ import { useState } from 'react'
 import { playGoalSound, playNotificationSound, playWhistleSound } from '../utils/audioUtils'
 import { fireWorldCupAlert } from '../hooks/useLiveEvents'
 import { useWorldCupData } from '../context/WorldCupContext'
-import { IS_DEMO } from '../services/footballApi'
 import confetti from 'canvas-confetti'
 
 export default function Settings({ favoriteTeam, onChangeFavorite, simRunning, onStartSim, onStopSim, apiMode, lastUpdated }) {
-  const { data, refresh } = useWorldCupData()
+  const { data, sources, refresh } = useWorldCupData()
   const favTeam = data.teams.find(t => t.id === favoriteTeam)
   const [notifPerm, setNotifPerm] = useState(
     () => (typeof Notification !== 'undefined' ? Notification.permission : 'default')
@@ -175,37 +174,38 @@ export default function Settings({ favoriteTeam, onChangeFavorite, simRunning, o
 
       {/* ── Live Data Source ── */}
       <div className="card p-4">
-        <h3 className="font-bold text-white mb-3 flex items-center gap-2">🌐 مصدر البيانات</h3>
-        <div className="flex items-center justify-between mb-3 bg-slate-700/30 rounded-xl px-3 py-2">
-          <span className="text-slate-300 text-sm">وضع البيانات</span>
-          <span className={`text-sm font-bold ${apiMode === 'live' ? 'text-emerald-400' : apiMode === 'loading' ? 'text-amber-400' : 'text-slate-400'}`}>
-            {apiMode === 'live' ? '🟢 بيانات حية' : apiMode === 'loading' ? '⏳ جاري التحميل' : '📦 بيانات ثابتة'}
-          </span>
+        <h3 className="font-bold text-white mb-3 flex items-center gap-2">🌐 مصادر البيانات المفتوحة</h3>
+        <div className="space-y-2 mb-3">
+          {[
+            { label: 'نتائج مباشرة', src: 'ESPN Public API', active: sources?.scores },
+            { label: 'ترتيب المجموعات', src: 'ESPN Standings', active: sources?.standings },
+            { label: 'أخبار عاجلة', src: 'BBC Sport RSS', active: sources?.news },
+          ].map(({ label, src, active }) => (
+            <div key={label} className="flex items-center justify-between bg-slate-700/30 rounded-xl px-3 py-2">
+              <div>
+                <p className="text-white text-sm font-medium">{label}</p>
+                <p className="text-slate-500 text-xs">{src}</p>
+              </div>
+              <span className={`text-xs font-bold px-2 py-1 rounded-full ${active ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-700 text-slate-500'}`}>
+                {active ? '🟢 متصل' : '⭕ غير متاح'}
+              </span>
+            </div>
+          ))}
         </div>
         {lastUpdated && (
           <p className="text-xs text-slate-500 text-center mb-2">
-            آخر تحديث: {lastUpdated.toLocaleTimeString('ar-SA')}
+            آخر تحديث: {lastUpdated.toLocaleTimeString('ar-SA')} — يتجدد كل 60 ثانية
           </p>
         )}
-        {IS_DEMO ? (
-          <div className="bg-amber-900/20 border border-amber-500/30 rounded-xl p-3 mb-2">
-            <p className="text-amber-400 text-xs font-bold mb-1">⚙️ لتفعيل البيانات الحية:</p>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              سجّل مجاناً في <span className="text-white font-medium">football-data.org</span>،
-              احصل على مفتاح API، ثم أضفه في ملف <span className="text-emerald-400 font-mono text-xs">.env</span>:
-            </p>
-            <div className="mt-2 bg-slate-900 rounded-lg px-3 py-2 font-mono text-xs text-emerald-400 select-all">
-              VITE_FOOTBALL_API_KEY=مفتاحك_هنا
-            </div>
-          </div>
-        ) : (
-          <button
-            onClick={refresh}
-            className="w-full py-2.5 bg-slate-700/80 border border-slate-600/50 text-white text-sm rounded-xl hover:bg-slate-600/80 transition-colors"
-          >
-            🔄 تحديث البيانات الآن
-          </button>
-        )}
+        <button
+          onClick={refresh}
+          className="w-full py-2.5 bg-slate-700/80 border border-slate-600/50 text-white text-sm rounded-xl hover:bg-slate-600/80 transition-colors"
+        >
+          🔄 تحديث فوري
+        </button>
+        <p className="text-center text-slate-600 text-xs mt-2">
+          لا يتطلب مفاتيح API أو حسابات خارجية
+        </p>
       </div>
 
       {/* ── App Info ── */}
