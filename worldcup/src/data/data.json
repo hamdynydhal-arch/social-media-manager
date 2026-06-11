@@ -2,1211 +2,3206 @@
   "tournament": {
     "name": "كأس العالم FIFA 2026",
     "edition": "23",
-    "host_countries": ["الولايات المتحدة", "كندا", "المكسيك"],
+    "host_countries": [
+      "الولايات المتحدة",
+      "كندا",
+      "المكسيك"
+    ],
     "start_date": "2026-06-11",
-    "end_date": "2026-07-26",
+    "end_date": "2026-07-19",
     "final_venue": "ملعب ميتلايف، نيوجيرسي",
     "slogan": "نحو الغد"
   },
   "news": [
-    "🏆 انطلاق كأس العالم 2026 اليوم بمشاركة 48 منتخباً في أمريكا الشمالية",
-    "⚽ الولايات المتحدة تفتتح المونديال أمام بنما في ملعب ميتلايف بنيوجيرسي",
-    "🌙 ستة منتخبات عربية تشارك: السعودية والمغرب والجزائر والعراق والأردن ومصر",
-    "🇩🇿 الجزائر تعود لكأس العالم بعد غياب منذ 2014 في المجموعة C",
-    "🇯🇴 الأردن يشارك في كأس العالم للمرة الأولى تاريخياً في المجموعة D",
-    "🇦🇷 الأرجنتين تسعى للدفاع عن اللقب وتواجه أستراليا والمجر والأردن",
-    "📍 16 ملعباً في الولايات المتحدة وكندا والمكسيك تستضيف البطولة",
-    "🎫 الفيفا: مبيعات التذاكر تتجاوز 5 ملايين تذكرة قبيل الانطلاق"
+    "🏆 انطلقت كأس العالم 2026 بمباراة المكسيك وجنوب أفريقيا في ملعب الأزتيكا بمكسيكو سيتي",
+    "⚽ مباراة الافتتاح: المكسيك بقيادة أغويري تواجه جنوب أفريقيا أمام 87 ألف مشجع",
+    "🇰🇷 كوريا الجنوبية تلتقي التشيك في المباراة الثانية من المجموعة A في غوادالاخارا",
+    "🇹🇳 تونس في المجموعة F مع هولندا واليابان والسويد بقيادة صبري لمواشي",
+    "🇲🇦 المغرب في المجموعة C مع البرازيل الذي يقوده كارلو أنتشيلوتي",
+    "🇩🇿 الجزائر في المجموعة J مع الأرجنتين والنمسا والأردن",
+    "⭐ 8 منتخبات عربية في مونديال 2026: قطر، المغرب، العراق، السعودية، مصر، تونس، الجزائر، الأردن",
+    "🏟️ مونديال 2026 يُقام على 16 ملعباً في الولايات المتحدة وكندا والمكسيك"
   ],
   "teams": [
     {
-      "id": "USA", "name": "الولايات المتحدة", "flag": "🇺🇸", "color": "#002868",
-      "group": "A", "ranking": 13, "coach": "مورييسيو بوكا",
-      "players": [
-        {"number": 1, "name": "ترنر", "position": "حارس مرمى"},
-        {"number": 4, "name": "أدامز", "position": "وسط"},
-        {"number": 10, "name": "بولسيتش", "position": "مهاجم"},
-        {"number": 8, "name": "ماكيني", "position": "وسط"},
-        {"number": 21, "name": "ويا", "position": "جناح"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "MEX",
+      "name": "المكسيك",
+      "flag": "🇲🇽",
+      "color": "#006847",
+      "group": "A",
+      "ranking": 16,
+      "coach": "خافيير أغويري",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "CRO", "name": "كرواتيا", "flag": "🇭🇷", "color": "#CC0000",
-      "group": "A", "ranking": 10, "coach": "زلاتكو داليتش",
-      "players": [
-        {"number": 1, "name": "ليفاكوفيتش", "position": "حارس مرمى"},
-        {"number": 10, "name": "موديريتش", "position": "وسط"},
-        {"number": 8, "name": "كوفاتشيتش", "position": "وسط"},
-        {"number": 18, "name": "كراماريتش", "position": "مهاجم"},
-        {"number": 4, "name": "غفارديول", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "RSA",
+      "name": "جنوب أفريقيا",
+      "flag": "🇿🇦",
+      "color": "#007A4D",
+      "group": "A",
+      "ranking": 68,
+      "coach": "هوغو بروس",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "ECU", "name": "الإكوادور", "flag": "🇪🇨", "color": "#FFD700",
-      "group": "A", "ranking": 42, "coach": "سيباستيان بيسكو",
-      "players": [
-        {"number": 1, "name": "غالينديز", "position": "حارس مرمى"},
-        {"number": 13, "name": "إينير فالنسيا", "position": "مهاجم"},
-        {"number": 25, "name": "كايسيدو", "position": "وسط"},
-        {"number": 11, "name": "إيسيكيال فالنسيا", "position": "جناح"},
-        {"number": 7, "name": "بليرتا", "position": "جناح"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "KOR",
+      "name": "كوريا الجنوبية",
+      "flag": "🇰🇷",
+      "color": "#CD2E3A",
+      "group": "A",
+      "ranking": 22,
+      "coach": "هونغ مايونغ-بو",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "PAN", "name": "بنما", "flag": "🇵🇦", "color": "#DA121A",
-      "group": "A", "ranking": 53, "coach": "توماس كريستيانسن",
-      "players": [
-        {"number": 1, "name": "موسكيرا", "position": "حارس مرمى"},
-        {"number": 3, "name": "موريلو", "position": "مدافع"},
-        {"number": 10, "name": "ديفيس", "position": "وسط"},
-        {"number": 9, "name": "فاخاردو", "position": "مهاجم"},
-        {"number": 7, "name": "غودوي", "position": "جناح"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "CZE",
+      "name": "التشيك",
+      "flag": "🇨🇿",
+      "color": "#D7141A",
+      "group": "A",
+      "ranking": 39,
+      "coach": "ميروسلاف كوبيك",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "CAN", "name": "كندا", "flag": "🇨🇦", "color": "#FF0000",
-      "group": "B", "ranking": 40, "coach": "جيسي مارش",
-      "players": [
-        {"number": 1, "name": "بورجان", "position": "حارس مرمى"},
-        {"number": 19, "name": "ديفيس", "position": "مدافع"},
-        {"number": 7, "name": "ديفيد", "position": "مهاجم"},
-        {"number": 11, "name": "بوشانان", "position": "جناح"},
-        {"number": 8, "name": "إيانكوف", "position": "وسط"}
-      ],
-      "stats": {"played": 1, "wins": 1, "draws": 0, "losses": 0, "goals_for": 2, "goals_against": 0, "points": 3}
+      "id": "CAN",
+      "name": "كندا",
+      "flag": "🇨🇦",
+      "color": "#FF0000",
+      "group": "B",
+      "ranking": 47,
+      "coach": "جيسي مارش",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "SRB", "name": "صربيا", "flag": "🇷🇸", "color": "#C6363C",
-      "group": "B", "ranking": 33, "coach": "دراغان ستويكوفيتش",
-      "players": [
-        {"number": 1, "name": "ميتروفيتش", "position": "حارس مرمى"},
-        {"number": 9, "name": "فلاهوفيتش", "position": "مهاجم"},
-        {"number": 10, "name": "تاديتش", "position": "جناح"},
-        {"number": 8, "name": "ميلينكوفيتش-سافيتش", "position": "وسط"},
-        {"number": 5, "name": "ميلينكوفيتش", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "BIH",
+      "name": "البوسنة والهرسك",
+      "flag": "🇧🇦",
+      "color": "#002395",
+      "group": "B",
+      "ranking": 62,
+      "coach": "سيرجي باربارير",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "MAR", "isArab": true, "name": "المغرب", "flag": "🇲🇦", "color": "#006233",
-      "group": "B", "ranking": 14, "coach": "وليد الركراكي",
-      "players": [
-        {"number": 1, "name": "بونو", "position": "حارس مرمى"},
-        {"number": 2, "name": "الحكيمي", "position": "مدافع"},
-        {"number": 7, "name": "زياش", "position": "جناح"},
-        {"number": 19, "name": "بوفال", "position": "جناح"},
-        {"number": 8, "name": "عمرابط", "position": "وسط"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "QAT",
+      "name": "قطر",
+      "flag": "🇶🇦",
+      "color": "#8D1B3D",
+      "group": "B",
+      "ranking": 58,
+      "coach": "خولين لوبيتيغي",
+      "isArab": true,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "NZL", "name": "نيوزيلندا", "flag": "🇳🇿", "color": "#00247D",
-      "group": "B", "ranking": 99, "coach": "داريان بازيلي",
-      "players": [
-        {"number": 1, "name": "سيل", "position": "حارس مرمى"},
-        {"number": 9, "name": "وود", "position": "مهاجم"},
-        {"number": 8, "name": "بيل", "position": "وسط"},
-        {"number": 7, "name": "روجيك", "position": "جناح"},
-        {"number": 3, "name": "ريد", "position": "مدافع"}
-      ],
-      "stats": {"played": 1, "wins": 0, "draws": 0, "losses": 1, "goals_for": 0, "goals_against": 2, "points": 0}
+      "id": "SUI",
+      "name": "سويسرا",
+      "flag": "🇨🇭",
+      "color": "#FF0000",
+      "group": "B",
+      "ranking": 19,
+      "coach": "مورات ياكين",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "MEX", "name": "المكسيك", "flag": "🇲🇽", "color": "#006847",
-      "group": "C", "ranking": 15, "coach": "خايمي ليرادو",
-      "players": [
-        {"number": 1, "name": "أوتشوا", "position": "حارس مرمى"},
-        {"number": 22, "name": "لوزانو", "position": "جناح"},
-        {"number": 9, "name": "خيمينيز", "position": "مهاجم"},
-        {"number": 10, "name": "غييرمو مارتينيز", "position": "وسط"},
-        {"number": 5, "name": "مورينو", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "BRA",
+      "name": "البرازيل",
+      "flag": "🇧🇷",
+      "color": "#009C3B",
+      "group": "C",
+      "ranking": 5,
+      "coach": "كارلو أنتشيلوتي",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "TUR", "name": "تركيا", "flag": "🇹🇷", "color": "#E30A17",
-      "group": "C", "ranking": 28, "coach": "فينسنت بيتيني",
-      "players": [
-        {"number": 1, "name": "بايندير", "position": "حارس مرمى"},
-        {"number": 10, "name": "أردا غولر", "position": "جناح"},
-        {"number": 8, "name": "تشالهانوغلو", "position": "وسط"},
-        {"number": 7, "name": "يلدز", "position": "جناح"},
-        {"number": 9, "name": "آكتوركوغلو", "position": "مهاجم"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "MAR",
+      "name": "المغرب",
+      "flag": "🇲🇦",
+      "color": "#C1272D",
+      "group": "C",
+      "ranking": 14,
+      "coach": "محمد وهبي",
+      "isArab": true,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "ALG", "isArab": true, "name": "الجزائر", "flag": "🇩🇿", "color": "#006233",
-      "group": "C", "ranking": 52, "coach": "فلاديمير بيتكوفيتش",
-      "players": [
-        {"number": 1, "name": "مبولحي", "position": "حارس مرمى"},
-        {"number": 7, "name": "محرز", "position": "جناح"},
-        {"number": 9, "name": "سليماني", "position": "مهاجم"},
-        {"number": 8, "name": "قادري", "position": "وسط"},
-        {"number": 10, "name": "بنرحمة", "position": "وسط"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "HAI",
+      "name": "هايتي",
+      "flag": "🇭🇹",
+      "color": "#00209F",
+      "group": "C",
+      "ranking": 83,
+      "coach": "سيباستيان مينييه",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "JAM", "name": "جامايكا", "flag": "🇯🇲", "color": "#000000",
-      "group": "C", "ranking": 62, "coach": "هيو بارتون",
-      "players": [
-        {"number": 7, "name": "بيلي", "position": "جناح"},
-        {"number": 9, "name": "أنتوني", "position": "مهاجم"},
-        {"number": 11, "name": "ريد", "position": "جناح"},
-        {"number": 4, "name": "مكانف", "position": "مدافع"},
-        {"number": 1, "name": "بليك", "position": "حارس مرمى"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "SCO",
+      "name": "اسكتلندا",
+      "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+      "color": "#003380",
+      "group": "C",
+      "ranking": 37,
+      "coach": "ستيف كلارك",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "ARG", "name": "الأرجنتين", "flag": "🇦🇷", "color": "#74ACDF",
-      "group": "D", "ranking": 1, "coach": "ليونيل سكالوني",
-      "players": [
-        {"number": 23, "name": "مارتينيز", "position": "حارس مرمى"},
-        {"number": 10, "name": "ميسي", "position": "مهاجم"},
-        {"number": 9, "name": "ألفاريز", "position": "مهاجم"},
-        {"number": 24, "name": "إنزو فيرنانديز", "position": "وسط"},
-        {"number": 11, "name": "دي ماريا", "position": "جناح"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "USA",
+      "name": "الولايات المتحدة",
+      "flag": "🇺🇸",
+      "color": "#002868",
+      "group": "D",
+      "ranking": 13,
+      "coach": "ماوريسيو بوكيتينو",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "AUS", "name": "أستراليا", "flag": "🇦🇺", "color": "#FFD700",
-      "group": "D", "ranking": 24, "coach": "توني بوبوفيتش",
-      "players": [
-        {"number": 1, "name": "رايان", "position": "حارس مرمى"},
-        {"number": 7, "name": "ليكي", "position": "جناح"},
-        {"number": 9, "name": "ديوك", "position": "مهاجم"},
-        {"number": 8, "name": "هروستيتش", "position": "وسط"},
-        {"number": 5, "name": "دادلي", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "PAR",
+      "name": "باراغواي",
+      "flag": "🇵🇾",
+      "color": "#D52B1E",
+      "group": "D",
+      "ranking": 64,
+      "coach": "غوستافو ألفارو",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "JOR", "isArab": true, "name": "الأردن", "flag": "🇯🇴", "color": "#007A3D",
-      "group": "D", "ranking": 70, "coach": "حسين عمو",
-      "players": [
-        {"number": 1, "name": "أبو لبدة", "position": "حارس مرمى"},
-        {"number": 9, "name": "النيمات", "position": "مهاجم"},
-        {"number": 10, "name": "الناصر", "position": "وسط"},
-        {"number": 7, "name": "الرواحنة", "position": "جناح"},
-        {"number": 4, "name": "حريبات", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "AUS",
+      "name": "أستراليا",
+      "flag": "🇦🇺",
+      "color": "#00843D",
+      "group": "D",
+      "ranking": 23,
+      "coach": "توني بوبوفيتش",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "HUN", "name": "المجر", "flag": "🇭🇺", "color": "#CE2939",
-      "group": "D", "ranking": 26, "coach": "مارك روسي",
-      "players": [
-        {"number": 1, "name": "غولاتشي", "position": "حارس مرمى"},
-        {"number": 10, "name": "صوبوصلاي", "position": "وسط"},
-        {"number": 9, "name": "فارغا", "position": "مهاجم"},
-        {"number": 7, "name": "صالاي", "position": "جناح"},
-        {"number": 3, "name": "فيولا", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "TUR",
+      "name": "تركيا",
+      "flag": "🇹🇷",
+      "color": "#E30A17",
+      "group": "D",
+      "ranking": 29,
+      "coach": "فينشينسو مونتيلا",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "FRA", "name": "فرنسا", "flag": "🇫🇷", "color": "#002395",
-      "group": "E", "ranking": 2, "coach": "ديدييه ديشامب",
-      "players": [
-        {"number": 1, "name": "مانياس", "position": "حارس مرمى"},
-        {"number": 10, "name": "مبابي", "position": "مهاجم"},
-        {"number": 7, "name": "غريزمان", "position": "مهاجم"},
-        {"number": 8, "name": "تشواميني", "position": "وسط"},
-        {"number": 5, "name": "كونديه", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "GER",
+      "name": "ألمانيا",
+      "flag": "🇩🇪",
+      "color": "#000000",
+      "group": "E",
+      "ranking": 12,
+      "coach": "يوليان ناغلسمان",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "URU", "name": "أوروغواي", "flag": "🇺🇾", "color": "#5EB6E4",
-      "group": "E", "ranking": 20, "coach": "مارسيلو بيلسا",
-      "players": [
-        {"number": 1, "name": "موسليرا", "position": "حارس مرمى"},
-        {"number": 9, "name": "نونيز", "position": "مهاجم"},
-        {"number": 8, "name": "فالفيردي", "position": "وسط"},
-        {"number": 11, "name": "أراوهو", "position": "جناح"},
-        {"number": 3, "name": "أولمو", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "CUW",
+      "name": "كوراساو",
+      "flag": "🇨🇼",
+      "color": "#003DA5",
+      "group": "E",
+      "ranking": 99,
+      "coach": "ديك أدفوكات",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "JPN", "name": "اليابان", "flag": "🇯🇵", "color": "#BC002D",
-      "group": "E", "ranking": 17, "coach": "هاجيمي موريياسو",
-      "players": [
-        {"number": 1, "name": "غوندا", "position": "حارس مرمى"},
-        {"number": 10, "name": "كودو", "position": "وسط"},
-        {"number": 9, "name": "أوكافور", "position": "مهاجم"},
-        {"number": 11, "name": "ميتوما", "position": "جناح"},
-        {"number": 6, "name": "إندو", "position": "وسط"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "CIV",
+      "name": "كوت ديفوار",
+      "flag": "🇨🇮",
+      "color": "#FF8200",
+      "group": "E",
+      "ranking": 50,
+      "coach": "إيمرس فاي",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "BOL", "name": "بوليفيا", "flag": "🇧🇴", "color": "#D52B1E",
-      "group": "E", "ranking": 85, "coach": "أوسكار فيلاريل",
-      "players": [
-        {"number": 1, "name": "لامبي", "position": "حارس مرمى"},
-        {"number": 9, "name": "ألغار", "position": "مهاجم"},
-        {"number": 10, "name": "موريتا", "position": "وسط"},
-        {"number": 7, "name": "مارتينيز", "position": "جناح"},
-        {"number": 5, "name": "كوستاس", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "ECU",
+      "name": "الإكوادور",
+      "flag": "🇪🇨",
+      "color": "#FFD100",
+      "group": "E",
+      "ranking": 44,
+      "coach": "سيباستيان بيكاشيشي",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "ESP", "name": "إسبانيا", "flag": "🇪🇸", "color": "#AA151B",
-      "group": "F", "ranking": 6, "coach": "لويس دي لا فوينتي",
-      "players": [
-        {"number": 1, "name": "سيمون", "position": "حارس مرمى"},
-        {"number": 19, "name": "يامال", "position": "جناح"},
-        {"number": 8, "name": "بيدري", "position": "وسط"},
-        {"number": 16, "name": "رودري", "position": "وسط"},
-        {"number": 9, "name": "مورانو", "position": "مهاجم"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "NED",
+      "name": "هولندا",
+      "flag": "🇳🇱",
+      "color": "#FF4F00",
+      "group": "F",
+      "ranking": 7,
+      "coach": "رونالد كومان",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "COL", "name": "كولومبيا", "flag": "🇨🇴", "color": "#FCD116",
-      "group": "F", "ranking": 19, "coach": "نيستور لورنسو",
-      "players": [
-        {"number": 1, "name": "فارغاس", "position": "حارس مرمى"},
-        {"number": 11, "name": "لويس دياز", "position": "جناح"},
-        {"number": 10, "name": "جيمس رودريغيز", "position": "وسط"},
-        {"number": 9, "name": "كوتشو هيرنانديز", "position": "مهاجم"},
-        {"number": 6, "name": "أرياس", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "JPN",
+      "name": "اليابان",
+      "flag": "🇯🇵",
+      "color": "#BC002D",
+      "group": "F",
+      "ranking": 18,
+      "coach": "هاجيمي موريياسو",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "IRQ", "isArab": true, "name": "العراق", "flag": "🇮🇶", "color": "#CE1126",
-      "group": "F", "ranking": 60, "coach": "خيسوس كاساس",
-      "players": [
-        {"number": 1, "name": "جلال حسن", "position": "حارس مرمى"},
-        {"number": 9, "name": "أيمن حسين", "position": "مهاجم"},
-        {"number": 7, "name": "علي جاسم", "position": "جناح"},
-        {"number": 10, "name": "عمار سيف", "position": "وسط"},
-        {"number": 5, "name": "علي عدنان", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "SWE",
+      "name": "السويد",
+      "flag": "🇸🇪",
+      "color": "#006AA7",
+      "group": "F",
+      "ranking": 25,
+      "coach": "يون دال توماسون",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "HON", "name": "هندوراس", "flag": "🇭🇳", "color": "#003F87",
-      "group": "F", "ranking": 74, "coach": "دييغو فاسكيز",
-      "players": [
-        {"number": 1, "name": "تيناكو", "position": "حارس مرمى"},
-        {"number": 10, "name": "إيليس", "position": "جناح"},
-        {"number": 9, "name": "خيرون", "position": "مهاجم"},
-        {"number": 7, "name": "أكوستا", "position": "جناح"},
-        {"number": 4, "name": "أوييدا", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "TUN",
+      "name": "تونس",
+      "flag": "🇹🇳",
+      "color": "#E70013",
+      "group": "F",
+      "ranking": 34,
+      "coach": "صبري لمواشي",
+      "isArab": true,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "ENG", "name": "إنجلترا", "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "color": "#003090",
-      "group": "G", "ranking": 4, "coach": "توماس توخيل",
-      "players": [
-        {"number": 1, "name": "بيكفورد", "position": "حارس مرمى"},
-        {"number": 9, "name": "كين", "position": "مهاجم"},
-        {"number": 10, "name": "بيلينغهام", "position": "وسط"},
-        {"number": 17, "name": "ساكا", "position": "جناح"},
-        {"number": 47, "name": "فودين", "position": "وسط"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "BEL",
+      "name": "بلجيكا",
+      "flag": "🇧🇪",
+      "color": "#EF3340",
+      "group": "G",
+      "ranking": 8,
+      "coach": "رودي غارسيا",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "KOR", "name": "كوريا الجنوبية", "flag": "🇰🇷", "color": "#C60C30",
-      "group": "G", "ranking": 23, "coach": "هونغ مينيون",
-      "players": [
-        {"number": 1, "name": "كيم سينيون", "position": "حارس مرمى"},
-        {"number": 7, "name": "سون هيونغمين", "position": "جناح"},
-        {"number": 9, "name": "تشو جيسيونغ", "position": "مهاجم"},
-        {"number": 10, "name": "لي كانغين", "position": "وسط"},
-        {"number": 4, "name": "كيم مينجاي", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "EGY",
+      "name": "مصر",
+      "flag": "🇪🇬",
+      "color": "#C8102E",
+      "group": "G",
+      "ranking": 45,
+      "coach": "حسام حسن",
+      "isArab": true,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "NGA", "name": "نيجيريا", "flag": "🇳🇬", "color": "#008751",
-      "group": "G", "ranking": 39, "coach": "إريك تينيبو",
-      "players": [
-        {"number": 1, "name": "أدامو", "position": "حارس مرمى"},
-        {"number": 10, "name": "أيوساي", "position": "مهاجم"},
-        {"number": 9, "name": "دايلي", "position": "مهاجم"},
-        {"number": 7, "name": "ليوكو", "position": "جناح"},
-        {"number": 6, "name": "كولوباليت", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "IRN",
+      "name": "إيران",
+      "flag": "🇮🇷",
+      "color": "#239F40",
+      "group": "G",
+      "ranking": 21,
+      "coach": "أمير غالينويي",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "VEN", "name": "فنزويلا", "flag": "🇻🇪", "color": "#CF142B",
-      "group": "G", "ranking": 58, "coach": "فيرناندو باتيستا",
-      "players": [
-        {"number": 1, "name": "غراتيرول", "position": "حارس مرمى"},
-        {"number": 10, "name": "سوتيلدو", "position": "جناح"},
-        {"number": 9, "name": "رونيدون", "position": "مهاجم"},
-        {"number": 7, "name": "هيريرا", "position": "جناح"},
-        {"number": 4, "name": "أوسوريو", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "NZL",
+      "name": "نيوزيلندا",
+      "flag": "🇳🇿",
+      "color": "#000000",
+      "group": "G",
+      "ranking": 96,
+      "coach": "دارن بازلي",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "GER", "name": "ألمانيا", "flag": "🇩🇪", "color": "#000000",
-      "group": "H", "ranking": 12, "coach": "يوليان ناغلسمان",
-      "players": [
-        {"number": 1, "name": "تير شتيغن", "position": "حارس مرمى"},
-        {"number": 10, "name": "موسيالا", "position": "وسط"},
-        {"number": 7, "name": "هافيرتز", "position": "مهاجم"},
-        {"number": 29, "name": "فيرتز", "position": "وسط"},
-        {"number": 16, "name": "روديغر", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "ESP",
+      "name": "إسبانيا",
+      "flag": "🇪🇸",
+      "color": "#C60B1E",
+      "group": "H",
+      "ranking": 3,
+      "coach": "لويس دي لا فوينتي",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "SUI", "name": "سويسرا", "flag": "🇨🇭", "color": "#FF0000",
-      "group": "H", "ranking": 21, "coach": "مورات ياكين",
-      "players": [
-        {"number": 1, "name": "سومير", "position": "حارس مرمى"},
-        {"number": 10, "name": "جرانيت جاكا", "position": "وسط"},
-        {"number": 7, "name": "إمبولو", "position": "مهاجم"},
-        {"number": 23, "name": "شاكيري", "position": "جناح"},
-        {"number": 5, "name": "اكانجي", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "CPV",
+      "name": "الرأس الأخضر",
+      "flag": "🇨🇻",
+      "color": "#003893",
+      "group": "H",
+      "ranking": 76,
+      "coach": "بوبيستا",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "SEN", "name": "السنغال", "flag": "🇸🇳", "color": "#00853F",
-      "group": "H", "ranking": 18, "coach": "أليو سيسيه",
-      "players": [
-        {"number": 1, "name": "مينيدي", "position": "حارس مرمى"},
-        {"number": 10, "name": "ماني", "position": "جناح"},
-        {"number": 5, "name": "كوليبالي", "position": "مدافع"},
-        {"number": 9, "name": "ديينغ", "position": "مهاجم"},
-        {"number": 8, "name": "غيه", "position": "وسط"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "KSA",
+      "name": "السعودية",
+      "flag": "🇸🇦",
+      "color": "#006C35",
+      "group": "H",
+      "ranking": 56,
+      "coach": "خيورخيوس دونيس",
+      "isArab": true,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "EGY", "isArab": true, "name": "مصر", "flag": "🇪🇬", "color": "#C8102E",
-      "group": "H", "ranking": 34, "coach": "إيهاب جلال",
-      "players": [
-        {"number": 1, "name": "الشناوي", "position": "حارس مرمى"},
-        {"number": 11, "name": "صلاح", "position": "جناح"},
-        {"number": 9, "name": "تريزيغيه", "position": "مهاجم"},
-        {"number": 8, "name": "النني", "position": "وسط"},
-        {"number": 4, "name": "الوينيش", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "URU",
+      "name": "أوروغواي",
+      "flag": "🇺🇾",
+      "color": "#75AADB",
+      "group": "H",
+      "ranking": 15,
+      "coach": "مارسيلو بييلسا",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "POR", "name": "البرتغال", "flag": "🇵🇹", "color": "#006600",
-      "group": "I", "ranking": 7, "coach": "روبيرتو مارتينيز",
-      "players": [
-        {"number": 1, "name": "كوستا", "position": "حارس مرمى"},
-        {"number": 7, "name": "رونالدو", "position": "مهاجم"},
-        {"number": 10, "name": "برناردو سيلفا", "position": "وسط"},
-        {"number": 8, "name": "برونو فيرنانديز", "position": "وسط"},
-        {"number": 17, "name": "لياو", "position": "جناح"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "FRA",
+      "name": "فرنسا",
+      "flag": "🇫🇷",
+      "color": "#002395",
+      "group": "I",
+      "ranking": 2,
+      "coach": "ديدييه ديشان",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "AUT", "name": "النمسا", "flag": "🇦🇹", "color": "#ED2939",
-      "group": "I", "ranking": 25, "coach": "راينر هاسنهوتل",
-      "players": [
-        {"number": 1, "name": "بنيكلر", "position": "حارس مرمى"},
-        {"number": 8, "name": "داييفد ألابا", "position": "مدافع"},
-        {"number": 7, "name": "أرناوتوفيتش", "position": "مهاجم"},
-        {"number": 16, "name": "سابيتزير", "position": "وسط"},
-        {"number": 10, "name": "غريليتش", "position": "وسط"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "SEN",
+      "name": "السنغال",
+      "flag": "🇸🇳",
+      "color": "#00853F",
+      "group": "I",
+      "ranking": 20,
+      "coach": "بابي تياو",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "IRN", "name": "إيران", "flag": "🇮🇷", "color": "#239F40",
-      "group": "I", "ranking": 22, "coach": "أمير قلعه نوعي",
-      "players": [
-        {"number": 1, "name": "بيرانوند", "position": "حارس مرمى"},
-        {"number": 9, "name": "طارمي", "position": "مهاجم"},
-        {"number": 7, "name": "أزمون", "position": "مهاجم"},
-        {"number": 10, "name": "أنصاري فرد", "position": "وسط"},
-        {"number": 5, "name": "خليل زاده", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "IRQ",
+      "name": "العراق",
+      "flag": "🇮🇶",
+      "color": "#007A3D",
+      "group": "I",
+      "ranking": 66,
+      "coach": "غراهام أرنولد",
+      "isArab": true,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "CMR", "name": "الكاميرون", "flag": "🇨🇲", "color": "#007A5E",
-      "group": "I", "ranking": 43, "coach": "ريغوبير سونغ",
-      "players": [
-        {"number": 1, "name": "أونانا", "position": "حارس مرمى"},
-        {"number": 13, "name": "تشوبو موتينغ", "position": "مهاجم"},
-        {"number": 10, "name": "آبوبكار", "position": "جناح"},
-        {"number": 7, "name": "تاوو", "position": "مدافع"},
-        {"number": 8, "name": "إنغانو", "position": "وسط"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "NOR",
+      "name": "النرويج",
+      "flag": "🇳🇴",
+      "color": "#EF2B2D",
+      "group": "I",
+      "ranking": 31,
+      "coach": "ستولي سولباكن",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "BRA", "name": "البرازيل", "flag": "🇧🇷", "color": "#FFD700",
-      "group": "J", "ranking": 5, "coach": "دورييفال جونيور",
-      "players": [
-        {"number": 1, "name": "أليسون", "position": "حارس مرمى"},
-        {"number": 7, "name": "فينيسيوس جونيور", "position": "جناح"},
-        {"number": 11, "name": "رودريغو", "position": "جناح"},
-        {"number": 4, "name": "ماركينيوس", "position": "مدافع"},
-        {"number": 19, "name": "إندريك", "position": "مهاجم"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "ARG",
+      "name": "الأرجنتين",
+      "flag": "🇦🇷",
+      "color": "#74ACDF",
+      "group": "J",
+      "ranking": 1,
+      "coach": "ليونيل سكالوني",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "UKR", "name": "أوكرانيا", "flag": "🇺🇦", "color": "#005BBB",
-      "group": "J", "ranking": 22, "coach": "سيرهي ريبروف",
-      "players": [
-        {"number": 1, "name": "لونين", "position": "حارس مرمى"},
-        {"number": 10, "name": "مالينوفسكي", "position": "وسط"},
-        {"number": 15, "name": "موديريك", "position": "جناح"},
-        {"number": 9, "name": "يارمولينكو", "position": "مهاجم"},
-        {"number": 5, "name": "زينتشينكو", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "ALG",
+      "name": "الجزائر",
+      "flag": "🇩🇿",
+      "color": "#006233",
+      "group": "J",
+      "ranking": 53,
+      "coach": "فلاديمير بيتكوفيتش",
+      "isArab": true,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "KSA", "isArab": true, "name": "السعودية", "flag": "🇸🇦", "color": "#006C35",
-      "group": "J", "ranking": 56, "coach": "هيرفي رينار",
-      "players": [
-        {"number": 21, "name": "العواجي", "position": "حارس مرمى"},
-        {"number": 10, "name": "الدوسري", "position": "مهاجم"},
-        {"number": 7, "name": "الشهري", "position": "جناح"},
-        {"number": 6, "name": "البريك", "position": "مدافع"},
-        {"number": 17, "name": "الغنام", "position": "وسط"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "AUT",
+      "name": "النمسا",
+      "flag": "🇦🇹",
+      "color": "#ED2939",
+      "group": "J",
+      "ranking": 26,
+      "coach": "رالف رانغنيك",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "TUN", "isArab": true, "name": "تونس", "flag": "🇹🇳", "color": "#E70013",
-      "group": "J", "ranking": 32, "coach": "فوزي البنزرتي",
-      "players": [
-        {"number": 1, "name": "دحمان", "position": "حارس مرمى"},
-        {"number": 10, "name": "مزرقي", "position": "وسط"},
-        {"number": 9, "name": "جازي", "position": "مهاجم"},
-        {"number": 11, "name": "خزري", "position": "جناح"},
-        {"number": 7, "name": "يوسف المساكني", "position": "مهاجم"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "JOR",
+      "name": "الأردن",
+      "flag": "🇯🇴",
+      "color": "#007A3D",
+      "group": "J",
+      "ranking": 70,
+      "coach": "جمال السلامي",
+      "isArab": true,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "NED", "name": "هولندا", "flag": "🇳🇱", "color": "#FF6600",
-      "group": "K", "ranking": 8, "coach": "رونالد كومان",
-      "players": [
-        {"number": 1, "name": "فلكرويغن", "position": "حارس مرمى"},
-        {"number": 4, "name": "فان دايك", "position": "مدافع"},
-        {"number": 21, "name": "دي يونغ", "position": "وسط"},
-        {"number": 10, "name": "غاكبو", "position": "جناح"},
-        {"number": 11, "name": "بيرغفاين", "position": "جناح"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "POR",
+      "name": "البرتغال",
+      "flag": "🇵🇹",
+      "color": "#006600",
+      "group": "K",
+      "ranking": 6,
+      "coach": "روبرتو مارتينيز",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "SCO", "name": "اسكتلندا", "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "color": "#003380",
-      "group": "K", "ranking": 36, "coach": "ستيف كلارك",
-      "players": [
-        {"number": 1, "name": "غوردون", "position": "حارس مرمى"},
-        {"number": 3, "name": "روبيرتسون", "position": "مدافع"},
-        {"number": 10, "name": "ماكتومني", "position": "وسط"},
-        {"number": 7, "name": "ماكجين", "position": "وسط"},
-        {"number": 9, "name": "آدامز", "position": "مهاجم"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "COD",
+      "name": "الكونغو الديمقراطية",
+      "flag": "🇨🇩",
+      "color": "#007FFF",
+      "group": "K",
+      "ranking": 59,
+      "coach": "سيباستيان ديزابر",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "UZB", "name": "أوزبكستان", "flag": "🇺🇿", "color": "#1EB53A",
-      "group": "K", "ranking": 68, "coach": "سريفار جلالوف",
-      "players": [
-        {"number": 1, "name": "يورديف", "position": "حارس مرمى"},
-        {"number": 9, "name": "شوموردوف", "position": "مهاجم"},
-        {"number": 10, "name": "ياخشيبويف", "position": "جناح"},
-        {"number": 8, "name": "ماشارييف", "position": "وسط"},
-        {"number": 4, "name": "أشوروف", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "UZB",
+      "name": "أوزبكستان",
+      "flag": "🇺🇿",
+      "color": "#1EB53A",
+      "group": "K",
+      "ranking": 74,
+      "coach": "فابيو كاناڤارو",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "RSA", "name": "جنوب أفريقيا", "flag": "🇿🇦", "color": "#007A4D",
-      "group": "K", "ranking": 64, "coach": "هوغو برووس",
-      "players": [
-        {"number": 1, "name": "ويليامز", "position": "حارس مرمى"},
-        {"number": 11, "name": "تاو", "position": "جناح"},
-        {"number": 5, "name": "زونغو", "position": "وسط"},
-        {"number": 9, "name": "فيلا", "position": "مهاجم"},
-        {"number": 3, "name": "موكوينا", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "COL",
+      "name": "كولومبيا",
+      "flag": "🇨🇴",
+      "color": "#FCD116",
+      "group": "K",
+      "ranking": 17,
+      "coach": "نيستور لورينسو",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "BEL", "name": "بلجيكا", "flag": "🇧🇪", "color": "#000000",
-      "group": "L", "ranking": 3, "coach": "دومينيكو تيديسكو",
-      "players": [
-        {"number": 1, "name": "كورتوا", "position": "حارس مرمى"},
-        {"number": 7, "name": "دي بروين", "position": "وسط"},
-        {"number": 9, "name": "لوكاكو", "position": "مهاجم"},
-        {"number": 11, "name": "لوكيبا", "position": "جناح"},
-        {"number": 4, "name": "كومبايني", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "ENG",
+      "name": "إنجلترا",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "color": "#FFFFFF",
+      "group": "L",
+      "ranking": 4,
+      "coach": "توماس توشيل",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "POL", "name": "بولندا", "flag": "🇵🇱", "color": "#DC143C",
-      "group": "L", "ranking": 27, "coach": "ميخائيل بروبيرز",
-      "players": [
-        {"number": 1, "name": "فابيانسكي", "position": "حارس مرمى"},
-        {"number": 9, "name": "ليفاندوفسكي", "position": "مهاجم"},
-        {"number": 10, "name": "زيلينسكي", "position": "وسط"},
-        {"number": 7, "name": "سالامون", "position": "مدافع"},
-        {"number": 8, "name": "شيمانسكي", "position": "وسط"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "CRO",
+      "name": "كرواتيا",
+      "flag": "🇭🇷",
+      "color": "#FF0000",
+      "group": "L",
+      "ranking": 9,
+      "coach": "زلاتكو داليتش",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "CHI", "name": "تشيلي", "flag": "🇨🇱", "color": "#D52B1E",
-      "group": "L", "ranking": 47, "coach": "ريكاردو غاريكا",
-      "players": [
-        {"number": 1, "name": "بريفو", "position": "حارس مرمى"},
-        {"number": 7, "name": "فيدال", "position": "وسط"},
-        {"number": 11, "name": "فارغاس", "position": "جناح"},
-        {"number": 9, "name": "بولسيينو", "position": "مهاجم"},
-        {"number": 20, "name": "أرانغيز", "position": "وسط"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "GHA",
+      "name": "غانا",
+      "flag": "🇬🇭",
+      "color": "#006B3F",
+      "group": "L",
+      "ranking": 60,
+      "coach": "كارلوس كيروس",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     },
     {
-      "id": "CIV", "name": "كوت ديفوار", "flag": "🇨🇮", "color": "#F77F00",
-      "group": "L", "ranking": 48, "coach": "إيميرس فاي",
-      "players": [
-        {"number": 1, "name": "سانجيري", "position": "حارس مرمى"},
-        {"number": 9, "name": "هاليه", "position": "مهاجم"},
-        {"number": 7, "name": "بريفو", "position": "جناح"},
-        {"number": 10, "name": "كيسي", "position": "وسط"},
-        {"number": 4, "name": "بامبا", "position": "مدافع"}
-      ],
-      "stats": {"played": 0, "wins": 0, "draws": 0, "losses": 0, "goals_for": 0, "goals_against": 0, "points": 0}
+      "id": "PAN",
+      "name": "بنما",
+      "flag": "🇵🇦",
+      "color": "#DA121A",
+      "group": "L",
+      "ranking": 72,
+      "coach": "توماس كريستيانسن",
+      "isArab": false,
+      "stats": {
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goals_for": 0,
+        "goals_against": 0,
+        "points": 0
+      },
+      "players": []
     }
   ],
   "stadiums": [
-    {"id": "STA01", "name": "ملعب ميتلايف", "city": "نيوجيرسي", "country": "الولايات المتحدة", "capacity": 82500, "surface": "عشب طبيعي", "image_url": ""},
-    {"id": "STA02", "name": "ملعب AT&T", "city": "دالاس", "country": "الولايات المتحدة", "capacity": 80000, "surface": "عشب صناعي", "image_url": ""},
-    {"id": "STA03", "name": "ملعب سوفي", "city": "لوس أنجلوس", "country": "الولايات المتحدة", "capacity": 70240, "surface": "عشب صناعي", "image_url": ""},
-    {"id": "STA04", "name": "ملعب NRG", "city": "هيوستن", "country": "الولايات المتحدة", "capacity": 72220, "surface": "عشب صناعي", "image_url": ""},
-    {"id": "STA05", "name": "ملعب ليفايز", "city": "سان فرانسيسكو", "country": "الولايات المتحدة", "capacity": 68500, "surface": "عشب طبيعي", "image_url": ""},
-    {"id": "STA06", "name": "ملعب هارد روك", "city": "ميامي", "country": "الولايات المتحدة", "capacity": 65326, "surface": "عشب طبيعي", "image_url": ""},
-    {"id": "STA07", "name": "ملعب لينكولن فايننشال", "city": "فيلادلفيا", "country": "الولايات المتحدة", "capacity": 69796, "surface": "عشب طبيعي", "image_url": ""},
-    {"id": "STA08", "name": "ملعب لومن فيلد", "city": "سياتل", "country": "الولايات المتحدة", "capacity": 69000, "surface": "عشب صناعي", "image_url": ""},
-    {"id": "STA09", "name": "ملعب أروهيد", "city": "كانساس سيتي", "country": "الولايات المتحدة", "capacity": 76416, "surface": "عشب طبيعي", "image_url": ""},
-    {"id": "STA10", "name": "ملعب مرسيدس-بنز", "city": "أتلانتا", "country": "الولايات المتحدة", "capacity": 71000, "surface": "عشب صناعي", "image_url": ""},
-    {"id": "STA11", "name": "ملعب غيليت", "city": "بوسطن", "country": "الولايات المتحدة", "capacity": 65878, "surface": "عشب طبيعي", "image_url": ""},
-    {"id": "STA12", "name": "ملعب BMO", "city": "تورنتو", "country": "كندا", "capacity": 45736, "surface": "عشب طبيعي", "image_url": ""},
-    {"id": "STA13", "name": "ملعب BC Place", "city": "فانكوفر", "country": "كندا", "capacity": 54500, "surface": "عشب صناعي", "image_url": ""},
-    {"id": "STA14", "name": "الملعب الأزتيكي", "city": "مكسيكو سيتي", "country": "المكسيك", "capacity": 83714, "surface": "عشب طبيعي", "image_url": ""},
-    {"id": "STA15", "name": "ملعب BBVA", "city": "مونتيري", "country": "المكسيك", "capacity": 53500, "surface": "عشب طبيعي", "image_url": ""},
-    {"id": "STA16", "name": "ملعب أكرون", "city": "غوادالاخارا", "country": "المكسيك", "capacity": 49850, "surface": "عشب طبيعي", "image_url": ""}
+    {
+      "id": "STA01",
+      "name": "ملعب ميتلايف",
+      "city": "نيو جيرسي",
+      "country": "الولايات المتحدة",
+      "capacity": 82500,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA02",
+      "name": "ملعب AT&T",
+      "city": "أرلينغتون، تكساس",
+      "country": "الولايات المتحدة",
+      "capacity": 80000,
+      "surface": "عشب صناعي"
+    },
+    {
+      "id": "STA03",
+      "name": "ملعب سوفاي",
+      "city": "لوس أنجلوس",
+      "country": "الولايات المتحدة",
+      "capacity": 70240,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA04",
+      "name": "ملعب NRG",
+      "city": "هيوستن، تكساس",
+      "country": "الولايات المتحدة",
+      "capacity": 72220,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA05",
+      "name": "ملعب ليفايز",
+      "city": "سانتا كلارا، كاليفورنيا",
+      "country": "الولايات المتحدة",
+      "capacity": 68500,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA06",
+      "name": "ملعب هارد روك",
+      "city": "ميامي، فلوريدا",
+      "country": "الولايات المتحدة",
+      "capacity": 64767,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA07",
+      "name": "ملعب لنكولن فاينانشال",
+      "city": "فيلادلفيا",
+      "country": "الولايات المتحدة",
+      "capacity": 69796,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA08",
+      "name": "ملعب لومن فيلد",
+      "city": "سياتل، واشنطن",
+      "country": "الولايات المتحدة",
+      "capacity": 68740,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA09",
+      "name": "ملعب أروهيد",
+      "city": "كانساس سيتي",
+      "country": "الولايات المتحدة",
+      "capacity": 76416,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA10",
+      "name": "ملعب مرسيدس-بنز",
+      "city": "أتلانتا، جورجيا",
+      "country": "الولايات المتحدة",
+      "capacity": 71000,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA11",
+      "name": "ملعب جيليت",
+      "city": "بوسطن، ماساتشوستس",
+      "country": "الولايات المتحدة",
+      "capacity": 65878,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA12",
+      "name": "ملعب BMO",
+      "city": "تورنتو، أونتاريو",
+      "country": "كندا",
+      "capacity": 45000,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA13",
+      "name": "ملعب BC بليس",
+      "city": "فانكوفر، كولومبيا البريطانية",
+      "country": "كندا",
+      "capacity": 54500,
+      "surface": "عشب صناعي"
+    },
+    {
+      "id": "STA14",
+      "name": "الأزتيكا",
+      "city": "مكسيكو سيتي",
+      "country": "المكسيك",
+      "capacity": 87523,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA15",
+      "name": "ملعب BBVA",
+      "city": "مونتيري",
+      "country": "المكسيك",
+      "capacity": 51350,
+      "surface": "عشب طبيعي"
+    },
+    {
+      "id": "STA16",
+      "name": "ملعب أكرون",
+      "city": "غوادالاخارا",
+      "country": "المكسيك",
+      "capacity": 49850,
+      "surface": "عشب طبيعي"
+    }
   ],
   "matches": [
     {
-      "id": "M001", "date": "2026-06-11", "time": "16:00", "status": "finished",
-      "team_home": "CAN", "team_away": "NZL", "score_home": 2, "score_away": 0,
-      "stadium_id": "STA12", "group": "B", "round": "دور المجموعات", "matchday": 1,
-      "goals": [
-        {"team": "CAN", "player": "جوناثان ديفيد", "minute": 31, "type": "عادي"},
-        {"team": "CAN", "player": "ألفونسو ديفيس", "minute": 74, "type": "عادي"}
-      ],
-      "stats": {
-        "home": {"possession": 58, "shots": 14, "shots_on_target": 7, "corners": 6, "fouls": 8, "yellow_cards": 1, "red_cards": 0},
-        "away": {"possession": 42, "shots": 5, "shots_on_target": 1, "corners": 3, "fouls": 11, "yellow_cards": 2, "red_cards": 0}
-      },
-      "weather": {"temp": 21, "condition": "مشمس", "humidity": 55, "wind": 10, "icon": "☀️"},
-      "votes": {"home": 8543, "draw": 1205, "away": 2341}
-    },
-    {
-      "id": "M002", "date": "2026-06-11", "time": "19:00", "status": "live", "minute": 67,
-      "team_home": "USA", "team_away": "PAN", "score_home": 1, "score_away": 0,
-      "stadium_id": "STA01", "group": "A", "round": "دور المجموعات", "matchday": 1,
-      "goals": [
-        {"team": "USA", "player": "كريستيان بولسيتش", "minute": 23, "type": "عادي"}
-      ],
-      "stats": {
-        "home": {"possession": 62, "shots": 11, "shots_on_target": 5, "corners": 5, "fouls": 7, "yellow_cards": 0, "red_cards": 0},
-        "away": {"possession": 38, "shots": 4, "shots_on_target": 1, "corners": 2, "fouls": 12, "yellow_cards": 2, "red_cards": 0}
-      },
-      "weather": {"temp": 24, "condition": "صافٍ", "humidity": 58, "wind": 12, "icon": "☀️"},
-      "votes": {"home": 18432, "draw": 3201, "away": 4891}
-    },
-    {
-      "id": "M003", "date": "2026-06-11", "time": "22:00", "status": "live", "minute": 33,
-      "team_home": "SRB", "team_away": "MAR", "score_home": 0, "score_away": 0,
-      "stadium_id": "STA06", "group": "B", "round": "دور المجموعات", "matchday": 1,
+      "id": "M001",
+      "date": "2026-06-11",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "MEX",
+      "team_away": "RSA",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA14",
+      "group": "A",
+      "round": "الجولة الأولى",
+      "matchday": 1,
       "goals": [],
-      "stats": {
-        "home": {"possession": 45, "shots": 5, "shots_on_target": 2, "corners": 3, "fouls": 9, "yellow_cards": 1, "red_cards": 0},
-        "away": {"possession": 55, "shots": 7, "shots_on_target": 3, "corners": 4, "fouls": 7, "yellow_cards": 0, "red_cards": 0}
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
       },
-      "weather": {"temp": 30, "condition": "حار", "humidity": 75, "wind": 8, "icon": "🌡️"},
-      "votes": {"home": 7234, "draw": 4512, "away": 11089}
-    },
-    {
-      "id": "M004", "date": "2026-06-11", "time": "23:00", "status": "scheduled",
-      "team_home": "ECU", "team_away": "CRO", "score_home": null, "score_away": null,
-      "stadium_id": "STA02", "group": "A", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 33, "condition": "حار جداً", "humidity": 40, "wind": 6, "icon": "🌡️"},
-      "votes": {"home": 6234, "draw": 3456, "away": 9012}
-    },
-    {
-      "id": "M005", "date": "2026-06-12", "time": "18:00", "status": "scheduled",
-      "team_home": "MEX", "team_away": "JAM", "score_home": null, "score_away": null,
-      "stadium_id": "STA14", "group": "C", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 22, "condition": "غائم جزئياً", "humidity": 65, "wind": 14, "icon": "⛅"},
-      "votes": {"home": 15234, "draw": 2341, "away": 3456}
-    },
-    {
-      "id": "M006", "date": "2026-06-12", "time": "21:00", "status": "scheduled",
-      "team_home": "AUS", "team_away": "JOR", "score_home": null, "score_away": null,
-      "stadium_id": "STA07", "group": "D", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 26, "condition": "مشمس", "humidity": 50, "wind": 9, "icon": "☀️"},
-      "votes": {"home": 8901, "draw": 3456, "away": 7823}
-    },
-    {
-      "id": "M007", "date": "2026-06-12", "time": "22:00", "status": "scheduled",
-      "team_home": "ARG", "team_away": "HUN", "score_home": null, "score_away": null,
-      "stadium_id": "STA01", "group": "D", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 25, "condition": "معتدل", "humidity": 60, "wind": 11, "icon": "🌤️"},
-      "votes": {"home": 22456, "draw": 4123, "away": 6789}
-    },
-    {
-      "id": "M008", "date": "2026-06-12", "time": "23:00", "status": "scheduled",
-      "team_home": "TUR", "team_away": "ALG", "score_home": null, "score_away": null,
-      "stadium_id": "STA03", "group": "C", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 22, "condition": "ضبابي", "humidity": 70, "wind": 7, "icon": "🌫️"},
-      "votes": {"home": 9876, "draw": 4567, "away": 12345}
-    },
-    {
-      "id": "M009", "date": "2026-06-13", "time": "18:00", "status": "scheduled",
-      "team_home": "FRA", "team_away": "BOL", "score_home": null, "score_away": null,
-      "stadium_id": "STA06", "group": "E", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 31, "condition": "حار", "humidity": 72, "wind": 9, "icon": "🌡️"},
-      "votes": {"home": 19876, "draw": 2345, "away": 3456}
-    },
-    {
-      "id": "M010", "date": "2026-06-13", "time": "21:00", "status": "scheduled",
-      "team_home": "ENG", "team_away": "VEN", "score_home": null, "score_away": null,
-      "stadium_id": "STA01", "group": "G", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 26, "condition": "مشمس", "humidity": 55, "wind": 10, "icon": "☀️"},
-      "votes": {"home": 17654, "draw": 3210, "away": 5678}
-    },
-    {
-      "id": "M011", "date": "2026-06-13", "time": "22:00", "status": "scheduled",
-      "team_home": "URU", "team_away": "JPN", "score_home": null, "score_away": null,
-      "stadium_id": "STA03", "group": "E", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 23, "condition": "صافٍ", "humidity": 48, "wind": 8, "icon": "☀️"},
-      "votes": {"home": 9876, "draw": 4321, "away": 12345}
-    },
-    {
-      "id": "M012", "date": "2026-06-13", "time": "23:00", "status": "scheduled",
-      "team_home": "ESP", "team_away": "HON", "score_home": null, "score_away": null,
-      "stadium_id": "STA04", "group": "F", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 34, "condition": "حار جداً", "humidity": 68, "wind": 5, "icon": "🌡️"},
-      "votes": {"home": 18765, "draw": 2109, "away": 4321}
-    },
-    {
-      "id": "M013", "date": "2026-06-14", "time": "18:00", "status": "scheduled",
-      "team_home": "COL", "team_away": "IRQ", "score_home": null, "score_away": null,
-      "stadium_id": "STA05", "group": "F", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 19, "condition": "ضبابي", "humidity": 78, "wind": 15, "icon": "🌫️"},
-      "votes": {"home": 10234, "draw": 3456, "away": 8765}
-    },
-    {
-      "id": "M014", "date": "2026-06-14", "time": "21:00", "status": "scheduled",
-      "team_home": "KOR", "team_away": "NGA", "score_home": null, "score_away": null,
-      "stadium_id": "STA10", "group": "G", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 32, "condition": "حار", "humidity": 70, "wind": 7, "icon": "🌡️"},
-      "votes": {"home": 11234, "draw": 4567, "away": 8901}
-    },
-    {
-      "id": "M015", "date": "2026-06-14", "time": "22:00", "status": "scheduled",
-      "team_home": "GER", "team_away": "EGY", "score_home": null, "score_away": null,
-      "stadium_id": "STA02", "group": "H", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 34, "condition": "حار جداً", "humidity": 38, "wind": 6, "icon": "🌡️"},
-      "votes": {"home": 14321, "draw": 3456, "away": 9876}
-    },
-    {
-      "id": "M016", "date": "2026-06-14", "time": "23:00", "status": "scheduled",
-      "team_home": "SUI", "team_away": "SEN", "score_home": null, "score_away": null,
-      "stadium_id": "STA08", "group": "H", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 20, "condition": "غائم", "humidity": 65, "wind": 14, "icon": "☁️"},
-      "votes": {"home": 7654, "draw": 3210, "away": 9012}
-    },
-    {
-      "id": "M017", "date": "2026-06-15", "time": "18:00", "status": "scheduled",
-      "team_home": "POR", "team_away": "CMR", "score_home": null, "score_away": null,
-      "stadium_id": "STA04", "group": "I", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 35, "condition": "حار جداً", "humidity": 66, "wind": 8, "icon": "🌡️"},
-      "votes": {"home": 16543, "draw": 2341, "away": 5678}
-    },
-    {
-      "id": "M018", "date": "2026-06-15", "time": "21:00", "status": "scheduled",
-      "team_home": "BRA", "team_away": "TUN", "score_home": null, "score_away": null,
-      "stadium_id": "STA01", "group": "J", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 27, "condition": "معتدل", "humidity": 62, "wind": 10, "icon": "🌤️"},
-      "votes": {"home": 21345, "draw": 3456, "away": 5678}
-    },
-    {
-      "id": "M019", "date": "2026-06-15", "time": "22:00", "status": "scheduled",
-      "team_home": "AUT", "team_away": "IRN", "score_home": null, "score_away": null,
-      "stadium_id": "STA11", "group": "I", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 22, "condition": "مشمس", "humidity": 52, "wind": 11, "icon": "☀️"},
-      "votes": {"home": 7890, "draw": 3456, "away": 8901}
-    },
-    {
-      "id": "M020", "date": "2026-06-15", "time": "23:00", "status": "scheduled",
-      "team_home": "UKR", "team_away": "KSA", "score_home": null, "score_away": null,
-      "stadium_id": "STA03", "group": "J", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 24, "condition": "صافٍ", "humidity": 45, "wind": 9, "icon": "☀️"},
-      "votes": {"home": 8765, "draw": 3210, "away": 12456}
-    },
-    {
-      "id": "M021", "date": "2026-06-16", "time": "18:00", "status": "scheduled",
-      "team_home": "NED", "team_away": "RSA", "score_home": null, "score_away": null,
-      "stadium_id": "STA06", "group": "K", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 31, "condition": "حار", "humidity": 74, "wind": 8, "icon": "🌡️"},
-      "votes": {"home": 13456, "draw": 3210, "away": 4567}
-    },
-    {
-      "id": "M022", "date": "2026-06-16", "time": "21:00", "status": "scheduled",
-      "team_home": "BEL", "team_away": "CIV", "score_home": null, "score_away": null,
-      "stadium_id": "STA02", "group": "L", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 35, "condition": "حار جداً", "humidity": 36, "wind": 5, "icon": "🌡️"},
-      "votes": {"home": 11234, "draw": 3456, "away": 6789}
-    },
-    {
-      "id": "M023", "date": "2026-06-16", "time": "22:00", "status": "scheduled",
-      "team_home": "SCO", "team_away": "UZB", "score_home": null, "score_away": null,
-      "stadium_id": "STA07", "group": "K", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 27, "condition": "معتدل", "humidity": 58, "wind": 12, "icon": "🌤️"},
-      "votes": {"home": 7654, "draw": 3210, "away": 5678}
-    },
-    {
-      "id": "M024", "date": "2026-06-16", "time": "23:00", "status": "scheduled",
-      "team_home": "POL", "team_away": "CHI", "score_home": null, "score_away": null,
-      "stadium_id": "STA13", "group": "L", "round": "دور المجموعات", "matchday": 1,
-      "goals": [], "stats": null,
-      "weather": {"temp": 19, "condition": "غائم", "humidity": 68, "wind": 16, "icon": "☁️"},
-      "votes": {"home": 8901, "draw": 4321, "away": 6789}
-    },
-    {
-      "id": "M025", "date": "2026-06-17", "time": "16:00", "status": "scheduled",
-      "team_home": "USA", "team_away": "ECU", "score_home": null, "score_away": null,
-      "stadium_id": "STA05", "group": "A", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 20, "condition": "ضبابي", "humidity": 80, "wind": 13, "icon": "🌫️"},
-      "votes": {"home": 15678, "draw": 3456, "away": 7890}
-    },
-    {
-      "id": "M026", "date": "2026-06-17", "time": "19:00", "status": "scheduled",
-      "team_home": "CAN", "team_away": "MAR", "score_home": null, "score_away": null,
-      "stadium_id": "STA12", "group": "B", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 22, "condition": "مشمس", "humidity": 54, "wind": 9, "icon": "☀️"},
-      "votes": {"home": 9876, "draw": 4321, "away": 14567}
-    },
-    {
-      "id": "M027", "date": "2026-06-17", "time": "22:00", "status": "scheduled",
-      "team_home": "CRO", "team_away": "PAN", "score_home": null, "score_away": null,
-      "stadium_id": "STA04", "group": "A", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 34, "condition": "حار جداً", "humidity": 65, "wind": 7, "icon": "🌡️"},
-      "votes": {"home": 8765, "draw": 3210, "away": 5432}
-    },
-    {
-      "id": "M028", "date": "2026-06-17", "time": "23:00", "status": "scheduled",
-      "team_home": "NZL", "team_away": "SRB", "score_home": null, "score_away": null,
-      "stadium_id": "STA11", "group": "B", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 23, "condition": "معتدل", "humidity": 55, "wind": 10, "icon": "🌤️"},
-      "votes": {"home": 4321, "draw": 3210, "away": 9876}
-    },
-    {
-      "id": "M029", "date": "2026-06-18", "time": "16:00", "status": "scheduled",
-      "team_home": "MEX", "team_away": "ALG", "score_home": null, "score_away": null,
-      "stadium_id": "STA15", "group": "C", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 35, "condition": "حار جداً", "humidity": 40, "wind": 8, "icon": "🌡️"},
-      "votes": {"home": 13456, "draw": 4321, "away": 11234}
-    },
-    {
-      "id": "M030", "date": "2026-06-18", "time": "19:00", "status": "scheduled",
-      "team_home": "ARG", "team_away": "JOR", "score_home": null, "score_away": null,
-      "stadium_id": "STA01", "group": "D", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 26, "condition": "مشمس", "humidity": 57, "wind": 11, "icon": "☀️"},
-      "votes": {"home": 23456, "draw": 3456, "away": 12345}
-    },
-    {
-      "id": "M031", "date": "2026-06-18", "time": "22:00", "status": "scheduled",
-      "team_home": "TUR", "team_away": "JAM", "score_home": null, "score_away": null,
-      "stadium_id": "STA16", "group": "C", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 28, "condition": "معتدل", "humidity": 60, "wind": 12, "icon": "🌤️"},
-      "votes": {"home": 9876, "draw": 3210, "away": 4567}
-    },
-    {
-      "id": "M032", "date": "2026-06-18", "time": "23:00", "status": "scheduled",
-      "team_home": "HUN", "team_away": "AUS", "score_home": null, "score_away": null,
-      "stadium_id": "STA03", "group": "D", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 24, "condition": "صافٍ", "humidity": 46, "wind": 8, "icon": "☀️"},
-      "votes": {"home": 6789, "draw": 3456, "away": 8901}
-    },
-    {
-      "id": "M033", "date": "2026-06-19", "time": "16:00", "status": "scheduled",
-      "team_home": "FRA", "team_away": "JPN", "score_home": null, "score_away": null,
-      "stadium_id": "STA06", "group": "E", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 31, "condition": "حار", "humidity": 73, "wind": 9, "icon": "🌡️"},
-      "votes": {"home": 18765, "draw": 4321, "away": 9876}
-    },
-    {
-      "id": "M034", "date": "2026-06-19", "time": "19:00", "status": "scheduled",
-      "team_home": "ESP", "team_away": "IRQ", "score_home": null, "score_away": null,
-      "stadium_id": "STA02", "group": "F", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 35, "condition": "حار جداً", "humidity": 37, "wind": 6, "icon": "🌡️"},
-      "votes": {"home": 19876, "draw": 2345, "away": 8765}
-    },
-    {
-      "id": "M035", "date": "2026-06-19", "time": "22:00", "status": "scheduled",
-      "team_home": "BOL", "team_away": "URU", "score_home": null, "score_away": null,
-      "stadium_id": "STA10", "group": "E", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 33, "condition": "حار", "humidity": 68, "wind": 7, "icon": "🌡️"},
-      "votes": {"home": 4321, "draw": 3210, "away": 11234}
-    },
-    {
-      "id": "M036", "date": "2026-06-19", "time": "23:00", "status": "scheduled",
-      "team_home": "HON", "team_away": "COL", "score_home": null, "score_away": null,
-      "stadium_id": "STA08", "group": "F", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 21, "condition": "غائم جزئياً", "humidity": 66, "wind": 13, "icon": "⛅"},
-      "votes": {"home": 5678, "draw": 3456, "away": 12345}
-    },
-    {
-      "id": "M037", "date": "2026-06-20", "time": "16:00", "status": "scheduled",
-      "team_home": "ENG", "team_away": "NGA", "score_home": null, "score_away": null,
-      "stadium_id": "STA01", "group": "G", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 27, "condition": "معتدل", "humidity": 60, "wind": 10, "icon": "🌤️"},
-      "votes": {"home": 16543, "draw": 4321, "away": 7890}
-    },
-    {
-      "id": "M038", "date": "2026-06-20", "time": "19:00", "status": "scheduled",
-      "team_home": "GER", "team_away": "SEN", "score_home": null, "score_away": null,
-      "stadium_id": "STA04", "group": "H", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 34, "condition": "حار جداً", "humidity": 65, "wind": 6, "icon": "🌡️"},
-      "votes": {"home": 13456, "draw": 4321, "away": 8765}
-    },
-    {
-      "id": "M039", "date": "2026-06-20", "time": "22:00", "status": "scheduled",
-      "team_home": "VEN", "team_away": "KOR", "score_home": null, "score_away": null,
-      "stadium_id": "STA07", "group": "G", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 28, "condition": "مشمس", "humidity": 55, "wind": 11, "icon": "☀️"},
-      "votes": {"home": 5678, "draw": 3456, "away": 11234}
-    },
-    {
-      "id": "M040", "date": "2026-06-20", "time": "23:00", "status": "scheduled",
-      "team_home": "EGY", "team_away": "SUI", "score_home": null, "score_away": null,
-      "stadium_id": "STA05", "group": "H", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 21, "condition": "ضبابي", "humidity": 79, "wind": 14, "icon": "🌫️"},
-      "votes": {"home": 9876, "draw": 4321, "away": 8765}
-    },
-    {
-      "id": "M041", "date": "2026-06-21", "time": "16:00", "status": "scheduled",
-      "team_home": "POR", "team_away": "AUT", "score_home": null, "score_away": null,
-      "stadium_id": "STA03", "group": "I", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 24, "condition": "صافٍ", "humidity": 47, "wind": 9, "icon": "☀️"},
-      "votes": {"home": 15432, "draw": 4321, "away": 8765}
-    },
-    {
-      "id": "M042", "date": "2026-06-21", "time": "19:00", "status": "scheduled",
-      "team_home": "BRA", "team_away": "UKR", "score_home": null, "score_away": null,
-      "stadium_id": "STA01", "group": "J", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 28, "condition": "مشمس", "humidity": 58, "wind": 10, "icon": "☀️"},
-      "votes": {"home": 21345, "draw": 4321, "away": 7654}
-    },
-    {
-      "id": "M043", "date": "2026-06-21", "time": "22:00", "status": "scheduled",
-      "team_home": "CMR", "team_away": "IRN", "score_home": null, "score_away": null,
-      "stadium_id": "STA11", "group": "I", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 24, "condition": "معتدل", "humidity": 54, "wind": 11, "icon": "🌤️"},
-      "votes": {"home": 7654, "draw": 4321, "away": 8901}
-    },
-    {
-      "id": "M044", "date": "2026-06-21", "time": "23:00", "status": "scheduled",
-      "team_home": "KSA", "team_away": "TUN", "score_home": null, "score_away": null,
-      "stadium_id": "STA02", "group": "J", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 35, "condition": "حار جداً", "humidity": 38, "wind": 5, "icon": "🌡️"},
-      "votes": {"home": 11234, "draw": 3456, "away": 5678}
-    },
-    {
-      "id": "M045", "date": "2026-06-22", "time": "16:00", "status": "scheduled",
-      "team_home": "NED", "team_away": "SCO", "score_home": null, "score_away": null,
-      "stadium_id": "STA06", "group": "K", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 32, "condition": "حار", "humidity": 71, "wind": 8, "icon": "🌡️"},
-      "votes": {"home": 13456, "draw": 4321, "away": 7890}
-    },
-    {
-      "id": "M046", "date": "2026-06-22", "time": "19:00", "status": "scheduled",
-      "team_home": "BEL", "team_away": "POL", "score_home": null, "score_away": null,
-      "stadium_id": "STA13", "group": "L", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 20, "condition": "غائم", "humidity": 67, "wind": 15, "icon": "☁️"},
-      "votes": {"home": 12345, "draw": 4321, "away": 9876}
-    },
-    {
-      "id": "M047", "date": "2026-06-22", "time": "22:00", "status": "scheduled",
-      "team_home": "RSA", "team_away": "UZB", "score_home": null, "score_away": null,
-      "stadium_id": "STA10", "group": "K", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 34, "condition": "حار", "humidity": 69, "wind": 7, "icon": "🌡️"},
-      "votes": {"home": 6789, "draw": 3456, "away": 5678}
-    },
-    {
-      "id": "M048", "date": "2026-06-22", "time": "23:00", "status": "scheduled",
-      "team_home": "CIV", "team_away": "CHI", "score_home": null, "score_away": null,
-      "stadium_id": "STA12", "group": "L", "round": "دور المجموعات", "matchday": 2,
-      "goals": [], "stats": null,
-      "weather": {"temp": 23, "condition": "مشمس", "humidity": 53, "wind": 9, "icon": "☀️"},
-      "votes": {"home": 7890, "draw": 3456, "away": 6789}
-    },
-    {
-      "id": "M049", "date": "2026-06-23", "time": "18:00", "status": "scheduled",
-      "team_home": "CAN", "team_away": "SRB", "score_home": null, "score_away": null,
-      "stadium_id": "STA12", "group": "B", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 23, "condition": "معتدل", "humidity": 55, "wind": 10, "icon": "🌤️"},
-      "votes": {"home": 11234, "draw": 4321, "away": 9876}
-    },
-    {
-      "id": "M050", "date": "2026-06-23", "time": "18:00", "status": "scheduled",
-      "team_home": "MAR", "team_away": "NZL", "score_home": null, "score_away": null,
-      "stadium_id": "STA06", "group": "B", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 31, "condition": "حار", "humidity": 73, "wind": 8, "icon": "🌡️"},
-      "votes": {"home": 12345, "draw": 3210, "away": 3456}
-    },
-    {
-      "id": "M051", "date": "2026-06-23", "time": "21:00", "status": "scheduled",
-      "team_home": "USA", "team_away": "CRO", "score_home": null, "score_away": null,
-      "stadium_id": "STA01", "group": "A", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 26, "condition": "مشمس", "humidity": 57, "wind": 11, "icon": "☀️"},
-      "votes": {"home": 19876, "draw": 4321, "away": 11234}
-    },
-    {
-      "id": "M052", "date": "2026-06-23", "time": "21:00", "status": "scheduled",
-      "team_home": "PAN", "team_away": "ECU", "score_home": null, "score_away": null,
-      "stadium_id": "STA02", "group": "A", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 35, "condition": "حار جداً", "humidity": 38, "wind": 6, "icon": "🌡️"},
-      "votes": {"home": 5678, "draw": 3456, "away": 9012}
-    },
-    {
-      "id": "M053", "date": "2026-06-24", "time": "20:00", "status": "scheduled",
-      "team_home": "MEX", "team_away": "TUR", "score_home": null, "score_away": null,
-      "stadium_id": "STA14", "group": "C", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 23, "condition": "غائم جزئياً", "humidity": 63, "wind": 13, "icon": "⛅"},
-      "votes": {"home": 14321, "draw": 4321, "away": 9876}
-    },
-    {
-      "id": "M054", "date": "2026-06-24", "time": "20:00", "status": "scheduled",
-      "team_home": "ALG", "team_away": "JAM", "score_home": null, "score_away": null,
-      "stadium_id": "STA04", "group": "C", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 35, "condition": "حار جداً", "humidity": 64, "wind": 7, "icon": "🌡️"},
-      "votes": {"home": 12345, "draw": 3210, "away": 4321}
-    },
-    {
-      "id": "M055", "date": "2026-06-24", "time": "21:00", "status": "scheduled",
-      "team_home": "ARG", "team_away": "AUS", "score_home": null, "score_away": null,
-      "stadium_id": "STA01", "group": "D", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 27, "condition": "معتدل", "humidity": 60, "wind": 10, "icon": "🌤️"},
-      "votes": {"home": 24567, "draw": 4321, "away": 9876}
-    },
-    {
-      "id": "M056", "date": "2026-06-24", "time": "21:00", "status": "scheduled",
-      "team_home": "JOR", "team_away": "HUN", "score_home": null, "score_away": null,
-      "stadium_id": "STA07", "group": "D", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 29, "condition": "مشمس", "humidity": 56, "wind": 11, "icon": "☀️"},
-      "votes": {"home": 11234, "draw": 4321, "away": 7654}
-    },
-    {
-      "id": "M057", "date": "2026-06-25", "time": "21:00", "status": "scheduled",
-      "team_home": "FRA", "team_away": "URU", "score_home": null, "score_away": null,
-      "stadium_id": "STA06", "group": "E", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 32, "condition": "حار", "humidity": 70, "wind": 8, "icon": "🌡️"},
-      "votes": {"home": 18765, "draw": 4321, "away": 9876}
-    },
-    {
-      "id": "M058", "date": "2026-06-25", "time": "21:00", "status": "scheduled",
-      "team_home": "JPN", "team_away": "BOL", "score_home": null, "score_away": null,
-      "stadium_id": "STA05", "group": "E", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 20, "condition": "ضبابي", "humidity": 79, "wind": 14, "icon": "🌫️"},
-      "votes": {"home": 14321, "draw": 3210, "away": 4321}
-    },
-    {
-      "id": "M059", "date": "2026-06-25", "time": "21:00", "status": "scheduled",
-      "team_home": "ESP", "team_away": "COL", "score_home": null, "score_away": null,
-      "stadium_id": "STA02", "group": "F", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 35, "condition": "حار جداً", "humidity": 36, "wind": 5, "icon": "🌡️"},
-      "votes": {"home": 19876, "draw": 5678, "away": 14321}
-    },
-    {
-      "id": "M060", "date": "2026-06-25", "time": "21:00", "status": "scheduled",
-      "team_home": "IRQ", "team_away": "HON", "score_home": null, "score_away": null,
-      "stadium_id": "STA03", "group": "F", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 25, "condition": "مشمس", "humidity": 46, "wind": 9, "icon": "☀️"},
-      "votes": {"home": 9876, "draw": 3456, "away": 5678}
-    },
-    {
-      "id": "M061", "date": "2026-06-26", "time": "21:00", "status": "scheduled",
-      "team_home": "ENG", "team_away": "KOR", "score_home": null, "score_away": null,
-      "stadium_id": "STA01", "group": "G", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 28, "condition": "معتدل", "humidity": 60, "wind": 10, "icon": "🌤️"},
-      "votes": {"home": 18765, "draw": 5678, "away": 13456}
-    },
-    {
-      "id": "M062", "date": "2026-06-26", "time": "21:00", "status": "scheduled",
-      "team_home": "NGA", "team_away": "VEN", "score_home": null, "score_away": null,
-      "stadium_id": "STA10", "group": "G", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 33, "condition": "حار", "humidity": 69, "wind": 7, "icon": "🌡️"},
-      "votes": {"home": 8765, "draw": 3456, "away": 6789}
-    },
-    {
-      "id": "M063", "date": "2026-06-26", "time": "21:00", "status": "scheduled",
-      "team_home": "GER", "team_away": "SUI", "score_home": null, "score_away": null,
-      "stadium_id": "STA04", "group": "H", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 35, "condition": "حار جداً", "humidity": 64, "wind": 6, "icon": "🌡️"},
-      "votes": {"home": 14321, "draw": 5678, "away": 10234}
-    },
-    {
-      "id": "M064", "date": "2026-06-26", "time": "21:00", "status": "scheduled",
-      "team_home": "SEN", "team_away": "EGY", "score_home": null, "score_away": null,
-      "stadium_id": "STA08", "group": "H", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 21, "condition": "غائم جزئياً", "humidity": 65, "wind": 13, "icon": "⛅"},
-      "votes": {"home": 10234, "draw": 4321, "away": 12345}
-    },
-    {
-      "id": "M065", "date": "2026-06-27", "time": "21:00", "status": "scheduled",
-      "team_home": "POR", "team_away": "IRN", "score_home": null, "score_away": null,
-      "stadium_id": "STA03", "group": "I", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 25, "condition": "صافٍ", "humidity": 47, "wind": 8, "icon": "☀️"},
-      "votes": {"home": 16543, "draw": 4321, "away": 9876}
-    },
-    {
-      "id": "M066", "date": "2026-06-27", "time": "21:00", "status": "scheduled",
-      "team_home": "CMR", "team_away": "AUT", "score_home": null, "score_away": null,
-      "stadium_id": "STA11", "group": "I", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 24, "condition": "معتدل", "humidity": 53, "wind": 11, "icon": "🌤️"},
-      "votes": {"home": 7654, "draw": 3456, "away": 8901}
-    },
-    {
-      "id": "M067", "date": "2026-06-27", "time": "21:00", "status": "scheduled",
-      "team_home": "BRA", "team_away": "KSA", "score_home": null, "score_away": null,
-      "stadium_id": "STA01", "group": "J", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 28, "condition": "مشمس", "humidity": 59, "wind": 10, "icon": "☀️"},
-      "votes": {"home": 22345, "draw": 3456, "away": 14321}
-    },
-    {
-      "id": "M068", "date": "2026-06-27", "time": "21:00", "status": "scheduled",
-      "team_home": "TUN", "team_away": "UKR", "score_home": null, "score_away": null,
-      "stadium_id": "STA02", "group": "J", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 35, "condition": "حار جداً", "humidity": 37, "wind": 5, "icon": "🌡️"},
-      "votes": {"home": 6789, "draw": 4321, "away": 8901}
-    },
-    {
-      "id": "M069", "date": "2026-06-28", "time": "21:00", "status": "scheduled",
-      "team_home": "NED", "team_away": "UZB", "score_home": null, "score_away": null,
-      "stadium_id": "STA06", "group": "K", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 32, "condition": "حار", "humidity": 72, "wind": 8, "icon": "🌡️"},
-      "votes": {"home": 14321, "draw": 3456, "away": 5678}
-    },
-    {
-      "id": "M070", "date": "2026-06-28", "time": "21:00", "status": "scheduled",
-      "team_home": "RSA", "team_away": "SCO", "score_home": null, "score_away": null,
-      "stadium_id": "STA07", "group": "K", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 30, "condition": "مشمس", "humidity": 57, "wind": 10, "icon": "☀️"},
-      "votes": {"home": 6789, "draw": 4321, "away": 8901}
-    },
-    {
-      "id": "M071", "date": "2026-06-28", "time": "21:00", "status": "scheduled",
-      "team_home": "BEL", "team_away": "CHI", "score_home": null, "score_away": null,
-      "stadium_id": "STA13", "group": "L", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 20, "condition": "غائم", "humidity": 67, "wind": 14, "icon": "☁️"},
-      "votes": {"home": 13456, "draw": 4321, "away": 7890}
-    },
-    {
-      "id": "M072", "date": "2026-06-28", "time": "21:00", "status": "scheduled",
-      "team_home": "CIV", "team_away": "POL", "score_home": null, "score_away": null,
-      "stadium_id": "STA12", "group": "L", "round": "دور المجموعات", "matchday": 3,
-      "goals": [], "stats": null,
-      "weather": {"temp": 23, "condition": "معتدل", "humidity": 54, "wind": 9, "icon": "🌤️"},
-      "votes": {"home": 7890, "draw": 4321, "away": 11234}
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M002",
+      "date": "2026-06-11",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "KOR",
+      "team_away": "CZE",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA16",
+      "group": "A",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M003",
+      "date": "2026-06-15",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "MEX",
+      "team_away": "KOR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA14",
+      "group": "A",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M004",
+      "date": "2026-06-15",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "RSA",
+      "team_away": "CZE",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA16",
+      "group": "A",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M005",
+      "date": "2026-06-19",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "MEX",
+      "team_away": "CZE",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA14",
+      "group": "A",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M006",
+      "date": "2026-06-19",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "RSA",
+      "team_away": "KOR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA16",
+      "group": "A",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M007",
+      "date": "2026-06-12",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "CAN",
+      "team_away": "BIH",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA12",
+      "group": "B",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M008",
+      "date": "2026-06-12",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "QAT",
+      "team_away": "SUI",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA02",
+      "group": "B",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M009",
+      "date": "2026-06-16",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "CAN",
+      "team_away": "QAT",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA12",
+      "group": "B",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M010",
+      "date": "2026-06-16",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "BIH",
+      "team_away": "SUI",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA02",
+      "group": "B",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M011",
+      "date": "2026-06-20",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "CAN",
+      "team_away": "SUI",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA12",
+      "group": "B",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M012",
+      "date": "2026-06-20",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "BIH",
+      "team_away": "QAT",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA02",
+      "group": "B",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M013",
+      "date": "2026-06-13",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "BRA",
+      "team_away": "MAR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA01",
+      "group": "C",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M014",
+      "date": "2026-06-13",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "HAI",
+      "team_away": "SCO",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA06",
+      "group": "C",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M015",
+      "date": "2026-06-17",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "BRA",
+      "team_away": "HAI",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA01",
+      "group": "C",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M016",
+      "date": "2026-06-17",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "MAR",
+      "team_away": "SCO",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA06",
+      "group": "C",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M017",
+      "date": "2026-06-21",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "BRA",
+      "team_away": "SCO",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA01",
+      "group": "C",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M018",
+      "date": "2026-06-21",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "MAR",
+      "team_away": "HAI",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA06",
+      "group": "C",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M019",
+      "date": "2026-06-12",
+      "time": "21:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "USA",
+      "team_away": "PAR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA01",
+      "group": "D",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M020",
+      "date": "2026-06-13",
+      "time": "01:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "AUS",
+      "team_away": "TUR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA08",
+      "group": "D",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M021",
+      "date": "2026-06-17",
+      "time": "21:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "USA",
+      "team_away": "AUS",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA03",
+      "group": "D",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M022",
+      "date": "2026-06-18",
+      "time": "01:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "PAR",
+      "team_away": "TUR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA08",
+      "group": "D",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M023",
+      "date": "2026-06-21",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "USA",
+      "team_away": "TUR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA01",
+      "group": "D",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M024",
+      "date": "2026-06-21",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "PAR",
+      "team_away": "AUS",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA08",
+      "group": "D",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M025",
+      "date": "2026-06-14",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "GER",
+      "team_away": "CUW",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA04",
+      "group": "E",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M026",
+      "date": "2026-06-14",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "CIV",
+      "team_away": "ECU",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA07",
+      "group": "E",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M027",
+      "date": "2026-06-18",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "GER",
+      "team_away": "CIV",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA04",
+      "group": "E",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M028",
+      "date": "2026-06-18",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "CUW",
+      "team_away": "ECU",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA07",
+      "group": "E",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M029",
+      "date": "2026-06-22",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "GER",
+      "team_away": "ECU",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA04",
+      "group": "E",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M030",
+      "date": "2026-06-22",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "CUW",
+      "team_away": "CIV",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA07",
+      "group": "E",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M031",
+      "date": "2026-06-14",
+      "time": "21:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "NED",
+      "team_away": "JPN",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA02",
+      "group": "F",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M032",
+      "date": "2026-06-15",
+      "time": "01:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "SWE",
+      "team_away": "TUN",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA15",
+      "group": "F",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M033",
+      "date": "2026-06-20",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "NED",
+      "team_away": "SWE",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA04",
+      "group": "F",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M034",
+      "date": "2026-06-20",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "JPN",
+      "team_away": "TUN",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA15",
+      "group": "F",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M035",
+      "date": "2026-06-25",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "NED",
+      "team_away": "TUN",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA02",
+      "group": "F",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M036",
+      "date": "2026-06-25",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "JPN",
+      "team_away": "SWE",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA09",
+      "group": "F",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M037",
+      "date": "2026-06-15",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "BEL",
+      "team_away": "EGY",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA10",
+      "group": "G",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M038",
+      "date": "2026-06-15",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "IRN",
+      "team_away": "NZL",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA11",
+      "group": "G",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M039",
+      "date": "2026-06-19",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "BEL",
+      "team_away": "IRN",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA10",
+      "group": "G",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M040",
+      "date": "2026-06-19",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "EGY",
+      "team_away": "NZL",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA11",
+      "group": "G",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M041",
+      "date": "2026-06-23",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "BEL",
+      "team_away": "NZL",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA10",
+      "group": "G",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M042",
+      "date": "2026-06-23",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "EGY",
+      "team_away": "IRN",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA11",
+      "group": "G",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M043",
+      "date": "2026-06-15",
+      "time": "21:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "ESP",
+      "team_away": "CPV",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA03",
+      "group": "H",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M044",
+      "date": "2026-06-16",
+      "time": "01:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "KSA",
+      "team_away": "URU",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA13",
+      "group": "H",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M045",
+      "date": "2026-06-20",
+      "time": "21:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "ESP",
+      "team_away": "KSA",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA03",
+      "group": "H",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M046",
+      "date": "2026-06-21",
+      "time": "01:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "CPV",
+      "team_away": "URU",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA13",
+      "group": "H",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M047",
+      "date": "2026-06-24",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "ESP",
+      "team_away": "URU",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA03",
+      "group": "H",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M048",
+      "date": "2026-06-24",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "CPV",
+      "team_away": "KSA",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA13",
+      "group": "H",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M049",
+      "date": "2026-06-16",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "FRA",
+      "team_away": "SEN",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA01",
+      "group": "I",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M050",
+      "date": "2026-06-16",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "IRQ",
+      "team_away": "NOR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA09",
+      "group": "I",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M051",
+      "date": "2026-06-20",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "FRA",
+      "team_away": "IRQ",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA01",
+      "group": "I",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M052",
+      "date": "2026-06-20",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "SEN",
+      "team_away": "NOR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA09",
+      "group": "I",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M053",
+      "date": "2026-06-24",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "FRA",
+      "team_away": "NOR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA01",
+      "group": "I",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M054",
+      "date": "2026-06-24",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "SEN",
+      "team_away": "IRQ",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA09",
+      "group": "I",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M055",
+      "date": "2026-06-16",
+      "time": "21:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "ARG",
+      "team_away": "ALG",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA05",
+      "group": "J",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M056",
+      "date": "2026-06-17",
+      "time": "01:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "AUT",
+      "team_away": "JOR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA07",
+      "group": "J",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M057",
+      "date": "2026-06-21",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "ARG",
+      "team_away": "AUT",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA05",
+      "group": "J",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M058",
+      "date": "2026-06-21",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "ALG",
+      "team_away": "JOR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA07",
+      "group": "J",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M059",
+      "date": "2026-06-25",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "ARG",
+      "team_away": "JOR",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA05",
+      "group": "J",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M060",
+      "date": "2026-06-25",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "ALG",
+      "team_away": "AUT",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA07",
+      "group": "J",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M061",
+      "date": "2026-06-17",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "POR",
+      "team_away": "COD",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA04",
+      "group": "K",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M062",
+      "date": "2026-06-17",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "UZB",
+      "team_away": "COL",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA06",
+      "group": "K",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M063",
+      "date": "2026-06-22",
+      "time": "19:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "POR",
+      "team_away": "UZB",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA04",
+      "group": "K",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M064",
+      "date": "2026-06-22",
+      "time": "23:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "COD",
+      "team_away": "COL",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA06",
+      "group": "K",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M065",
+      "date": "2026-06-26",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "POR",
+      "team_away": "COL",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA04",
+      "group": "K",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M066",
+      "date": "2026-06-26",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "COD",
+      "team_away": "UZB",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA06",
+      "group": "K",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M067",
+      "date": "2026-06-17",
+      "time": "21:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "ENG",
+      "team_away": "CRO",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA01",
+      "group": "L",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M068",
+      "date": "2026-06-18",
+      "time": "01:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "GHA",
+      "team_away": "PAN",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA08",
+      "group": "L",
+      "round": "الجولة الأولى",
+      "matchday": 1,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M069",
+      "date": "2026-06-22",
+      "time": "21:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "ENG",
+      "team_away": "GHA",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA01",
+      "group": "L",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M070",
+      "date": "2026-06-23",
+      "time": "01:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "CRO",
+      "team_away": "PAN",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA08",
+      "group": "L",
+      "round": "الجولة الثانية",
+      "matchday": 2,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M071",
+      "date": "2026-06-26",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "ENG",
+      "team_away": "PAN",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA01",
+      "group": "L",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
+    },
+    {
+      "id": "M072",
+      "date": "2026-06-26",
+      "time": "22:00",
+      "status": "scheduled",
+      "minute": null,
+      "team_home": "CRO",
+      "team_away": "GHA",
+      "score_home": null,
+      "score_away": null,
+      "stadium_id": "STA08",
+      "group": "L",
+      "round": "الجولة الثالثة",
+      "matchday": 3,
+      "goals": [],
+      "stats": null,
+      "weather": {
+        "temp": 25,
+        "humidity": 60,
+        "wind": 15,
+        "icon": "☀️",
+        "condition": "مشمس"
+      },
+      "votes": {
+        "home": 100,
+        "draw": 60,
+        "away": 80
+      }
     }
   ]
 }
