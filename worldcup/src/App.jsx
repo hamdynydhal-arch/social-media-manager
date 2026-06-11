@@ -10,6 +10,7 @@ import Groups from './pages/Groups'
 import Settings from './pages/Settings'
 import BottomNav from './components/BottomNav'
 import InstallPrompt from './components/InstallPrompt'
+import ForceInstallModal from './components/ForceInstallModal'
 import NotificationSystem from './components/NotificationSystem'
 import TeamSelector from './components/TeamSelector'
 
@@ -87,6 +88,7 @@ function AppInner() {
 
         <BottomNav />
         <InstallPrompt />
+        <ForceInstallModal />
         <NotificationSystem />
       </div>
     </HashRouter>

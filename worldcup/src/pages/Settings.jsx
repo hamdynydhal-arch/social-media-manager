@@ -4,12 +4,15 @@ import { fireWorldCupAlert } from '../hooks/useLiveEvents'
 import { useWorldCupData } from '../context/WorldCupContext'
 import confetti from 'canvas-confetti'
 
+const BASE = import.meta.env.BASE_URL
+
 export default function Settings({ favoriteTeam, onChangeFavorite, simRunning, onStartSim, onStopSim, apiMode, lastUpdated }) {
   const { data, sources, refresh } = useWorldCupData()
   const favTeam = data.teams.find(t => t.id === favoriteTeam)
   const [notifPerm, setNotifPerm] = useState(
     () => (typeof Notification !== 'undefined' ? Notification.permission : 'default')
   )
+  const [testStatus, setTestStatus] = useState(null) // null | 'sending' | 'ok' | 'denied'
 
   const testGoalFX = () => {
     playGoalSound()
@@ -28,6 +31,64 @@ export default function Settings({ favoriteTeam, onChangeFavorite, simRunning, o
         'notification'
       )
     }
+  }
+
+  const sendRealTestNotification = async () => {
+    setTestStatus('sending')
+
+    let perm = notifPerm
+    if (perm !== 'granted' && typeof Notification !== 'undefined') {
+      perm = await Notification.requestPermission()
+      setNotifPerm(perm)
+    }
+
+    if (perm !== 'granted') {
+      setTestStatus('denied')
+      setTimeout(() => setTestStatus(null), 3000)
+      return
+    }
+
+    // Immediate audio + haptic feedback
+    playGoalSound()
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } })
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200])
+
+    const iconUrl = BASE + 'icons/icon-192.png'
+    const notifTitle = '⚽ هدف! — اختبار إشعار كأس العالم 2026'
+    const notifOpts = {
+      body: 'نجح الاختبار! هكذا ستظهر إشعارات الأهداف والمباريات على شاشتك حتى عند إغلاق التطبيق.',
+      icon: iconUrl,
+      badge: iconUrl,
+      dir: 'rtl',
+      lang: 'ar',
+      tag: 'wc-test-goal',
+      renotify: true,
+      vibrate: [100, 50, 100, 50, 200],
+    }
+
+    try {
+      if ('serviceWorker' in navigator) {
+        const reg = await navigator.serviceWorker.ready
+        await reg.showNotification(notifTitle, notifOpts)
+      } else {
+        new Notification(notifTitle, notifOpts)
+      }
+      setTestStatus('ok')
+    } catch {
+      try {
+        navigator.serviceWorker?.controller?.postMessage({
+          type: 'SHOW_NOTIFICATION',
+          title: notifTitle,
+          body: notifOpts.body,
+          tag: 'wc-test-goal',
+          vibrate: [100, 50, 100, 50, 200],
+        })
+        setTestStatus('ok')
+      } catch {
+        setTestStatus('denied')
+      }
+    }
+    setTimeout(() => setTestStatus(null), 4000)
   }
 
   const notifStatusLabel = {
@@ -68,9 +129,41 @@ export default function Settings({ favoriteTeam, onChangeFavorite, simRunning, o
         </button>
       </div>
 
+      {/* ── Real Test Notification (prominent) ── */}
+      <div className="card p-4 border-amber-500/30 bg-gradient-to-r from-amber-900/15 to-transparent">
+        <h3 className="font-bold text-white mb-1 flex items-center gap-2">📳 اختبار إشعار الشاشة والصوت</h3>
+        <p className="text-slate-400 text-xs mb-3 leading-relaxed">
+          اضغط الزر لإرسال إشعار حقيقي يظهر على شاشتك من الأعلى — حتى لو أغلقت التطبيق — مع صوت وتنبيه.
+        </p>
+        <button
+          onClick={sendRealTestNotification}
+          disabled={testStatus === 'sending'}
+          className="w-full py-4 rounded-2xl font-black text-white text-base transition-all active:scale-95 disabled:opacity-60"
+          style={{
+            background:
+              testStatus === 'ok'
+                ? 'linear-gradient(135deg, #10b981, #059669)'
+                : testStatus === 'denied'
+                ? 'linear-gradient(135deg, #ef4444, #dc2626)'
+                : 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+            boxShadow: '0 6px 24px rgba(245,158,11,0.35)',
+          }}
+        >
+          {testStatus === 'sending' && '⏳ جاري الإرسال...'}
+          {testStatus === 'ok' && '✅ وصل الإشعار بنجاح!'}
+          {testStatus === 'denied' && '🚫 الإشعارات محظورة — افتح إعدادات المتصفح'}
+          {!testStatus && '📳 اختبار إشعار الشاشة والصوت الآن'}
+        </button>
+        {notifPerm !== 'granted' && (
+          <p className="text-center text-amber-400/70 text-xs mt-2">
+            سيُطلب منك السماح بالإشعارات عند الضغط
+          </p>
+        )}
+      </div>
+
       {/* ── Notifications ── */}
       <div className="card p-4">
-        <h3 className="font-bold text-white mb-3 flex items-center gap-2">🔔 الإشعارات</h3>
+        <h3 className="font-bold text-white mb-3 flex items-center gap-2">🔔 إعدادات الإشعارات</h3>
         <div className="flex items-center justify-between mb-3 bg-slate-700/30 rounded-xl px-3 py-2">
           <span className="text-slate-300 text-sm">حالة الإشعارات</span>
           <span className={`text-sm font-bold ${notifStatusColor}`}>{notifStatusLabel}</span>
@@ -97,7 +190,7 @@ export default function Settings({ favoriteTeam, onChangeFavorite, simRunning, o
             onClick={() => fireWorldCupAlert('🔔 اختبار الإشعارات', 'إشعارات كأس العالم 2026 تعمل بشكل صحيح!', 'notification')}
             className="w-full py-2.5 bg-slate-700/80 border border-slate-600/50 text-white text-sm rounded-xl hover:bg-slate-600/80 transition-colors"
           >
-            🧪 إرسال إشعار تجريبي
+            🧪 إشعار داخلي تجريبي
           </button>
         )}
       </div>
@@ -213,7 +306,7 @@ export default function Settings({ favoriteTeam, onChangeFavorite, simRunning, o
         <h3 className="font-bold text-white mb-3">📱 معلومات التطبيق</h3>
         <div className="space-y-2 text-sm">
           {[
-            { label: 'الإصدار', val: '3.0.0' },
+            { label: 'الإصدار', val: '4.0.0' },
             { label: 'البطولة', val: 'كأس العالم FIFA 2026' },
             { label: 'الدول المستضيفة', val: 'الولايات المتحدة • كندا • المكسيك' },
             { label: 'المنتخبات', val: `${data.teams.length} منتخب` },

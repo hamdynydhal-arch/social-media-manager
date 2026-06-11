@@ -1,4 +1,4 @@
-// v3 — force immediate activation on every deploy
+// v4 — ForceInstallModal + real SW showNotification test
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
