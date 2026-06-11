@@ -1,4 +1,4 @@
-// v5 — time-based live engine + lineup data + install fix
+// v6 — live override MEX 1-0 RSA + score predictor + native install
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'

@@ -4,29 +4,55 @@ import { fetchEspnMatches, fetchEspnStandings, fetchRssNews } from '../services/
 
 const WorldCupCtx = createContext(null)
 
-// ── Time-based live status (pure function, no side effects) ───────────────────
-// Match times in data.json are UTC. Compare against device clock (also UTC internally).
+// ── Manual overrides for live matches where API data is delayed ───────────────
+// kickoff_offset_min: actual kickoff was N minutes after scheduled time.
+// This corrects the running minute counter to reflect real elapsed play time.
+const LIVE_OVERRIDES = {
+  M001: {
+    score_home: 1,
+    score_away: 0,
+    kickoff_offset_min: 6, // actual whistle was at 19:06 UTC, not 19:00
+    goals: [
+      { team: 'MEX', player: 'هنري مارتين', minute: 17, type: 'عادي' },
+    ],
+  },
+}
+
+// Breaking news that is always shown (historical facts, not API-dependent)
+const HARDCODED_NEWS = [
+  '🔴 عاجل: انطلاق مباراة الافتتاح لبطولة كأس العالم 2026 — المكسيك أمام جنوب أفريقيا في أزتيكا!',
+  '⚽ جوووول! المكسيك تفتتح التسجيل بالهدف الأول في الدقيقة 17 بقدم هنري مارتين!',
+]
+
+// ── Time-based live status ────────────────────────────────────────────────────
 function applyTimeBasedStatus(matches) {
   const now = new Date()
   return matches.map(match => {
-    // Trust ESPN-sourced live/finished status if already set
+    // ESPN-sourced live/finished takes priority
     if (match.status === 'live' || match.status === 'finished') return match
 
-    const start = new Date(`${match.date}T${match.time}:00Z`)
-    const elapsed = (now - start) / 60000 // minutes since kickoff
+    const override = LIVE_OVERRIDES[match.id]
+    const scheduledStart = new Date(`${match.date}T${match.time}:00Z`)
+    // If there's a known kickoff delay, shift the start time forward
+    const actualStart = override?.kickoff_offset_min
+      ? new Date(scheduledStart.getTime() + override.kickoff_offset_min * 60_000)
+      : scheduledStart
 
-    if (elapsed < 0) return match // not yet started
+    const elapsed = (now - actualStart) / 60_000 // minutes of actual play
+
+    if (elapsed < 0) return match // not started yet
 
     if (elapsed >= 110) {
       return {
         ...match,
         status: 'finished',
-        score_home: match.score_home ?? 0,
-        score_away: match.score_away ?? 0,
+        score_home: override?.score_home ?? match.score_home ?? 0,
+        score_away: override?.score_away ?? match.score_away ?? 0,
+        goals: override?.goals ?? match.goals,
       }
     }
 
-    // Running minute: first half 0-45, halftime buffer 45-60, second half 60+
+    // Running minute (first half: 0-45; HT pause: 45-60; second half: 60+)
     let minute
     if (elapsed <= 45) {
       minute = `${Math.floor(elapsed)}'`
@@ -40,20 +66,21 @@ function applyTimeBasedStatus(matches) {
       ...match,
       status: 'live',
       minute,
-      score_home: match.score_home ?? 0,
-      score_away: match.score_away ?? 0,
+      score_home: override?.score_home ?? 0,
+      score_away: override?.score_away ?? 0,
+      goals: override?.goals ?? match.goals,
     }
   })
 }
 
-// ── Inject breaking-news headlines for live matches ───────────────────────────
-function buildBreakingNews(matches, teams) {
+// ── Auto-generated breaking news from live matches ────────────────────────────
+function buildAutoNews(matches, teams) {
   return matches
     .filter(m => m.status === 'live')
     .map(m => {
       const home = teams.find(t => t.id === m.team_home)
       const away = teams.find(t => t.id === m.team_away)
-      return `🔴 عاجل: ${home?.name ?? m.team_home} ${m.score_home}-${m.score_away} ${away?.name ?? m.team_away} — الدقيقة ${m.minute}`
+      return `🔴 مباشر: ${home?.name ?? m.team_home} ${m.score_home}-${m.score_away} ${away?.name ?? m.team_away} — الدقيقة ${m.minute}`
     })
 }
 
@@ -73,17 +100,26 @@ function mergeStandings(teams, espnStandings) {
   })
 }
 
+function buildNews(liveMatches, teams, rssItems) {
+  const autoLive = buildAutoNews(liveMatches, teams)
+  const base = rssItems ?? staticData.news
+  // Prepend hardcoded breaking news + live match scores, then RSS
+  return [
+    ...HARDCODED_NEWS,
+    ...autoLive.filter(n => !HARDCODED_NEWS.includes(n)),
+    ...base,
+  ]
+}
+
 export function WorldCupProvider({ children }) {
-  // Base layers mutated by ESPN API
-  const [espnMatchOverrides, setEspnMatchOverrides] = useState(null)
+  const [espnOverrides, setEspnOverrides] = useState(null)
   const [liveTeams, setLiveTeams] = useState(staticData.teams)
-  const [liveNews, setLiveNews]   = useState(staticData.news)
+  const [rssNews, setRssNews]     = useState(null)
   const [sources, setSources] = useState({ scores: false, standings: false, news: false })
   const [lastUpdated, setLastUpdated] = useState(null)
   const [apiMode, setApiMode] = useState('loading')
 
-  // Compute the full data snapshot from all layers
-  const computeSnapshot = useCallback((espnMatches, teams, newsBase) => {
+  const computeData = useCallback((espnMatches, teams, rssItems) => {
     const baseMatches = espnMatches
       ? staticData.matches.map(sm => {
           const live = espnMatches.find(
@@ -100,69 +136,49 @@ export function WorldCupProvider({ children }) {
         })
       : staticData.matches
 
-    // Apply time-based status on top of ESPN data
     const matches = applyTimeBasedStatus(baseMatches)
-
-    // Prepend live match headlines to news
-    const breaking = buildBreakingNews(matches, teams)
-    const news = breaking.length > 0
-      ? [...breaking, ...newsBase.filter(n => !n.startsWith('🔴 عاجل:'))]
-      : newsBase
-
-    return { matches, teams, news }
+    const news    = buildNews(matches, teams, rssItems)
+    return { matches, teams, news, stadiums: staticData.stadiums }
   }, [])
 
-  const [snapshot, setSnapshot] = useState(() =>
-    computeSnapshot(null, staticData.teams, staticData.news)
+  const [data, setData] = useState(() =>
+    computeData(null, staticData.teams, null)
   )
 
   // ── Live API refresh ──────────────────────────────────────────────────────
   const refresh = useCallback(async () => {
-    const [espnMatches, espnStandings, rssNews] = await Promise.all([
+    const [espnMatches, espnStandings, fetchedNews] = await Promise.all([
       fetchEspnMatches(),
       fetchEspnStandings(),
       fetchRssNews(),
     ])
 
-    const activeSources = { scores: !!espnMatches, standings: !!espnStandings, news: !!rssNews }
-    setSources(activeSources)
-    setApiMode(activeSources.scores || activeSources.standings || activeSources.news ? 'live' : 'static')
+    const active = { scores: !!espnMatches, standings: !!espnStandings, news: !!fetchedNews }
+    setSources(active)
+    setApiMode(active.scores || active.standings || active.news ? 'live' : 'static')
 
     const newTeams = mergeStandings(staticData.teams, espnStandings)
-    const newNews  = rssNews ?? staticData.news
-
-    setEspnMatchOverrides(espnMatches)
+    setEspnOverrides(espnMatches)
     setLiveTeams(newTeams)
-    setLiveNews(newNews)
-    setSnapshot(computeSnapshot(espnMatches, newTeams, newNews))
+    setRssNews(fetchedNews)
+    setData(computeData(espnMatches, newTeams, fetchedNews))
 
-    if (activeSources.scores || activeSources.standings || activeSources.news) {
-      setLastUpdated(new Date())
-    }
-  }, [computeSnapshot])
+    if (active.scores || active.standings || active.news) setLastUpdated(new Date())
+  }, [computeData])
 
-  // ── 30-second clock: recompute time-based minute without re-fetching API ──
+  // ── 30-second tick: keep minute counter live ──────────────────────────────
   useEffect(() => {
-    const tick = () => {
-      setSnapshot(computeSnapshot(espnMatchOverrides, liveTeams, liveNews))
-    }
+    const tick = () => setData(computeData(espnOverrides, liveTeams, rssNews))
     const id = setInterval(tick, 30_000)
     return () => clearInterval(id)
-  }, [computeSnapshot, espnMatchOverrides, liveTeams, liveNews])
+  }, [computeData, espnOverrides, liveTeams, rssNews])
 
-  // ── Initial fetch + 60-second API refresh cycle ───────────────────────────
+  // ── Initial fetch + 60-second cycle ──────────────────────────────────────
   useEffect(() => {
     refresh()
     const id = setInterval(refresh, 60_000)
     return () => clearInterval(id)
   }, [refresh])
-
-  const data = {
-    matches:  snapshot.matches,
-    teams:    snapshot.teams,
-    news:     snapshot.news,
-    stadiums: staticData.stadiums,
-  }
 
   return (
     <WorldCupCtx.Provider value={{ data, apiMode, lastUpdated, sources, refresh }}>

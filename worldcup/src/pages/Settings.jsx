@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { playGoalSound, playNotificationSound, playWhistleSound } from '../utils/audioUtils'
 import { fireWorldCupAlert } from '../hooks/useLiveEvents'
 import { useWorldCupData } from '../context/WorldCupContext'
@@ -13,7 +13,7 @@ export default function Settings({
   installState = {},
 }) {
   const { data, sources, refresh } = useWorldCupData()
-  const { installPrompt, isInstalled, isIOS, triggerInstall } = installState
+  const { isInstalled, isIOS } = installState
   const favTeam = data.teams.find(t => t.id === favoriteTeam)
 
   const [notifPerm, setNotifPerm] = useState(
@@ -22,16 +22,31 @@ export default function Settings({
   const [testStatus, setTestStatus] = useState(null)
   const [installing, setInstalling] = useState(false)
   const [showIOSModal, setShowIOSModal] = useState(false)
+  // React-reactive flag that mirrors window.deferredPrompt existence
+  const [hasNativePrompt, setHasNativePrompt] = useState(() => !!window.deferredPrompt)
 
-  // ── Install handlers ────────────────────────────────────────────────────────
+  useEffect(() => {
+    const onPrompt = () => setHasNativePrompt(true)
+    const onInstalled = () => setHasNativePrompt(false)
+    window.addEventListener('beforeinstallprompt', onPrompt)
+    window.addEventListener('appinstalled', onInstalled)
+    return () => {
+      window.removeEventListener('beforeinstallprompt', onPrompt)
+      window.removeEventListener('appinstalled', onInstalled)
+    }
+  }, [])
+
+  // ── Install: call native prompt directly from window.deferredPrompt ─────────
   const handleInstall = async () => {
-    if (triggerInstall && installPrompt) {
-      setInstalling(true)
-      await triggerInstall()
+    if (isIOS) { setShowIOSModal(true); return }
+    if (!window.deferredPrompt) return // prompt not yet captured — button won't show
+    setInstalling(true)
+    try {
+      await window.deferredPrompt.prompt()
+      const { outcome } = await window.deferredPrompt.userChoice
+      if (outcome === 'accepted') window.deferredPrompt = null
+    } finally {
       setInstalling(false)
-    } else {
-      // Fallback: Chrome 3-dot menu instruction (prompt not yet available)
-      alert('افتح قائمة Chrome (⋮) واختر "إضافة إلى الشاشة الرئيسية" أو "تثبيت التطبيق"')
     }
   }
 
@@ -100,8 +115,9 @@ export default function Settings({
   const notifStatusLabel = { granted: '✅ مفعّلة', denied: '🚫 محظورة', default: '🔕 غير مفعّلة' }[notifPerm] ?? '🔕 غير مفعّلة'
   const notifStatusColor = { granted: 'text-emerald-400', denied: 'text-red-400', default: 'text-amber-400' }[notifPerm] ?? 'text-amber-400'
 
-  // Show install section whenever NOT in standalone mode (regardless of installPrompt)
+  // Show install section when not in standalone mode AND there's something to offer
   const notInstalled = !isInstalled
+  const showInstallSection = notInstalled && (hasNativePrompt || isIOS)
 
   return (
     <div className="px-4 py-4 pb-24 space-y-4">
@@ -140,7 +156,7 @@ export default function Settings({
             </div>
           </div>
         </div>
-      ) : notInstalled ? (
+      ) : showInstallSection ? (
         <div
           className="rounded-3xl overflow-hidden"
           style={{
@@ -156,7 +172,6 @@ export default function Settings({
           </div>
           <div className="px-4 pb-5 space-y-2.5">
             {isIOS ? (
-              /* iOS: always show instructions modal button */
               <>
                 <button
                   onClick={() => setShowIOSModal(true)}
@@ -168,7 +183,7 @@ export default function Settings({
                 <p className="text-center text-emerald-400/70 text-xs">يتطلب متصفح Safari</p>
               </>
             ) : (
-              /* Android/Desktop: call native prompt if available, fallback to alert */
+              /* Android: window.deferredPrompt.prompt() — no alerts, no manual instructions */
               <>
                 <button
                   onClick={handleInstall}
@@ -176,11 +191,9 @@ export default function Settings({
                   className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95 disabled:opacity-60"
                   style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 4px 20px rgba(52,211,153,0.5)' }}
                 >
-                  {installing ? '⏳ جاري التثبيت...' : installPrompt ? '📲 تثبيت التطبيق الآن (لمسة واحدة)' : '📲 تثبيت التطبيق'}
+                  {installing ? '⏳ جاري التثبيت...' : '📲 تثبيت التطبيق الآن'}
                 </button>
-                <p className="text-center text-emerald-400/70 text-xs">
-                  {installPrompt ? 'سيظهر مربع التثبيت الأصلي من Chrome فوراً' : 'افتح القائمة (⋮) واختر "تثبيت التطبيق"'}
-                </p>
+                <p className="text-center text-emerald-400/70 text-xs">سيظهر مربع التثبيت الأصلي من Chrome فوراً</p>
               </>
             )}
           </div>
