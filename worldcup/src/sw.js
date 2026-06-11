@@ -1,4 +1,4 @@
-// v7 — real lineups, events tab, CORS fallbacks, countdown, Western numerals
+// v8 — real stats M001, corrected minutes, native-only install, zero hallucination
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'

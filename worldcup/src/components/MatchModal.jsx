@@ -282,12 +282,16 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                 <span className="font-bold text-white text-sm">{awayTeam.name}</span>
               </div>
               {[
-                { label: 'الاستحواذ %', h: match.stats.home.possession, a: match.stats.away.possession },
-                { label: 'التسديدات', h: match.stats.home.shots, a: match.stats.away.shots },
-                { label: 'على المرمى', h: match.stats.home.shots_on_target, a: match.stats.away.shots_on_target },
-                { label: 'الركنيات', h: match.stats.home.corners, a: match.stats.away.corners },
-                { label: 'الأخطاء', h: match.stats.home.fouls, a: match.stats.away.fouls },
-                { label: 'البطاقات الصفراء', h: match.stats.home.yellow_cards, a: match.stats.away.yellow_cards },
+                { label: 'الاستحواذ %',       h: match.stats.home.possession,      a: match.stats.away.possession },
+                { label: 'التسديدات',          h: match.stats.home.shots,           a: match.stats.away.shots },
+                { label: 'على المرمى',         h: match.stats.home.shots_on_target, a: match.stats.away.shots_on_target },
+                { label: 'الركنيات',           h: match.stats.home.corners,         a: match.stats.away.corners },
+                { label: 'الأخطاء',            h: match.stats.home.fouls,           a: match.stats.away.fouls },
+                { label: 'البطاقات الصفراء',   h: match.stats.home.yellow_cards,    a: match.stats.away.yellow_cards },
+                ...(match.stats.home.passes != null ? [
+                  { label: 'التمريرات',        h: match.stats.home.passes,          a: match.stats.away.passes },
+                  { label: 'دقة التمرير %',    h: match.stats.home.pass_accuracy,   a: match.stats.away.pass_accuracy },
+                ] : []),
               ].map((stat) => (
                 <StatBar key={stat.label} label={stat.label} homeVal={stat.h} awayVal={stat.a} />
               ))}

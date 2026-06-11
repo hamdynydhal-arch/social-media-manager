@@ -1131,20 +1131,41 @@
       "matchday": 1,
       "goals": [
         { "team": "MEX", "player": "خوليان كيمايونيس", "minute": 9,  "type": "عادي" },
-        { "team": "MEX", "player": "راؤول خيمينيز",    "minute": 66, "type": "عادي" }
+        { "team": "MEX", "player": "راؤول خيمينيز",    "minute": 67, "type": "عادي" }
       ],
       "events": [
-        { "type": "kickoff",  "minute": 0,  "team": null,  "player": null,                   "detail": "انطلاق المباراة" },
-        { "type": "goal",     "minute": 9,  "team": "MEX", "player": "خوليان كيمايونيس",   "detail": "أول هدف في تاريخ مونديال 2026" },
-        { "type": "halftime", "minute": 45, "team": null,  "player": null,                   "detail": "نهاية الشوط الأول — 1-0" },
-        { "type": "kickoff2", "minute": 46, "team": null,  "player": null,                   "detail": "بداية الشوط الثاني" },
-        { "type": "red_card", "minute": 49, "team": "RSA", "player": "سفيفيلو سيتولي",     "detail": "طرد لحرمان المنافس من فرصة واضحة" },
-        { "type": "goal",     "minute": 66, "team": "MEX", "player": "راؤول خيمينيز",       "detail": "رأسية من تمريرة روبيرتو ألفارادو" },
-        { "type": "red_card", "minute": 70, "team": "MEX", "player": "سيزار مونتيس",        "detail": "طرد بعد تدخل خشن" },
-        { "type": "red_card", "minute": 85, "team": "RSA", "player": "ثيمبا زواني",         "detail": "طرد بتدخل متهور" },
-        { "type": "fulltime", "minute": 90, "team": null,  "player": null,                   "detail": "صافرة النهاية — المكسيك 2-0 جنوب أفريقيا" }
+        { "type": "kickoff",  "minute": 0,   "team": null,  "player": null,                  "detail": "انطلاق المباراة" },
+        { "type": "goal",     "minute": 9,   "team": "MEX", "player": "خوليان كيمايونيس",  "detail": "أول هدف في تاريخ مونديال 2026" },
+        { "type": "halftime", "minute": 45,  "team": null,  "player": null,                  "detail": "نهاية الشوط الأول — 1-0" },
+        { "type": "kickoff2", "minute": 46,  "team": null,  "player": null,                  "detail": "بداية الشوط الثاني" },
+        { "type": "red_card", "minute": 49,  "team": "RSA", "player": "سفيفيلو سيتولي",    "detail": "طرد لحرمان المنافس من فرصة واضحة — 10 لاعبين" },
+        { "type": "goal",     "minute": 67,  "team": "MEX", "player": "راؤول خيمينيز",      "detail": "رأسية من تمريرة روبيرتو ألفارادو — 2-0" },
+        { "type": "red_card", "minute": 84,  "team": "RSA", "player": "ثيمبا زواني",        "detail": "طرد بتدخل متهور — 9 لاعبين" },
+        { "type": "red_card", "minute": 92,  "team": "MEX", "player": "سيزار مونتيس",       "detail": "طرد في الوقت بدل الضائع — 10 لاعبين" },
+        { "type": "fulltime", "minute": 94,  "team": null,  "player": null,                  "detail": "صافرة النهاية — المكسيك 2-0 جنوب أفريقيا" }
       ],
-      "stats": null,
+      "stats": {
+        "home": {
+          "possession":      60,
+          "shots":           16,
+          "shots_on_target": 4,
+          "corners":         3,
+          "fouls":           12,
+          "yellow_cards":    1,
+          "passes":          520,
+          "pass_accuracy":   90
+        },
+        "away": {
+          "possession":      40,
+          "shots":           3,
+          "shots_on_target": 2,
+          "corners":         1,
+          "fouls":           11,
+          "yellow_cards":    1,
+          "passes":          335,
+          "pass_accuracy":   81
+        }
+      },
       "weather": {
         "temp": 25,
         "humidity": 60,

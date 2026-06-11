@@ -14,7 +14,7 @@ const LIVE_OVERRIDES = {
     kickoff_offset_min: 6,
     goals: [
       { team: 'MEX', player: 'خوليان كيمايونيس', minute: 9, type: 'عادي' },
-      { team: 'MEX', player: 'راؤول خيمينيز', minute: 66, type: 'عادي' },
+      { team: 'MEX', player: 'راؤول خيمينيز', minute: 67, type: 'عادي' },
     ],
   },
 }
