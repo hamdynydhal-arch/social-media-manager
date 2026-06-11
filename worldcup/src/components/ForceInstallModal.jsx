@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useInstallPrompt } from '../hooks/useInstallPrompt'
 
-export default function ForceInstallModal() {
-  const { installPrompt, isInstalled, isIOS, triggerInstall } = useInstallPrompt()
+export default function ForceInstallModal({ installState = {} }) {
+  const { installPrompt, isInstalled, isIOS, triggerInstall } = installState
   const [visible, setVisible] = useState(false)
   const [installing, setInstalling] = useState(false)
   const [notifPerm, setNotifPerm] = useState(
@@ -19,7 +18,6 @@ export default function ForceInstallModal() {
   const needsNotif = notifPerm === 'default'
   const canInstall = installPrompt || isIOS
 
-  // Nothing actionable — hide
   if (!visible || isInstalled || (!canInstall && !needsNotif)) return null
 
   const dismiss = () => {
@@ -36,16 +34,12 @@ export default function ForceInstallModal() {
 
   const handleAndroidInstall = async () => {
     if (needsNotif) await requestNotif()
-    if (installPrompt) {
+    if (installPrompt && triggerInstall) {
       setInstalling(true)
       await triggerInstall()
       setInstalling(false)
       setVisible(false)
     }
-  }
-
-  const handleIOSNotif = async () => {
-    await requestNotif()
   }
 
   return (
@@ -58,9 +52,8 @@ export default function ForceInstallModal() {
           boxShadow: '0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(16,185,129,0.15)',
         }}
       >
-        {/* Header */}
         <div className="text-center px-6 pt-7 pb-4">
-          <div className="text-6xl mb-3" style={{ animation: 'bounce 1s infinite' }}>⚽</div>
+          <div className="text-6xl mb-3 animate-bounce">⚽</div>
           <h2 className="text-xl font-black text-white mb-1">ثبّت التطبيق الآن!</h2>
           <p className="text-emerald-300 text-sm font-bold mb-2">كأس العالم 2026 — إشعارات الأهداف الفورية</p>
           <p className="text-slate-400 text-xs leading-relaxed">
@@ -70,30 +63,12 @@ export default function ForceInstallModal() {
 
         <div className="px-5 pb-6 space-y-3">
           {isIOS ? (
-            /* ── iOS: step-by-step instructions ── */
             <>
-              <p className="text-center text-slate-300 text-sm font-bold">
-                لتثبيت التطبيق على iPhone / iPad:
-              </p>
+              <p className="text-center text-slate-300 text-sm font-bold">لتثبيت التطبيق على iPhone / iPad:</p>
               {[
-                {
-                  n: '1',
-                  icon: '⬆️',
-                  label: 'اضغط زر المشاركة',
-                  sub: 'الزر المربع بسهم للأعلى في شريط Safari السفلي',
-                },
-                {
-                  n: '2',
-                  icon: '⊕',
-                  label: 'اختر "إضافة إلى الشاشة الرئيسية"',
-                  sub: '',
-                },
-                {
-                  n: '3',
-                  icon: '✅',
-                  label: 'اضغط "إضافة" في الزاوية العلوية',
-                  sub: '',
-                },
+                { n: '1', icon: '⬆️', label: 'اضغط زر المشاركة', sub: 'الزر المربع بسهم للأعلى في شريط Safari السفلي' },
+                { n: '2', icon: '➕', label: 'اختر "إضافة إلى الشاشة الرئيسية"', sub: '' },
+                { n: '3', icon: '✅', label: 'اضغط "إضافة" في الزاوية العلوية', sub: '' },
               ].map(({ n, icon, label, sub }) => (
                 <div key={n} className="flex items-center gap-3 bg-slate-800/60 rounded-2xl px-3 py-2.5">
                   <div className="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
@@ -106,50 +81,34 @@ export default function ForceInstallModal() {
                   </div>
                 </div>
               ))}
-
               {needsNotif && (
                 <button
-                  onClick={handleIOSNotif}
+                  onClick={requestNotif}
                   className="w-full py-3.5 rounded-2xl font-black text-white text-sm transition-all active:scale-95"
                   style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', boxShadow: '0 4px 16px rgba(245,158,11,0.35)' }}
                 >
                   🔔 تفعيل إشعارات الأهداف أيضاً
                 </button>
               )}
-
-              {notifPerm === 'granted' && (
-                <div className="bg-emerald-900/40 border border-emerald-500/30 rounded-2xl p-2.5 text-center">
-                  <p className="text-emerald-400 text-xs font-bold">✅ الإشعارات مفعّلة — ثبّت التطبيق للاستمتاع الكامل</p>
-                </div>
-              )}
-
-              <button onClick={dismiss} className="w-full py-2 text-slate-500 text-xs font-medium">
-                ليس الآن
-              </button>
+              <button onClick={dismiss} className="w-full py-2 text-slate-500 text-xs font-medium">ليس الآن</button>
             </>
           ) : (
-            /* ── Android / Desktop: one-tap install ── */
             <>
               <button
                 onClick={handleAndroidInstall}
                 disabled={installing || !installPrompt}
                 className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95 disabled:opacity-60"
-                style={{
-                  background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)',
-                  boxShadow: '0 6px 24px rgba(52,211,153,0.45)',
-                }}
+                style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 6px 24px rgba(52,211,153,0.45)' }}
               >
                 {installing ? '⏳ جاري التثبيت...' : '📲 تثبيت التطبيق الآن'}
               </button>
-
               {needsNotif && (
                 <div className="bg-amber-900/30 border border-amber-500/30 rounded-2xl p-3 text-center">
                   <p className="text-amber-300 text-xs font-bold">🔔 سيُطلب منك تفعيل الإشعارات أيضاً</p>
                   <p className="text-amber-400/60 text-xs mt-0.5">اضغط "السماح" لتلقي تنبيهات الأهداف الفورية</p>
                 </div>
               )}
-
-              {!installPrompt && !isIOS && needsNotif && (
+              {!installPrompt && needsNotif && (
                 <button
                   onClick={requestNotif}
                   className="w-full py-3.5 rounded-2xl font-black text-white text-sm transition-all active:scale-95"
@@ -158,10 +117,7 @@ export default function ForceInstallModal() {
                   🔔 تفعيل إشعارات الأهداف
                 </button>
               )}
-
-              <button onClick={dismiss} className="w-full py-2 text-slate-500 text-xs font-medium">
-                ليس الآن
-              </button>
+              <button onClick={dismiss} className="w-full py-2 text-slate-500 text-xs font-medium">ليس الآن</button>
             </>
           )}
         </div>

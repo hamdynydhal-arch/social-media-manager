@@ -2,25 +2,24 @@ import { useState, useMemo } from 'react'
 import MatchCard from '../components/MatchCard'
 import MatchModal from '../components/MatchModal'
 import NewsTicker from '../components/NewsTicker'
-import { useInstallPrompt } from '../hooks/useInstallPrompt'
 import { useWorldCupData } from '../context/WorldCupContext'
 
 function getTeam(teams, id) { return teams.find(t => t.id === id) }
 function getStadium(stadiums, id) { return stadiums.find(s => s.id === id) }
 
-export default function Home({ favoriteTeam }) {
+export default function Home({ favoriteTeam, installState = {} }) {
   const { data, apiMode } = useWorldCupData()
   const { teams, matches, stadiums } = data
+  const { installPrompt, isInstalled, isIOS, triggerInstall } = installState
 
   const [selectedMatch, setSelectedMatch] = useState(null)
   const [showIOSModal, setShowIOSModal] = useState(false)
-  const { installPrompt, isInstalled, isIOS, triggerInstall } = useInstallPrompt()
 
   const canInstall = !isInstalled && (installPrompt || isIOS)
 
   const handleInstall = () => {
     if (isIOS) setShowIOSModal(true)
-    else triggerInstall()
+    else triggerInstall?.()
   }
 
   const today = new Date().toISOString().split('T')[0]

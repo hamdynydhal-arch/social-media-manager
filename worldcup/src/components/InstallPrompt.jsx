@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { useInstallPrompt } from '../hooks/useInstallPrompt'
 
-export default function InstallPrompt() {
-  const { installPrompt, isInstalled, isIOS, triggerInstall } = useInstallPrompt()
+export default function InstallPrompt({ installState = {} }) {
+  const { installPrompt, isInstalled, isIOS, triggerInstall } = installState
   const [dismissed, setDismissed] = useState(
     () => localStorage.getItem('install_dismissed') === 'true'
   )
@@ -28,20 +27,18 @@ export default function InstallPrompt() {
               <p className="font-bold text-white text-sm">ثبّت التطبيق على هاتفك</p>
               <p className="text-slate-400 text-xs mt-0.5">تابع المباريات بدون إنترنت</p>
             </div>
-            <div className="flex gap-2 flex-shrink-0">
-              <button
-                onClick={handleDismiss}
-                className="text-slate-400 hover:text-slate-200 p-1 text-lg"
-                aria-label="إغلاق"
-              >
-                ✕
-              </button>
-            </div>
+            <button
+              onClick={handleDismiss}
+              className="text-slate-400 hover:text-slate-200 p-1 text-lg flex-shrink-0"
+              aria-label="إغلاق"
+            >
+              ✕
+            </button>
           </div>
           <button
             onClick={() => {
               if (isIOS) setShowIOSModal(true)
-              else triggerInstall()
+              else triggerInstall?.()
             }}
             className="btn-primary w-full mt-3 text-sm"
           >
@@ -62,7 +59,6 @@ export default function InstallPrompt() {
             <div className="w-10 h-1 bg-slate-600 rounded-full mx-auto mb-6" />
             <h3 className="text-xl font-bold text-white text-center mb-2">تثبيت التطبيق على iOS</h3>
             <p className="text-slate-400 text-center text-sm mb-6">اتبع هذه الخطوات لتثبيت التطبيق من Safari</p>
-
             <div className="space-y-4">
               {[
                 { icon: '1️⃣', text: 'افتح الرابط في متصفح Safari على هاتفك' },
@@ -76,7 +72,6 @@ export default function InstallPrompt() {
                 </div>
               ))}
             </div>
-
             <button
               onClick={() => setShowIOSModal(false)}
               className="btn-primary w-full mt-6"

@@ -3,6 +3,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useLiveMatchEvents } from './hooks/useLiveEvents'
 import { useLiveSimulator } from './hooks/useLiveSimulator'
+import { useInstallPrompt } from './hooks/useInstallPrompt'
 import { WorldCupProvider, useWorldCupData } from './context/WorldCupContext'
 import Home from './pages/Home'
 import Matches from './pages/Matches'
@@ -18,6 +19,11 @@ function AppInner() {
   const [favoriteTeam, setFavoriteTeam] = useLocalStorage('favorite_team', null)
   const [showSelector, setShowSelector] = useState(!favoriteTeam)
   const { apiMode, lastUpdated } = useWorldCupData()
+
+  // ── Capture beforeinstallprompt ONCE at the top level ────────────────────
+  // The event fires exactly once on page load. Calling the hook here ensures
+  // it's captured before any child renders, then passed as props everywhere.
+  const installState = useInstallPrompt()
 
   useLiveMatchEvents(favoriteTeam)
   const { running: simRunning, startSim, stopSim } = useLiveSimulator(favoriteTeam)
@@ -66,7 +72,7 @@ function AppInner() {
 
         <main className="flex-1">
           <Routes>
-            <Route path="/" element={<Home favoriteTeam={favoriteTeam} />} />
+            <Route path="/" element={<Home favoriteTeam={favoriteTeam} installState={installState} />} />
             <Route path="/matches" element={<Matches favoriteTeam={favoriteTeam} />} />
             <Route path="/groups" element={<Groups favoriteTeam={favoriteTeam} />} />
             <Route
@@ -80,6 +86,7 @@ function AppInner() {
                   onStopSim={stopSim}
                   apiMode={apiMode}
                   lastUpdated={lastUpdated}
+                  installState={installState}
                 />
               }
             />
@@ -87,8 +94,8 @@ function AppInner() {
         </main>
 
         <BottomNav />
-        <InstallPrompt />
-        <ForceInstallModal />
+        <InstallPrompt installState={installState} />
+        <ForceInstallModal installState={installState} />
         <NotificationSystem />
       </div>
     </HashRouter>
