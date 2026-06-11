@@ -1,27 +1,44 @@
+// v3 — force immediate activation on every deploy
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
-import { CacheFirst, NetworkFirst } from 'workbox-strategies'
+import { CacheFirst } from 'workbox-strategies'
 import { ExpirationPlugin } from 'workbox-expiration'
 
 cleanupOutdatedCaches()
 precacheAndRoute(self.__WB_MANIFEST)
+
+// ── Immediately activate new SW without waiting for old tabs to close ────────
+self.addEventListener('install', () => self.skipWaiting())
+
+self.addEventListener('activate', event =>
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(k => k.startsWith('workbox-') || k.startsWith('wc-'))
+          .map(k => caches.delete(k))
+      )
+    ).then(() => clients.claim())
+  )
+)
 
 // Cache Google Fonts
 registerRoute(
   /^https:\/\/fonts\.googleapis\.com\/.*/i,
   new CacheFirst({
     cacheName: 'google-fonts-cache',
-    plugins: [new ExpirationPlugin({ maxEntries: 10, maxAgeSeconds: 31536000 })]
+    plugins: [new ExpirationPlugin({ maxEntries: 10, maxAgeSeconds: 31_536_000 })]
   })
 )
 
-// Handle messages from main thread
+// ── Message bus ──────────────────────────────────────────────────────────────
 self.addEventListener('message', event => {
+  // Legacy compat: vite-plugin-pwa autoUpdate sends this
   if (event.data?.type === 'SKIP_WAITING') {
     self.skipWaiting()
     return
   }
-  // Show notification via SW (more reliable in background)
+
   if (event.data?.type === 'SHOW_NOTIFICATION') {
     const { title, body, tag, vibrate } = event.data
     event.waitUntil(
@@ -39,7 +56,7 @@ self.addEventListener('message', event => {
   }
 })
 
-// Server-push notifications (future: when backend is added)
+// ── Server push (future backend) ─────────────────────────────────────────────
 self.addEventListener('push', event => {
   const data = event.data?.json() ?? {}
   event.waitUntil(
@@ -54,7 +71,7 @@ self.addEventListener('push', event => {
   )
 })
 
-// Notification click — open/focus the app
+// ── Notification tap → open/focus app ────────────────────────────────────────
 self.addEventListener('notificationclick', event => {
   event.notification.close()
   event.waitUntil(
