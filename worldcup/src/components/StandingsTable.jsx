@@ -1,9 +1,17 @@
-import data from '../data/data.json'
+import { useWorldCupData } from '../context/WorldCupContext'
 
 export default function StandingsTable({ groupId, favoriteTeam }) {
+  const { data } = useWorldCupData()
+
   const teams = data.teams
-    .filter((t) => t.group === groupId)
-    .sort((a, b) => b.stats.points - a.stats.points || b.stats.goals_for - a.stats.goals_for)
+    .filter(t => t.group === groupId)
+    .sort((a, b) => {
+      if (b.stats.points !== a.stats.points) return b.stats.points - a.stats.points
+      const gdA = (a.stats.goals_for ?? 0) - (a.stats.goals_against ?? 0)
+      const gdB = (b.stats.goals_for ?? 0) - (b.stats.goals_against ?? 0)
+      if (gdB !== gdA) return gdB - gdA
+      return (b.stats.goals_for ?? 0) - (a.stats.goals_for ?? 0)
+    })
 
   if (teams.length === 0) return null
 
@@ -41,13 +49,13 @@ export default function StandingsTable({ groupId, favoriteTeam }) {
                   {team.id === favoriteTeam && <span className="text-emerald-400 text-xs">★</span>}
                 </div>
               </td>
-              <td className="text-center py-2.5 text-slate-300">{team.stats.played}</td>
-              <td className="text-center py-2.5 text-emerald-400">{team.stats.wins}</td>
-              <td className="text-center py-2.5 text-slate-300">{team.stats.draws}</td>
-              <td className="text-center py-2.5 text-red-400">{team.stats.losses}</td>
-              <td className="text-center py-2.5 text-slate-300">{team.stats.goals_for}</td>
-              <td className="text-center py-2.5 text-slate-300">{team.stats.goals_against}</td>
-              <td className="text-center py-2.5 font-black text-amber-400">{team.stats.points}</td>
+              <td className="text-center py-2.5 text-slate-300">{team.stats.played ?? 0}</td>
+              <td className="text-center py-2.5 text-emerald-400">{team.stats.wins ?? 0}</td>
+              <td className="text-center py-2.5 text-slate-300">{team.stats.draws ?? 0}</td>
+              <td className="text-center py-2.5 text-red-400">{team.stats.losses ?? 0}</td>
+              <td className="text-center py-2.5 text-slate-300">{team.stats.goals_for ?? 0}</td>
+              <td className="text-center py-2.5 text-slate-300">{team.stats.goals_against ?? 0}</td>
+              <td className="text-center py-2.5 font-black text-amber-400">{team.stats.points ?? 0}</td>
             </tr>
           ))}
         </tbody>

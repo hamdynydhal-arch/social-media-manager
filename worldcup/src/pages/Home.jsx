@@ -1,14 +1,17 @@
 import { useState, useMemo } from 'react'
-import data from '../data/data.json'
 import MatchCard from '../components/MatchCard'
 import MatchModal from '../components/MatchModal'
 import NewsTicker from '../components/NewsTicker'
 import { useInstallPrompt } from '../hooks/useInstallPrompt'
+import { useWorldCupData } from '../context/WorldCupContext'
 
-function getTeam(id) { return data.teams.find(t => t.id === id) }
-function getStadium(id) { return data.stadiums.find(s => s.id === id) }
+function getTeam(teams, id) { return teams.find(t => t.id === id) }
+function getStadium(stadiums, id) { return stadiums.find(s => s.id === id) }
 
 export default function Home({ favoriteTeam }) {
+  const { data, apiMode } = useWorldCupData()
+  const { teams, matches, stadiums } = data
+
   const [selectedMatch, setSelectedMatch] = useState(null)
   const [showIOSModal, setShowIOSModal] = useState(false)
   const { installPrompt, isInstalled, isIOS, triggerInstall } = useInstallPrompt()
@@ -16,44 +19,38 @@ export default function Home({ favoriteTeam }) {
   const canInstall = !isInstalled && (installPrompt || isIOS)
 
   const handleInstall = () => {
-    if (isIOS) {
-      setShowIOSModal(true)
-    } else {
-      triggerInstall()
-    }
+    if (isIOS) setShowIOSModal(true)
+    else triggerInstall()
   }
 
   const today = new Date().toISOString().split('T')[0]
 
-  const liveMatches = useMemo(
-    () => data.matches.filter(m => m.status === 'live'),
-    []
-  )
+  const liveMatches = useMemo(() => matches.filter(m => m.status === 'live'), [matches])
 
   const todayMatches = useMemo(
-    () => data.matches.filter(m => m.date === today && m.status !== 'live'),
-    [today]
+    () => matches.filter(m => m.date === today && m.status !== 'live'),
+    [matches, today]
   )
 
   const upcomingMatches = useMemo(() => {
-    const sorted = data.matches
-      .filter(m => m.status === 'scheduled' && m.date > today)
+    const sorted = matches
+      .filter(m => m.status === 'scheduled' && m.date >= today)
       .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))
 
     if (favoriteTeam && favoriteTeam !== 'NONE') {
-      const favMatches = sorted.filter(m => m.team_home === favoriteTeam || m.team_away === favoriteTeam)
+      const fav = sorted.filter(m => m.team_home === favoriteTeam || m.team_away === favoriteTeam)
       const others = sorted.filter(m => m.team_home !== favoriteTeam && m.team_away !== favoriteTeam)
-      return [...favMatches, ...others].slice(0, 6)
+      return [...fav, ...others].slice(0, 6)
     }
     return sorted.slice(0, 6)
-  }, [favoriteTeam, today])
+  }, [matches, favoriteTeam, today])
 
   const recentMatches = useMemo(
-    () => data.matches.filter(m => m.status === 'finished').slice(0, 4),
-    []
+    () => matches.filter(m => m.status === 'finished').slice(0, 4),
+    [matches]
   )
 
-  const favTeamData = favoriteTeam && favoriteTeam !== 'NONE' ? getTeam(favoriteTeam) : null
+  const favTeamData = favoriteTeam && favoriteTeam !== 'NONE' ? getTeam(teams, favoriteTeam) : null
 
   return (
     <div className="flex flex-col min-h-full">
@@ -61,18 +58,45 @@ export default function Home({ favoriteTeam }) {
 
       <div className="flex-1 px-4 py-4 space-y-6 pb-24">
 
+        {/* ── Mandatory install banner ── */}
         {canInstall && (
-          <button
-            onClick={handleInstall}
-            className="w-full py-4 rounded-2xl font-black text-white text-base transition-all active:scale-95 flex items-center justify-center gap-3"
-            style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)', boxShadow: '0 6px 24px rgba(16,185,129,0.4)' }}
-          >
-            <span className="text-2xl">📲</span>
-            <span>تثبيت التطبيق</span>
-            <span className="text-emerald-200 text-sm font-normal">يعمل بدون إنترنت</span>
-          </button>
+          <div className="rounded-3xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)', border: '2px solid rgba(52,211,153,0.4)', boxShadow: '0 8px 32px rgba(16,185,129,0.35)' }}>
+            <div className="px-5 pt-5 pb-2 text-center">
+              <div className="text-5xl mb-2 animate-bounce">📲</div>
+              <h2 className="text-xl font-black text-white leading-tight mb-1">
+                للحصول على التنبيهات الحية
+              </h2>
+              <p className="text-emerald-200 text-sm font-bold mb-1">
+                يجب تثبيت التطبيق الآن
+              </p>
+              <p className="text-emerald-300/70 text-xs leading-relaxed">
+                أهداف فورية • إشعارات في الخلفية • يعمل بدون إنترنت
+              </p>
+            </div>
+            <div className="px-4 pb-4 pt-3">
+              <button
+                onClick={handleInstall}
+                className="w-full py-4 rounded-2xl font-black text-slate-900 text-lg transition-all active:scale-95 flex items-center justify-center gap-3"
+                style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 4px 20px rgba(52,211,153,0.5)' }}
+              >
+                <span>📲 تثبيت التطبيق الآن</span>
+              </button>
+              <p className="text-center text-emerald-400/60 text-xs mt-2">
+                {isIOS ? 'أضفه إلى الشاشة الرئيسية عبر Safari' : 'تثبيت سريع — ثانية واحدة'}
+              </p>
+            </div>
+          </div>
         )}
 
+        {/* API status pill */}
+        {apiMode === 'live' && (
+          <div className="flex items-center justify-center gap-2 py-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs text-emerald-400 font-medium">بيانات حية من football-data.org</span>
+          </div>
+        )}
+
+        {/* ── Favorite team card ── */}
         {favTeamData && (
           <div className="card p-4 border-emerald-500/30 bg-gradient-to-r from-emerald-900/30 to-transparent">
             <div className="flex items-center gap-3">
@@ -117,9 +141,9 @@ export default function Home({ favoriteTeam }) {
                 <MatchCard
                   key={m.id}
                   match={m}
-                  homeTeam={getTeam(m.team_home)}
-                  awayTeam={getTeam(m.team_away)}
-                  stadium={getStadium(m.stadium_id)}
+                  homeTeam={getTeam(teams, m.team_home)}
+                  awayTeam={getTeam(teams, m.team_away)}
+                  stadium={getStadium(stadiums, m.stadium_id)}
                   onClick={() => setSelectedMatch(m)}
                 />
               ))}
@@ -137,9 +161,9 @@ export default function Home({ favoriteTeam }) {
                 <MatchCard
                   key={m.id}
                   match={m}
-                  homeTeam={getTeam(m.team_home)}
-                  awayTeam={getTeam(m.team_away)}
-                  stadium={getStadium(m.stadium_id)}
+                  homeTeam={getTeam(teams, m.team_home)}
+                  awayTeam={getTeam(teams, m.team_away)}
+                  stadium={getStadium(stadiums, m.stadium_id)}
                   onClick={() => setSelectedMatch(m)}
                 />
               ))}
@@ -166,9 +190,9 @@ export default function Home({ favoriteTeam }) {
                 <MatchCard
                   key={m.id}
                   match={m}
-                  homeTeam={getTeam(m.team_home)}
-                  awayTeam={getTeam(m.team_away)}
-                  stadium={getStadium(m.stadium_id)}
+                  homeTeam={getTeam(teams, m.team_home)}
+                  awayTeam={getTeam(teams, m.team_away)}
+                  stadium={getStadium(stadiums, m.stadium_id)}
                   onClick={() => setSelectedMatch(m)}
                 />
               ))}
@@ -184,9 +208,9 @@ export default function Home({ favoriteTeam }) {
                 <MatchCard
                   key={m.id}
                   match={m}
-                  homeTeam={getTeam(m.team_home)}
-                  awayTeam={getTeam(m.team_away)}
-                  stadium={getStadium(m.stadium_id)}
+                  homeTeam={getTeam(teams, m.team_home)}
+                  awayTeam={getTeam(teams, m.team_away)}
+                  stadium={getStadium(stadiums, m.stadium_id)}
                   onClick={() => setSelectedMatch(m)}
                 />
               ))}
@@ -198,13 +222,14 @@ export default function Home({ favoriteTeam }) {
       {selectedMatch && (
         <MatchModal
           match={selectedMatch}
-          homeTeam={getTeam(selectedMatch.team_home)}
-          awayTeam={getTeam(selectedMatch.team_away)}
-          stadium={getStadium(selectedMatch.stadium_id)}
+          homeTeam={getTeam(teams, selectedMatch.team_home)}
+          awayTeam={getTeam(teams, selectedMatch.team_away)}
+          stadium={getStadium(stadiums, selectedMatch.stadium_id)}
           onClose={() => setSelectedMatch(null)}
         />
       )}
 
+      {/* iOS install instructions modal */}
       {showIOSModal && (
         <div
           className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm"
@@ -217,20 +242,20 @@ export default function Home({ favoriteTeam }) {
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-black text-white text-lg">تثبيت التطبيق 📲</h3>
+                <h3 className="font-black text-white text-lg">كيفية التثبيت على iPhone</h3>
                 <button
                   onClick={() => setShowIOSModal(false)}
                   className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-700 text-slate-400 hover:text-white"
                 >✕</button>
               </div>
               <p className="text-slate-400 text-sm mb-5 leading-relaxed">
-                لتثبيت التطبيق على جهاز iPhone أو iPad، اتبع الخطوات التالية:
+                Safari فقط يدعم التثبيت. اتبع هذه الخطوات الثلاث:
               </p>
               <div className="space-y-3">
                 {[
-                  { step: '1', icon: '⎋', text: 'اضغط على زر المشاركة في شريط Safari السفلي' },
-                  { step: '2', icon: '➕', text: 'اختر "إضافة إلى الشاشة الرئيسية"' },
-                  { step: '3', icon: '✅', text: 'اضغط "إضافة" في الزاوية العلوية اليمنى' },
+                  { step: '1', icon: '⎋', text: 'اضغط زر المشاركة في شريط أدوات Safari السفلي' },
+                  { step: '2', icon: '➕', text: 'اختر "إضافة إلى الشاشة الرئيسية" من القائمة' },
+                  { step: '3', icon: '✅', text: 'اضغط "إضافة" في أعلى يمين الشاشة' },
                 ].map(({ step, icon, text }) => (
                   <div key={step} className="flex items-center gap-3 bg-slate-700/50 rounded-2xl p-3">
                     <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center flex-shrink-0">
@@ -243,8 +268,8 @@ export default function Home({ favoriteTeam }) {
               </div>
               <button
                 onClick={() => setShowIOSModal(false)}
-                className="w-full mt-5 py-3 rounded-2xl font-bold text-white text-sm transition-all active:scale-95"
-                style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}
+                className="w-full mt-5 py-3 rounded-2xl font-bold text-slate-900 text-sm transition-all active:scale-95"
+                style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)' }}
               >
                 فهمت، شكراً!
               </button>

@@ -1,10 +1,7 @@
 import { useState, useMemo } from 'react'
-import data from '../data/data.json'
 import MatchCard from '../components/MatchCard'
 import MatchModal from '../components/MatchModal'
-
-function getTeam(id) { return data.teams.find(t => t.id === id) }
-function getStadium(id) { return data.stadiums.find(s => s.id === id) }
+import { useWorldCupData } from '../context/WorldCupContext'
 
 const FILTERS = [
   { id: 'all', label: 'الكل' },
@@ -14,18 +11,24 @@ const FILTERS = [
 ]
 
 export default function Matches({ favoriteTeam }) {
+  const { data } = useWorldCupData()
+  const { teams, matches, stadiums } = data
+
   const [filter, setFilter] = useState('all')
   const [selectedMatch, setSelectedMatch] = useState(null)
 
+  const getTeam = id => teams.find(t => t.id === id)
+  const getStadium = id => stadiums.find(s => s.id === id)
+
   const filtered = useMemo(() => {
-    let matches = data.matches
-    if (filter !== 'all') matches = matches.filter(m => m.status === filter)
-    return matches.sort((a, b) => {
+    let list = matches
+    if (filter !== 'all') list = list.filter(m => m.status === filter)
+    return list.sort((a, b) => {
       const order = { live: 0, scheduled: 1, finished: 2 }
       if (order[a.status] !== order[b.status]) return order[a.status] - order[b.status]
       return `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`)
     })
-  }, [filter])
+  }, [matches, filter])
 
   return (
     <div className="px-4 py-4 pb-24 space-y-4">

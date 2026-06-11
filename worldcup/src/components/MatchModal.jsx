@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import confetti from 'canvas-confetti'
 import { playGoalSound, haptic } from '../utils/audioUtils'
-import data from '../data/data.json'
 
 function StatBar({ label, homeVal, awayVal, homeColor }) {
   const total = homeVal + awayVal || 1

@@ -1,19 +1,21 @@
 import { useState } from 'react'
-import data from '../data/data.json'
 import StandingsTable from '../components/StandingsTable'
+import { useWorldCupData } from '../context/WorldCupContext'
 
-const GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+const ALL_GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
 
 export default function Groups({ favoriteTeam }) {
-  const [activeGroup, setActiveGroup] = useState('A')
+  const { data } = useWorldCupData()
+  const { teams } = data
 
-  const groupTeams = data.teams.filter(t => t.group === activeGroup)
+  const [activeGroup, setActiveGroup] = useState('A')
+  const groupTeams = teams.filter(t => t.group === activeGroup)
 
   return (
     <div className="px-4 py-4 pb-24 space-y-4">
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        {GROUPS.map(g => {
-          const hasFav = data.teams.some(t => t.group === g && t.id === favoriteTeam)
+      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+        {ALL_GROUPS.map(g => {
+          const hasFav = teams.some(t => t.group === g && t.id === favoriteTeam)
           return (
             <button
               key={g}

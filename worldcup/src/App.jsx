@@ -3,6 +3,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useLiveMatchEvents } from './hooks/useLiveEvents'
 import { useLiveSimulator } from './hooks/useLiveSimulator'
+import { WorldCupProvider, useWorldCupData } from './context/WorldCupContext'
 import Home from './pages/Home'
 import Matches from './pages/Matches'
 import Groups from './pages/Groups'
@@ -12,14 +13,12 @@ import InstallPrompt from './components/InstallPrompt'
 import NotificationSystem from './components/NotificationSystem'
 import TeamSelector from './components/TeamSelector'
 
-export default function App() {
+function AppInner() {
   const [favoriteTeam, setFavoriteTeam] = useLocalStorage('favorite_team', null)
   const [showSelector, setShowSelector] = useState(!favoriteTeam)
+  const { apiMode, lastUpdated } = useWorldCupData()
 
-  // Live match events engine (real schedule-based alerts)
   useLiveMatchEvents(favoriteTeam)
-
-  // Live simulator (for testing, returns controls)
   const { running: simRunning, startSim, stopSim } = useLiveSimulator(favoriteTeam)
 
   useEffect(() => {
@@ -48,10 +47,18 @@ export default function App() {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              {apiMode === 'live' && lastUpdated && (
+                <span className="text-xs text-emerald-400 font-medium">
+                  {lastUpdated.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              )}
               <span className="text-xs text-slate-500">
                 {new Date().toLocaleDateString('ar-SA', { day: 'numeric', month: 'short' })}
               </span>
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" title="مباشر" />
+              <div
+                className={`w-2 h-2 rounded-full animate-pulse ${apiMode === 'live' ? 'bg-emerald-400' : 'bg-amber-400'}`}
+                title={apiMode === 'live' ? 'بيانات حية' : 'وضع ثابت'}
+              />
             </div>
           </div>
         </header>
@@ -70,6 +77,8 @@ export default function App() {
                   simRunning={simRunning}
                   onStartSim={startSim}
                   onStopSim={stopSim}
+                  apiMode={apiMode}
+                  lastUpdated={lastUpdated}
                 />
               }
             />
@@ -81,5 +90,13 @@ export default function App() {
         <NotificationSystem />
       </div>
     </HashRouter>
+  )
+}
+
+export default function App() {
+  return (
+    <WorldCupProvider>
+      <AppInner />
+    </WorldCupProvider>
   )
 }
