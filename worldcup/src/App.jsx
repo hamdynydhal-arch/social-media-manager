@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import { useLocalStorage } from './hooks/useLocalStorage'
+import { useLiveMatchEvents } from './hooks/useLiveEvents'
+import { useLiveSimulator } from './hooks/useLiveSimulator'
 import Home from './pages/Home'
 import Matches from './pages/Matches'
 import Groups from './pages/Groups'
@@ -13,6 +15,12 @@ import TeamSelector from './components/TeamSelector'
 export default function App() {
   const [favoriteTeam, setFavoriteTeam] = useLocalStorage('favorite_team', null)
   const [showSelector, setShowSelector] = useState(!favoriteTeam)
+
+  // Live match events engine (real schedule-based alerts)
+  useLiveMatchEvents(favoriteTeam)
+
+  // Live simulator (for testing, returns controls)
+  const { running: simRunning, startSim, stopSim } = useLiveSimulator(favoriteTeam)
 
   useEffect(() => {
     document.documentElement.classList.add('dark')
@@ -59,6 +67,9 @@ export default function App() {
                 <Settings
                   favoriteTeam={favoriteTeam}
                   onChangeFavorite={() => setShowSelector(true)}
+                  simRunning={simRunning}
+                  onStartSim={startSim}
+                  onStopSim={stopSim}
                 />
               }
             />
