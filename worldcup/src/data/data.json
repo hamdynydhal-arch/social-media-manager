@@ -172,6 +172,7 @@
     },
     {
       "id": "SAU",
+      "isArab": true,
       "name": "السعودية",
       "flag": "🇸🇦",
       "color": "#006C35",
@@ -191,6 +192,7 @@
     },
     {
       "id": "MAR",
+      "isArab": true,
       "name": "المغرب",
       "flag": "🇲🇦",
       "color": "#006233",
@@ -245,6 +247,446 @@
         { "number": 25, "name": "سار", "position": "مدافع" }
       ],
       "stats": { "played": 3, "wins": 1, "draws": 2, "losses": 0, "goals_for": 4, "goals_against": 3, "points": 5 }
+    },
+    {
+      "id": "USA", "name": "الولايات المتحدة", "flag": "🇺🇸", "color": "#002868", "group": "A", "ranking": 11,
+      "coach": "غريغ بيرهالتر",
+      "players": [
+        {"number": 1, "name": "ترنر", "position": "حارس مرمى"},
+        {"number": 5, "name": "آدامز", "position": "وسط"},
+        {"number": 7, "name": "بوليسيتش", "position": "مهاجم"},
+        {"number": 9, "name": "فيريرا", "position": "مهاجم"},
+        {"number": 4, "name": "ماتا", "position": "مدافع"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 3, "goals_against": 4, "points": 4}
+    },
+    {
+      "id": "COL", "name": "كولومبيا", "flag": "🇨🇴", "color": "#FCD116", "group": "B", "ranking": 9,
+      "coach": "نيستور لورينزو",
+      "players": [
+        {"number": 1, "name": "فارغاس", "position": "حارس مرمى"},
+        {"number": 3, "name": "موسكيرا", "position": "مدافع"},
+        {"number": 10, "name": "خيمس رودريغيز", "position": "وسط"},
+        {"number": 7, "name": "آرياس", "position": "جناح"},
+        {"number": 9, "name": "بوريه", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 2, "draws": 0, "losses": 1, "goals_for": 5, "goals_against": 3, "points": 6}
+    },
+    {
+      "id": "KOR", "name": "كوريا الجنوبية", "flag": "🇰🇷", "color": "#C60C30", "group": "C", "ranking": 22,
+      "coach": "هونغ ميونغ-بو",
+      "players": [
+        {"number": 1, "name": "كيم سيونغ-غيون", "position": "حارس مرمى"},
+        {"number": 4, "name": "كيم مين-جاي", "position": "مدافع"},
+        {"number": 7, "name": "سون هيونغ-مين", "position": "مهاجم"},
+        {"number": 8, "name": "لي جاي-سونغ", "position": "وسط"},
+        {"number": 10, "name": "هوانغ هي-تشان", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 2, "losses": 0, "goals_for": 3, "goals_against": 2, "points": 5}
+    },
+    {
+      "id": "NGA", "name": "نيجيريا", "flag": "🇳🇬", "color": "#008751", "group": "D", "ranking": 30,
+      "coach": "أوغستين إيغابوان",
+      "players": [
+        {"number": 1, "name": "نوابارا", "position": "حارس مرمى"},
+        {"number": 5, "name": "تروست-إيكونغ", "position": "مدافع"},
+        {"number": 10, "name": "أوسيمهين", "position": "مهاجم"},
+        {"number": 7, "name": "لوكمان", "position": "جناح"},
+        {"number": 15, "name": "إيهياناتشو", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 3, "goals_against": 3, "points": 4}
+    },
+    {
+      "id": "MEX", "name": "المكسيك", "flag": "🇲🇽", "color": "#006847", "group": "E", "ranking": 15,
+      "coach": "خافيير أغويري",
+      "players": [
+        {"number": 1, "name": "أوتشوا", "position": "حارس مرمى"},
+        {"number": 3, "name": "أراوخو", "position": "مدافع"},
+        {"number": 10, "name": "لوزانو", "position": "جناح"},
+        {"number": 9, "name": "خيمينيز", "position": "مهاجم"},
+        {"number": 7, "name": "أنتونا", "position": "جناح"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 0, "losses": 2, "goals_for": 2, "goals_against": 5, "points": 3}
+    },
+    {
+      "id": "BEL", "name": "بلجيكا", "flag": "🇧🇪", "color": "#000000", "group": "E", "ranking": 5,
+      "coach": "دومينيكو تيديسكو",
+      "players": [
+        {"number": 1, "name": "كاستيلس", "position": "حارس مرمى"},
+        {"number": 4, "name": "فيرتونغن", "position": "مدافع"},
+        {"number": 7, "name": "دي برويني", "position": "وسط"},
+        {"number": 9, "name": "لوكاكو", "position": "مهاجم"},
+        {"number": 11, "name": "دوكو", "position": "جناح"}
+      ],
+      "stats": {"played": 3, "wins": 2, "draws": 1, "losses": 0, "goals_for": 6, "goals_against": 2, "points": 7}
+    },
+    {
+      "id": "CAN", "name": "كندا", "flag": "🇨🇦", "color": "#FF0000", "group": "F", "ranking": 41,
+      "coach": "جيسي مارش",
+      "players": [
+        {"number": 1, "name": "كريبو", "position": "حارس مرمى"},
+        {"number": 3, "name": "جونستون", "position": "مدافع"},
+        {"number": 7, "name": "ديفيز", "position": "مدافع"},
+        {"number": 10, "name": "دافيد", "position": "مهاجم"},
+        {"number": 9, "name": "بوكانيير", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 4, "goals_against": 5, "points": 4}
+    },
+    {
+      "id": "ITA", "name": "إيطاليا", "flag": "🇮🇹", "color": "#003399", "group": "F", "ranking": 8,
+      "coach": "لوتشيانو سبالتي",
+      "players": [
+        {"number": 1, "name": "دوناروما", "position": "حارس مرمى"},
+        {"number": 6, "name": "باستوني", "position": "مدافع"},
+        {"number": 8, "name": "باريلا", "position": "وسط"},
+        {"number": 9, "name": "سكاماكا", "position": "مهاجم"},
+        {"number": 14, "name": "كيزا", "position": "جناح"}
+      ],
+      "stats": {"played": 3, "wins": 2, "draws": 0, "losses": 1, "goals_for": 5, "goals_against": 4, "points": 6}
+    },
+    {
+      "id": "TUR", "name": "تركيا", "flag": "🇹🇷", "color": "#E30A17", "group": "G", "ranking": 35,
+      "coach": "فينتشينزو مونتيلا",
+      "players": [
+        {"number": 1, "name": "باييندير", "position": "حارس مرمى"},
+        {"number": 3, "name": "مولدور", "position": "مدافع"},
+        {"number": 10, "name": "تشالهانوغلو", "position": "وسط"},
+        {"number": 7, "name": "أردا غولر", "position": "وسط"},
+        {"number": 9, "name": "يلدز", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 4, "goals_against": 4, "points": 4}
+    },
+    {
+      "id": "CHE", "name": "سويسرا", "flag": "🇨🇭", "color": "#FF0000", "group": "G", "ranking": 19,
+      "coach": "مورات ياكين",
+      "players": [
+        {"number": 1, "name": "سومر", "position": "حارس مرمى"},
+        {"number": 5, "name": "أكانجي", "position": "مدافع"},
+        {"number": 10, "name": "تشاكا", "position": "وسط"},
+        {"number": 23, "name": "شاكيري", "position": "جناح"},
+        {"number": 9, "name": "إيمبولو", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 2, "draws": 0, "losses": 1, "goals_for": 5, "goals_against": 3, "points": 6}
+    },
+    {
+      "id": "ECU", "name": "إكوادور", "flag": "🇪🇨", "color": "#FFD100", "group": "H", "ranking": 44,
+      "coach": "فيليكس سانتشيز",
+      "players": [
+        {"number": 1, "name": "غاليندز", "position": "حارس مرمى"},
+        {"number": 3, "name": "بريسيادو", "position": "مدافع"},
+        {"number": 10, "name": "كايسيدو", "position": "وسط"},
+        {"number": 11, "name": "بلاتا", "position": "جناح"},
+        {"number": 13, "name": "فالنسيا", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 3, "goals_against": 4, "points": 4}
+    },
+    {
+      "id": "URU", "name": "أوروغواي", "flag": "🇺🇾", "color": "#75AADB", "group": "H", "ranking": 16,
+      "coach": "مارسيلو بيلسا",
+      "players": [
+        {"number": 1, "name": "روشيت", "position": "حارس مرمى"},
+        {"number": 3, "name": "أوليفيرا", "position": "مدافع"},
+        {"number": 5, "name": "خيمينيز", "position": "مدافع"},
+        {"number": 10, "name": "دي أراسكاييتا", "position": "وسط"},
+        {"number": 21, "name": "نونييز", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 2, "draws": 0, "losses": 1, "goals_for": 5, "goals_against": 3, "points": 6}
+    },
+    {
+      "id": "TUN", "name": "تونس", "flag": "🇹🇳", "color": "#E70013", "group": "I", "ranking": 31,
+      "isArab": true,
+      "coach": "جلال القادري",
+      "players": [
+        {"number": 1, "name": "داهمان", "position": "حارس مرمى"},
+        {"number": 3, "name": "الطالبي", "position": "مدافع"},
+        {"number": 10, "name": "خزري", "position": "وسط"},
+        {"number": 14, "name": "مساكني", "position": "مهاجم"},
+        {"number": 7, "name": "بن سليمان", "position": "جناح"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 4, "goals_against": 5, "points": 4}
+    },
+    {
+      "id": "EGY", "name": "مصر", "flag": "🇪🇬", "color": "#CE1126", "group": "I", "ranking": 36,
+      "isArab": true,
+      "coach": "حسام حسن",
+      "players": [
+        {"number": 1, "name": "الشناوي", "position": "حارس مرمى"},
+        {"number": 5, "name": "حجازي", "position": "مدافع"},
+        {"number": 10, "name": "صلاح", "position": "مهاجم"},
+        {"number": 7, "name": "تريزيغيه", "position": "جناح"},
+        {"number": 8, "name": "حمدي فتحي", "position": "وسط"}
+      ],
+      "stats": {"played": 3, "wins": 2, "draws": 0, "losses": 1, "goals_for": 5, "goals_against": 3, "points": 6}
+    },
+    {
+      "id": "ALG", "name": "الجزائر", "flag": "🇩🇿", "color": "#006233", "group": "I", "ranking": 29,
+      "isArab": true,
+      "coach": "دجامل بلماضي",
+      "players": [
+        {"number": 1, "name": "ماندريا", "position": "حارس مرمى"},
+        {"number": 3, "name": "عيت نوري", "position": "مدافع"},
+        {"number": 10, "name": "محرز", "position": "جناح"},
+        {"number": 7, "name": "بن رحمة", "position": "وسط"},
+        {"number": 9, "name": "سليماني", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 2, "draws": 1, "losses": 0, "goals_for": 6, "goals_against": 2, "points": 7}
+    },
+    {
+      "id": "GHA", "name": "غانا", "flag": "🇬🇭", "color": "#006B3F", "group": "J", "ranking": 47,
+      "coach": "أوتو آدو",
+      "players": [
+        {"number": 1, "name": "وولاكوت", "position": "حارس مرمى"},
+        {"number": 3, "name": "لامبتي", "position": "مدافع"},
+        {"number": 10, "name": "أيو", "position": "وسط"},
+        {"number": 9, "name": "كيريه", "position": "مهاجم"},
+        {"number": 11, "name": "سيمينيو", "position": "جناح"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 0, "losses": 2, "goals_for": 3, "goals_against": 6, "points": 3}
+    },
+    {
+      "id": "CIV", "name": "ساحل العاج", "flag": "🇨🇮", "color": "#F77F00", "group": "J", "ranking": 39,
+      "coach": "إيميرس فاي",
+      "players": [
+        {"number": 1, "name": "سانغاريه", "position": "حارس مرمى"},
+        {"number": 3, "name": "كونان", "position": "مدافع"},
+        {"number": 9, "name": "هالر", "position": "مهاجم"},
+        {"number": 11, "name": "بيبي", "position": "جناح"},
+        {"number": 7, "name": "جرادل", "position": "وسط"}
+      ],
+      "stats": {"played": 3, "wins": 2, "draws": 0, "losses": 1, "goals_for": 5, "goals_against": 3, "points": 6}
+    },
+    {
+      "id": "CMR", "name": "الكاميرون", "flag": "🇨🇲", "color": "#007A5E", "group": "J", "ranking": 42,
+      "coach": "مارك بريس",
+      "players": [
+        {"number": 1, "name": "إيباسي", "position": "حارس مرمى"},
+        {"number": 5, "name": "إيكانا", "position": "مدافع"},
+        {"number": 10, "name": "أونغيسا", "position": "وسط"},
+        {"number": 9, "name": "مبوومو", "position": "مهاجم"},
+        {"number": 7, "name": "أبوبكر", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 4, "goals_against": 4, "points": 4}
+    },
+    {
+      "id": "SRB", "name": "صربيا", "flag": "🇷🇸", "color": "#C6363C", "group": "K", "ranking": 24,
+      "coach": "دراغان ستويكوفيتش",
+      "players": [
+        {"number": 1, "name": "راجكوفيتش", "position": "حارس مرمى"},
+        {"number": 5, "name": "ميلنكوفيتش", "position": "مدافع"},
+        {"number": 10, "name": "تاديتش", "position": "وسط"},
+        {"number": 9, "name": "يوفيتش", "position": "مهاجم"},
+        {"number": 8, "name": "ميلنكوفيتش سافيتش", "position": "وسط"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 2, "losses": 0, "goals_for": 4, "goals_against": 3, "points": 5}
+    },
+    {
+      "id": "DEN", "name": "الدنمارك", "flag": "🇩🇰", "color": "#C60C30", "group": "K", "ranking": 20,
+      "coach": "كاسبر هيولماند",
+      "players": [
+        {"number": 1, "name": "شمايكل", "position": "حارس مرمى"},
+        {"number": 5, "name": "كريستنسن", "position": "مدافع"},
+        {"number": 10, "name": "إريكسن", "position": "وسط"},
+        {"number": 9, "name": "هويلوند", "position": "مهاجم"},
+        {"number": 8, "name": "دامسغارد", "position": "وسط"}
+      ],
+      "stats": {"played": 3, "wins": 2, "draws": 0, "losses": 1, "goals_for": 5, "goals_against": 3, "points": 6}
+    },
+    {
+      "id": "AUS", "name": "أستراليا", "flag": "🇦🇺", "color": "#00008B", "group": "K", "ranking": 23,
+      "coach": "توني بوبوفيتش",
+      "players": [
+        {"number": 1, "name": "رايان", "position": "حارس مرمى"},
+        {"number": 3, "name": "بيهيتش", "position": "مدافع"},
+        {"number": 10, "name": "ليكي", "position": "جناح"},
+        {"number": 9, "name": "ماكلارين", "position": "مهاجم"},
+        {"number": 7, "name": "إيرفاين", "position": "وسط"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 3, "goals_against": 4, "points": 4}
+    },
+    {
+      "id": "IRN", "name": "إيران", "flag": "🇮🇷", "color": "#239F40", "group": "L", "ranking": 21,
+      "coach": "أمير غالي نوي",
+      "players": [
+        {"number": 1, "name": "حسيني", "position": "حارس مرمى"},
+        {"number": 3, "name": "محمدي", "position": "مدافع"},
+        {"number": 10, "name": "تاريمي", "position": "مهاجم"},
+        {"number": 7, "name": "قدوس", "position": "جناح"},
+        {"number": 9, "name": "أزمون", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 3, "goals_against": 4, "points": 4}
+    },
+    {
+      "id": "QAT", "name": "قطر", "flag": "🇶🇦", "color": "#8D1B3D", "group": "L", "ranking": 37,
+      "isArab": true,
+      "coach": "لويس غارسيا",
+      "players": [
+        {"number": 1, "name": "الشيب", "position": "حارس مرمى"},
+        {"number": 3, "name": "بيدرو ميغيل", "position": "مدافع"},
+        {"number": 10, "name": "الحيدوس", "position": "وسط"},
+        {"number": 9, "name": "عفيف", "position": "مهاجم"},
+        {"number": 11, "name": "منديل", "position": "جناح"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 0, "losses": 2, "goals_for": 2, "goals_against": 5, "points": 3}
+    },
+    {
+      "id": "OMA", "name": "عُمان", "flag": "🇴🇲", "color": "#DB161B", "group": "L", "ranking": 76,
+      "isArab": true,
+      "coach": "براندان رودناب",
+      "players": [
+        {"number": 1, "name": "الحبسي", "position": "حارس مرمى"},
+        {"number": 3, "name": "المخيني", "position": "مدافع"},
+        {"number": 10, "name": "المندهر علي", "position": "وسط"},
+        {"number": 9, "name": "الغيلاني", "position": "مهاجم"},
+        {"number": 7, "name": "اليحيائي", "position": "جناح"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 2, "goals_against": 3, "points": 4}
+    },
+    {
+      "id": "IRQ", "name": "العراق", "flag": "🇮🇶", "color": "#007A3D", "group": "M", "ranking": 52,
+      "isArab": true,
+      "coach": "خيسوس كاساس",
+      "players": [
+        {"number": 1, "name": "جلال", "position": "حارس مرمى"},
+        {"number": 3, "name": "طالب", "position": "مدافع"},
+        {"number": 10, "name": "علي عدنان", "position": "مدافع"},
+        {"number": 9, "name": "أمين الحمداني", "position": "مهاجم"},
+        {"number": 7, "name": "الكعبي", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 2, "losses": 0, "goals_for": 3, "goals_against": 2, "points": 5}
+    },
+    {
+      "id": "JOR", "name": "الأردن", "flag": "🇯🇴", "color": "#007A3D", "group": "M", "ranking": 74,
+      "isArab": true,
+      "coach": "حسين عموتة",
+      "players": [
+        {"number": 1, "name": "عامر شفيع", "position": "حارس مرمى"},
+        {"number": 3, "name": "أيمن خليل", "position": "مدافع"},
+        {"number": 10, "name": "موسى التعامرة", "position": "مهاجم"},
+        {"number": 9, "name": "حمزة الدردور", "position": "مهاجم"},
+        {"number": 7, "name": "يزن النعيمات", "position": "وسط"}
+      ],
+      "stats": {"played": 3, "wins": 0, "draws": 2, "losses": 1, "goals_for": 2, "goals_against": 4, "points": 2}
+    },
+    {
+      "id": "UAE", "name": "الإمارات", "flag": "🇦🇪", "color": "#00732F", "group": "M", "ranking": 66,
+      "isArab": true,
+      "coach": "رودولفو أروابارينا",
+      "players": [
+        {"number": 1, "name": "خالد عيسى", "position": "حارس مرمى"},
+        {"number": 3, "name": "علي خميس", "position": "مدافع"},
+        {"number": 10, "name": "علي مبخوت", "position": "مهاجم"},
+        {"number": 7, "name": "خليل إبراهيم", "position": "وسط"},
+        {"number": 9, "name": "فابيو دي ليما", "position": "جناح"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 3, "goals_against": 3, "points": 4}
+    },
+    {
+      "id": "UKR", "name": "أوكرانيا", "flag": "🇺🇦", "color": "#005BBB", "group": "N", "ranking": 22,
+      "coach": "سيرهي ريبروف",
+      "players": [
+        {"number": 1, "name": "لونين", "position": "حارس مرمى"},
+        {"number": 3, "name": "ميكولينكو", "position": "مدافع"},
+        {"number": 10, "name": "مودريك", "position": "جناح"},
+        {"number": 7, "name": "زينتشينكو", "position": "وسط"},
+        {"number": 9, "name": "دوبفيك", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 2, "draws": 0, "losses": 1, "goals_for": 4, "goals_against": 3, "points": 6}
+    },
+    {
+      "id": "HUN", "name": "المجر", "flag": "🇭🇺", "color": "#436F4D", "group": "N", "ranking": 27,
+      "coach": "ماركو روسي",
+      "players": [
+        {"number": 1, "name": "غولاتشي", "position": "حارس مرمى"},
+        {"number": 3, "name": "فيولا", "position": "مدافع"},
+        {"number": 10, "name": "سوبوسلاي", "position": "وسط"},
+        {"number": 9, "name": "فارغا", "position": "مهاجم"},
+        {"number": 8, "name": "ناغي", "position": "وسط"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 3, "goals_against": 3, "points": 4}
+    },
+    {
+      "id": "CRC", "name": "كوستاريكا", "flag": "🇨🇷", "color": "#002B7F", "group": "N", "ranking": 50,
+      "coach": "غوستافو ألفارو",
+      "players": [
+        {"number": 1, "name": "نافاس", "position": "حارس مرمى"},
+        {"number": 3, "name": "دوارتي", "position": "مدافع"},
+        {"number": 10, "name": "كامبل", "position": "جناح"},
+        {"number": 9, "name": "فينيغاس", "position": "مهاجم"},
+        {"number": 7, "name": "روساس", "position": "وسط"}
+      ],
+      "stats": {"played": 3, "wins": 0, "draws": 1, "losses": 2, "goals_for": 1, "goals_against": 5, "points": 1}
+    },
+    {
+      "id": "IDN", "name": "إندونيسيا", "flag": "🇮🇩", "color": "#CE1126", "group": "O", "ranking": 130,
+      "coach": "باتريك كلويفيرت",
+      "players": [
+        {"number": 1, "name": "إيرناندو أري", "position": "حارس مرمى"},
+        {"number": 3, "name": "براتاما أرهان", "position": "مدافع"},
+        {"number": 10, "name": "ويتان سولياستا", "position": "وسط"},
+        {"number": 9, "name": "إيجي ماولانا", "position": "جناح"},
+        {"number": 7, "name": "إيفار جينير", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 0, "draws": 1, "losses": 2, "goals_for": 1, "goals_against": 7, "points": 1}
+    },
+    {
+      "id": "COD", "name": "الكونغو الديمقراطية", "flag": "🇨🇩", "color": "#007FFF", "group": "O", "ranking": 55,
+      "coach": "سيباستيان ديسابر",
+      "players": [
+        {"number": 1, "name": "ماتامبي", "position": "حارس مرمى"},
+        {"number": 3, "name": "نسيمبا", "position": "مدافع"},
+        {"number": 10, "name": "مبوكاني", "position": "مهاجم"},
+        {"number": 7, "name": "كايامبي", "position": "وسط"},
+        {"number": 9, "name": "بونغوندا", "position": "جناح"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 3, "goals_against": 3, "points": 4}
+    },
+    {
+      "id": "PAN", "name": "بنما", "flag": "🇵🇦", "color": "#DA121A", "group": "O", "ranking": 53,
+      "coach": "توماس كريستيانسن",
+      "players": [
+        {"number": 1, "name": "موسكيرا", "position": "حارس مرمى"},
+        {"number": 3, "name": "موريلو", "position": "مدافع"},
+        {"number": 10, "name": "ديفيس", "position": "وسط"},
+        {"number": 9, "name": "فاخاردو", "position": "مهاجم"},
+        {"number": 7, "name": "غودوي", "position": "جناح"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 0, "losses": 2, "goals_for": 2, "goals_against": 4, "points": 3}
+    },
+    {
+      "id": "SCO", "name": "اسكتلندا", "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "color": "#003380", "group": "P", "ranking": 36,
+      "coach": "ستيف كلارك",
+      "players": [
+        {"number": 1, "name": "غوردون", "position": "حارس مرمى"},
+        {"number": 3, "name": "روبرتسون", "position": "مدافع"},
+        {"number": 10, "name": "ماكتومني", "position": "وسط"},
+        {"number": 7, "name": "ماكجين", "position": "وسط"},
+        {"number": 9, "name": "آدامز", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 1, "draws": 1, "losses": 1, "goals_for": 3, "goals_against": 3, "points": 4}
+    },
+    {
+      "id": "NZL", "name": "نيوزيلندا", "flag": "🇳🇿", "color": "#00247D", "group": "P", "ranking": 99,
+      "coach": "داريان بازيلي",
+      "players": [
+        {"number": 1, "name": "سيل", "position": "حارس مرمى"},
+        {"number": 3, "name": "ريد", "position": "مدافع"},
+        {"number": 10, "name": "وود", "position": "مهاجم"},
+        {"number": 7, "name": "روجيك", "position": "وسط"},
+        {"number": 9, "name": "كاتشي", "position": "مدافع"}
+      ],
+      "stats": {"played": 3, "wins": 0, "draws": 2, "losses": 1, "goals_for": 2, "goals_against": 4, "points": 2}
+    },
+    {
+      "id": "VEN", "name": "فنزويلا", "flag": "🇻🇪", "color": "#CF142B", "group": "P", "ranking": 58,
+      "coach": "فيرناندو باتيستا",
+      "players": [
+        {"number": 1, "name": "غراتيرول", "position": "حارس مرمى"},
+        {"number": 3, "name": "غونزاليز", "position": "مدافع"},
+        {"number": 10, "name": "سوتيلدو", "position": "جناح"},
+        {"number": 7, "name": "روندون", "position": "مهاجم"},
+        {"number": 9, "name": "بيلو", "position": "مهاجم"}
+      ],
+      "stats": {"played": 3, "wins": 2, "draws": 0, "losses": 1, "goals_for": 4, "goals_against": 3, "points": 6}
     }
   ],
   "stadiums": [
