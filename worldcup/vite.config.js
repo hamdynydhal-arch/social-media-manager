@@ -3,12 +3,12 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  base: '/social-media-manager/',
+  base: '/social-media-manager/world-cup/',
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icons/*.png'],
+      includeAssets: ['favicon.ico', 'icons/*.png'],
       manifest: {
         name: 'كأس العالم 2026',
         short_name: 'كأس العالم',
@@ -17,8 +17,8 @@ export default defineConfig({
         background_color: '#0f172a',
         display: 'standalone',
         orientation: 'portrait',
-        scope: '/social-media-manager/',
-        start_url: '/social-media-manager/',
+        scope: '/social-media-manager/world-cup/',
+        start_url: '/social-media-manager/world-cup/',
         lang: 'ar',
         dir: 'rtl',
         icons: [
@@ -32,7 +32,7 @@ export default defineConfig({
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'CacheFirst',
-            options: { cacheName: 'google-fonts-cache', expiration: { maxEntries: 10, maxAgeSeconds: 31536000 } }
+            options: { cacheName: 'google-fonts-cache', expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 } }
           }
         ]
       },
