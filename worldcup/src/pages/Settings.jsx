@@ -22,6 +22,7 @@ export default function Settings({
   const [testStatus, setTestStatus] = useState(null)
   const [installing, setInstalling] = useState(false)
   const [showIOSModal, setShowIOSModal] = useState(false)
+  const [showAndroidModal, setShowAndroidModal] = useState(false)
   // React-reactive flag that mirrors window.deferredPrompt existence
   const [hasNativePrompt, setHasNativePrompt] = useState(() => !!window.deferredPrompt)
 
@@ -39,7 +40,7 @@ export default function Settings({
   // ── Install: native OS bottom sheet via beforeinstallprompt ─────────────────
   const handleInstall = async () => {
     if (isIOS) { setShowIOSModal(true); return }
-    if (!window.deferredPrompt) return
+    if (!window.deferredPrompt) { setShowAndroidModal(true); return }
     setInstalling(true)
     try {
       await window.deferredPrompt.prompt()
@@ -388,6 +389,41 @@ export default function Settings({
         <p className="text-center text-slate-400 text-sm">🏆 كأس العالم 2026 — متابع من كل مكان</p>
         <p className="text-center text-slate-500 text-xs mt-1">يعمل بدون إنترنت • إشعارات فورية • RTL عربي</p>
       </div>
+
+      {/* ── Android Manual Install Modal ── */}
+      {showAndroidModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md px-4"
+          onClick={() => setShowAndroidModal(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(180deg, #0f172a 0%, #0a1628 100%)',
+              border: '1.5px solid rgba(52,211,153,0.3)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="text-center px-6 pt-7 pb-4">
+              <div className="text-6xl mb-2">📲</div>
+              <h3 className="text-xl font-black text-white mb-1">تثبيت التطبيق يدوياً</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                لإضافة التطبيق، اضغط على النقاط الثلاث (⋮) في متصفح Chrome واختر (إضافة إلى الشاشة الرئيسية)
+              </p>
+            </div>
+            <div className="px-5 pb-6">
+              <button
+                onClick={() => setShowAndroidModal(false)}
+                className="w-full py-3.5 rounded-2xl font-black text-slate-900 text-sm transition-all active:scale-95"
+                style={{ background: 'linear-gradient(135deg, #34d399, #10b981)', boxShadow: '0 4px 16px rgba(52,211,153,0.35)' }}
+              >
+                فهمت، شكراً!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── iOS Install Modal ── */}
       {showIOSModal && (

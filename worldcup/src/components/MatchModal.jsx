@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import confetti from 'canvas-confetti'
 import { playGoalSound, haptic } from '../utils/audioUtils'
 import lineupsData from '../data/lineups.json'
+import { useWorldCupData } from '../context/WorldCupContext'
 
 function StatBar({ label, homeVal, awayVal, homeColor }) {
   const total = homeVal + awayVal || 1
@@ -22,7 +23,15 @@ function StatBar({ label, homeVal, awayVal, homeColor }) {
 }
 
 export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose }) {
+  const { refresh } = useWorldCupData()
   const [activeTab, setActiveTab] = useState('overview')
+
+  // 30-second polling for live matches
+  useEffect(() => {
+    if (match.status !== 'live') return
+    const id = setInterval(refresh, 30_000)
+    return () => clearInterval(id)
+  }, [match.status, refresh])
   const [userVote, setUserVote] = useState(
     () => localStorage.getItem(`vote_${match.id}`)
   )
@@ -288,6 +297,9 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                 { label: 'الركنيات',           h: match.stats.home.corners,         a: match.stats.away.corners },
                 { label: 'الأخطاء',            h: match.stats.home.fouls,           a: match.stats.away.fouls },
                 { label: 'البطاقات الصفراء',   h: match.stats.home.yellow_cards,    a: match.stats.away.yellow_cards },
+                ...(match.stats.home.red_cards != null ? [
+                  { label: 'البطاقات الحمراء', h: match.stats.home.red_cards,       a: match.stats.away.red_cards },
+                ] : []),
                 ...(match.stats.home.passes != null ? [
                   { label: 'التمريرات',        h: match.stats.home.passes,          a: match.stats.away.passes },
                   { label: 'دقة التمرير %',    h: match.stats.home.pass_accuracy,   a: match.stats.away.pass_accuracy },

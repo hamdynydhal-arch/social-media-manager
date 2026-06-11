@@ -1152,6 +1152,7 @@
           "corners":         3,
           "fouls":           12,
           "yellow_cards":    1,
+          "red_cards":       1,
           "passes":          520,
           "pass_accuracy":   90
         },
@@ -1162,6 +1163,7 @@
           "corners":         1,
           "fouls":           11,
           "yellow_cards":    1,
+          "red_cards":       2,
           "passes":          335,
           "pass_accuracy":   81
         }

@@ -8,6 +8,7 @@
 // ── Endpoints ──────────────────────────────────────────────────────────────
 const ESPN_SCOREBOARD = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard'
 const ESPN_STANDINGS  = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/standings'
+const THINGPROXY     = url => `https://thingproxy.freeboard.io/fetch/${url}`
 const ALLORIGINS      = url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
 const CORSPROXY      = url => `https://corsproxy.io/?${encodeURIComponent(url)}`
 const ALLORIGINS_GET = url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`
@@ -74,10 +75,12 @@ async function safeFetch(url) {
   }
 }
 
-// Try direct, then proxy if CORS blocks it
+// Try direct, then proxies in priority order if CORS blocks
 async function fetchWithFallback(url) {
   const direct = await safeFetch(url)
   if (direct) return direct
+  const thing = await safeFetch(THINGPROXY(url))
+  if (thing) return thing
   const raw = await safeFetch(ALLORIGINS(url))
   if (raw) return raw
   const cors = await safeFetch(CORSPROXY(url))

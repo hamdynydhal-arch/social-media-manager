@@ -1,4 +1,4 @@
-// v8 — real stats M001, corrected minutes, native-only install, zero hallucination
+// v9 — dynamic standings, red cards, android install modal, aggressive CORS fallback
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
