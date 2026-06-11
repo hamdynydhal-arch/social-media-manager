@@ -1,8 +1,65 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import MatchCard from '../components/MatchCard'
 import MatchModal from '../components/MatchModal'
 import NewsTicker from '../components/NewsTicker'
 import { useWorldCupData } from '../context/WorldCupContext'
+
+function useCountdown(targetISO) {
+  const [diff, setDiff] = useState(() => new Date(targetISO) - Date.now())
+  useEffect(() => {
+    const id = setInterval(() => setDiff(new Date(targetISO) - Date.now()), 1000)
+    return () => clearInterval(id)
+  }, [targetISO])
+  return diff
+}
+
+function NextMatchCountdown({ match, homeTeam, awayTeam }) {
+  const diff = useCountdown(`${match.date}T${match.time}:00Z`)
+  if (diff <= 0) return null
+  const totalSec = Math.floor(diff / 1000)
+  const days    = Math.floor(totalSec / 86400)
+  const hours   = Math.floor((totalSec % 86400) / 3600)
+  const minutes = Math.floor((totalSec % 3600) / 60)
+  const seconds = totalSec % 60
+  const pad = n => String(n).padStart(2, '0')
+  return (
+    <div className="card p-4 border-amber-500/20 bg-gradient-to-r from-amber-900/15 to-transparent">
+      <p className="text-xs text-amber-400 font-bold text-center mb-2">⏱️ العد التنازلي للمباراة القادمة</p>
+      <div className="flex items-center justify-center gap-2 mb-3 text-sm font-bold text-white">
+        <span className="text-xl">{homeTeam?.flag}</span>
+        <span>{homeTeam?.name}</span>
+        <span className="text-slate-500 text-xs px-1">vs</span>
+        <span>{awayTeam?.name}</span>
+        <span className="text-xl">{awayTeam?.flag}</span>
+      </div>
+      <div className="flex items-end justify-center gap-2">
+        {days > 0 && (
+          <>
+            <div className="text-center">
+              <div className="text-3xl font-black text-white tabular-nums">{days}</div>
+              <div className="text-xs text-slate-400">يوم</div>
+            </div>
+            <div className="text-slate-500 text-2xl font-black mb-4">:</div>
+          </>
+        )}
+        <div className="text-center">
+          <div className="text-3xl font-black text-white tabular-nums">{pad(hours)}</div>
+          <div className="text-xs text-slate-400">ساعة</div>
+        </div>
+        <div className="text-slate-500 text-2xl font-black mb-4">:</div>
+        <div className="text-center">
+          <div className="text-3xl font-black text-amber-400 tabular-nums">{pad(minutes)}</div>
+          <div className="text-xs text-slate-400">دقيقة</div>
+        </div>
+        <div className="text-slate-500 text-2xl font-black mb-4">:</div>
+        <div className="text-center">
+          <div className="text-3xl font-black text-amber-400 tabular-nums">{pad(seconds)}</div>
+          <div className="text-xs text-slate-400">ثانية</div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function getTeam(teams, id) { return teams.find(t => t.id === id) }
 function getStadium(stadiums, id) { return stadiums.find(s => s.id === id) }
@@ -25,6 +82,13 @@ export default function Home({ favoriteTeam, installState = {} }) {
   const today = new Date().toISOString().split('T')[0]
 
   const liveMatches = useMemo(() => matches.filter(m => m.status === 'live'), [matches])
+
+  const nextScheduledMatch = useMemo(
+    () => matches
+      .filter(m => m.status === 'scheduled')
+      .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))[0] ?? null,
+    [matches]
+  )
 
   const todayMatches = useMemo(
     () => matches.filter(m => m.date === today && m.status !== 'live'),
@@ -91,8 +155,17 @@ export default function Home({ favoriteTeam, installState = {} }) {
         {apiMode === 'live' && (
           <div className="flex items-center justify-center gap-2 py-1">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs text-emerald-400 font-medium">بيانات حية من football-data.org</span>
+            <span className="text-xs text-emerald-400 font-medium">بيانات حية</span>
           </div>
+        )}
+
+        {/* ── Next match countdown ── */}
+        {nextScheduledMatch && (
+          <NextMatchCountdown
+            match={nextScheduledMatch}
+            homeTeam={getTeam(teams, nextScheduledMatch.team_home)}
+            awayTeam={getTeam(teams, nextScheduledMatch.team_away)}
+          />
         )}
 
         {/* ── Favorite team card ── */}

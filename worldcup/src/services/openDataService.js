@@ -9,6 +9,8 @@
 const ESPN_SCOREBOARD = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard'
 const ESPN_STANDINGS  = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/standings'
 const ALLORIGINS      = url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
+const CORSPROXY      = url => `https://corsproxy.io/?${encodeURIComponent(url)}`
+const ALLORIGINS_GET = url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`
 const RSS2JSON        = url => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=20`
 
 const RSS_FEEDS = [
@@ -76,7 +78,15 @@ async function safeFetch(url) {
 async function fetchWithFallback(url) {
   const direct = await safeFetch(url)
   if (direct) return direct
-  return safeFetch(ALLORIGINS(url))
+  const raw = await safeFetch(ALLORIGINS(url))
+  if (raw) return raw
+  const cors = await safeFetch(CORSPROXY(url))
+  if (cors) return cors
+  const get = await safeFetch(ALLORIGINS_GET(url))
+  if (get?.contents) {
+    try { return JSON.parse(get.contents) } catch { return null }
+  }
+  return null
 }
 
 // ── ESPN Live Scores ─────────────────────────────────────────────────────────
@@ -152,7 +162,7 @@ export async function fetchRssNews() {
           const title = item.title?.trim() ?? ''
           // Prepend time if available
           const pub = item.pubDate ? new Date(item.pubDate) : null
-          const time = pub ? pub.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' }) : ''
+          const time = pub ? pub.toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' }) : ''
           return time ? `${time} — ${title}` : title
         }).filter(Boolean)
       }

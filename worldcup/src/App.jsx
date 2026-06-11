@@ -56,11 +56,11 @@ function AppInner() {
             <div className="flex items-center gap-2">
               {apiMode === 'live' && lastUpdated && (
                 <span className="text-xs text-emerald-400 font-medium">
-                  {lastUpdated.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                  {lastUpdated.toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })}
                 </span>
               )}
               <span className="text-xs text-slate-500">
-                {new Date().toLocaleDateString('ar-SA', { day: 'numeric', month: 'short' })}
+                {new Date().toLocaleDateString('ar-SA-u-nu-latn', { day: 'numeric', month: 'short' })}
               </span>
               <div
                 className={`w-2 h-2 rounded-full animate-pulse ${apiMode === 'live' ? 'bg-emerald-400' : 'bg-amber-400'}`}

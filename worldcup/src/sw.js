@@ -1,4 +1,4 @@
-// v6 — live override MEX 1-0 RSA + score predictor + native install
+// v7 — real lineups, events tab, CORS fallbacks, countdown, Western numerals
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'

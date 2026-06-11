@@ -9,19 +9,22 @@ const WorldCupCtx = createContext(null)
 // This corrects the running minute counter to reflect real elapsed play time.
 const LIVE_OVERRIDES = {
   M001: {
-    score_home: 1,
+    score_home: 2,
     score_away: 0,
-    kickoff_offset_min: 6, // actual whistle was at 19:06 UTC, not 19:00
+    kickoff_offset_min: 6,
     goals: [
-      { team: 'MEX', player: 'هنري مارتين', minute: 17, type: 'عادي' },
+      { team: 'MEX', player: 'خوليان كيمايونيس', minute: 9, type: 'عادي' },
+      { team: 'MEX', player: 'راؤول خيمينيز', minute: 66, type: 'عادي' },
     ],
   },
 }
 
 // Breaking news that is always shown (historical facts, not API-dependent)
 const HARDCODED_NEWS = [
-  '🔴 عاجل: انطلاق مباراة الافتتاح لبطولة كأس العالم 2026 — المكسيك أمام جنوب أفريقيا في أزتيكا!',
-  '⚽ جوووول! المكسيك تفتتح التسجيل بالهدف الأول في الدقيقة 17 بقدم هنري مارتين!',
+  '🏆 نهائية: المكسيك 2-0 جنوب أفريقيا — انتصار تاريخي في مباراة الافتتاح بمونديال 2026!',
+  '⚽ خوليان كيمايونيس يسجل أول هدف في تاريخ مونديال 2026 في الدقيقة 9',
+  '⚽ راؤول خيمينيز يضاعف في الدقيقة 66 برأسية ذهبية من تمريرة روبيرتو ألفارادو',
+  '🟥 ثلاث بطاقات حمراء في مباراة الافتتاح: سيتولي 49ـ ومونتيس 70ـ وزواني 85ـ',
 ]
 
 // ── Time-based live status ────────────────────────────────────────────────────

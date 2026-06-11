@@ -22,6 +22,7 @@ export default function Settings({
   const [testStatus, setTestStatus] = useState(null)
   const [installing, setInstalling] = useState(false)
   const [showIOSModal, setShowIOSModal] = useState(false)
+  const [showAndroidManualModal, setShowAndroidManualModal] = useState(false)
   // React-reactive flag that mirrors window.deferredPrompt existence
   const [hasNativePrompt, setHasNativePrompt] = useState(() => !!window.deferredPrompt)
 
@@ -36,17 +37,20 @@ export default function Settings({
     }
   }, [])
 
-  // ── Install: call native prompt directly from window.deferredPrompt ─────────
+  // ── Install: native prompt if available, else show manual instructions ───────
   const handleInstall = async () => {
     if (isIOS) { setShowIOSModal(true); return }
-    if (!window.deferredPrompt) return // prompt not yet captured — button won't show
-    setInstalling(true)
-    try {
-      await window.deferredPrompt.prompt()
-      const { outcome } = await window.deferredPrompt.userChoice
-      if (outcome === 'accepted') window.deferredPrompt = null
-    } finally {
-      setInstalling(false)
+    if (window.deferredPrompt) {
+      setInstalling(true)
+      try {
+        await window.deferredPrompt.prompt()
+        const { outcome } = await window.deferredPrompt.userChoice
+        if (outcome === 'accepted') window.deferredPrompt = null
+      } finally {
+        setInstalling(false)
+      }
+    } else {
+      setShowAndroidManualModal(true)
     }
   }
 
@@ -115,9 +119,8 @@ export default function Settings({
   const notifStatusLabel = { granted: '✅ مفعّلة', denied: '🚫 محظورة', default: '🔕 غير مفعّلة' }[notifPerm] ?? '🔕 غير مفعّلة'
   const notifStatusColor = { granted: 'text-emerald-400', denied: 'text-red-400', default: 'text-amber-400' }[notifPerm] ?? 'text-amber-400'
 
-  // Show install section when not in standalone mode AND there's something to offer
-  const notInstalled = !isInstalled
-  const showInstallSection = notInstalled && (hasNativePrompt || isIOS)
+  // Show install section when not in standalone mode
+  const showInstallSection = !isInstalled
 
   return (
     <div className="px-4 py-4 pb-24 space-y-4">
@@ -183,7 +186,6 @@ export default function Settings({
                 <p className="text-center text-emerald-400/70 text-xs">يتطلب متصفح Safari</p>
               </>
             ) : (
-              /* Android: window.deferredPrompt.prompt() — no alerts, no manual instructions */
               <>
                 <button
                   onClick={handleInstall}
@@ -193,7 +195,9 @@ export default function Settings({
                 >
                   {installing ? '⏳ جاري التثبيت...' : '📲 تثبيت التطبيق الآن'}
                 </button>
-                <p className="text-center text-emerald-400/70 text-xs">سيظهر مربع التثبيت الأصلي من Chrome فوراً</p>
+                <p className="text-center text-emerald-400/70 text-xs">
+                  {window.deferredPrompt ? 'سيظهر مربع التثبيت الأصلي من Chrome فوراً' : 'اضغط لعرض طريقة التثبيت اليدوي'}
+                </p>
               </>
             )}
           </div>
@@ -321,7 +325,7 @@ export default function Settings({
               <div>
                 <p className="font-bold text-white text-sm">{s.name}</p>
                 <p className="text-xs text-slate-400">{s.city}، {s.country}</p>
-                <p className="text-xs text-emerald-400">{s.capacity.toLocaleString('ar-SA')} مقعد</p>
+                <p className="text-xs text-emerald-400">{s.capacity.toLocaleString('en-US')} مقعد</p>
               </div>
             </div>
           ))}
@@ -350,7 +354,7 @@ export default function Settings({
         </div>
         {lastUpdated && (
           <p className="text-xs text-slate-500 text-center mb-2">
-            آخر تحديث: {lastUpdated.toLocaleTimeString('ar-SA')} — يتجدد كل 60 ثانية
+            آخر تحديث: {lastUpdated.toLocaleTimeString('ar-SA-u-nu-latn')} — يتجدد كل 60 ثانية
           </p>
         )}
         <button
@@ -386,6 +390,104 @@ export default function Settings({
         <p className="text-center text-slate-400 text-sm">🏆 كأس العالم 2026 — متابع من كل مكان</p>
         <p className="text-center text-slate-500 text-xs mt-1">يعمل بدون إنترنت • إشعارات فورية • RTL عربي</p>
       </div>
+
+      {/* ── Android Manual Install Modal ── */}
+      {showAndroidManualModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md px-4"
+          onClick={() => setShowAndroidManualModal(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(180deg, #0f172a 0%, #0a1628 100%)',
+              border: '1.5px solid rgba(52,211,153,0.3)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="text-center px-6 pt-7 pb-4">
+              <div className="text-6xl mb-2">📲</div>
+              <h3 className="text-xl font-black text-white mb-1">تثبيت على Android</h3>
+              <p className="text-slate-400 text-sm">اتبع هذه الخطوات في متصفح Chrome</p>
+            </div>
+            <div className="px-5 pb-6 space-y-2.5">
+              {[
+                { n: '1', color: 'bg-blue-500', icon: '⋮', title: 'اضغط القائمة (ثلاث نقاط)', sub: 'في أعلى يمين شريط Chrome' },
+                { n: '2', color: 'bg-blue-500', icon: '➕', title: 'اختر "إضافة إلى الشاشة الرئيسية"', sub: 'أو "تثبيت التطبيق" في بعض الإصدارات' },
+                { n: '3', color: 'bg-emerald-500', icon: '✅', title: 'اضغط "تثبيت" في النافذة', sub: 'ستجد أيقونة التطبيق على شاشتك فوراً' },
+              ].map(({ n, color, icon, title, sub }) => (
+                <div key={n} className="flex items-center gap-3 bg-slate-800/70 rounded-2xl px-4 py-3">
+                  <div className={`w-8 h-8 rounded-full ${color} flex items-center justify-center flex-shrink-0`}>
+                    <span className="text-white font-black text-sm">{n}</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white text-sm font-bold leading-tight">{title}</p>
+                    <p className="text-slate-400 text-xs mt-0.5">{sub}</p>
+                  </div>
+                  <span className="text-2xl flex-shrink-0">{icon}</span>
+                </div>
+              ))}
+              <button
+                onClick={() => setShowAndroidManualModal(false)}
+                className="w-full py-3.5 rounded-2xl font-black text-slate-900 text-sm transition-all active:scale-95"
+                style={{ background: 'linear-gradient(135deg, #34d399, #10b981)', boxShadow: '0 4px 16px rgba(52,211,153,0.35)' }}
+              >
+                فهمت، شكراً!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Android Manual Install Modal ── */}
+      {showAndroidManualModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md px-4"
+          onClick={() => setShowAndroidManualModal(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(180deg, #0f172a 0%, #0a1628 100%)',
+              border: '1.5px solid rgba(52,211,153,0.3)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="text-center px-6 pt-7 pb-4">
+              <div className="text-6xl mb-2">📲</div>
+              <h3 className="text-xl font-black text-white mb-1">تثبيت التطبيق على Android</h3>
+              <p className="text-slate-400 text-sm">اتبع هذه الخطوات في متصفح Chrome</p>
+            </div>
+            <div className="px-5 pb-6 space-y-2.5">
+              {[
+                { n: '1', color: 'bg-blue-500', icon: '⋮', title: 'اضغط القائمة (ثلاث نقاط)', sub: 'الزر في أعلى يمين شريط Chrome' },
+                { n: '2', color: 'bg-blue-500', icon: '➕', title: 'اختر "إضافة إلى الشاشة الرئيسية"', sub: 'أو "تثبيت التطبيق" في بعض الإصدارات' },
+                { n: '3', color: 'bg-emerald-500', icon: '✅', title: 'اضغط "تثبيت" في النافذة المنبثقة', sub: 'ستجد أيقونة التطبيق على شاشتك فوراً' },
+              ].map(({ n, color, icon, title, sub }) => (
+                <div key={n} className="flex items-center gap-3 bg-slate-800/70 rounded-2xl px-4 py-3">
+                  <div className={`w-8 h-8 rounded-full ${color} flex items-center justify-center flex-shrink-0`}>
+                    <span className="text-white font-black text-sm">{n}</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white text-sm font-bold leading-tight">{title}</p>
+                    <p className="text-slate-400 text-xs mt-0.5">{sub}</p>
+                  </div>
+                  <span className="text-2xl flex-shrink-0">{icon}</span>
+                </div>
+              ))}
+              <button
+                onClick={() => setShowAndroidManualModal(false)}
+                className="w-full py-3.5 rounded-2xl font-black text-slate-900 text-sm transition-all active:scale-95"
+                style={{ background: 'linear-gradient(135deg, #34d399, #10b981)', boxShadow: '0 4px 16px rgba(52,211,153,0.35)' }}
+              >
+                فهمت، شكراً!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── iOS Install Modal ── */}
       {showIOSModal && (

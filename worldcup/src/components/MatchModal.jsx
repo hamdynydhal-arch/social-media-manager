@@ -82,9 +82,10 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
 
   const tabs = [
     { id: 'overview', label: 'نظرة عامة' },
-    { id: 'stats', label: 'إحصائيات' },
-    { id: 'lineup', label: 'تشكيلة' },
-    { id: 'vote', label: 'توقع' },
+    { id: 'events',   label: 'أحداث' },
+    { id: 'stats',    label: 'إحصائيات' },
+    { id: 'lineup',   label: 'تشكيلة' },
+    { id: 'vote',     label: 'توقع' },
   ]
 
   return (
@@ -114,7 +115,7 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                   <div>
                     <div className="text-2xl font-black text-white">vs</div>
                     <div className="text-xs text-slate-400 mt-1">
-                      {new Date(`${match.date}T${match.time}:00Z`).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(`${match.date}T${match.time}:00Z`).toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                 ) : (
@@ -221,12 +222,58 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                 <p className="text-white font-bold">{stadium?.name}</p>
                 <p className="text-slate-400 text-xs">{stadium?.city}، {stadium?.country}</p>
                 <div className="flex gap-4 mt-2 text-xs text-slate-400">
-                  <span>👥 {stadium?.capacity?.toLocaleString('ar-SA')} مقعد</span>
+                  <span>👥 {stadium?.capacity?.toLocaleString('en-US')} مقعد</span>
                   <span>🌿 {stadium?.surface}</span>
                 </div>
               </div>
             </>
           )}
+
+          {activeTab === 'events' && (() => {
+            const evtList = match.events ?? match.goals.map(g => ({ type: 'goal', ...g }))
+            const homeId = homeTeam.id
+            const eventIcon = t => ({ goal: '⚽', red_card: '🟥', yellow_card: '🟨', substitution: '🔄', halftime: '⏸️', kickoff2: '▶️', kickoff: '🏁', fulltime: '🏆', var: '📺' }[t] ?? '📋')
+            if (evtList.length === 0) return (
+              <div className="text-center text-slate-400 py-8">
+                <p className="text-3xl mb-2">📋</p>
+                <p>لا توجد أحداث متاحة</p>
+              </div>
+            )
+            return (
+              <div className="space-y-1.5">
+                {evtList.map((ev, i) => {
+                  const isHomeTeam = ev.team === homeId
+                  const isNeutral  = !ev.team
+                  return (
+                    <div
+                      key={i}
+                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 ${
+                        isNeutral ? 'bg-slate-700/30 border border-slate-600/30'
+                        : isHomeTeam ? 'bg-emerald-900/20 border border-emerald-700/30'
+                        : 'bg-blue-900/20 border border-blue-700/30'
+                      }`}
+                    >
+                      <span className={`text-xs font-black w-8 text-center flex-shrink-0 tabular-nums ${
+                        isNeutral ? 'text-slate-400' : isHomeTeam ? 'text-emerald-400' : 'text-blue-400'
+                      }`}>
+                        {ev.minute > 0 ? `${ev.minute}'` : ''}
+                      </span>
+                      <span className="text-lg flex-shrink-0">{eventIcon(ev.type)}</span>
+                      <div className="flex-1 min-w-0">
+                        {ev.player && <p className="text-white text-sm font-bold truncate">{ev.player}</p>}
+                        <p className="text-slate-400 text-xs truncate">{ev.detail}</p>
+                      </div>
+                      {ev.team && (
+                        <span className="text-lg flex-shrink-0">
+                          {ev.team === homeId ? homeTeam.flag : awayTeam.flag}
+                        </span>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )
+          })()}
 
           {activeTab === 'stats' && match.stats && (
             <div className="space-y-3">
@@ -425,7 +472,7 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                         </div>
                       )
                     })}
-                    <p className="text-center text-xs text-slate-500">إجمالي الأصوات: {totalVotes.toLocaleString('ar-SA')}</p>
+                    <p className="text-center text-xs text-slate-500">إجمالي الأصوات: {totalVotes.toLocaleString('en-US')}</p>
                   </div>
                 )}
               </div>

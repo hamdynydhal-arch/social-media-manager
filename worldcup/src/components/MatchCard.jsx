@@ -25,12 +25,12 @@ export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick 
   const isScheduled = match.status === 'scheduled'
 
   const matchDate = new Date(`${match.date}T${match.time}:00Z`)
-  const localTime = matchDate.toLocaleTimeString('ar-SA', {
+  const localTime = matchDate.toLocaleTimeString('ar-SA-u-nu-latn', {
     hour: '2-digit',
     minute: '2-digit',
     timeZoneName: 'short',
   })
-  const localDate = matchDate.toLocaleDateString('ar-SA', {
+  const localDate = matchDate.toLocaleDateString('ar-SA-u-nu-latn', {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
