@@ -1,0 +1,62 @@
+{
+  "M001": {
+    "formation_home": "4-3-3",
+    "formation_away": "4-4-2",
+    "home": [
+      { "number": 13, "name": "غييرمو أوتشوا", "position": "حارس" },
+      { "number": 2,  "name": "خورخي سانشيز", "position": "ظهير أيمن" },
+      { "number": 3,  "name": "سيزار مونتيس", "position": "قلب دفاع" },
+      { "number": 15, "name": "يوهان فاسكيز", "position": "قلب دفاع" },
+      { "number": 21, "name": "خيسوس غايارو", "position": "ظهير أيسر" },
+      { "number": 6,  "name": "إيدسون ألفاريز", "position": "وسط دفاعي" },
+      { "number": 7,  "name": "كارلوس رودريغيز", "position": "وسط" },
+      { "number": 16, "name": "أوربيلين بينيدا", "position": "وسط" },
+      { "number": 22, "name": "هيرفينغ لوزانو", "position": "جناح أيمن" },
+      { "number": 9,  "name": "راؤول خيمينيز", "position": "مهاجم" },
+      { "number": 14, "name": "هنري مارتين", "position": "جناح أيسر" }
+    ],
+    "away": [
+      { "number": 1,  "name": "رونوين ويليامز", "position": "حارس" },
+      { "number": 2,  "name": "خولوسو مودو", "position": "ظهير أيمن" },
+      { "number": 5,  "name": "روشين دو ريك", "position": "قلب دفاع" },
+      { "number": 20, "name": "سيياندا خولو", "position": "قلب دفاع" },
+      { "number": 17, "name": "تيرينس ماشيغو", "position": "ظهير أيسر" },
+      { "number": 6,  "name": "سيبو مبولي", "position": "وسط" },
+      { "number": 8,  "name": "إيثان نكوسي", "position": "وسط" },
+      { "number": 11, "name": "ثيمبا زواني", "position": "وسط" },
+      { "number": 10, "name": "بيرسي تاو", "position": "جناح أيمن" },
+      { "number": 9,  "name": "إيفيدنس ماكغوبا", "position": "مهاجم" },
+      { "number": 14, "name": "لايل فوستر", "position": "جناح أيسر" }
+    ]
+  },
+  "M002": {
+    "formation_home": "4-2-3-1",
+    "formation_away": "4-3-3",
+    "home": [
+      { "number": 1,  "name": "كيم سيونغ-غيون", "position": "حارس" },
+      { "number": 2,  "name": "كيم مون-هوان", "position": "ظهير أيمن" },
+      { "number": 5,  "name": "كيم يونغ-غون", "position": "قلب دفاع" },
+      { "number": 4,  "name": "كيم جين-سو", "position": "قلب دفاع" },
+      { "number": 3,  "name": "هونغ تشول", "position": "ظهير أيسر" },
+      { "number": 16, "name": "جيونغ وو-يونغ", "position": "وسط دفاعي" },
+      { "number": 8,  "name": "هوانغ إن-بيوم", "position": "وسط دفاعي" },
+      { "number": 17, "name": "لي جاي-سونغ", "position": "وسط هجومي" },
+      { "number": 10, "name": "لي جايه-سونغ", "position": "جناح أيمن" },
+      { "number": 9,  "name": "تشو غيون-غيو", "position": "مهاجم" },
+      { "number": 7,  "name": "سون هيونغ-مين", "position": "جناح أيسر" }
+    ],
+    "away": [
+      { "number": 1,  "name": "ييندريتش ستانيك", "position": "حارس" },
+      { "number": 2,  "name": "بافيل كاديرابيك", "position": "ظهير أيمن" },
+      { "number": 5,  "name": "توماش هولاس", "position": "قلب دفاع" },
+      { "number": 3,  "name": "ديفيد زيما", "position": "قلب دفاع" },
+      { "number": 15, "name": "ياكوب بيتر", "position": "ظهير أيسر" },
+      { "number": 8,  "name": "توماش سوتشيك", "position": "وسط" },
+      { "number": 6,  "name": "أليكس كراتسا", "position": "وسط" },
+      { "number": 10, "name": "باتريك شيك", "position": "وسط هجومي" },
+      { "number": 7,  "name": "أنتونين باراك", "position": "جناح أيمن" },
+      { "number": 9,  "name": "آدم هلوزيك", "position": "مهاجم" },
+      { "number": 11, "name": "فلاديميل سوفيك", "position": "جناح أيسر" }
+    ]
+  }
+}

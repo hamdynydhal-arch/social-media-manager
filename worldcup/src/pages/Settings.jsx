@@ -25,10 +25,14 @@ export default function Settings({
 
   // ── Install handlers ────────────────────────────────────────────────────────
   const handleInstall = async () => {
-    if (!installPrompt || !triggerInstall) return
-    setInstalling(true)
-    await triggerInstall()
-    setInstalling(false)
+    if (triggerInstall && installPrompt) {
+      setInstalling(true)
+      await triggerInstall()
+      setInstalling(false)
+    } else {
+      // Fallback: Chrome 3-dot menu instruction (prompt not yet available)
+      alert('افتح قائمة Chrome (⋮) واختر "إضافة إلى الشاشة الرئيسية" أو "تثبيت التطبيق"')
+    }
   }
 
   // ── Notification handlers ───────────────────────────────────────────────────
@@ -96,7 +100,8 @@ export default function Settings({
   const notifStatusLabel = { granted: '✅ مفعّلة', denied: '🚫 محظورة', default: '🔕 غير مفعّلة' }[notifPerm] ?? '🔕 غير مفعّلة'
   const notifStatusColor = { granted: 'text-emerald-400', denied: 'text-red-400', default: 'text-amber-400' }[notifPerm] ?? 'text-amber-400'
 
-  const canInstall = !isInstalled && (installPrompt || isIOS)
+  // Show install section whenever NOT in standalone mode (regardless of installPrompt)
+  const notInstalled = !isInstalled
 
   return (
     <div className="px-4 py-4 pb-24 space-y-4">
@@ -124,7 +129,7 @@ export default function Settings({
         </button>
       </div>
 
-      {/* ── Install App (permanent, visible until installed) ── */}
+      {/* ── Install App ── */}
       {isInstalled ? (
         <div className="card p-4 border-emerald-500/30 bg-emerald-900/10">
           <div className="flex items-center gap-3">
@@ -135,7 +140,7 @@ export default function Settings({
             </div>
           </div>
         </div>
-      ) : canInstall ? (
+      ) : notInstalled ? (
         <div
           className="rounded-3xl overflow-hidden"
           style={{
@@ -151,26 +156,33 @@ export default function Settings({
           </div>
           <div className="px-4 pb-5 space-y-2.5">
             {isIOS ? (
-              <button
-                onClick={() => setShowIOSModal(true)}
-                className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95"
-                style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 4px 20px rgba(52,211,153,0.5)' }}
-              >
-                📲 كيفية التثبيت على iPhone
-              </button>
+              /* iOS: always show instructions modal button */
+              <>
+                <button
+                  onClick={() => setShowIOSModal(true)}
+                  className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95"
+                  style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 4px 20px rgba(52,211,153,0.5)' }}
+                >
+                  📲 كيفية التثبيت على iPhone / iPad
+                </button>
+                <p className="text-center text-emerald-400/70 text-xs">يتطلب متصفح Safari</p>
+              </>
             ) : (
-              <button
-                onClick={handleInstall}
-                disabled={installing || !installPrompt}
-                className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95 disabled:opacity-60"
-                style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 4px 20px rgba(52,211,153,0.5)' }}
-              >
-                {installing ? '⏳ جاري التثبيت...' : '📲 تثبيت التطبيق الآن'}
-              </button>
+              /* Android/Desktop: call native prompt if available, fallback to alert */
+              <>
+                <button
+                  onClick={handleInstall}
+                  disabled={installing}
+                  className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95 disabled:opacity-60"
+                  style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 4px 20px rgba(52,211,153,0.5)' }}
+                >
+                  {installing ? '⏳ جاري التثبيت...' : installPrompt ? '📲 تثبيت التطبيق الآن (لمسة واحدة)' : '📲 تثبيت التطبيق'}
+                </button>
+                <p className="text-center text-emerald-400/70 text-xs">
+                  {installPrompt ? 'سيظهر مربع التثبيت الأصلي من Chrome فوراً' : 'افتح القائمة (⋮) واختر "تثبيت التطبيق"'}
+                </p>
+              </>
             )}
-            <p className="text-center text-emerald-400/70 text-xs">
-              {isIOS ? 'يتطلب متصفح Safari على iPhone / iPad' : 'تثبيت سريع بضغطة واحدة'}
-            </p>
           </div>
         </div>
       ) : null}

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import confetti from 'canvas-confetti'
 import { playGoalSound, haptic } from '../utils/audioUtils'
+import lineupsData from '../data/lineups.json'
 
 function StatBar({ label, homeVal, awayVal, homeColor }) {
   const total = homeVal + awayVal || 1
@@ -39,8 +40,13 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
   }
 
   const totalVotes = votes.home + votes.draw + votes.away
-  const homeTeamPlayers = homeTeam?.players || []
-  const awayTeamPlayers = awayTeam?.players || []
+
+  // Lineup: prefer match-specific data from lineups.json, fall back to team.players
+  const matchLineup = lineupsData[match.id]
+  const homeTeamPlayers = matchLineup?.home || homeTeam?.players || []
+  const awayTeamPlayers = matchLineup?.away || awayTeam?.players || []
+  const homeFormation = matchLineup?.formation_home || ''
+  const awayFormation = matchLineup?.formation_away || ''
 
   const tabs = [
     { id: 'overview', label: 'نظرة عامة' },
@@ -217,27 +223,45 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
           )}
 
           {activeTab === 'lineup' && (
-            <div className="grid grid-cols-2 gap-4">
-              {[{ team: homeTeam, players: homeTeamPlayers }, { team: awayTeam, players: awayTeamPlayers }].map(({ team, players }) => (
-                <div key={team.id}>
-                  <div className="flex items-center gap-1 mb-2">
-                    <span>{team.flag}</span>
-                    <span className="text-xs font-bold text-white">{team.name}</span>
-                  </div>
-                  <div className="space-y-1">
-                    {players.map((p) => (
-                      <div key={p.number} className="flex items-center gap-2 bg-slate-800/50 rounded-lg px-2 py-1.5">
-                        <span className="text-xs text-amber-400 font-bold w-5 text-center">{p.number}</span>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs text-white truncate">{p.name}</p>
-                          <p className="text-xs text-slate-500">{p.position}</p>
-                        </div>
+            homeTeamPlayers.length === 0 && awayTeamPlayers.length === 0 ? (
+              <div className="text-center text-slate-400 py-8">
+                <p className="text-3xl mb-2">📋</p>
+                <p>التشكيلة ستُعلن قبل المباراة بساعة</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { team: homeTeam, players: homeTeamPlayers, formation: homeFormation },
+                  { team: awayTeam, players: awayTeamPlayers, formation: awayFormation },
+                ].map(({ team, players, formation }) => (
+                  <div key={team.id}>
+                    <div className="flex items-center gap-1 mb-1">
+                      <span className="text-lg">{team.flag}</span>
+                      <span className="text-xs font-black text-white leading-tight">{team.name}</span>
+                    </div>
+                    {formation && (
+                      <div className="text-xs text-emerald-400 font-bold mb-2 bg-emerald-900/30 rounded-lg px-2 py-0.5 inline-block">
+                        {formation}
                       </div>
-                    ))}
+                    )}
+                    <div className="space-y-1">
+                      {players.map((p, i) => (
+                        <div
+                          key={i}
+                          className={`flex items-center gap-1.5 rounded-lg px-2 py-1.5 ${i === 0 ? 'bg-amber-900/30 border border-amber-500/20' : 'bg-slate-800/50'}`}
+                        >
+                          <span className="text-xs text-amber-400 font-black w-5 text-center flex-shrink-0">{p.number}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-white truncate font-medium">{p.name}</p>
+                            <p className="text-xs text-slate-500 truncate">{p.position}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )
           )}
 
           {activeTab === 'vote' && (

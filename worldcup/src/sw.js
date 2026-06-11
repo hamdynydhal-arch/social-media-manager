@@ -1,4 +1,4 @@
-// v4 — ForceInstallModal + real SW showNotification test
+// v5 — time-based live engine + lineup data + install fix
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
