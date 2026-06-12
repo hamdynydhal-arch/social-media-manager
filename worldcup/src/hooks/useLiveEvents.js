@@ -110,7 +110,7 @@ export function useLiveMatchEvents(favoriteTeams) {
         const home    = data.teams.find(t => t.id === match.team_home)
         const away    = data.teams.find(t => t.id === match.team_away)
         const stadium = data.stadiums.find(s => s.id === match.stadium_id)
-        const matchMs = new Date(`${match.date}T${match.time}:00`).getTime()
+        const matchMs = new Date(`${match.date}T${match.time}:00Z`).getTime()
         const diffMin = (matchMs - now) / 60_000
 
         const favNames = teams
@@ -125,8 +125,8 @@ export function useLiveMatchEvents(favoriteTeams) {
           firedRef.current.add(k60)
           const delay = Math.max(0, matchMs - now - 60 * 60_000)
           setTimeout(() => fireWorldCupAlert(
-            `⭐ ساعة على انطلاق ${home?.name} ضد ${away?.name}`,
-            `${favNames} يلعب خلال ساعة في ${stadium?.name ?? ''} — استعد! 📺`,
+            `🚨 ساعة على الانطلاق! ${home?.name} ضد ${away?.name}`,
+            `${favNames} | ${stadium?.city ?? ''} — استعد! 📺`,
             'warning', true
           ), delay)
         }
@@ -137,8 +137,8 @@ export function useLiveMatchEvents(favoriteTeams) {
           firedRef.current.add(k10)
           const delay = Math.max(0, matchMs - now - 10 * 60_000)
           setTimeout(() => fireWorldCupAlert(
-            `⭐ 10 دقائق على الانطلاق! ${home?.name} ضد ${away?.name}`,
-            `استعد! ${favNames} يلعب بعد 10 دقائق في ${stadium?.city ?? ''}! ⚽`,
+            `🚨 استعد! 10 دقائق | ${home?.name} ضد ${away?.name}`,
+            `${favNames} | ${stadium?.city ?? ''} — 10 دقائق ⚽`,
             'warning', true
           ), delay)
         }
@@ -148,8 +148,8 @@ export function useLiveMatchEvents(favoriteTeams) {
         if (diffMin <= 0 && diffMin > -2 && !firedRef.current.has(kKick)) {
           firedRef.current.add(kKick)
           fireWorldCupAlert(
-            `🎺 صافرة البداية! ${home?.flag ?? ''}${home?.name} ضد ${away?.name}${away?.flag ?? ''}`,
-            `انطلقت مباراة ${favNames} الآن في ${stadium?.city ?? ''}! النتيجة 0-0`,
+            `🔴 صافرة البداية! ${home?.flag ?? ''}${home?.name} ضد ${away?.flag ?? ''}${away?.name}`,
+            `${favNames} | ${stadium?.city ?? ''} — 0-0 الآن! 🎺`,
             'whistle', true
           )
         }
@@ -159,8 +159,8 @@ export function useLiveMatchEvents(favoriteTeams) {
         if (match.status === 'live' && !firedRef.current.has(kLive)) {
           firedRef.current.add(kLive)
           fireWorldCupAlert(
-            `🔴 مباشر الآن! ${home?.name} ${match.score_home ?? 0}-${match.score_away ?? 0} ${away?.name}`,
-            `مباراة ${favNames} مستمرة — الدقيقة ${match.minute ?? ''} في ${stadium?.city ?? ''}`,
+            `🔴 مباشر! ${home?.flag ?? ''}${home?.name} ${match.score_home ?? 0}-${match.score_away ?? 0} ${away?.name}${away?.flag ?? ''}`,
+            `${favNames} | د.${match.minute ?? ''} | ${stadium?.city ?? ''}`,
             'whistle', true
           )
         }
