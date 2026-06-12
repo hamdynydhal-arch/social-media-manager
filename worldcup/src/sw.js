@@ -1,4 +1,4 @@
-// v11 — M002 full data, auto-events generator, icon fix, null stats, player ratings+subs in lineup
+// v12 — RSS XML direct parsing via CORS proxy; Sky Sports feed added; stat rows always 9
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'

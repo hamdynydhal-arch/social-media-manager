@@ -33,6 +33,7 @@ const RSS_FEEDS = [
   'https://feeds.bbci.co.uk/arabic/sport/rss.xml',
   'https://feeds.bbci.co.uk/sport/football/rss.xml',
   'https://www.goal.com/en/feeds/news',
+  'https://www.skysports.com/rss/12040',
 ]
 
 // ── openfootball team name → our internal ID (all 48 WC 2026 teams) ───────────
@@ -230,19 +231,48 @@ export async function fetchEspnStandings() {
   return null
 }
 
+// ── Parse raw RSS/Atom XML ────────────────────────────────────────────────────
+function parseRssXml(xmlText) {
+  try {
+    const doc = new DOMParser().parseFromString(xmlText, 'text/xml')
+    if (doc.querySelector('parsererror')) return null
+    const items = [...doc.querySelectorAll('item, entry')]
+    if (!items.length) return null
+    return items.slice(0, 15).map(el => {
+      const title = (el.querySelector('title')?.textContent ?? '').trim()
+      const pub   = el.querySelector('pubDate, updated, published')?.textContent
+      const time  = pub
+        ? new Date(pub).toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
+        : ''
+      return time ? `${time} — ${title}` : title
+    }).filter(Boolean)
+  } catch { return null }
+}
+
 // ── Public: news feed ─────────────────────────────────────────────────────────
 export async function fetchRssNews() {
   for (const feed of RSS_FEEDS) {
-    // Try rss2json.com first
+    // 1. Direct XML via allorigins raw (most reliable — no rate limits)
+    const raw = await safeText(ALLORIGINS(feed))
+    if (raw) {
+      const items = parseRssXml(raw)
+      if (items?.length > 0) return items
+    }
+
+    // 2. allorigins /get wrapper (returns {contents: string})
+    const wrapped = await safeFetch(ALLORIGINS_GET(feed))
+    if (wrapped?.contents) {
+      const items = parseRssXml(wrapped.contents)
+      if (items?.length > 0) return items
+    }
+
+    // 3. rss2json.com JSON API (1 000 req/day free)
     const j1 = await safeFetch(RSS2JSON(feed))
-    if (j1?.status === 'ok' && j1.items?.length > 0) {
-      return formatItems(j1.items)
-    }
-    // Try feed2json.org as secondary converter
+    if (j1?.status === 'ok' && j1.items?.length > 0) return formatItems(j1.items)
+
+    // 4. feed2json.org fallback
     const j2 = await safeFetch(FEED2JSON(feed))
-    if (j2?.items?.length > 0) {
-      return formatItems(j2.items)
-    }
+    if (j2?.items?.length > 0) return formatItems(j2.items)
   }
   return null
 }
