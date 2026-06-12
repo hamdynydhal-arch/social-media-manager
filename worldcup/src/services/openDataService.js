@@ -27,14 +27,17 @@ const ALLORIGINS_GET = url => `https://api.allorigins.win/get?url=${encodeURICom
 const RSS2JSON   = url => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=15`
 const FEED2JSON  = url => `https://feed2json.org/convert?url=${encodeURIComponent(url)}`
 
-// Arabic World Cup news feeds first, English as fallback
+// BBC/Sky first (CDN often serves with CORS *), then Arabic sources
 const RSS_FEEDS = [
-  'https://www.aljazeera.net/rss/sports.xml',
-  'https://feeds.bbci.co.uk/arabic/sport/rss.xml',
   'https://feeds.bbci.co.uk/sport/football/rss.xml',
-  'https://www.goal.com/en/feeds/news',
   'https://www.skysports.com/rss/12040',
+  'https://feeds.bbci.co.uk/arabic/sport/rss.xml',
+  'https://www.aljazeera.net/rss/sports.xml',
+  'https://www.goal.com/en/feeds/news',
 ]
+
+// Reddit r/worldcup JSON API — CORS * guaranteed, no proxy needed
+const REDDIT_WC = 'https://www.reddit.com/r/worldcup/new.json?limit=20&t=day'
 
 // ── openfootball team name → our internal ID (all 48 WC 2026 teams) ───────────
 const OFB_TEAM_MAP = {
@@ -249,32 +252,67 @@ function parseRssXml(xmlText) {
   } catch { return null }
 }
 
+// ── Reddit r/worldcup — CORS * guaranteed ────────────────────────────────────
+async function fetchRedditNews() {
+  const json = await safeFetch(REDDIT_WC)
+  if (!json?.data?.children?.length) return null
+  const items = json.data.children
+    .map(post => {
+      const d = post.data
+      if (d.score < 20) return null
+      const time = new Date(d.created_utc * 1000)
+        .toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
+      return `${time} — ${d.title}`
+    })
+    .filter(Boolean)
+    .slice(0, 15)
+  return items.length > 0 ? items : null
+}
+
 // ── Public: news feed ─────────────────────────────────────────────────────────
 export async function fetchRssNews() {
+  // Try each RSS feed with multiple proxy strategies
   for (const feed of RSS_FEEDS) {
-    // 1. Direct XML via allorigins raw (most reliable — no rate limits)
-    const raw = await safeText(ALLORIGINS(feed))
-    if (raw) {
-      const items = parseRssXml(raw)
+    // 0. Direct (BBC/Sky CDN often serves with CORS *)
+    const direct = await safeText(feed)
+    if (direct) {
+      const items = parseRssXml(direct)
       if (items?.length > 0) return items
     }
-
-    // 2. allorigins /get wrapper (returns {contents: string})
+    // 1. corsproxy.io — good IP reputation, no rate limit
+    const c1 = await safeText(CORSPROXY(feed))
+    if (c1) {
+      const items = parseRssXml(c1)
+      if (items?.length > 0) return items
+    }
+    // 2. allorigins /raw
+    const c2 = await safeText(ALLORIGINS(feed))
+    if (c2) {
+      const items = parseRssXml(c2)
+      if (items?.length > 0) return items
+    }
+    // 3. thingproxy
+    const c3 = await safeText(THINGPROXY(feed))
+    if (c3) {
+      const items = parseRssXml(c3)
+      if (items?.length > 0) return items
+    }
+    // 4. allorigins /get (JSON wrapper)
     const wrapped = await safeFetch(ALLORIGINS_GET(feed))
     if (wrapped?.contents) {
       const items = parseRssXml(wrapped.contents)
       if (items?.length > 0) return items
     }
-
-    // 3. rss2json.com JSON API (1 000 req/day free)
+    // 5. rss2json.com (1 000 req/day)
     const j1 = await safeFetch(RSS2JSON(feed))
     if (j1?.status === 'ok' && j1.items?.length > 0) return formatItems(j1.items)
-
-    // 4. feed2json.org fallback
+    // 6. feed2json.org
     const j2 = await safeFetch(FEED2JSON(feed))
     if (j2?.items?.length > 0) return formatItems(j2.items)
   }
-  return null
+
+  // Last resort: Reddit r/worldcup (CORS * — always works)
+  return fetchRedditNews()
 }
 
 function formatItems(items) {

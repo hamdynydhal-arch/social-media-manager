@@ -1,4 +1,4 @@
-// v12 — RSS XML direct parsing via CORS proxy; Sky Sports feed added; stat rows always 9
+// v13 — 6-layer RSS proxy chain; BBC/Sky first; Reddit r/worldcup as guaranteed fallback
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
