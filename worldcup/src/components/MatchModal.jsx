@@ -4,20 +4,24 @@ import { playGoalSound, haptic } from '../utils/audioUtils'
 import lineupsData from '../data/lineups.json'
 import { useWorldCupData } from '../context/WorldCupContext'
 
-function StatBar({ label, homeVal, awayVal, homeColor }) {
-  const total = homeVal + awayVal || 1
-  const homePct = Math.round((homeVal / total) * 100)
+function StatBar({ label, homeVal, awayVal }) {
+  if (homeVal == null && awayVal == null) return null
+  const h = homeVal ?? 0
+  const a = awayVal ?? 0
+  const total = h + a || 1
+  const homePct = Math.round((h / total) * 100)
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-xs text-slate-400">
-        <span className="font-bold text-white">{homeVal}</span>
+        <span className="font-bold text-white">{homeVal ?? '—'}</span>
         <span>{label}</span>
-        <span className="font-bold text-white">{awayVal}</span>
+        <span className="font-bold text-white">{awayVal ?? '—'}</span>
       </div>
       <div className="flex gap-0.5 h-1.5">
         <div className="stat-bar bg-emerald-500 rounded-r-full" style={{ width: `${homePct}%` }} />
         <div className="stat-bar bg-slate-400 rounded-l-full flex-1" />
       </div>
+
     </div>
   )
 }
@@ -239,9 +243,15 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
           )}
 
           {activeTab === 'events' && (() => {
-            const evtList = match.events ?? match.goals.map(g => ({ type: 'goal', ...g }))
+            // empty [] → fall through to goals; also fix type so icon renders correctly
+            const evtList = (match.events?.length > 0 ? match.events : null)
+              ?? match.goals.map(g => ({ ...g, type: 'goal' }))
             const homeId = homeTeam.id
-            const eventIcon = t => ({ goal: '⚽', red_card: '🟥', yellow_card: '🟨', substitution: '🔄', halftime: '⏸️', kickoff2: '▶️', kickoff: '🏁', fulltime: '🏆', var: '📺' }[t] ?? '📋')
+            const GOAL_TYPES = new Set(['goal', 'عادي', 'رأسية', 'ركلة جزاء', 'penalty', 'own_goal'])
+            const eventIcon = t => {
+              if (GOAL_TYPES.has(t)) return '⚽'
+              return ({ red_card: '🟥', yellow_card: '🟨', substitution: '🔄', halftime: '⏸️', kickoff2: '▶️', kickoff: '🏁', fulltime: '🏆', var: '📺' }[t] ?? '📋')
+            }
             if (evtList.length === 0) return (
               <div className="text-center text-slate-400 py-8">
                 <p className="text-3xl mb-2">📋</p>
@@ -340,18 +350,25 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                       </div>
                     )}
                     <div className="space-y-1">
-                      {players.map((p, i) => (
-                        <div
-                          key={i}
-                          className={`flex items-center gap-1.5 rounded-lg px-2 py-1.5 ${i === 0 ? 'bg-amber-900/30 border border-amber-500/20' : 'bg-slate-800/50'}`}
-                        >
-                          <span className="text-xs text-amber-400 font-black w-5 text-center flex-shrink-0">{p.number}</span>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs text-white truncate font-medium">{p.name}</p>
-                            <p className="text-xs text-slate-500 truncate">{p.position}</p>
+                      {players.map((p, i) => {
+                        const isSub = p.subbed_off != null
+                        const ratingColor = p.rating >= 8 ? 'text-emerald-400' : p.rating >= 7 ? 'text-amber-400' : p.rating >= 6 ? 'text-slate-300' : 'text-red-400'
+                        return (
+                          <div
+                            key={i}
+                            className={`flex items-center gap-1.5 rounded-lg px-2 py-1.5 ${i === 0 ? 'bg-amber-900/30 border border-amber-500/20' : isSub ? 'bg-slate-700/30 opacity-60' : 'bg-slate-800/50'}`}
+                          >
+                            <span className="text-xs text-amber-400 font-black w-5 text-center flex-shrink-0">{p.number}</span>
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-xs truncate font-medium ${isSub ? 'line-through text-slate-500' : 'text-white'}`}>{p.name}</p>
+                              <p className="text-xs text-slate-500 truncate">{p.position}{p.subbed_off ? ` ↓${p.subbed_off}'` : ''}{p.subbed_on ? ` ↑${p.subbed_on}'` : ''}</p>
+                            </div>
+                            {p.rating != null && (
+                              <span className={`text-xs font-black flex-shrink-0 ${ratingColor}`}>{p.rating.toFixed(1)}</span>
+                            )}
                           </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
                 ))}

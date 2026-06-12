@@ -1,4 +1,4 @@
-// v10 — openfootball primary source, ESPN removed, Arabic RSS news, local standings
+// v11 — M002 full data, auto-events generator, icon fix, null stats, player ratings+subs in lineup
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'

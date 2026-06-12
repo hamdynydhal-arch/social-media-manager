@@ -58,5 +58,35 @@
       { "number": 9,  "name": "آدم هلوزيك",         "position": "مهاجم" },
       { "number": 11, "name": "فلاديميل سوفيك",     "position": "جناح أيسر" }
     ]
+  },
+  "M002": {
+    "formation_home": "4-3-3",
+    "formation_away": "3-4-3",
+    "home": [
+      { "number": 31, "name": "كيم سونغ-غيو",   "position": "حارس" },
+      { "number": 15, "name": "سيول يونغ-وو",   "position": "ظهير أيمن",  "subbed_off": null },
+      { "number": 3,  "name": "كيم مين-جاي",    "position": "قلب دفاع" },
+      { "number": 5,  "name": "لي هان-بوم",     "position": "قلب دفاع" },
+      { "number": 2,  "name": "لي غي-هيوك",     "position": "ظهير أيسر" },
+      { "number": 6,  "name": "لي تاي-سوك",     "position": "وسط دفاعي",  "subbed_off": 69 },
+      { "number": 8,  "name": "هوانغ إن-بوم",    "position": "وسط",         "subbed_off": 84 },
+      { "number": 18, "name": "بيك سونغ-هو",    "position": "وسط",         "subbed_off": 84 },
+      { "number": 17, "name": "لي كانغ-إن",     "position": "جناح أيمن" },
+      { "number": 11, "name": "لي جاي-سونغ",    "position": "جناح أيسر",   "subbed_off": 62 },
+      { "number": 7,  "name": "سون هيونغ-مين",  "position": "مهاجم",       "subbed_off": 69 }
+    ],
+    "away": [
+      { "number": 1,  "name": "ماتيي كوفار",        "position": "حارس" },
+      { "number": 2,  "name": "فلاديمير كوفال",      "position": "ظهير أيمن" },
+      { "number": 5,  "name": "توماش هولييش",        "position": "قلب دفاع" },
+      { "number": 6,  "name": "دافيد دوديرا",        "position": "قلب دفاع" },
+      { "number": 3,  "name": "لاديسلاف كريجيتشي",  "position": "ظهير أيسر" },
+      { "number": 15, "name": "ياروسلاف زيليني",    "position": "قلب دفاع" },
+      { "number": 8,  "name": "توماش سوتشيك",       "position": "وسط" },
+      { "number": 11, "name": "ميخال ساديليك",       "position": "وسط",       "subbed_off": 64 },
+      { "number": 7,  "name": "آدم هلوجيك",          "position": "جناح أيمن" },
+      { "number": 10, "name": "باتريك شيك",          "position": "مهاجم",     "subbed_off": 64 },
+      { "number": 17, "name": "بافيل سولتس",         "position": "جناح أيسر" }
+    ]
   }
 }

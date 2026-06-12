@@ -72,6 +72,39 @@ function mergeEspnStandings(teams, espnStandings) {
   })
 }
 
+// ── Auto-generate events timeline from goals when no manual events exist ─────
+function buildAutoEvents(match) {
+  if (match.events?.length > 0) return match          // manual events take priority
+  if (!match.goals?.length) return match              // nothing to build from
+
+  const goals = [...match.goals].sort((a, b) => a.minute - b.minute)
+  const htGoals = goals.filter(g => g.minute <= 45)
+  const stGoals = goals.filter(g => g.minute > 45)
+  const htHome = htGoals.filter(g => g.team === match.team_home).length
+  const htAway = htGoals.filter(g => g.team === match.team_away).length
+
+  return {
+    ...match,
+    events: [
+      { type: 'kickoff',  minute: 0,  detail: 'انطلاق المباراة' },
+      ...htGoals.map(g => ({
+        type: 'goal', team: g.team, player: g.player, minute: g.minute,
+        detail: g.assist ? `تمريرة: ${g.assist}` : '',
+      })),
+      { type: 'halftime', minute: 45, detail: `نهاية الشوط الأول — ${htHome}-${htAway}` },
+      { type: 'kickoff2', minute: 46, detail: 'بداية الشوط الثاني' },
+      ...stGoals.map(g => ({
+        type: 'goal', team: g.team, player: g.player, minute: g.minute,
+        detail: g.assist ? `تمريرة: ${g.assist}` : '',
+      })),
+      ...(match.status === 'finished' ? [{
+        type: 'fulltime', minute: 94,
+        detail: `نهاية المباراة — ${match.score_home}-${match.score_away}`,
+      }] : []),
+    ],
+  }
+}
+
 // ── Time-based live status ────────────────────────────────────────────────────
 function applyTimeBasedStatus(matches) {
   const now = new Date()
@@ -177,7 +210,7 @@ export function WorldCupProvider({ children }) {
         })
       : staticData.matches
 
-    const matches = applyTimeBasedStatus(baseMatches)
+    const matches = applyTimeBasedStatus(baseMatches).map(buildAutoEvents)
 
     // Primary: calculate standings from actual results (no API needed)
     let teams = calculateGroupStandings(matches, staticData.teams)
