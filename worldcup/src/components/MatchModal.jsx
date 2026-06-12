@@ -5,23 +5,22 @@ import lineupsData from '../data/lineups.json'
 import { useWorldCupData } from '../context/WorldCupContext'
 
 function StatBar({ label, homeVal, awayVal }) {
-  if (homeVal == null && awayVal == null) return null
+  const bothNull = homeVal == null && awayVal == null
   const h = homeVal ?? 0
   const a = awayVal ?? 0
   const total = h + a || 1
-  const homePct = Math.round((h / total) * 100)
+  const homePct = bothNull ? 50 : Math.round((h / total) * 100)
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-xs text-slate-400">
-        <span className="font-bold text-white">{homeVal ?? '—'}</span>
+        <span className={`font-bold ${bothNull ? 'text-slate-500' : 'text-white'}`}>{homeVal ?? '—'}</span>
         <span>{label}</span>
-        <span className="font-bold text-white">{awayVal ?? '—'}</span>
+        <span className={`font-bold ${bothNull ? 'text-slate-500' : 'text-white'}`}>{awayVal ?? '—'}</span>
       </div>
       <div className="flex gap-0.5 h-1.5">
-        <div className="stat-bar bg-emerald-500 rounded-r-full" style={{ width: `${homePct}%` }} />
-        <div className="stat-bar bg-slate-400 rounded-l-full flex-1" />
+        <div className={`stat-bar rounded-r-full ${bothNull ? 'bg-slate-600' : 'bg-emerald-500'}`} style={{ width: `${homePct}%` }} />
+        <div className={`stat-bar rounded-l-full flex-1 ${bothNull ? 'bg-slate-600' : 'bg-slate-400'}`} />
       </div>
-
     </div>
   )
 }
@@ -307,13 +306,9 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                 { label: 'الركنيات',           h: match.stats.home.corners,         a: match.stats.away.corners },
                 { label: 'الأخطاء',            h: match.stats.home.fouls,           a: match.stats.away.fouls },
                 { label: 'البطاقات الصفراء',   h: match.stats.home.yellow_cards,    a: match.stats.away.yellow_cards },
-                ...(match.stats.home.red_cards != null ? [
-                  { label: 'البطاقات الحمراء', h: match.stats.home.red_cards,       a: match.stats.away.red_cards },
-                ] : []),
-                ...(match.stats.home.passes != null ? [
-                  { label: 'التمريرات',        h: match.stats.home.passes,          a: match.stats.away.passes },
-                  { label: 'دقة التمرير %',    h: match.stats.home.pass_accuracy,   a: match.stats.away.pass_accuracy },
-                ] : []),
+                { label: 'البطاقات الحمراء',   h: match.stats.home.red_cards,       a: match.stats.away.red_cards },
+                { label: 'التمريرات',          h: match.stats.home.passes,          a: match.stats.away.passes },
+                { label: 'دقة التمرير %',      h: match.stats.home.pass_accuracy,   a: match.stats.away.pass_accuracy },
               ].map((stat) => (
                 <StatBar key={stat.label} label={stat.label} homeVal={stat.h} awayVal={stat.a} />
               ))}
