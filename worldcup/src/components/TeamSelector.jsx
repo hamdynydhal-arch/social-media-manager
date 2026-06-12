@@ -2,48 +2,59 @@ import { useState } from 'react'
 import { useInstallPrompt } from '../hooks/useInstallPrompt'
 import data from '../data/data.json'
 
-export default function TeamSelector({ onSelect }) {
-  const [selected, setSelected] = useState(null)
+export default function TeamSelector({ onSelect, initialSelected = [] }) {
+  const [selected, setSelected] = useState(() => new Set(initialSelected))
   const [showIOSModal, setShowIOSModal] = useState(false)
-  const { installPrompt, isInstalled, isIOS, triggerInstall } = useInstallPrompt()
+  const { isInstalled, isIOS, triggerInstall } = useInstallPrompt()
 
-  const handleSelect = (teamId) => {
-    setSelected(teamId)
-    setTimeout(() => onSelect(teamId), 300)
+  const toggle = (teamId) => {
+    setSelected(prev => {
+      const next = new Set(prev)
+      if (next.has(teamId)) next.delete(teamId)
+      else next.add(teamId)
+      return next
+    })
   }
+
+  const handleConfirm = () => onSelect([...selected])
+  const handleSkip    = () => onSelect([])
 
   const handleInstall = () => {
-    if (isIOS) {
-      setShowIOSModal(true)
-    } else if (installPrompt) {
-      triggerInstall()
-    } else {
-      setShowIOSModal(true)
-    }
+    if (isIOS) setShowIOSModal(true)
+    else if (triggerInstall) triggerInstall()
+    else setShowIOSModal(true)
   }
 
-  const arabTeams = data.teams.filter(t => t.isArab)
+  const arabTeams  = data.teams.filter(t => t.isArab)
   const otherTeams = data.teams.filter(t => !t.isArab)
+  const count      = selected.size
 
-  const TeamBtn = ({ team }) => (
-    <button
-      onClick={() => handleSelect(team.id)}
-      className={`flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border-2 transition-all duration-200 ${
-        selected === team.id
-          ? 'border-emerald-400 bg-emerald-400/10 scale-105 shadow-lg shadow-emerald-400/20'
-          : 'border-slate-700/50 bg-slate-800/50 active:scale-95'
-      }`}
-    >
-      <span className="text-3xl">{team.flag}</span>
-      <span className="text-xs font-bold text-white text-center leading-tight">{team.name}</span>
-    </button>
-  )
+  const TeamBtn = ({ team }) => {
+    const isSel = selected.has(team.id)
+    return (
+      <button
+        onClick={() => toggle(team.id)}
+        className={`flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border-2 transition-all duration-200 relative ${
+          isSel
+            ? 'border-emerald-400 bg-emerald-400/10 shadow-lg shadow-emerald-400/20'
+            : 'border-slate-700/50 bg-slate-800/50 active:scale-95'
+        }`}
+      >
+        {isSel && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-400 rounded-full flex items-center justify-center text-slate-900 text-xs font-black">
+            ✓
+          </span>
+        )}
+        <span className="text-3xl">{team.flag}</span>
+        <span className="text-xs font-bold text-white text-center leading-tight">{team.name}</span>
+      </button>
+    )
+  }
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950 overflow-y-auto safe-top safe-bottom">
-      <div className="max-w-sm w-full mx-auto px-5 py-6">
+      <div className="max-w-sm w-full mx-auto px-5 py-6 pb-40">
 
-        {/* ── زر تثبيت التطبيق ── */}
         {!isInstalled && (
           <button
             onClick={handleInstall}
@@ -55,15 +66,13 @@ export default function TeamSelector({ onSelect }) {
           </button>
         )}
 
-        {/* ── رأس الصفحة ── */}
         <div className="text-center mb-7">
           <div className="text-6xl mb-3">🏆</div>
           <h1 className="text-2xl font-black text-white mb-1">كأس العالم 2026</h1>
-          <p className="text-slate-400 text-base font-medium">ما هو منتخبك المفضل؟</p>
-          <p className="text-slate-500 text-sm mt-1">سنرتب المباريات بناءً على اختيارك</p>
+          <p className="text-slate-400 text-base font-medium">اختر منتخباتك المفضلة</p>
+          <p className="text-slate-500 text-sm mt-1">يمكنك اختيار أكثر من منتخب — ستصلك إشعارات مباراتهم</p>
         </div>
 
-        {/* ── المنتخبات العربية ── */}
         <div className="mb-5">
           <div className="flex items-center gap-2 mb-3 px-1">
             <span className="text-base">🌙</span>
@@ -77,7 +86,6 @@ export default function TeamSelector({ onSelect }) {
 
         <div className="border-t border-slate-800/60 my-5" />
 
-        {/* ── باقي المنتخبات ── */}
         <div className="mb-5">
           <div className="flex items-center gap-2 mb-3 px-1">
             <span className="text-base">🌍</span>
@@ -90,14 +98,31 @@ export default function TeamSelector({ onSelect }) {
         </div>
 
         <button
-          onClick={() => onSelect('NONE')}
+          onClick={handleSkip}
           className="w-full mt-2 mb-8 py-3 text-slate-500 text-sm active:text-slate-300 transition-colors"
         >
           تخطي — أتابع جميع المنتخبات
         </button>
       </div>
 
-      {/* ── مودال تعليمات التثبيت ── */}
+      {/* ── Fixed confirm bar ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-60 bg-slate-950/95 backdrop-blur-lg border-t border-slate-800 px-5 py-4 safe-bottom">
+        <button
+          onClick={handleConfirm}
+          className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95"
+          style={{
+            background: count > 0
+              ? 'linear-gradient(135deg, #34d399 0%, #10b981 100%)'
+              : 'linear-gradient(135deg, #475569 0%, #334155 100%)',
+            boxShadow: count > 0 ? '0 4px 20px rgba(52,211,153,0.5)' : 'none',
+          }}
+        >
+          {count > 0
+            ? `✅ تأكيد اختيار ${count} منتخب${count === 1 ? '' : count < 11 ? '' : 'اً'}`
+            : '⬆️ اختر منتخباً واحداً على الأقل'}
+        </button>
+      </div>
+
       {showIOSModal && (
         <div
           className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end"
@@ -110,9 +135,7 @@ export default function TeamSelector({ onSelect }) {
             <div className="w-10 h-1 bg-slate-600 rounded-full mx-auto mb-5" />
             <h3 className="text-xl font-bold text-white text-center mb-1">تثبيت التطبيق 📲</h3>
             <p className="text-slate-400 text-center text-sm mb-5">
-              {isIOS
-                ? 'اتبع هذه الخطوات من متصفح Safari:'
-                : 'اتبع هذه الخطوات من متصفح Chrome:'}
+              {isIOS ? 'اتبع هذه الخطوات من متصفح Safari:' : 'اتبع هذه الخطوات من متصفح Chrome:'}
             </p>
             <div className="space-y-3">
               {(isIOS ? [

@@ -16,29 +16,32 @@ import NotificationSystem from './components/NotificationSystem'
 import TeamSelector from './components/TeamSelector'
 
 function AppInner() {
-  const [favoriteTeam, setFavoriteTeam] = useLocalStorage('favorite_team', null)
-  const [showSelector, setShowSelector] = useState(!favoriteTeam)
+  // favoriteTeams: null = never configured, [] = watching all, [...] = specific teams
+  const [favoriteTeams, setFavoriteTeams] = useLocalStorage('favorite_teams', null)
+  const [showSelector, setShowSelector] = useState(favoriteTeams === null)
   const { apiMode, lastUpdated } = useWorldCupData()
 
-  // ── Capture beforeinstallprompt ONCE at the top level ────────────────────
-  // The event fires exactly once on page load. Calling the hook here ensures
-  // it's captured before any child renders, then passed as props everywhere.
   const installState = useInstallPrompt()
 
-  useLiveMatchEvents(favoriteTeam)
-  const { running: simRunning, startSim, stopSim } = useLiveSimulator(favoriteTeam)
+  useLiveMatchEvents(favoriteTeams ?? [])
+  const { running: simRunning, startSim, stopSim } = useLiveSimulator(favoriteTeams?.[0] ?? null)
 
   useEffect(() => {
     document.documentElement.classList.add('dark')
   }, [])
 
-  const handleTeamSelect = (teamId) => {
-    setFavoriteTeam(teamId)
+  const handleTeamSelect = (teams) => {
+    setFavoriteTeams(teams)
     setShowSelector(false)
   }
 
   if (showSelector) {
-    return <TeamSelector onSelect={handleTeamSelect} />
+    return (
+      <TeamSelector
+        onSelect={handleTeamSelect}
+        initialSelected={favoriteTeams ?? []}
+      />
+    )
   }
 
   return (
@@ -72,14 +75,14 @@ function AppInner() {
 
         <main className="flex-1">
           <Routes>
-            <Route path="/" element={<Home favoriteTeam={favoriteTeam} installState={installState} />} />
-            <Route path="/matches" element={<Matches favoriteTeam={favoriteTeam} />} />
-            <Route path="/groups" element={<Groups favoriteTeam={favoriteTeam} />} />
+            <Route path="/" element={<Home favoriteTeams={favoriteTeams ?? []} installState={installState} />} />
+            <Route path="/matches" element={<Matches favoriteTeams={favoriteTeams ?? []} />} />
+            <Route path="/groups" element={<Groups favoriteTeams={favoriteTeams ?? []} />} />
             <Route
               path="/settings"
               element={
                 <Settings
-                  favoriteTeam={favoriteTeam}
+                  favoriteTeams={favoriteTeams ?? []}
                   onChangeFavorite={() => setShowSelector(true)}
                   simRunning={simRunning}
                   onStartSim={startSim}

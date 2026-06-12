@@ -7,14 +7,14 @@ import confetti from 'canvas-confetti'
 const BASE = import.meta.env.BASE_URL
 
 export default function Settings({
-  favoriteTeam, onChangeFavorite,
+  favoriteTeams, onChangeFavorite,
   simRunning, onStartSim, onStopSim,
   apiMode, lastUpdated,
   installState = {},
 }) {
   const { data, sources, refresh } = useWorldCupData()
   const { isInstalled, isIOS } = installState
-  const favTeam = data.teams.find(t => t.id === favoriteTeam)
+  const firstFavTeam = data.teams.find(t => t.id === favoriteTeams?.[0])
 
   const [notifPerm, setNotifPerm] = useState(
     () => (typeof Notification !== 'undefined' ? Notification.permission : 'default')
@@ -23,7 +23,6 @@ export default function Settings({
   const [installing, setInstalling] = useState(false)
   const [showIOSModal, setShowIOSModal] = useState(false)
   const [showAndroidModal, setShowAndroidModal] = useState(false)
-  // React-reactive flag that mirrors window.deferredPrompt existence
   const [hasNativePrompt, setHasNativePrompt] = useState(() => !!window.deferredPrompt)
 
   useEffect(() => {
@@ -37,7 +36,7 @@ export default function Settings({
     }
   }, [])
 
-  // ── Install: native OS bottom sheet via beforeinstallprompt ─────────────────
+  // ── Install ─────────────────────────────────────────────────────────────────
   const handleInstall = async () => {
     if (isIOS) { setShowIOSModal(true); return }
     if (!window.deferredPrompt) { setShowAndroidModal(true); return }
@@ -116,33 +115,42 @@ export default function Settings({
   const notifStatusLabel = { granted: '✅ مفعّلة', denied: '🚫 محظورة', default: '🔕 غير مفعّلة' }[notifPerm] ?? '🔕 غير مفعّلة'
   const notifStatusColor = { granted: 'text-emerald-400', denied: 'text-red-400', default: 'text-amber-400' }[notifPerm] ?? 'text-amber-400'
 
-  // Show install section when not in standalone mode
-  const showInstallSection = !isInstalled
-
   return (
     <div className="px-4 py-4 pb-24 space-y-4">
 
-      {/* ── Favorite Team ── */}
+      {/* ── Favorite Teams ── */}
       <div className="card p-4">
-        <h3 className="font-bold text-white mb-3 flex items-center gap-2">⭐ المنتخب المفضل</h3>
-        {favTeam ? (
-          <div className="flex items-center gap-3 mb-3">
-            <span className="text-3xl">{favTeam.flag}</span>
-            <div>
-              <p className="font-bold text-white">{favTeam.name}</p>
-              <p className="text-xs text-slate-400">المدرب: {favTeam.coach}</p>
-              <p className="text-xs text-slate-500">المجموعة {favTeam.group}</p>
-            </div>
+        <h3 className="font-bold text-white mb-3 flex items-center gap-2">⭐ المنتخبات المفضلة</h3>
+        {favoriteTeams?.length > 0 ? (
+          <div className="flex flex-wrap gap-2 mb-3">
+            {favoriteTeams.map(teamId => {
+              const team = data.teams.find(t => t.id === teamId)
+              if (!team) return null
+              return (
+                <div key={teamId} className="flex items-center gap-2 bg-slate-700/50 rounded-xl px-3 py-2">
+                  <span className="text-2xl">{team.flag}</span>
+                  <div>
+                    <p className="font-bold text-white text-sm">{team.name}</p>
+                    <p className="text-xs text-slate-500">المجموعة {team.group}</p>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         ) : (
-          <p className="text-slate-400 text-sm mb-3">لم تختر منتخباً بعد</p>
+          <p className="text-slate-400 text-sm mb-3">لم تختر منتخبات — تتابع جميع المنتخبات</p>
         )}
         <button
           onClick={onChangeFavorite}
           className="w-full py-2.5 bg-slate-700/80 border border-slate-600/50 text-white text-sm font-bold rounded-xl hover:bg-slate-600/80 transition-colors"
         >
-          تغيير المنتخب المفضل
+          {favoriteTeams?.length > 0 ? 'تعديل المنتخبات المفضلة' : 'اختيار المنتخبات المفضلة'}
         </button>
+        {favoriteTeams?.length > 0 && (
+          <p className="text-xs text-emerald-400/70 text-center mt-2">
+            ستصلك إشعارات المباريات قبل ساعة، وقبل 10 دقائق، وعند الانطلاق
+          </p>
+        )}
       </div>
 
       {/* ── Install App ── */}
@@ -156,7 +164,7 @@ export default function Settings({
             </div>
           </div>
         </div>
-      ) : showInstallSection ? (
+      ) : (
         <div
           className="rounded-3xl overflow-hidden"
           style={{
@@ -186,8 +194,8 @@ export default function Settings({
               <>
                 <button
                   onClick={handleInstall}
-                  disabled={installing || !hasNativePrompt}
-                  className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95 disabled:opacity-50"
+                  disabled={installing}
+                  className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95 disabled:opacity-60"
                   style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 4px 20px rgba(52,211,153,0.5)' }}
                 >
                   {installing ? '⏳ جاري التثبيت...' : '📲 تثبيت التطبيق الآن'}
@@ -195,13 +203,13 @@ export default function Settings({
                 <p className="text-center text-emerald-400/70 text-xs">
                   {hasNativePrompt
                     ? 'سيظهر مربع التثبيت الأصلي من Chrome/Android فوراً'
-                    : 'في انتظار إشارة التثبيت من المتصفح — تأكد من استخدام Chrome'}
+                    : 'اضغط وسنوضح لك الطريقة خطوة بخطوة'}
                 </p>
               </>
             )}
           </div>
         </div>
-      ) : null}
+      )}
 
       {/* ── Real Test Notification ── */}
       <div className="card p-4 border-amber-500/30 bg-gradient-to-r from-amber-900/15 to-transparent">
@@ -238,6 +246,13 @@ export default function Settings({
           <span className="text-slate-300 text-sm">حالة الإشعارات</span>
           <span className={`text-sm font-bold ${notifStatusColor}`}>{notifStatusLabel}</span>
         </div>
+        {notifPerm === 'granted' && (
+          <div className="bg-emerald-900/20 border border-emerald-500/20 rounded-xl px-3 py-2 mb-3 space-y-1 text-xs text-slate-400">
+            <p>⏰ إشعار قبل المباراة بـ <span className="text-emerald-400 font-bold">ساعة كاملة</span></p>
+            <p>⏰ إشعار قبل المباراة بـ <span className="text-emerald-400 font-bold">10 دقائق</span></p>
+            <p>🎺 إشعار عند <span className="text-emerald-400 font-bold">صافرة الانطلاق</span></p>
+          </div>
+        )}
         {notifPerm !== 'granted' && notifPerm !== 'denied' && (
           <button
             onClick={requestNotifPermission}
@@ -268,8 +283,8 @@ export default function Settings({
         <p className="text-slate-400 text-xs mb-3 leading-relaxed">
           يُشغّل مباراة وهمية لمنتخبك المفضل ويُطلق إشعاراً وصوتاً كل 10 ثوانٍ لاختبار تجربة البث الحي كاملةً.
         </p>
-        {!favTeam ? (
-          <p className="text-amber-400 text-xs text-center py-2">اختر منتخباً مفضلاً أولاً</p>
+        {!firstFavTeam ? (
+          <p className="text-amber-400 text-xs text-center py-2">اختر منتخباً مفضلاً أولاً لتفعيل المحاكي</p>
         ) : simRunning ? (
           <div className="space-y-2">
             <div className="flex items-center gap-2 bg-emerald-900/30 border border-emerald-500/30 rounded-xl px-3 py-2">
@@ -289,7 +304,7 @@ export default function Settings({
             className="w-full py-3 rounded-xl font-bold text-white text-sm transition-all active:scale-95"
             style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)', boxShadow: '0 4px 16px rgba(59,130,246,0.35)' }}
           >
-            ▶️ تشغيل وضع المحاكاة
+            ▶️ تشغيل وضع المحاكاة ({firstFavTeam.flag} {firstFavTeam.name})
           </button>
         )}
       </div>
@@ -370,12 +385,13 @@ export default function Settings({
         <h3 className="font-bold text-white mb-3">📱 معلومات التطبيق</h3>
         <div className="space-y-2 text-sm">
           {[
-            { label: 'الإصدار', val: '4.1.0' },
+            { label: 'الإصدار', val: '5.0.0' },
             { label: 'البطولة', val: 'كأس العالم FIFA 2026' },
             { label: 'الدول المستضيفة', val: 'الولايات المتحدة • كندا • المكسيك' },
             { label: 'المنتخبات', val: `${data.teams.length} منتخب` },
             { label: 'المباريات', val: `${data.matches.length} مباراة` },
             { label: 'الملاعب', val: `${data.stadiums.length} ملعباً` },
+            { label: 'منتخباتك المفضلة', val: favoriteTeams?.length > 0 ? `${favoriteTeams.length} منتخب` : 'متابعة جميع المنتخبات' },
           ].map(({ label, val }) => (
             <div key={label} className="flex justify-between">
               <span className="text-slate-400">{label}</span>
@@ -408,11 +424,22 @@ export default function Settings({
             <div className="text-center px-6 pt-7 pb-4">
               <div className="text-6xl mb-2">📲</div>
               <h3 className="text-xl font-black text-white mb-1">تثبيت التطبيق يدوياً</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                لإضافة التطبيق، اضغط على النقاط الثلاث (⋮) في متصفح Chrome واختر (إضافة إلى الشاشة الرئيسية)
-              </p>
             </div>
-            <div className="px-5 pb-6">
+            <div className="px-5 pb-3 space-y-2.5">
+              {[
+                { n: '1', text: 'افتح النقاط الثلاث (⋮) في أعلى متصفح Chrome' },
+                { n: '2', text: 'اختر "إضافة إلى الشاشة الرئيسية" أو "تثبيت التطبيق"' },
+                { n: '3', text: 'اضغط "إضافة" أو "تثبيت" للتأكيد' },
+              ].map(({ n, text }) => (
+                <div key={n} className="flex items-center gap-3 bg-slate-800/70 rounded-2xl px-4 py-3">
+                  <div className="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center flex-shrink-0">
+                    <span className="text-emerald-400 font-black text-sm">{n}</span>
+                  </div>
+                  <p className="text-slate-300 text-sm leading-snug">{text}</p>
+                </div>
+              ))}
+            </div>
+            <div className="px-5 pb-6 pt-2">
               <button
                 onClick={() => setShowAndroidModal(false)}
                 className="w-full py-3.5 rounded-2xl font-black text-slate-900 text-sm transition-all active:scale-95"
@@ -445,27 +472,11 @@ export default function Settings({
               <h3 className="text-xl font-black text-white mb-1">أضفه إلى شاشتك الرئيسية</h3>
               <p className="text-slate-400 text-sm">اتبع هذه الخطوات في متصفح Safari</p>
             </div>
-
             <div className="px-5 pb-6 space-y-2.5">
               {[
-                {
-                  n: '1', color: 'bg-blue-500',
-                  icon: '⬆️',
-                  title: 'اضغط زر المشاركة',
-                  sub: 'الزر المربع بسهم للأعلى في شريط Safari السفلي',
-                },
-                {
-                  n: '2', color: 'bg-blue-500',
-                  icon: '➕',
-                  title: 'اختر "إضافة إلى الشاشة الرئيسية"',
-                  sub: 'ابحث عن الأيقونة بعلامة + في القائمة',
-                },
-                {
-                  n: '3', color: 'bg-emerald-500',
-                  icon: '✅',
-                  title: 'اضغط "إضافة" في الأعلى',
-                  sub: 'ستجد أيقونة كأس العالم على شاشتك فوراً',
-                },
+                { n: '1', color: 'bg-blue-500', icon: '⬆️', title: 'اضغط زر المشاركة', sub: 'الزر المربع بسهم للأعلى في شريط Safari السفلي' },
+                { n: '2', color: 'bg-blue-500', icon: '➕', title: 'اختر "إضافة إلى الشاشة الرئيسية"', sub: 'ابحث عن الأيقونة بعلامة + في القائمة' },
+                { n: '3', color: 'bg-emerald-500', icon: '✅', title: 'اضغط "إضافة" في الأعلى', sub: 'ستجد أيقونة كأس العالم على شاشتك فوراً' },
               ].map(({ n, color, icon, title, sub }) => (
                 <div key={n} className="flex items-center gap-3 bg-slate-800/70 rounded-2xl px-4 py-3">
                   <div className={`w-8 h-8 rounded-full ${color} flex items-center justify-center flex-shrink-0`}>
@@ -478,11 +489,9 @@ export default function Settings({
                   <span className="text-2xl flex-shrink-0">{icon}</span>
                 </div>
               ))}
-
               <div className="bg-amber-900/30 border border-amber-500/30 rounded-xl p-2.5 text-center">
                 <p className="text-amber-300 text-xs font-bold">⚠️ يجب استخدام متصفح Safari على iPhone / iPad</p>
               </div>
-
               <button
                 onClick={() => setShowIOSModal(false)}
                 className="w-full py-3.5 rounded-2xl font-black text-slate-900 text-sm transition-all active:scale-95"

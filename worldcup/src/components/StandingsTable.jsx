@@ -1,6 +1,6 @@
 import { useWorldCupData } from '../context/WorldCupContext'
 
-export default function StandingsTable({ groupId, favoriteTeam }) {
+export default function StandingsTable({ groupId, favoriteTeams = [] }) {
   const { data } = useWorldCupData()
 
   const teams = data.teams
@@ -36,17 +36,17 @@ export default function StandingsTable({ groupId, favoriteTeam }) {
             <tr
               key={team.id}
               className={`border-b border-slate-800/50 ${
-                team.id === favoriteTeam ? 'bg-emerald-400/5' : ''
+                favoriteTeams.includes(team.id) ? 'bg-emerald-400/5' : ''
               } ${i < 2 ? 'opacity-100' : 'opacity-70'}`}
             >
               <td className="py-2.5 text-slate-500 font-bold">{i + 1}</td>
               <td className="py-2.5 ps-2">
                 <div className="flex items-center gap-2">
                   <span className="text-base">{team.flag}</span>
-                  <span className={`font-medium ${team.id === favoriteTeam ? 'text-emerald-400' : 'text-white'}`}>
+                  <span className={`font-medium ${favoriteTeams.includes(team.id) ? 'text-emerald-400' : 'text-white'}`}>
                     {team.name}
                   </span>
-                  {team.id === favoriteTeam && <span className="text-emerald-400 text-xs">★</span>}
+                  {favoriteTeams.includes(team.id) && <span className="text-emerald-400 text-xs">★</span>}
                 </div>
               </td>
               <td className="text-center py-2.5 text-slate-300">{team.stats.played ?? 0}</td>

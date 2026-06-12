@@ -10,7 +10,7 @@ const FILTERS = [
   { id: 'finished', label: '✅ انتهت' },
 ]
 
-export default function Matches({ favoriteTeam }) {
+export default function Matches({ favoriteTeams = [] }) {
   const { data } = useWorldCupData()
   const { teams, matches, stadiums } = data
 

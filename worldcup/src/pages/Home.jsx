@@ -64,19 +64,24 @@ function NextMatchCountdown({ match, homeTeam, awayTeam }) {
 function getTeam(teams, id) { return teams.find(t => t.id === id) }
 function getStadium(stadiums, id) { return stadiums.find(s => s.id === id) }
 
-export default function Home({ favoriteTeam, installState = {} }) {
+export default function Home({ favoriteTeams = [], installState = {} }) {
   const { data, apiMode } = useWorldCupData()
   const { teams, matches, stadiums } = data
-  const { installPrompt, isInstalled, isIOS, triggerInstall } = installState
+  const { isInstalled, isIOS, triggerInstall } = installState
 
   const [selectedMatch, setSelectedMatch] = useState(null)
   const [showIOSModal, setShowIOSModal] = useState(false)
 
-  const canInstall = !isInstalled && (installPrompt || isIOS)
+  // Always show install banner when not yet installed
+  const canInstall = !isInstalled
 
   const handleInstall = () => {
     if (isIOS) setShowIOSModal(true)
-    else triggerInstall?.()
+    else if (window.deferredPrompt) triggerInstall?.()
+    else {
+      // Navigate to settings which has the manual instructions
+      window.location.hash = '#/settings'
+    }
   }
 
   const today = new Date().toISOString().split('T')[0]
@@ -95,25 +100,31 @@ export default function Home({ favoriteTeam, installState = {} }) {
     [matches, today]
   )
 
+  const isFav = (m) => favoriteTeams.length > 0 &&
+    (favoriteTeams.includes(m.team_home) || favoriteTeams.includes(m.team_away))
+
   const upcomingMatches = useMemo(() => {
     const sorted = matches
       .filter(m => m.status === 'scheduled' && m.date >= today)
       .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))
 
-    if (favoriteTeam && favoriteTeam !== 'NONE') {
-      const fav = sorted.filter(m => m.team_home === favoriteTeam || m.team_away === favoriteTeam)
-      const others = sorted.filter(m => m.team_home !== favoriteTeam && m.team_away !== favoriteTeam)
+    if (favoriteTeams.length > 0) {
+      const fav    = sorted.filter(isFav)
+      const others = sorted.filter(m => !isFav(m))
       return [...fav, ...others].slice(0, 6)
     }
     return sorted.slice(0, 6)
-  }, [matches, favoriteTeam, today])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matches, JSON.stringify(favoriteTeams), today])
 
   const recentMatches = useMemo(
     () => matches.filter(m => m.status === 'finished').slice(0, 4),
     [matches]
   )
 
-  const favTeamData = favoriteTeam && favoriteTeam !== 'NONE' ? getTeam(teams, favoriteTeam) : null
+  const favTeamsData = favoriteTeams.length > 0
+    ? favoriteTeams.map(id => getTeam(teams, id)).filter(Boolean)
+    : []
 
   return (
     <div className="flex flex-col min-h-full">
@@ -121,7 +132,7 @@ export default function Home({ favoriteTeam, installState = {} }) {
 
       <div className="flex-1 px-4 py-4 space-y-6 pb-24">
 
-        {/* ── Mandatory install banner ── */}
+        {/* ── Install banner (always shown when not installed) ── */}
         {canInstall && (
           <div className="rounded-3xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)', border: '2px solid rgba(52,211,153,0.4)', boxShadow: '0 8px 32px rgba(16,185,129,0.35)' }}>
             <div className="px-5 pt-5 pb-2 text-center">
@@ -145,7 +156,7 @@ export default function Home({ favoriteTeam, installState = {} }) {
                 <span>📲 تثبيت التطبيق الآن</span>
               </button>
               <p className="text-center text-emerald-400/60 text-xs mt-2">
-                {isIOS ? 'أضفه إلى الشاشة الرئيسية عبر Safari' : 'تثبيت سريع — ثانية واحدة'}
+                {isIOS ? 'أضفه إلى الشاشة الرئيسية عبر Safari' : 'تثبيت سريع — لمسة واحدة'}
               </p>
             </div>
           </div>
@@ -168,34 +179,38 @@ export default function Home({ favoriteTeam, installState = {} }) {
           />
         )}
 
-        {/* ── Favorite team card ── */}
-        {favTeamData && (
-          <div className="card p-4 border-emerald-500/30 bg-gradient-to-r from-emerald-900/30 to-transparent">
-            <div className="flex items-center gap-3">
-              <span className="text-4xl">{favTeamData.flag}</span>
-              <div>
-                <p className="text-xs text-emerald-400 font-bold">منتخبك المفضل</p>
-                <p className="text-xl font-black text-white">{favTeamData.name}</p>
-                <p className="text-xs text-slate-400">المدرب: {favTeamData.coach}</p>
-              </div>
-              <div className="mr-auto text-center">
-                <div className="text-2xl font-black text-amber-400">{favTeamData.stats.points}</div>
-                <div className="text-xs text-slate-400">نقاط</div>
-              </div>
-            </div>
-            <div className="flex gap-3 mt-3 text-xs text-center">
-              {[
-                { label: 'انتصارات', val: favTeamData.stats.wins, color: 'text-emerald-400' },
-                { label: 'تعادل', val: favTeamData.stats.draws, color: 'text-slate-300' },
-                { label: 'خسائر', val: favTeamData.stats.losses, color: 'text-red-400' },
-                { label: 'أهداف', val: favTeamData.stats.goals_for, color: 'text-amber-400' },
-              ].map(({ label, val, color }) => (
-                <div key={label} className="flex-1 bg-slate-700/50 rounded-xl p-2">
-                  <div className={`text-lg font-black ${color}`}>{val}</div>
-                  <div className="text-slate-500">{label}</div>
+        {/* ── Favorite teams cards ── */}
+        {favTeamsData.length > 0 && (
+          <div className="space-y-3">
+            {favTeamsData.map(favTeamData => (
+              <div key={favTeamData.id} className="card p-4 border-emerald-500/30 bg-gradient-to-r from-emerald-900/30 to-transparent">
+                <div className="flex items-center gap-3">
+                  <span className="text-4xl">{favTeamData.flag}</span>
+                  <div>
+                    <p className="text-xs text-emerald-400 font-bold">منتخبك المفضل</p>
+                    <p className="text-xl font-black text-white">{favTeamData.name}</p>
+                    <p className="text-xs text-slate-400">المدرب: {favTeamData.coach}</p>
+                  </div>
+                  <div className="mr-auto text-center">
+                    <div className="text-2xl font-black text-amber-400">{favTeamData.stats.points}</div>
+                    <div className="text-xs text-slate-400">نقاط</div>
+                  </div>
                 </div>
-              ))}
-            </div>
+                <div className="flex gap-3 mt-3 text-xs text-center">
+                  {[
+                    { label: 'انتصارات', val: favTeamData.stats.wins, color: 'text-emerald-400' },
+                    { label: 'تعادل', val: favTeamData.stats.draws, color: 'text-slate-300' },
+                    { label: 'خسائر', val: favTeamData.stats.losses, color: 'text-red-400' },
+                    { label: 'أهداف', val: favTeamData.stats.goals_for, color: 'text-amber-400' },
+                  ].map(({ label, val, color }) => (
+                    <div key={label} className="flex-1 bg-slate-700/50 rounded-xl p-2">
+                      <div className={`text-lg font-black ${color}`}>{val}</div>
+                      <div className="text-slate-500">{label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
@@ -217,6 +232,7 @@ export default function Home({ favoriteTeam, installState = {} }) {
                   awayTeam={getTeam(teams, m.team_away)}
                   stadium={getStadium(stadiums, m.stadium_id)}
                   onClick={() => setSelectedMatch(m)}
+                  isFav={isFav(m)}
                 />
               ))}
             </div>
@@ -237,6 +253,7 @@ export default function Home({ favoriteTeam, installState = {} }) {
                   awayTeam={getTeam(teams, m.team_away)}
                   stadium={getStadium(stadiums, m.stadium_id)}
                   onClick={() => setSelectedMatch(m)}
+                  isFav={isFav(m)}
                 />
               ))}
             </div>
@@ -255,7 +272,7 @@ export default function Home({ favoriteTeam, installState = {} }) {
           <section>
             <h2 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
               🗓️ المباريات القادمة
-              {favTeamData && <span className="text-xs text-emerald-400 font-normal">({favTeamData.name} أولاً)</span>}
+              {favTeamsData.length > 0 && <span className="text-xs text-emerald-400 font-normal">(منتخباتك أولاً)</span>}
             </h2>
             <div className="space-y-3">
               {upcomingMatches.map(m => (
@@ -266,6 +283,7 @@ export default function Home({ favoriteTeam, installState = {} }) {
                   awayTeam={getTeam(teams, m.team_away)}
                   stadium={getStadium(stadiums, m.stadium_id)}
                   onClick={() => setSelectedMatch(m)}
+                  isFav={isFav(m)}
                 />
               ))}
             </div>
@@ -284,6 +302,7 @@ export default function Home({ favoriteTeam, installState = {} }) {
                   awayTeam={getTeam(teams, m.team_away)}
                   stadium={getStadium(stadiums, m.stadium_id)}
                   onClick={() => setSelectedMatch(m)}
+                  isFav={isFav(m)}
                 />
               ))}
             </div>
@@ -320,9 +339,6 @@ export default function Home({ favoriteTeam, installState = {} }) {
                   className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-700 text-slate-400 hover:text-white"
                 >✕</button>
               </div>
-              <p className="text-slate-400 text-sm mb-5 leading-relaxed">
-                Safari فقط يدعم التثبيت. اتبع هذه الخطوات الثلاث:
-              </p>
               <div className="space-y-3">
                 {[
                   { step: '1', icon: '⎋', text: 'اضغط زر المشاركة في شريط أدوات Safari السفلي' },

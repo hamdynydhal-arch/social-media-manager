@@ -9,10 +9,10 @@ export default function NewsTicker({ news }) {
         <div className="flex-shrink-0 bg-red-800 text-white text-xs font-bold px-3 py-1 mx-3 rounded-md z-10 relative whitespace-nowrap">
           🔴 عاجل
         </div>
-        <div className="ticker-wrap flex-1 min-w-0">
+        <div className="ticker-wrap flex-1 min-w-0" style={{ direction: 'ltr' }}>
           <div className="ticker-content text-white text-sm font-medium">
             {doubled.map((item, i) => (
-              <span key={i} className="inline-block mx-8">
+              <span key={i} className="inline-block mx-8" dir="rtl">
                 {item}
               </span>
             ))}

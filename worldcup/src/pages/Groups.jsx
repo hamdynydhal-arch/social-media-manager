@@ -4,7 +4,7 @@ import { useWorldCupData } from '../context/WorldCupContext'
 
 const ALL_GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
 
-export default function Groups({ favoriteTeam }) {
+export default function Groups({ favoriteTeams = [] }) {
   const { data } = useWorldCupData()
   const { teams } = data
 
@@ -15,7 +15,7 @@ export default function Groups({ favoriteTeam }) {
     <div className="px-4 py-4 pb-24 space-y-4">
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
         {ALL_GROUPS.map(g => {
-          const hasFav = teams.some(t => t.group === g && t.id === favoriteTeam)
+          const hasFav = favoriteTeams.length > 0 && teams.some(t => t.group === g && favoriteTeams.includes(t.id))
           return (
             <button
               key={g}
@@ -44,7 +44,7 @@ export default function Groups({ favoriteTeam }) {
         </div>
 
         {groupTeams.length > 0 ? (
-          <StandingsTable groupId={activeGroup} favoriteTeam={favoriteTeam} />
+          <StandingsTable groupId={activeGroup} favoriteTeams={favoriteTeams} />
         ) : (
           <div className="text-center py-8 text-slate-400">
             <p className="text-3xl mb-2">📊</p>
@@ -62,7 +62,7 @@ export default function Groups({ favoriteTeam }) {
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-white">{team.name}</span>
-                  {team.id === favoriteTeam && (
+                  {favoriteTeams.includes(team.id) && (
                     <span className="text-xs bg-emerald-400/20 text-emerald-400 border border-emerald-400/30 px-1.5 py-0.5 rounded-full">
                       ★ مفضل
                     </span>

@@ -1,4 +1,4 @@
-// v14 — Sofascore ratings added; duplicate M002 removed; ticker seamless loop fix
+// v15 — ticker LTR fix; multi-team favorites; 1h/10min/kickoff reminders; install button always active
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'

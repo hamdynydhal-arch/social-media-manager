@@ -19,7 +19,7 @@ function TeamDisplay({ team, score, side }) {
   )
 }
 
-export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick }) {
+export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick, isFav = false }) {
   const isLive = match.status === 'live'
   const isFinished = match.status === 'finished'
   const isScheduled = match.status === 'scheduled'
@@ -60,10 +60,14 @@ export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick 
   return (
     <div
       onClick={onClick}
-      className="card p-4 cursor-pointer team-card-hover active:scale-98 select-none"
+      className={`card p-4 cursor-pointer team-card-hover active:scale-98 select-none ${isFav ? 'border-amber-400/40 bg-amber-400/5' : ''}`}
+      style={isFav ? { boxShadow: '0 0 0 1px rgba(251,191,36,0.3), 0 4px 16px rgba(251,191,36,0.1)' } : undefined}
     >
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs text-slate-400 bg-slate-700/50 px-2 py-0.5 rounded-full">{match.round}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-slate-400 bg-slate-700/50 px-2 py-0.5 rounded-full">{match.round}</span>
+          {isFav && <span className="text-xs text-amber-400 font-bold">⭐ مفضل</span>}
+        </div>
         {isLive && (
           <span className="live-badge">
             <span className="w-1.5 h-1.5 bg-white rounded-full" />
