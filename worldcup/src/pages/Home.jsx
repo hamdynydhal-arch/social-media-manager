@@ -79,8 +79,7 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
     if (isIOS) setShowIOSModal(true)
     else if (window.deferredPrompt) triggerInstall?.()
     else {
-      // Navigate to settings which has the manual instructions
-      window.location.hash = '#/settings'
+      window.location.hash = '/settings'
     }
   }
 
