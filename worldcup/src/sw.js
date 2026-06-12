@@ -1,4 +1,4 @@
-// v13 — 6-layer RSS proxy chain; BBC/Sky first; Reddit r/worldcup as guaranteed fallback
+// v14 — Sofascore ratings added; duplicate M002 removed; ticker seamless loop fix
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'

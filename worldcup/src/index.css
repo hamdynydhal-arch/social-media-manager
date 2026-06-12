@@ -59,9 +59,9 @@ body {
 }
 
 .ticker-content {
-  display: inline-block;
-  animation: ticker-scroll 45s linear infinite;
-  padding-right: 100%;
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker-scroll 55s linear infinite;
 }
 
 .ticker-content:hover {
@@ -69,8 +69,8 @@ body {
 }
 
 @keyframes ticker-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .bg-pitch {
