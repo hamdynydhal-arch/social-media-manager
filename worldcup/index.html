@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0f172a" />
     <meta name="description" content="تطبيق متابعة بطولة كأس العالم 2026 - نتائج مباشرة، جداول، إحصائيات" />
-    <!-- Force browsers to revalidate index.html on every load -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -19,6 +18,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <title>كأس العالم 2026</title>
+    <!-- Capture beforeinstallprompt BEFORE React boots so we never miss it -->
+    <script>
+      window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        window.deferredPrompt = e;
+        document.dispatchEvent(new Event('pwa-prompt-ready'));
+      });
+    </script>
   </head>
   <body class="bg-slate-950 text-white font-arabic" style="font-family:'Cairo',sans-serif">
     <div id="root"></div>

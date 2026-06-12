@@ -1,4 +1,4 @@
-// v15 — ticker LTR fix; multi-team favorites; 1h/10min/kickoff reminders; install button always active
+// v16 — RAF ticker; early beforeinstallprompt capture; requireInteraction for fav alerts
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
@@ -33,14 +33,13 @@ registerRoute(
 
 // ── Message bus ──────────────────────────────────────────────────────────────
 self.addEventListener('message', event => {
-  // Legacy compat: vite-plugin-pwa autoUpdate sends this
   if (event.data?.type === 'SKIP_WAITING') {
     self.skipWaiting()
     return
   }
 
   if (event.data?.type === 'SHOW_NOTIFICATION') {
-    const { title, body, tag, vibrate } = event.data
+    const { title, body, tag, vibrate, requireInteraction } = event.data
     event.waitUntil(
       self.registration.showNotification(title, {
         body: body ?? '',
@@ -51,6 +50,8 @@ self.addEventListener('message', event => {
         tag: tag ?? 'wc-alert',
         renotify: true,
         vibrate: vibrate ?? [200],
+        requireInteraction: requireInteraction ?? false,
+        silent: false,
       })
     )
   }
@@ -58,15 +59,16 @@ self.addEventListener('message', event => {
 
 // ── Server push (future backend) ─────────────────────────────────────────────
 self.addEventListener('push', event => {
-  const data = event.data?.json() ?? {}
+  const d = event.data?.json() ?? {}
   event.waitUntil(
-    self.registration.showNotification(data.title ?? '⚽ كأس العالم 2026', {
-      body: data.body ?? '',
+    self.registration.showNotification(d.title ?? '⚽ كأس العالم 2026', {
+      body: d.body ?? '',
       icon: '/social-media-manager/world-cup/icons/icon-192.png',
       badge: '/social-media-manager/world-cup/icons/icon-192.png',
       dir: 'rtl',
       lang: 'ar',
       tag: 'wc-push',
+      requireInteraction: d.requireInteraction ?? false,
     })
   )
 })

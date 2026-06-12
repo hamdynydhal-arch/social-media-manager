@@ -75,10 +75,12 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
   // Always show install banner when not yet installed
   const canInstall = !isInstalled
 
-  const handleInstall = () => {
-    if (isIOS) setShowIOSModal(true)
-    else if (window.deferredPrompt) triggerInstall?.()
-    else {
+  const handleInstall = async () => {
+    if (isIOS) { setShowIOSModal(true); return }
+    // triggerInstall checks both React state AND window.deferredPrompt
+    const ok = await triggerInstall?.()
+    if (ok === false && !window.deferredPrompt) {
+      // No native prompt available: guide user to manual install via Settings
       window.location.hash = '/settings'
     }
   }

@@ -1,18 +1,86 @@
-import { useEffect, useRef } from 'react'
+import { useRef, useEffect } from 'react'
 
+// RAF-based ticker — immune to RTL/LTR CSS issues
 export default function NewsTicker({ news }) {
-  const doubled = [...news, ...news]
+  const trackRef   = useRef(null)
+  const rafRef     = useRef(null)
+  const posRef     = useRef(0)
+  const pausedRef  = useRef(false)
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track || !news?.length) return
+
+    // Reset position when content changes
+    posRef.current = 0
+    track.style.transform = 'translateX(0px)'
+
+    const step = () => {
+      if (!pausedRef.current) {
+        posRef.current -= 1          // 1px per frame ≈ 60px/s at 60fps
+        const half = track.scrollWidth / 2
+        if (half > 0 && Math.abs(posRef.current) >= half) {
+          posRef.current += half     // seamless reset to first-copy position
+        }
+        track.style.transform = `translateX(${Math.round(posRef.current)}px)`
+      }
+      rafRef.current = requestAnimationFrame(step)
+    }
+
+    rafRef.current = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [news])
+
+  const doubled = [...(news ?? []), ...(news ?? [])]
 
   return (
-    <div className="bg-red-600/90 backdrop-blur-sm border-b border-red-500/50 py-2 overflow-hidden">
-      <div className="flex items-center">
-        <div className="flex-shrink-0 bg-red-800 text-white text-xs font-bold px-3 py-1 mx-3 rounded-md z-10 relative whitespace-nowrap">
+    <div
+      className="bg-red-600/90 backdrop-blur-sm border-b border-red-500/50 py-2"
+      style={{ overflow: 'hidden' }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', direction: 'ltr' }}>
+        <span style={{
+          flexShrink: 0,
+          background: '#7f1d1d',
+          color: 'white',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          padding: '4px 12px',
+          margin: '0 12px',
+          borderRadius: '6px',
+          whiteSpace: 'nowrap',
+          position: 'relative',
+          zIndex: 1,
+        }}>
           🔴 عاجل
-        </div>
-        <div className="ticker-wrap flex-1 min-w-0" style={{ direction: 'ltr' }}>
-          <div className="ticker-content text-white text-sm font-medium">
+        </span>
+
+        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+          <div
+            ref={trackRef}
+            onMouseEnter={() => { pausedRef.current = true }}
+            onMouseLeave={() => { pausedRef.current = false }}
+            onTouchStart={() => { pausedRef.current = true }}
+            onTouchEnd={() => { pausedRef.current = false }}
+            style={{
+              display: 'inline-flex',
+              whiteSpace: 'nowrap',
+              willChange: 'transform',
+            }}
+          >
             {doubled.map((item, i) => (
-              <span key={i} className="inline-block mx-8" dir="rtl">
+              <span
+                key={i}
+                style={{
+                  display: 'inline-block',
+                  padding: '0 2rem',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  direction: 'rtl',
+                  unicodeBidi: 'embed',
+                }}
+              >
                 {item}
               </span>
             ))}
