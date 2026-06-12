@@ -1,16 +1,15 @@
 import { useRef, useEffect, useMemo } from 'react'
 
-// Arabic ticker: label on right, scrolls left→right, max 10 items, refreshes with prop
+// Standard Arabic ticker: label RIGHT, text scrolls right→left (reading order correct)
 export default function NewsTicker({ news }) {
   const trackRef  = useRef(null)
   const rafRef    = useRef(null)
   const posRef    = useRef(0)
   const pausedRef = useRef(false)
-  const initRef   = useRef(false)
 
-  // Keep only latest 10 items; stable identity so effect only reruns when content changes
   const items = useMemo(
     () => (news ?? []).slice(0, 10),
+    // stable dep — only recompute when content actually changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [(news ?? []).slice(0, 10).join('\x01')]
   )
@@ -20,20 +19,15 @@ export default function NewsTicker({ news }) {
     if (!track || !items.length) return
 
     posRef.current = 0
-    initRef.current = false
     track.style.transform = 'translateX(0px)'
 
     const step = () => {
-      const half = track.scrollWidth / 2
-      // Initialize to -half so items enter from the left
-      if (!initRef.current && half > 0) {
-        posRef.current = -half
-        initRef.current = true
-        track.style.transform = `translateX(${Math.round(posRef.current)}px)`
-      }
-      if (!pausedRef.current && half > 0) {
-        posRef.current += 1                            // scroll right
-        if (posRef.current >= 0) posRef.current = -half  // seamless loop
+      if (!pausedRef.current) {
+        posRef.current -= 1                                    // ← right-to-left
+        const half = track.scrollWidth / 2
+        if (half > 0 && Math.abs(posRef.current) >= half) {
+          posRef.current += half                               // seamless loop
+        }
         track.style.transform = `translateX(${Math.round(posRef.current)}px)`
       }
       rafRef.current = requestAnimationFrame(step)
@@ -50,11 +44,12 @@ export default function NewsTicker({ news }) {
 
   return (
     <div
-      className="bg-red-700/95 backdrop-blur-sm border-b border-red-500/60 py-2"
+      className="bg-red-700/95 border-b border-red-600/60 py-2"
       style={{ overflow: 'hidden', direction: 'rtl' }}
     >
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        {/* Label — right side in RTL flow */}
+
+        {/* ── Label: RIGHT side in RTL flex ────────────────────────────── */}
         <span style={{
           flexShrink: 0,
           background: '#7f1d1d',
@@ -66,11 +61,12 @@ export default function NewsTicker({ news }) {
           borderRadius: '6px',
           whiteSpace: 'nowrap',
           letterSpacing: '0.5px',
+          userSelect: 'none',
         }}>
           📺 الأخبار
         </span>
 
-        {/* Scrolling area — force LTR so translateX behaves predictably */}
+        {/* ── Scrolling lane: LTR so translateX is direction-independent ── */}
         <div style={{ flex: 1, minWidth: 0, overflow: 'hidden', direction: 'ltr' }}>
           <div
             ref={trackRef}
@@ -98,6 +94,7 @@ export default function NewsTicker({ news }) {
             ))}
           </div>
         </div>
+
       </div>
     </div>
   )

@@ -5,6 +5,7 @@ import { useLiveMatchEvents } from './hooks/useLiveEvents'
 import { useLiveSimulator } from './hooks/useLiveSimulator'
 import { useInstallPrompt } from './hooks/useInstallPrompt'
 import { WorldCupProvider, useWorldCupData } from './context/WorldCupContext'
+import { playWhistleSound } from './utils/audioUtils'
 import Home from './pages/Home'
 import Matches from './pages/Matches'
 import Groups from './pages/Groups'
@@ -28,6 +29,15 @@ function AppInner() {
 
   useEffect(() => {
     document.documentElement.classList.add('dark')
+  }, [])
+
+  // Listen for SW→page audio trigger (fired when SW shows a background notification)
+  useEffect(() => {
+    const onSwMsg = (e) => {
+      if (e.data?.type === 'PLAY_WHISTLE') playWhistleSound()
+    }
+    navigator.serviceWorker?.addEventListener('message', onSwMsg)
+    return () => navigator.serviceWorker?.removeEventListener('message', onSwMsg)
   }, [])
 
   const handleTeamSelect = (teams) => {

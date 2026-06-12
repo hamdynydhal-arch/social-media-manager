@@ -1,4 +1,4 @@
-// v17 — referee whistle vibration [300,100,300,100,800] + sound property + WAV file
+// v18 — lock-screen: image banner + double vibrate + client audio trigger
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
@@ -7,7 +7,6 @@ import { ExpirationPlugin } from 'workbox-expiration'
 cleanupOutdatedCaches()
 precacheAndRoute(self.__WB_MANIFEST)
 
-// ── Immediately activate new SW without waiting for old tabs to close ────────
 self.addEventListener('install', () => self.skipWaiting())
 
 self.addEventListener('activate', event =>
@@ -31,6 +30,20 @@ registerRoute(
   })
 )
 
+const ICON  = '/social-media-manager/world-cup/icons/icon-192.png'
+const SOUND = '/social-media-manager/world-cup/sounds/whistle.wav'
+
+// Vibration: referee whistle (short-short-long) — works on Android lock screen
+const WHISTLE_VIB  = [300, 100, 300, 100, 800]
+const STANDARD_VIB = [200, 100, 200]
+
+// Send PLAY_WHISTLE to every open client tab so audio fires immediately
+function notifyClients() {
+  return clients
+    .matchAll({ type: 'window', includeUncontrolled: true })
+    .then(list => list.forEach(c => c.postMessage({ type: 'PLAY_WHISTLE' })))
+}
+
 // ── Message bus ──────────────────────────────────────────────────────────────
 self.addEventListener('message', event => {
   if (event.data?.type === 'SKIP_WAITING') {
@@ -40,28 +53,25 @@ self.addEventListener('message', event => {
 
   if (event.data?.type === 'SHOW_NOTIFICATION') {
     const { title, body, tag, vibrate, requireInteraction } = event.data
-    // Decide vibration: whistle/fav tags get the referee pattern
     const isWhistleType = (tag ?? '').includes('whistle') ||
                           (tag ?? '').includes('fav')    ||
                           (tag ?? '').includes('kick')   ||
                           (tag ?? '').includes('warning')
-    const vib = vibrate ?? (isWhistleType ? [300, 100, 300, 100, 800] : [200])
+    const vib = vibrate ?? (isWhistleType ? WHISTLE_VIB : STANDARD_VIB)
     event.waitUntil(
       self.registration.showNotification(title, {
-        body: body ?? '',
-        icon: '/social-media-manager/world-cup/icons/icon-192.png',
-        badge: '/social-media-manager/world-cup/icons/icon-192.png',
-        dir: 'rtl',
-        lang: 'ar',
-        tag: tag ?? 'wc-alert',
-        renotify: true,
-        vibrate: vib,
-        requireInteraction: requireInteraction ?? false,
-        silent: false,
-        // sound is part of the Notifications spec (most browsers ignore on Android,
-        // but we include it as the standard field)
-        sound: '/social-media-manager/world-cup/sounds/whistle.wav',
-      })
+        body:                body ?? '',
+        icon:                ICON,
+        badge:               ICON,
+        dir:                 'rtl',
+        lang:                'ar',
+        tag:                 tag ?? 'wc-alert',
+        renotify:            true,
+        vibrate:             vib,
+        requireInteraction:  requireInteraction ?? isWhistleType,
+        silent:              false,
+        sound:               SOUND,
+      }).then(() => isWhistleType ? notifyClients() : null)
     )
   }
 })
@@ -70,18 +80,19 @@ self.addEventListener('message', event => {
 self.addEventListener('push', event => {
   const d = event.data?.json() ?? {}
   event.waitUntil(
-    self.registration.showNotification(d.title ?? '⚽ كأس العالم 2026', {
-      body: d.body ?? '',
-      icon: '/social-media-manager/world-cup/icons/icon-192.png',
-      badge: '/social-media-manager/world-cup/icons/icon-192.png',
-      dir: 'rtl',
-      lang: 'ar',
-      tag: 'wc-push',
-      vibrate: [300, 100, 300, 100, 800],
+    self.registration.showNotification(d.title ?? '🚨 كأس العالم 2026', {
+      body:               d.body ?? '',
+      icon:               ICON,
+      badge:              ICON,
+      dir:                'rtl',
+      lang:               'ar',
+      tag:                'wc-push',
+      renotify:           true,
+      vibrate:            WHISTLE_VIB,
       requireInteraction: d.requireInteraction ?? true,
-      silent: false,
-      sound: '/social-media-manager/world-cup/sounds/whistle.wav',
-    })
+      silent:             false,
+      sound:              SOUND,
+    }).then(() => notifyClients())
   )
 })
 
