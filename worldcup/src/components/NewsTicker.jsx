@@ -1,27 +1,39 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useMemo } from 'react'
 
-// RAF-based ticker — immune to RTL/LTR CSS issues
+// Arabic ticker: label on right, scrolls left→right, max 10 items, refreshes with prop
 export default function NewsTicker({ news }) {
-  const trackRef   = useRef(null)
-  const rafRef     = useRef(null)
-  const posRef     = useRef(0)
-  const pausedRef  = useRef(false)
+  const trackRef  = useRef(null)
+  const rafRef    = useRef(null)
+  const posRef    = useRef(0)
+  const pausedRef = useRef(false)
+  const initRef   = useRef(false)
+
+  // Keep only latest 10 items; stable identity so effect only reruns when content changes
+  const items = useMemo(
+    () => (news ?? []).slice(0, 10),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [(news ?? []).slice(0, 10).join('\x01')]
+  )
 
   useEffect(() => {
     const track = trackRef.current
-    if (!track || !news?.length) return
+    if (!track || !items.length) return
 
-    // Reset position when content changes
     posRef.current = 0
+    initRef.current = false
     track.style.transform = 'translateX(0px)'
 
     const step = () => {
-      if (!pausedRef.current) {
-        posRef.current -= 1          // 1px per frame ≈ 60px/s at 60fps
-        const half = track.scrollWidth / 2
-        if (half > 0 && Math.abs(posRef.current) >= half) {
-          posRef.current += half     // seamless reset to first-copy position
-        }
+      const half = track.scrollWidth / 2
+      // Initialize to -half so items enter from the left
+      if (!initRef.current && half > 0) {
+        posRef.current = -half
+        initRef.current = true
+        track.style.transform = `translateX(${Math.round(posRef.current)}px)`
+      }
+      if (!pausedRef.current && half > 0) {
+        posRef.current += 1                            // scroll right
+        if (posRef.current >= 0) posRef.current = -half  // seamless loop
         track.style.transform = `translateX(${Math.round(posRef.current)}px)`
       }
       rafRef.current = requestAnimationFrame(step)
@@ -29,44 +41,44 @@ export default function NewsTicker({ news }) {
 
     rafRef.current = requestAnimationFrame(step)
     return () => cancelAnimationFrame(rafRef.current)
-  }, [news])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items])
 
-  const doubled = [...(news ?? []), ...(news ?? [])]
+  const doubled = [...items, ...items]
+
+  if (!items.length) return null
 
   return (
     <div
-      className="bg-red-600/90 backdrop-blur-sm border-b border-red-500/50 py-2"
-      style={{ overflow: 'hidden' }}
+      className="bg-red-700/95 backdrop-blur-sm border-b border-red-500/60 py-2"
+      style={{ overflow: 'hidden', direction: 'rtl' }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', direction: 'ltr' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        {/* Label — right side in RTL flow */}
         <span style={{
           flexShrink: 0,
           background: '#7f1d1d',
-          color: 'white',
+          color: '#fde047',
           fontSize: '12px',
-          fontWeight: 'bold',
-          padding: '4px 12px',
-          margin: '0 12px',
+          fontWeight: '800',
+          padding: '4px 10px',
+          marginLeft: '10px',
           borderRadius: '6px',
           whiteSpace: 'nowrap',
-          position: 'relative',
-          zIndex: 1,
+          letterSpacing: '0.5px',
         }}>
-          🔴 عاجل
+          📺 الأخبار
         </span>
 
-        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+        {/* Scrolling area — force LTR so translateX behaves predictably */}
+        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden', direction: 'ltr' }}>
           <div
             ref={trackRef}
             onMouseEnter={() => { pausedRef.current = true }}
             onMouseLeave={() => { pausedRef.current = false }}
             onTouchStart={() => { pausedRef.current = true }}
             onTouchEnd={() => { pausedRef.current = false }}
-            style={{
-              display: 'inline-flex',
-              whiteSpace: 'nowrap',
-              willChange: 'transform',
-            }}
+            style={{ display: 'inline-flex', whiteSpace: 'nowrap', willChange: 'transform' }}
           >
             {doubled.map((item, i) => (
               <span
