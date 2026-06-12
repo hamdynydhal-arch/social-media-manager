@@ -42,23 +42,61 @@ export function playNotificationSound() {
   } catch {}
 }
 
-export function playWhistleSound() {
+// Try to play the pre-generated WAV file first; fall back to synthesised sound
+let whistleAudio = null
+const WHISTLE_SRC = (import.meta.env.BASE_URL || '/') + 'sounds/whistle.wav'
+
+function loadWhistle() {
+  if (whistleAudio) return whistleAudio
+  try {
+    whistleAudio = new Audio(WHISTLE_SRC)
+    whistleAudio.preload = 'auto'
+  } catch { whistleAudio = null }
+  return whistleAudio
+}
+
+// Pre-load on first import so it's ready when needed
+loadWhistle()
+
+function synthesiseWhistle() {
   try {
     const ctx = getCtx()
-    for (let b = 0; b < 3; b++) {
-      const osc = ctx.createOscillator()
+    const BURSTS = [
+      { t0: 0.00, dur: 0.28 },
+      { t0: 0.42, dur: 0.28 },
+      { t0: 0.84, dur: 0.75 },
+    ]
+    BURSTS.forEach(({ t0, dur }) => {
+      const osc  = ctx.createOscillator()
       const gain = ctx.createGain()
       osc.connect(gain)
       gain.connect(ctx.destination)
-      osc.type = 'sawtooth'
-      osc.frequency.setValueAtTime(2000, ctx.currentTime + b * 0.25)
-      osc.frequency.linearRampToValueAtTime(2400, ctx.currentTime + b * 0.25 + 0.15)
-      gain.gain.setValueAtTime(0.2, ctx.currentTime + b * 0.25)
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + b * 0.25 + 0.2)
-      osc.start(ctx.currentTime + b * 0.25)
-      osc.stop(ctx.currentTime + b * 0.25 + 0.22)
-    }
+      osc.type = 'triangle'
+      osc.frequency.setValueAtTime(2800, ctx.currentTime + t0)
+      osc.frequency.linearRampToValueAtTime(2950, ctx.currentTime + t0 + dur * 0.3)
+      osc.frequency.linearRampToValueAtTime(2800, ctx.currentTime + t0 + dur)
+      gain.gain.setValueAtTime(0, ctx.currentTime + t0)
+      gain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + t0 + 0.02)
+      gain.gain.setValueAtTime(0.35, ctx.currentTime + t0 + dur - 0.05)
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + t0 + dur)
+      osc.start(ctx.currentTime + t0)
+      osc.stop(ctx.currentTime + t0 + dur + 0.05)
+    })
   } catch {}
+}
+
+export function playWhistleSound() {
+  // 1. Vibration — referee whistle pattern (short-short-long)
+  haptic([300, 100, 300, 100, 800])
+
+  // 2. Audio — try WAV file first, synthesise as fallback
+  const audio = loadWhistle()
+  if (audio) {
+    audio.currentTime = 0
+    audio.play().catch(() => synthesiseWhistle())
+  } else {
+    synthesiseWhistle()
+  }
 }
 
 export function haptic(pattern = [50]) {

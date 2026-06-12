@@ -1,4 +1,4 @@
-// v16 — RAF ticker; early beforeinstallprompt capture; requireInteraction for fav alerts
+// v17 — referee whistle vibration [300,100,300,100,800] + sound property + WAV file
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
@@ -40,6 +40,12 @@ self.addEventListener('message', event => {
 
   if (event.data?.type === 'SHOW_NOTIFICATION') {
     const { title, body, tag, vibrate, requireInteraction } = event.data
+    // Decide vibration: whistle/fav tags get the referee pattern
+    const isWhistleType = (tag ?? '').includes('whistle') ||
+                          (tag ?? '').includes('fav')    ||
+                          (tag ?? '').includes('kick')   ||
+                          (tag ?? '').includes('warning')
+    const vib = vibrate ?? (isWhistleType ? [300, 100, 300, 100, 800] : [200])
     event.waitUntil(
       self.registration.showNotification(title, {
         body: body ?? '',
@@ -49,9 +55,12 @@ self.addEventListener('message', event => {
         lang: 'ar',
         tag: tag ?? 'wc-alert',
         renotify: true,
-        vibrate: vibrate ?? [200],
+        vibrate: vib,
         requireInteraction: requireInteraction ?? false,
         silent: false,
+        // sound is part of the Notifications spec (most browsers ignore on Android,
+        // but we include it as the standard field)
+        sound: '/social-media-manager/world-cup/sounds/whistle.wav',
       })
     )
   }
@@ -68,7 +77,10 @@ self.addEventListener('push', event => {
       dir: 'rtl',
       lang: 'ar',
       tag: 'wc-push',
-      requireInteraction: d.requireInteraction ?? false,
+      vibrate: [300, 100, 300, 100, 800],
+      requireInteraction: d.requireInteraction ?? true,
+      silent: false,
+      sound: '/social-media-manager/world-cup/sounds/whistle.wav',
     })
   )
 })
