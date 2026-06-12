@@ -171,6 +171,8 @@ export function WorldCupProvider({ children }) {
             minute:     live.minute     ?? sm.minute,
             score_home: live.score_home ?? sm.score_home,
             score_away: live.score_away ?? sm.score_away,
+            // Keep Arabic goals from static data; use external English names only for new matches
+            goals: sm.goals?.length > 0 ? sm.goals : (live.goals ?? sm.goals ?? []),
           }
         })
       : staticData.matches

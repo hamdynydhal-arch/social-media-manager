@@ -336,9 +336,9 @@ export default function Settings({
         <h3 className="font-bold text-white mb-3 flex items-center gap-2">🌐 مصادر البيانات المفتوحة</h3>
         <div className="space-y-2 mb-3">
           {[
-            { label: 'نتائج مباشرة', src: 'ESPN Public API', active: sources?.scores },
-            { label: 'ترتيب المجموعات', src: 'ESPN Standings', active: sources?.standings },
-            { label: 'أخبار عاجلة', src: 'BBC Sport RSS', active: sources?.news },
+            { label: 'نتائج المباريات', src: 'openfootball / GitHub', active: sources?.scores },
+            { label: 'ترتيب المجموعات', src: 'محسوب محلياً من النتائج', active: true },
+            { label: 'أخبار عاجلة', src: 'Al Jazeera / BBC RSS', active: sources?.news },
           ].map(({ label, src, active }) => (
             <div key={label} className="flex items-center justify-between bg-slate-700/30 rounded-xl px-3 py-2">
               <div>

@@ -1,70 +1,111 @@
 /**
- * Open, no-auth data sources for FIFA World Cup 2026:
- *  1. ESPN public API  – live match scores (no key)
- *  2. rss2json.com     – converts BBC Sport / ESPN RSS to JSON (no key, 1000 req/day free)
- *  3. AllOrigins proxy – CORS bypass if ESPN blocks direct browser calls
+ * Data sources for FIFA World Cup 2026 — all CORS-friendly, no API keys:
+ *
+ *  PRIMARY  → openfootball/worldcup.json on GitHub raw
+ *             Auto-updated after every match. CORS: * (GitHub CDN).
+ *
+ *  NEWS     → rss2json.com (free, 1 000 req/day) with Arabic RSS feeds first,
+ *             then feed2json.org as secondary converter, then English fallbacks.
+ *
+ *  FALLBACK → ESPN scoreboard via proxy chain when openfootball has no data yet
+ *             (i.e. during a match that hasn't finished).
  */
 
-// ── Endpoints ──────────────────────────────────────────────────────────────
-const ESPN_SCOREBOARD = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard'
-const ESPN_STANDINGS  = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/standings'
-const THINGPROXY     = url => `https://thingproxy.freeboard.io/fetch/${url}`
-const ALLORIGINS      = url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
-const CORSPROXY      = url => `https://corsproxy.io/?${encodeURIComponent(url)}`
-const ALLORIGINS_GET = url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`
-const RSS2JSON        = url => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=20`
+// ── Primary: openfootball GitHub raw (no CORS issues) ─────────────────────────
+const OFB_MATCHES = 'https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json'
 
+// ── Secondary: ESPN scoreboard (often CORS-blocked, used as last resort) ──────
+const ESPN_SCOREBOARD = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard'
+
+// ── CORS proxy chain (ESPN fallback only) ─────────────────────────────────────
+const THINGPROXY    = url => `https://thingproxy.freeboard.io/fetch/${url}`
+const ALLORIGINS    = url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
+const CORSPROXY     = url => `https://corsproxy.io/?${encodeURIComponent(url)}`
+const ALLORIGINS_GET = url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`
+
+// ── RSS-to-JSON services ───────────────────────────────────────────────────────
+const RSS2JSON   = url => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=15`
+const FEED2JSON  = url => `https://feed2json.org/convert?url=${encodeURIComponent(url)}`
+
+// Arabic World Cup news feeds first, English as fallback
 const RSS_FEEDS = [
+  'https://www.aljazeera.net/rss/sports.xml',
+  'https://feeds.bbci.co.uk/arabic/sport/rss.xml',
   'https://feeds.bbci.co.uk/sport/football/rss.xml',
-  'https://www.espn.com/espn/rss/soccer/news',
   'https://www.goal.com/en/feeds/news',
 ]
 
-// ── Team code mappings ──────────────────────────────────────────────────────
-const ESPN_ABBR_MAP = {
-  USA: 'USA', USMNT: 'USA', CAN: 'CAN', MEX: 'MEX',
-  CRO: 'CRO', ECU: 'ECU', PAN: 'PAN',
-  SRB: 'SRB', MAR: 'MAR', NZL: 'NZL',
-  TUR: 'TUR', ALG: 'ALG', JAM: 'JAM',
-  ARG: 'ARG', AUS: 'AUS', JOR: 'JOR', HUN: 'HUN',
-  FRA: 'FRA', URU: 'URU', JPN: 'JPN', BOL: 'BOL',
-  ESP: 'ESP', COL: 'COL', IRQ: 'IRQ', HON: 'HON',
-  ENG: 'ENG', KOR: 'KOR', SKO: 'KOR', NGA: 'NGA', VEN: 'VEN',
-  GER: 'GER', SUI: 'SUI', SWI: 'SUI', SEN: 'SEN', EGY: 'EGY',
-  POR: 'POR', AUT: 'AUT', IRN: 'IRN', CMR: 'CMR',
-  BRA: 'BRA', UKR: 'UKR', KSA: 'KSA', SAU: 'KSA', TUN: 'TUN',
-  NED: 'NED', SCO: 'SCO', UZB: 'UZB', RSA: 'RSA',
-  BEL: 'BEL', POL: 'POL', CHI: 'CHI', CIV: 'CIV', CIV2: 'CIV',
+// ── openfootball team name → our internal ID (all 48 WC 2026 teams) ───────────
+const OFB_TEAM_MAP = {
+  // Group A
+  'Mexico':           'MEX', 'South Africa':        'RSA',
+  'South Korea':      'KOR', 'Czech Republic':      'CZE',
+  // Group B
+  'Canada':           'CAN', 'Bosnia & Herzegovina':'BIH',
+  'Bosnia and Herzegovina': 'BIH',
+  'Qatar':            'QAT', 'Switzerland':         'SUI',
+  // Group C
+  'Brazil':           'BRA', 'Morocco':             'MAR',
+  'Haiti':            'HAI', 'Scotland':            'SCO',
+  // Group D
+  'USA':              'USA', 'United States':       'USA',
+  'Paraguay':         'PAR', 'Australia':           'AUS',
+  'Turkey':           'TUR', 'Türkiye':             'TUR',
+  // Group E
+  'Germany':          'GER', 'Curaçao':             'CUW',
+  'Curacao':          'CUW', "Côte d'Ivoire":       'CIV',
+  "Cote d'Ivoire":    'CIV', 'Ivory Coast':         'CIV',
+  'Ecuador':          'ECU',
+  // Group F
+  'Netherlands':      'NED', 'Japan':               'JPN',
+  'Sweden':           'SWE', 'Tunisia':             'TUN',
+  // Group G
+  'Belgium':          'BEL', 'Egypt':               'EGY',
+  'Iran':             'IRN', 'New Zealand':         'NZL',
+  // Group H
+  'Spain':            'ESP', 'Cape Verde':          'CPV',
+  'Saudi Arabia':     'KSA', 'Uruguay':             'URU',
+  // Group I
+  'France':           'FRA', 'Senegal':             'SEN',
+  'Iraq':             'IRQ', 'Norway':              'NOR',
+  // Group J
+  'Argentina':        'ARG', 'Algeria':             'ALG',
+  'Austria':          'AUT', 'Jordan':              'JOR',
+  // Group K
+  'Portugal':         'POR', 'DR Congo':            'COD',
+  'Congo DR':         'COD', 'Democratic Republic of Congo': 'COD',
+  'Uzbekistan':       'UZB', 'Colombia':            'COL',
+  // Group L
+  'England':          'ENG', 'Croatia':             'CRO',
+  'Ghana':            'GHA', 'Panama':              'PAN',
 }
 
-const ESPN_NAME_MAP = {
-  'United States': 'USA', 'Canada': 'CAN', 'Mexico': 'MEX',
-  'Croatia': 'CRO', 'Ecuador': 'ECU', 'Panama': 'PAN',
-  'Serbia': 'SRB', 'Morocco': 'MAR', 'New Zealand': 'NZL',
-  'Turkey': 'TUR', 'Algeria': 'ALG', 'Jamaica': 'JAM',
-  'Argentina': 'ARG', 'Australia': 'AUS', 'Jordan': 'JOR', 'Hungary': 'HUN',
-  'France': 'FRA', 'Uruguay': 'URU', 'Japan': 'JPN', 'Bolivia': 'BOL',
-  'Spain': 'ESP', 'Colombia': 'COL', 'Iraq': 'IRQ', 'Honduras': 'HON',
-  'England': 'ENG', 'South Korea': 'KOR', 'Nigeria': 'NGA', 'Venezuela': 'VEN',
-  'Germany': 'GER', 'Switzerland': 'SUI', 'Senegal': 'SEN', 'Egypt': 'EGY',
-  'Portugal': 'POR', 'Austria': 'AUT', 'Iran': 'IRN', 'Cameroon': 'CMR',
-  'Brazil': 'BRA', 'Ukraine': 'UKR', 'Saudi Arabia': 'KSA', 'Tunisia': 'TUN',
-  'Netherlands': 'NED', 'Scotland': 'SCO', 'Uzbekistan': 'UZB', 'South Africa': 'RSA',
-  'Belgium': 'BEL', 'Poland': 'POL', 'Chile': 'CHI',
-  "Côte d'Ivoire": 'CIV', 'Ivory Coast': 'CIV', "Cote d'Ivoire": 'CIV',
+// ── ESPN abbreviation/name maps (kept for ESPN fallback) ─────────────────────
+const ESPN_ABBR_MAP = {
+  USA: 'USA', USMNT: 'USA', CAN: 'CAN', MEX: 'MEX', RSA: 'RSA',
+  CRO: 'CRO', ECU: 'ECU', PAN: 'PAN', CZE: 'CZE', BIH: 'BIH',
+  QAT: 'QAT', BRA: 'BRA', MAR: 'MAR', HAI: 'HAI', SCO: 'SCO',
+  PAR: 'PAR', AUS: 'AUS', TUR: 'TUR', GER: 'GER', CUW: 'CUW',
+  CIV: 'CIV', NED: 'NED', JPN: 'JPN', SWE: 'SWE', TUN: 'TUN',
+  BEL: 'BEL', EGY: 'EGY', IRN: 'IRN', NZL: 'NZL', ESP: 'ESP',
+  CPV: 'CPV', KSA: 'KSA', SAU: 'KSA', URU: 'URU', FRA: 'FRA',
+  SEN: 'SEN', IRQ: 'IRQ', NOR: 'NOR', ARG: 'ARG', ALG: 'ALG',
+  AUT: 'AUT', JOR: 'JOR', POR: 'POR', COD: 'COD', UZB: 'UZB',
+  COL: 'COL', ENG: 'ENG', GHA: 'GHA', KOR: 'KOR', SKO: 'KOR',
+  SUI: 'SUI', SWI: 'SUI',
 }
 
 const ESPN_STATUS_MAP = {
-  STATUS_SCHEDULED: 'scheduled',
+  STATUS_SCHEDULED:  'scheduled',
   STATUS_IN_PROGRESS: 'live',
-  STATUS_HALFTIME: 'live',
+  STATUS_HALFTIME:   'live',
   STATUS_END_PERIOD: 'live',
-  STATUS_FINAL: 'finished',
-  STATUS_FULL_TIME: 'finished',
-  STATUS_POSTPONED: 'scheduled',
+  STATUS_FINAL:      'finished',
+  STATUS_FULL_TIME:  'finished',
+  STATUS_POSTPONED:  'scheduled',
 }
 
-// ── Fetch helpers ────────────────────────────────────────────────────────────
+// ── Fetch helpers ─────────────────────────────────────────────────────────────
 async function safeFetch(url) {
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(8000) })
@@ -75,103 +116,144 @@ async function safeFetch(url) {
   }
 }
 
-// Try direct, then proxies in priority order if CORS blocks
-async function fetchWithFallback(url) {
+async function safeText(url) {
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(8000) })
+    if (!res.ok) return null
+    return res.text()
+  } catch {
+    return null
+  }
+}
+
+// ESPN-only fallback: try proxy chain
+async function fetchWithProxy(url) {
   const direct = await safeFetch(url)
   if (direct) return direct
-  const thing = await safeFetch(THINGPROXY(url))
-  if (thing) return thing
-  const raw = await safeFetch(ALLORIGINS(url))
-  if (raw) return raw
-  const cors = await safeFetch(CORSPROXY(url))
-  if (cors) return cors
-  const get = await safeFetch(ALLORIGINS_GET(url))
-  if (get?.contents) {
-    try { return JSON.parse(get.contents) } catch { return null }
-  }
+  const t = await safeFetch(THINGPROXY(url))
+  if (t) return t
+  const r = await safeFetch(ALLORIGINS(url))
+  if (r) return r
+  const c = await safeFetch(CORSPROXY(url))
+  if (c) return c
+  const g = await safeFetch(ALLORIGINS_GET(url))
+  if (g?.contents) { try { return JSON.parse(g.contents) } catch { return null } }
   return null
 }
 
-// ── ESPN Live Scores ─────────────────────────────────────────────────────────
-export async function fetchEspnMatches() {
-  const json = await fetchWithFallback(ESPN_SCOREBOARD)
+// ── PRIMARY: openfootball match data ─────────────────────────────────────────
+async function fetchOpenfootballMatches() {
+  const json = await safeFetch(OFB_MATCHES)
+  if (!json?.matches?.length) return null
+
+  const result = []
+  for (const m of json.matches) {
+    const homeId = OFB_TEAM_MAP[m.team1]
+    const awayId = OFB_TEAM_MAP[m.team2]
+    if (!homeId || !awayId) continue
+
+    // Only return matches with a confirmed final score
+    if (!m.score?.ft) continue
+
+    const sh = m.score.ft[0]
+    const sa = m.score.ft[1]
+
+    // Build goals array (English names — will be overridden by Arabic in data.json when available)
+    const goals = [
+      ...(m.goals1 ?? []).map(g => ({
+        team: homeId, player: g.name, minute: parseInt(g.minute) || 0, type: 'عادي',
+      })),
+      ...(m.goals2 ?? []).map(g => ({
+        team: awayId, player: g.name, minute: parseInt(g.minute) || 0, type: 'عادي',
+      })),
+    ].sort((a, b) => a.minute - b.minute)
+
+    result.push({ team_home: homeId, team_away: awayId, status: 'finished', score_home: sh, score_away: sa, goals })
+  }
+  return result.length > 0 ? result : null
+}
+
+// ── FALLBACK: ESPN live scores (during ongoing matches only) ──────────────────
+async function fetchEspnLive() {
+  const json = await fetchWithProxy(ESPN_SCOREBOARD)
   if (!json?.events?.length) return null
 
-  const matches = []
+  const result = []
   for (const event of json.events) {
     const comp = event.competitions?.[0]
     if (!comp) continue
-
     const homeComp = comp.competitors?.find(c => c.homeAway === 'home')
     const awayComp = comp.competitors?.find(c => c.homeAway === 'away')
     if (!homeComp || !awayComp) continue
-
-    const homeId = ESPN_ABBR_MAP[homeComp.team?.abbreviation] || ESPN_NAME_MAP[homeComp.team?.displayName]
-    const awayId = ESPN_ABBR_MAP[awayComp.team?.abbreviation] || ESPN_NAME_MAP[awayComp.team?.displayName]
+    const homeId = ESPN_ABBR_MAP[homeComp.team?.abbreviation]
+    const awayId = ESPN_ABBR_MAP[awayComp.team?.abbreviation]
     if (!homeId || !awayId) continue
-
     const statusName = comp.status?.type?.name ?? 'STATUS_SCHEDULED'
     const status = ESPN_STATUS_MAP[statusName] ?? 'scheduled'
-    const isActive = status !== 'scheduled'
-
-    matches.push({
-      team_home: homeId,
-      team_away: awayId,
-      status,
-      minute: status === 'live' ? comp.status?.displayClock ?? null : null,
-      score_home: isActive ? parseInt(homeComp.score ?? 0, 10) : null,
-      score_away: isActive ? parseInt(awayComp.score ?? 0, 10) : null,
+    if (status === 'scheduled') continue  // only return active matches
+    result.push({
+      team_home: homeId, team_away: awayId, status,
+      minute: status === 'live' ? (comp.status?.displayClock ?? null) : null,
+      score_home: parseInt(homeComp.score ?? 0, 10),
+      score_away: parseInt(awayComp.score ?? 0, 10),
     })
   }
-  return matches.length > 0 ? matches : null
+  return result.length > 0 ? result : null
 }
 
-// ── ESPN Standings ───────────────────────────────────────────────────────────
-export async function fetchEspnStandings() {
-  const json = await fetchWithFallback(ESPN_STANDINGS)
-  if (!json?.standings?.entries?.length && !json?.children) return null
+// ── Public: fetch all match data ──────────────────────────────────────────────
+export async function fetchEspnMatches() {
+  // openfootball gives us completed results (CORS-safe)
+  const ofb = await fetchOpenfootballMatches()
+  // ESPN gives us scores for currently-live matches (often CORS-blocked)
+  const espnLive = await fetchEspnLive()
 
-  // ESPN groups standings under children[].standings.entries[]
-  const groups = json.children ?? []
-  const rows = []
-  for (const grp of groups) {
-    const entries = grp.standings?.entries ?? []
-    for (const entry of entries) {
-      const teamId = ESPN_ABBR_MAP[entry.team?.abbreviation] || ESPN_NAME_MAP[entry.team?.displayName]
-      if (!teamId) continue
-      const stats = Object.fromEntries((entry.stats ?? []).map(s => [s.name, s.value]))
-      rows.push({
-        teamId,
-        played: stats.gamesPlayed ?? 0,
-        wins: stats.wins ?? 0,
-        draws: stats.ties ?? 0,
-        losses: stats.losses ?? 0,
-        goals_for: stats.pointsFor ?? stats.goalsScored ?? 0,
-        goals_against: stats.pointsAgainst ?? stats.goalsConceded ?? 0,
-        points: stats.points ?? 0,
-      })
+  if (!ofb && !espnLive) return null
+
+  // Merge: start with openfootball completed results, overlay ESPN live on top
+  const merged = [...(ofb ?? [])]
+  if (espnLive) {
+    for (const live of espnLive) {
+      const idx = merged.findIndex(m => m.team_home === live.team_home && m.team_away === live.team_away)
+      if (idx >= 0) {
+        merged[idx] = { ...merged[idx], ...live }
+      } else {
+        merged.push(live)
+      }
     }
   }
-  return rows.length > 0 ? rows : null
+  return merged
 }
 
-// ── RSS News Feed ────────────────────────────────────────────────────────────
+// ── Public: standings — always null (calculated locally in WorldCupContext) ───
+export async function fetchEspnStandings() {
+  return null
+}
+
+// ── Public: news feed ─────────────────────────────────────────────────────────
 export async function fetchRssNews() {
   for (const feed of RSS_FEEDS) {
-    try {
-      const json = await safeFetch(RSS2JSON(feed))
-      if (json?.status === 'ok' && json.items?.length > 0) {
-        return json.items.slice(0, 20).map(item => {
-          const title = item.title?.trim() ?? ''
-          // Prepend time if available
-          const pub = item.pubDate ? new Date(item.pubDate) : null
-          const time = pub ? pub.toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' }) : ''
-          return time ? `${time} — ${title}` : title
-        }).filter(Boolean)
-      }
-    } catch {
-      // try next feed
+    // Try rss2json.com first
+    const j1 = await safeFetch(RSS2JSON(feed))
+    if (j1?.status === 'ok' && j1.items?.length > 0) {
+      return formatItems(j1.items)
+    }
+    // Try feed2json.org as secondary converter
+    const j2 = await safeFetch(FEED2JSON(feed))
+    if (j2?.items?.length > 0) {
+      return formatItems(j2.items)
     }
   }
   return null
+}
+
+function formatItems(items) {
+  return items.slice(0, 15).map(item => {
+    const title = item.title?.trim() ?? ''
+    const pub = item.pubDate || item.date_published
+    const time = pub
+      ? new Date(pub).toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
+      : ''
+    return time ? `${time} — ${title}` : title
+  }).filter(Boolean)
 }

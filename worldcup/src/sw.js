@@ -1,4 +1,4 @@
-// v9 — dynamic standings, red cards, android install modal, aggressive CORS fallback
+// v10 — openfootball primary source, ESPN removed, Arabic RSS news, local standings
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
