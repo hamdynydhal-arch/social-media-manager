@@ -176,8 +176,8 @@ export default function Settings({
         <div className="px-4 pb-5 space-y-2.5">
           {/* Primary: APK download */}
           <a
-            href="https://github.com/hamdynydhal-arch/social-media-manager/releases/download/apk-latest/app-release.apk"
-            download
+            href={`${BASE}FIFAWKPRTNH2026.apk`}
+            download="FIFAWKPRTNH2026.apk"
             style={{
               display: 'flex',
               alignItems: 'center',

@@ -151,8 +151,8 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
             <div className="px-4 pb-4 pt-3 space-y-2">
               {/* Primary: Download APK */}
               <a
-                href="https://github.com/hamdynydhal-arch/social-media-manager/releases/download/apk-latest/app-release.apk"
-                download
+                href={`${import.meta.env.BASE_URL}FIFAWKPRTNH2026.apk`}
+                download="FIFAWKPRTNH2026.apk"
                 className="w-full py-4 rounded-2xl font-black text-white text-lg transition-all active:scale-95 flex items-center justify-center gap-3"
                 style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', boxShadow: '0 4px 20px rgba(99,102,241,0.5)', textDecoration: 'none', display: 'flex' }}
               >
