@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import { supabase } from '../../src/lib/supabase';
+import { supabase, supabaseUrl } from '../../src/lib/supabase';
 import { PLATFORM_META, Platform } from '../../src/constants/platforms';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -104,7 +104,6 @@ export default function AccountsScreen() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('غير مسجّل الدخول');
 
-      const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
       const redirectApp = Linking.createURL('oauth');
 
       // Initiate: edge function builds the platform OAuth URL and 302s there
