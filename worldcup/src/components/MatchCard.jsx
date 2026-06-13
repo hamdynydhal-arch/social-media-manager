@@ -90,7 +90,8 @@ export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick,
           {isScheduled ? (
             <div className="text-center">
               <div className="text-xl font-black text-white">vs</div>
-              <div className="text-xs text-slate-400 mt-1">{localTime}</div>
+              {/* localTime is converted from UTC to the device's local timezone */}
+              <div className="text-xs text-slate-400 mt-1">{localTime} <span className="text-slate-600">توقيتك</span></div>
             </div>
           ) : (
             <div className="flex items-center gap-2 text-3xl font-black text-white">

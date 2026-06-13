@@ -134,31 +134,32 @@ function buildAutoEvents(match) {
 
 // ── Time-based live status ────────────────────────────────────────────────────
 // Uses server-corrected time (serverNow) to be immune to device clock drift.
-// Only simulates lifecycle for matches with a confirmed LIVE_OVERRIDE entry;
-// all other "scheduled" matches keep their data.json / API status unchanged.
+// Applies to ALL matches: once the scheduled UTC kickoff time passes the match
+// transitions live → finished automatically.  LIVE_OVERRIDES provide confirmed
+// scores/goals; without them scores stay null (displayed as "?" in the UI)
+// until the ESPN API fills them in.
 function applyTimeBasedStatus(matches) {
   const now = new Date(serverNow())
   return matches.map(match => {
     if (match.status === 'live' || match.status === 'finished') return match
 
-    const override = LIVE_OVERRIDES[match.id]
-    if (!override) return match
-
+    const override       = LIVE_OVERRIDES[match.id]
     const scheduledStart = new Date(`${match.date}T${match.time}:00Z`)
-    const actualStart = override.kickoff_offset_min
+    const actualStart    = override?.kickoff_offset_min
       ? new Date(scheduledStart.getTime() + override.kickoff_offset_min * 60_000)
       : scheduledStart
 
     const elapsed = (now - actualStart) / 60_000
-    if (elapsed < 0) return match
+    if (elapsed < 0) return match   // hasn't started yet — keep as scheduled
 
     if (elapsed >= 110) {
       return {
         ...match,
         status: 'finished',
-        score_home: override.score_home ?? match.score_home ?? 0,
-        score_away: override.score_away ?? match.score_away ?? 0,
-        goals: override.goals ?? match.goals,
+        // Only set scores when we have confirmed data; null → shown as "?" in UI
+        score_home: override?.score_home ?? match.score_home ?? null,
+        score_away: override?.score_away ?? match.score_away ?? null,
+        goals: override?.goals ?? match.goals ?? [],
       }
     }
 
@@ -171,9 +172,9 @@ function applyTimeBasedStatus(matches) {
       ...match,
       status: 'live',
       minute,
-      score_home: override.score_home ?? match.score_home,
-      score_away: override.score_away ?? match.score_away,
-      goals: override.goals ?? match.goals,
+      score_home: override?.score_home ?? match.score_home ?? null,
+      score_away: override?.score_away ?? match.score_away ?? null,
+      goals: override?.goals ?? match.goals ?? [],
     }
   })
 }
@@ -206,7 +207,9 @@ function buildAutoNews(matches, teams) {
     .map(m => {
       const home = teams.find(t => t.id === m.team_home)
       const away = teams.find(t => t.id === m.team_away)
-      return `🔴 مباشر: ${home?.name ?? m.team_home} ${m.score_home}-${m.score_away} ${away?.name ?? m.team_away} — الدقيقة ${m.minute}`
+      const sh = m.score_home ?? '?'
+      const sa = m.score_away ?? '?'
+      return `🔴 مباشر: ${home?.name ?? m.team_home} ${sh}-${sa} ${away?.name ?? m.team_away} — الدقيقة ${m.minute}`
     })
 }
 

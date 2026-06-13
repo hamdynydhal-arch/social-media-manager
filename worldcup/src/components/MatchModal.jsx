@@ -128,6 +128,7 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                     <div className="text-2xl font-black text-white">vs</div>
                     <div className="text-xs text-slate-400 mt-1">
                       {new Date(`${match.date}T${match.time}:00Z`).toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })}
+                      <span className="text-slate-600 mr-1">توقيتك</span>
                     </div>
                     <div className="text-xs text-slate-500 mt-0.5">
                       {new Date(`${match.date}T${match.time}:00Z`).toLocaleDateString('ar-SA-u-nu-latn', { weekday: 'short', month: 'short', day: 'numeric' })}
