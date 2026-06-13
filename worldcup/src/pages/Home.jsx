@@ -3,11 +3,13 @@ import MatchCard from '../components/MatchCard'
 import MatchModal from '../components/MatchModal'
 import NewsTicker from '../components/NewsTicker'
 import { useWorldCupData } from '../context/WorldCupContext'
+import { serverNow } from '../utils/clockSync'
 
+// Countdown uses serverNow() so device clock drift / wrong timezone doesn't affect accuracy
 function useCountdown(targetISO) {
-  const [diff, setDiff] = useState(() => new Date(targetISO) - Date.now())
+  const [diff, setDiff] = useState(() => new Date(targetISO) - serverNow())
   useEffect(() => {
-    const id = setInterval(() => setDiff(new Date(targetISO) - Date.now()), 1000)
+    const id = setInterval(() => setDiff(new Date(targetISO) - serverNow()), 1000)
     return () => clearInterval(id)
   }, [targetISO])
   return diff
@@ -86,15 +88,15 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
     }
   }
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = new Date(serverNow()).toISOString().split('T')[0]
 
   const liveMatches = useMemo(() => matches.filter(m => m.status === 'live'), [matches])
 
-  // Only the next match that hasn't started yet — compared by full UTC datetime
+  // Only the next match that hasn't started yet — uses server-corrected time
   const nextScheduledMatch = useMemo(() => {
-    const now = new Date()
+    const now = serverNow()
     return matches
-      .filter(m => m.status === 'scheduled' && new Date(`${m.date}T${m.time}:00Z`) > now)
+      .filter(m => m.status === 'scheduled' && new Date(`${m.date}T${m.time}:00Z`).getTime() > now)
       .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))[0] ?? null
   }, [matches])
 
@@ -107,11 +109,11 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
   const isFav = (m) => favoriteTeams.length > 0 &&
     (favoriteTeams.includes(m.team_home) || favoriteTeams.includes(m.team_away))
 
-  // Upcoming: only matches with a future UTC start time
+  // Upcoming: only matches with a future UTC start time (server-corrected)
   const upcomingMatches = useMemo(() => {
-    const now = new Date()
+    const now = serverNow()
     const sorted = matches
-      .filter(m => m.status === 'scheduled' && new Date(`${m.date}T${m.time}:00Z`) > now)
+      .filter(m => m.status === 'scheduled' && new Date(`${m.date}T${m.time}:00Z`).getTime() > now)
       .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))
 
     if (favoriteTeams.length > 0) {

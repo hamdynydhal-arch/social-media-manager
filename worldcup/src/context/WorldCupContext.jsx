@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
 import staticData from '../data/data.json'
 import { fetchEspnMatches, fetchEspnStandings, fetchRssNews } from '../services/openDataService'
+import { syncClock, serverNow } from '../utils/clockSync'
 
 const WorldCupCtx = createContext(null)
 
@@ -24,6 +25,32 @@ const HARDCODED_NEWS = [
   '⚽ راؤول خيمينيز يضاعف التقدم برأسية في الدقيقة 67 من تمريرة ألفارادو',
   '🟥 ثلاث بطاقات حمراء: سيتولي (RSA) 49 ـ ، وزواني (RSA) 84 ـ ، ومونتيس (MEX) 90+2',
 ]
+
+// ── Cross-validation cache ─────────────────────────────────────────────────────
+// Persists API-confirmed match states in localStorage so that when the API is
+// temporarily unavailable, we keep showing the last known live/finished result
+// instead of falling back to stale "scheduled" from data.json.
+const CV_KEY = 'wc-cv-states'
+
+function loadCvCache() {
+  try { return JSON.parse(localStorage.getItem(CV_KEY) ?? '{}') } catch { return {} }
+}
+
+function saveCvCache(matches) {
+  const states = {}
+  for (const m of matches) {
+    if (m.status === 'live' || m.status === 'finished') {
+      states[`${m.team_home}_${m.team_away}`] = {
+        status:     m.status,
+        score_home: m.score_home,
+        score_away: m.score_away,
+        minute:     m.minute ?? null,
+        goals:      m.goals  ?? [],
+      }
+    }
+  }
+  try { localStorage.setItem(CV_KEY, JSON.stringify(states)) } catch {}
+}
 
 // ── Dynamic standings from match results (primary source) ─────────────────────
 function calculateGroupStandings(matches, teams) {
@@ -74,8 +101,8 @@ function mergeEspnStandings(teams, espnStandings) {
 
 // ── Auto-generate events timeline from goals when no manual events exist ─────
 function buildAutoEvents(match) {
-  if (match.events?.length > 0) return match          // manual events take priority
-  if (!match.goals?.length) return match              // nothing to build from
+  if (match.events?.length > 0) return match
+  if (!match.goals?.length) return match
 
   const goals = [...match.goals].sort((a, b) => a.minute - b.minute)
   const htGoals = goals.filter(g => g.minute <= 45)
@@ -106,17 +133,16 @@ function buildAutoEvents(match) {
 }
 
 // ── Time-based live status ────────────────────────────────────────────────────
-// Only simulates lifecycle for matches with a confirmed LIVE_OVERRIDE entry.
-// All other matches keep whatever status the API or data.json provides —
-// prevents fabricating finished/live states for matches with wrong dates.
+// Uses server-corrected time (serverNow) to be immune to device clock drift.
+// Only simulates lifecycle for matches with a confirmed LIVE_OVERRIDE entry;
+// all other "scheduled" matches keep their data.json / API status unchanged.
 function applyTimeBasedStatus(matches) {
-  const now = new Date()
+  const now = new Date(serverNow())
   return matches.map(match => {
-    // API-confirmed status is absolute truth
     if (match.status === 'live' || match.status === 'finished') return match
 
     const override = LIVE_OVERRIDES[match.id]
-    if (!override) return match // no confirmed data → keep data.json status as-is
+    if (!override) return match
 
     const scheduledStart = new Date(`${match.date}T${match.time}:00Z`)
     const actualStart = override.kickoff_offset_min
@@ -152,6 +178,27 @@ function applyTimeBasedStatus(matches) {
   })
 }
 
+// ── Cross-validation merge ────────────────────────────────────────────────────
+// If the live API confirms a match is live/finished but data.json still says
+// "scheduled", the cache immediately overrides — critical for wrong-date entries.
+function applyCrossValidation(matches, cvCache) {
+  if (!Object.keys(cvCache).length) return matches
+  return matches.map(m => {
+    if (m.status === 'live' || m.status === 'finished') return m
+    const key = `${m.team_home}_${m.team_away}`
+    const cached = cvCache[key]
+    if (!cached) return m
+    return {
+      ...m,
+      status:     cached.status,
+      score_home: cached.score_home,
+      score_away: cached.score_away,
+      minute:     cached.minute,
+      goals:      cached.goals?.length > 0 ? cached.goals : (m.goals ?? []),
+    }
+  })
+}
+
 // ── Auto news from live matches ───────────────────────────────────────────────
 function buildAutoNews(matches, teams) {
   return matches
@@ -163,7 +210,6 @@ function buildAutoNews(matches, teams) {
     })
 }
 
-// ── Fallback news generated from finished matches ─────────────────────────────
 function buildResultsNews(matches, teams) {
   return matches
     .filter(m => m.status === 'finished' && m.score_home != null)
@@ -194,6 +240,7 @@ export function WorldCupProvider({ children }) {
   const [sources,        setSources]        = useState({ scores: false, standings: false, news: false })
   const [lastUpdated,    setLastUpdated]    = useState(null)
   const [apiMode,        setApiMode]        = useState('loading')
+  const cvCacheRef = useRef(loadCvCache())
 
   // computeData: derive all display data from current state
   const computeData = useCallback((espnMatches, curEspnStandings, rssItems) => {
@@ -209,28 +256,30 @@ export function WorldCupProvider({ children }) {
             minute:     live.minute     ?? sm.minute,
             score_home: live.score_home ?? sm.score_home,
             score_away: live.score_away ?? sm.score_away,
-            // Keep Arabic goals from static data; use external English names only for new matches
             goals: sm.goals?.length > 0 ? sm.goals : (live.goals ?? sm.goals ?? []),
           }
         })
       : staticData.matches
 
-    const matches = applyTimeBasedStatus(baseMatches).map(buildAutoEvents)
+    // Cross-validation: override stale "scheduled" entries with cached live/finished data
+    const cvMatches = applyCrossValidation(baseMatches, cvCacheRef.current)
 
-    // Primary: calculate standings from actual results (no API needed)
+    const matches = applyTimeBasedStatus(cvMatches).map(buildAutoEvents)
+
+    // Persist any newly confirmed live/finished states to the CV cache
+    saveCvCache(matches)
+    cvCacheRef.current = loadCvCache()
+
     let teams = calculateGroupStandings(matches, staticData.teams)
-    // Secondary: if ESPN standings responded, merge in their data
     if (curEspnStandings) teams = mergeEspnStandings(teams, curEspnStandings)
 
     const news = buildNews(matches, teams, rssItems)
     return { matches, teams, news, stadiums: staticData.stadiums }
   }, [])
 
-  const [data, setData] = useState(() =>
-    computeData(null, null, null)
-  )
+  const [data, setData] = useState(() => computeData(null, null, null))
 
-  // ── Live API refresh (60s) ────────────────────────────────────────────────
+  // ── Global API refresh (120 s) ────────────────────────────────────────────
   const refresh = useCallback(async () => {
     const [espnMatches, newEspnStandings, fetchedNews] = await Promise.all([
       fetchEspnMatches(),
@@ -249,17 +298,17 @@ export function WorldCupProvider({ children }) {
     setLastUpdated(new Date())
   }, [computeData])
 
-  // ── 30-second tick: recompute live minutes ────────────────────────────────
+  // ── 30-second tick: recompute live minutes (no API call) ──────────────────
   useEffect(() => {
     const tick = () => setData(computeData(espnOverrides, espnStandings, rssNews))
     const id = setInterval(tick, 30_000)
     return () => clearInterval(id)
   }, [computeData, espnOverrides, espnStandings, rssNews])
 
-  // ── Initial load + 60-second API cycle ───────────────────────────────────
+  // ── Initial clock sync + load + 120-second API cycle ─────────────────────
   useEffect(() => {
-    refresh()
-    const id = setInterval(refresh, 60_000)
+    syncClock().then(() => refresh())              // sync server time before first refresh
+    const id = setInterval(refresh, 120_000)      // global 2-minute polling
     return () => clearInterval(id)
   }, [refresh])
 
