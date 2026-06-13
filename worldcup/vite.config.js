@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  base: '/social-media-manager/world-cup/',
+  base: '/wc26/',
   plugins: [
     react(),
     VitePWA({
@@ -20,8 +20,8 @@ export default defineConfig({
         background_color: '#0f172a',
         display: 'standalone',
         orientation: 'portrait',
-        scope: '/social-media-manager/world-cup/',
-        start_url: '/social-media-manager/world-cup/',
+        scope: '/wc26/',
+        start_url: '/wc26/',
         lang: 'ar',
         dir: 'rtl',
         icons: [

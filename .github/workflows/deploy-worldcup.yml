@@ -35,11 +35,38 @@ jobs:
         working-directory: worldcup
         run: npm run build
 
-      - name: Deploy to gh-pages/world-cup (keeps Expo app intact)
+      - name: Prepare deployment structure
+        run: |
+          mkdir -p worldcup/site/wc26
+          mkdir -p worldcup/site/.well-known
+
+          # Empty root page (prtnh.com root stays blank)
+          cat > worldcup/site/index.html << 'HTMLEOF'
+          <!DOCTYPE html>
+          <html lang="ar">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <title>prtnh.com</title>
+            <style>html,body{margin:0;padding:0;background:#000;height:100%;}</style>
+          </head>
+          <body></body>
+          </html>
+          HTMLEOF
+
+          # Asset links at root for Android TWA verification
+          cp worldcup/public/.well-known/assetlinks.json worldcup/site/.well-known/assetlinks.json
+
+          # CNAME so GitHub Pages serves via prtnh.com
+          echo "prtnh.com" > worldcup/site/CNAME
+
+          # World Cup app in /wc26/
+          cp -r worldcup/dist/. worldcup/site/wc26/
+
+      - name: Deploy to gh-pages (prtnh.com root + /wc26/)
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: worldcup/dist
-          destination_dir: world-cup
+          publish_dir: worldcup/site
           keep_files: true
-          commit_message: 'Deploy World Cup app to /world-cup/ [skip ci]'
+          commit_message: 'Deploy: empty root + World Cup app at /wc26/ [skip ci]'
