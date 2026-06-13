@@ -1,15 +1,17 @@
 import { useRef, useEffect, useMemo } from 'react'
 
-// Standard Arabic ticker: label RIGHT, text scrolls right→left (reading order correct)
+// Arabic ticker: label RIGHT, scrolls left→right, items enter left in correct order
+// To get correct item order with LTR scroll, the track is stored in reverse so items
+// are revealed from the second copy in forward order as posRef approaches 0.
 export default function NewsTicker({ news }) {
   const trackRef  = useRef(null)
   const rafRef    = useRef(null)
   const posRef    = useRef(0)
   const pausedRef = useRef(false)
+  const initRef   = useRef(false)
 
   const items = useMemo(
     () => (news ?? []).slice(0, 10),
-    // stable dep — only recompute when content actually changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [(news ?? []).slice(0, 10).join('\x01')]
   )
@@ -19,15 +21,22 @@ export default function NewsTicker({ news }) {
     if (!track || !items.length) return
 
     posRef.current = 0
+    initRef.current = false
     track.style.transform = 'translateX(0px)'
 
     const step = () => {
-      if (!pausedRef.current) {
-        posRef.current -= 1                                    // ← right-to-left
-        const half = track.scrollWidth / 2
-        if (half > 0 && Math.abs(posRef.current) >= half) {
-          posRef.current += half                               // seamless loop
-        }
+      const half = track.scrollWidth / 2
+
+      // One-time init: jump to -half so first item starts at left edge
+      if (!initRef.current && half > 0) {
+        posRef.current = -half
+        initRef.current = true
+        track.style.transform = `translateX(${Math.round(posRef.current)}px)`
+      }
+
+      if (!pausedRef.current && half > 0) {
+        posRef.current += 1                              // ← left-to-right
+        if (posRef.current >= 0) posRef.current = -half // seamless loop
         track.style.transform = `translateX(${Math.round(posRef.current)}px)`
       }
       rafRef.current = requestAnimationFrame(step)
@@ -38,7 +47,9 @@ export default function NewsTicker({ news }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items])
 
-  const doubled = [...items, ...items]
+  // Reverse so that LTR scroll reveals items in order: 1, 2, 3… (not reversed)
+  const rev     = [...items].reverse()
+  const doubled = [...rev, ...rev]
 
   if (!items.length) return null
 
@@ -49,7 +60,7 @@ export default function NewsTicker({ news }) {
     >
       <div style={{ display: 'flex', alignItems: 'center' }}>
 
-        {/* ── Label: RIGHT side in RTL flex ────────────────────────────── */}
+        {/* Label — right side in RTL flex */}
         <span style={{
           flexShrink: 0,
           background: '#7f1d1d',
@@ -66,7 +77,7 @@ export default function NewsTicker({ news }) {
           📺 الأخبار
         </span>
 
-        {/* ── Scrolling lane: LTR so translateX is direction-independent ── */}
+        {/* Scrolling lane — LTR so translateX is direction-independent */}
         <div style={{ flex: 1, minWidth: 0, overflow: 'hidden', direction: 'ltr' }}>
           <div
             ref={trackRef}
