@@ -1,4 +1,4 @@
-// v19 — background goal detection via Periodic Background Sync
+// v20 — APK auto-update check via Periodic Background Sync
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
@@ -39,6 +39,9 @@ const STANDARD_VIB = [200, 100, 200]
 // Live scores source (CORS * — GitHub CDN)
 const OFB_URL = 'https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json'
 
+// APK version manifest (same origin — always fresh)
+const VERSION_URL = '/social-media-manager/world-cup/version.json'
+
 // ── Lightweight Cache store for SW-private state ─────────────────────────────
 const SW_STATE = 'wc-sw-state-v1'
 
@@ -62,6 +65,49 @@ function notifyClients() {
   return clients
     .matchAll({ type: 'window', includeUncontrolled: true })
     .then(list => list.forEach(c => c.postMessage({ type: 'PLAY_WHISTLE' })))
+}
+
+// ── APK auto-update check ─────────────────────────────────────────────────────
+async function checkApkUpdate() {
+  let manifest
+  try {
+    const res = await fetch(VERSION_URL, { cache: 'no-store' })
+    if (!res.ok) return
+    manifest = await res.json()
+  } catch { return }
+
+  const { apkVersion, apkUrl, releaseNotes } = manifest ?? {}
+  if (!apkVersion || !apkUrl) return
+
+  const stored = await swGet('apk-version')
+
+  // First run — seed silently (don't notify for the version already installed)
+  if (!stored) {
+    await swSet('apk-version', apkVersion)
+    return
+  }
+
+  if (stored === apkVersion) return // no change
+
+  // New version detected
+  await swSet('apk-version', apkVersion)
+  await self.registration.showNotification(
+    `🆕 تحديث جديد — كأس العالم 2026 (${apkVersion})`,
+    {
+      body:               releaseNotes ?? 'اضغط لتنزيل النسخة الجديدة',
+      icon:               ICON,
+      badge:              ICON,
+      dir:                'rtl',
+      lang:               'ar',
+      tag:                `apk-update-${apkVersion}`,
+      renotify:           true,
+      requireInteraction: true,
+      silent:             false,
+      vibrate:            STANDARD_VIB,
+      data:               { url: apkUrl },
+      actions:            [{ action: 'download', title: '⬇️ تحميل التحديث' }],
+    }
+  )
 }
 
 // ── Background goal detection ─────────────────────────────────────────────────
@@ -131,7 +177,9 @@ async function backgroundScoreCheck() {
 // ── Periodic Background Sync (fires when app is closed on Android Chrome) ─────
 self.addEventListener('periodicsync', event => {
   if (event.tag === 'wc-live-check') {
-    event.waitUntil(backgroundScoreCheck())
+    event.waitUntil(
+      Promise.all([backgroundScoreCheck(), checkApkUpdate()])
+    )
   }
 })
 
@@ -193,9 +241,17 @@ self.addEventListener('push', event => {
   )
 })
 
-// ── Notification tap → open/focus app ────────────────────────────────────────
+// ── Notification tap → open/focus app (or download APK) ──────────────────────
 self.addEventListener('notificationclick', event => {
   event.notification.close()
+  const apkUrl = event.notification.data?.url
+
+  // "Download update" action button OR tap on an APK-update notification
+  if (event.action === 'download' || (apkUrl && event.action === '')) {
+    event.waitUntil(clients.openWindow(apkUrl))
+    return
+  }
+
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
       if (list.length > 0) return list[0].focus()
