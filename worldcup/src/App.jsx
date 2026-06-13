@@ -27,6 +27,38 @@ function AppInner() {
 
   useLiveMatchEvents(favoriteTeams ?? [])
   useGoalDetection(data.matches, favoriteTeams ?? [])
+
+  // Keep SW informed of favorite teams for background score checks
+  useEffect(() => {
+    const send = () => {
+      if (!navigator.serviceWorker?.controller) return
+      navigator.serviceWorker.controller.postMessage({
+        type: 'SET_FAVORITES',
+        favorites: favoriteTeams ?? [],
+      })
+    }
+    send()
+    // Retry once SW controller becomes available
+    const onControllerChange = () => send()
+    navigator.serviceWorker?.addEventListener('controllerchange', onControllerChange)
+    return () => navigator.serviceWorker?.removeEventListener('controllerchange', onControllerChange)
+  }, [favoriteTeams])
+
+  // Register Periodic Background Sync (Android Chrome + installed PWA)
+  useEffect(() => {
+    const register = async () => {
+      if (!('serviceWorker' in navigator)) return
+      try {
+        const reg = await navigator.serviceWorker.ready
+        if (!('periodicSync' in reg)) return
+        const status = await navigator.permissions.query({ name: 'periodic-background-sync' })
+        if (status.state === 'granted') {
+          await reg.periodicSync.register('wc-live-check', { minInterval: 5 * 60 * 1000 })
+        }
+      } catch { /* not supported — silently skip */ }
+    }
+    register()
+  }, [])
   const { running: simRunning, startSim, stopSim } = useLiveSimulator(favoriteTeams?.[0] ?? null)
 
   useEffect(() => {

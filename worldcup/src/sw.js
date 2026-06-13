@@ -1,4 +1,4 @@
-// v18 — lock-screen: image banner + double vibrate + client audio trigger
+// v19 — background goal detection via Periodic Background Sync
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
@@ -14,7 +14,7 @@ self.addEventListener('activate', event =>
     caches.keys().then(keys =>
       Promise.all(
         keys
-          .filter(k => k.startsWith('workbox-') || k.startsWith('wc-'))
+          .filter(k => k.startsWith('workbox-') || (k.startsWith('wc-') && k !== 'wc-sw-state-v1'))
           .map(k => caches.delete(k))
       )
     ).then(() => clients.claim())
@@ -33,21 +33,118 @@ registerRoute(
 const ICON  = '/social-media-manager/world-cup/icons/icon-192.png'
 const SOUND = '/social-media-manager/world-cup/sounds/whistle.wav'
 
-// Vibration: referee whistle (short-short-long) — works on Android lock screen
 const WHISTLE_VIB  = [300, 100, 300, 100, 800]
 const STANDARD_VIB = [200, 100, 200]
 
-// Send PLAY_WHISTLE to every open client tab so audio fires immediately
+// Live scores source (CORS * — GitHub CDN)
+const OFB_URL = 'https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json'
+
+// ── Lightweight Cache store for SW-private state ─────────────────────────────
+const SW_STATE = 'wc-sw-state-v1'
+
+async function swGet(key) {
+  const cache = await caches.open(SW_STATE)
+  const res = await cache.match(`/__sw__/${key}`)
+  if (!res) return null
+  try { return await res.json() } catch { return null }
+}
+
+async function swSet(key, value) {
+  const cache = await caches.open(SW_STATE)
+  await cache.put(
+    `/__sw__/${key}`,
+    new Response(JSON.stringify(value), { headers: { 'Content-Type': 'application/json' } })
+  )
+}
+
+// ── Broadcast PLAY_WHISTLE to all open tabs ───────────────────────────────────
 function notifyClients() {
   return clients
     .matchAll({ type: 'window', includeUncontrolled: true })
     .then(list => list.forEach(c => c.postMessage({ type: 'PLAY_WHISTLE' })))
 }
 
-// ── Message bus ──────────────────────────────────────────────────────────────
+// ── Background goal detection ─────────────────────────────────────────────────
+async function backgroundScoreCheck() {
+  const favs = (await swGet('favs')) ?? []
+  if (!favs.length) return
+
+  let data
+  try {
+    const res = await fetch(OFB_URL, { cache: 'no-store' })
+    if (!res.ok) return
+    data = await res.json()
+  } catch { return }
+
+  const prev = (await swGet('bg-scores')) ?? {}
+  const next = { ...prev }
+
+  for (const round of (data.rounds ?? [])) {
+    for (const m of (round.matches ?? [])) {
+      if (!m.score?.ft) continue // not finished/live yet
+
+      // openfootball uses .code (MEX, BRA…) which matches our internal IDs
+      const hCode = m.team1?.code ?? ''
+      const aCode = m.team2?.code ?? ''
+      if (!favs.includes(hCode) && !favs.includes(aCode)) continue
+
+      const id = `${m.date}_${hCode}_${aCode}`
+      const sh = Number(m.score.ft[0] ?? 0)
+      const sa = Number(m.score.ft[1] ?? 0)
+      const p  = prev[id] ?? { h: 0, a: 0 }
+
+      next[id] = { h: sh, a: sa }
+
+      if (sh > p.h) {
+        const isFavScorer = favs.includes(hCode)
+        await self.registration.showNotification(
+          `🚨⚽ هدف! ${m.team1?.name} ${sh}–${sa} ${m.team2?.name}`,
+          {
+            body:               isFavScorer ? '⭐ منتخبك يسجل!' : 'هدف في مباراتك المفضلة',
+            icon: ICON, badge: ICON, dir: 'rtl', lang: 'ar',
+            tag: `bg-${id}-h${sh}`, renotify: true,
+            vibrate: WHISTLE_VIB, requireInteraction: true, silent: false,
+          }
+        )
+        notifyClients()
+      }
+
+      if (sa > p.a) {
+        const isFavScorer = favs.includes(aCode)
+        await self.registration.showNotification(
+          `🚨⚽ هدف! ${m.team1?.name} ${sh}–${sa} ${m.team2?.name}`,
+          {
+            body:               isFavScorer ? '⭐ منتخبك يسجل!' : 'هدف في مباراتك المفضلة',
+            icon: ICON, badge: ICON, dir: 'rtl', lang: 'ar',
+            tag: `bg-${id}-a${sa}`, renotify: true,
+            vibrate: WHISTLE_VIB, requireInteraction: true, silent: false,
+          }
+        )
+        notifyClients()
+      }
+    }
+  }
+
+  await swSet('bg-scores', next)
+}
+
+// ── Periodic Background Sync (fires when app is closed on Android Chrome) ─────
+self.addEventListener('periodicsync', event => {
+  if (event.tag === 'wc-live-check') {
+    event.waitUntil(backgroundScoreCheck())
+  }
+})
+
+// ── Message bus ───────────────────────────────────────────────────────────────
 self.addEventListener('message', event => {
   if (event.data?.type === 'SKIP_WAITING') {
     self.skipWaiting()
+    return
+  }
+
+  // App sends favorite team IDs so SW can check them in the background
+  if (event.data?.type === 'SET_FAVORITES') {
+    event.waitUntil(swSet('favs', event.data.favorites ?? []))
     return
   }
 

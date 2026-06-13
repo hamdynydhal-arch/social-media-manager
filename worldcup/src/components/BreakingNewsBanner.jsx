@@ -1,29 +1,50 @@
 import { useState, useEffect, useRef } from 'react'
 
+const STORAGE_KEY = 'wc-seen-news'
+
+function loadSeen() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return new Set(raw ? JSON.parse(raw) : [])
+  } catch { return new Set() }
+}
+
+function saveSeen(set) {
+  try {
+    // Keep newest 100 items to avoid unbounded growth
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...set].slice(-100)))
+  } catch {}
+}
+
 /**
- * Shows a full-width red breaking news banner for 30 seconds when a new
- * news item appears that wasn't seen in the previous news array.
- * First load seeds seen items silently — no popup on initial mount.
+ * Shows a 30-second red breaking news banner when a news item arrives
+ * that has never been seen before (persisted in localStorage across refreshes).
+ * Seeds silently on first mount — no popup on initial page load.
  */
 export default function BreakingNewsBanner({ news }) {
-  const [banner, setBanner] = useState(null)
-  const seenRef        = useRef(new Set())
-  const initializedRef = useRef(false)
-  const timerRef       = useRef(null)
+  const [banner, setBanner]   = useState(null)
+  const initializedRef        = useRef(false)
+  const timerRef              = useRef(null)
 
   useEffect(() => {
     if (!Array.isArray(news) || !news.length) return
 
+    const seen = loadSeen()
+
     if (!initializedRef.current) {
-      news.forEach(item => seenRef.current.add(item))
+      // First render this session: seed all current items silently
+      news.forEach(item => seen.add(item))
+      saveSeen(seen)
       initializedRef.current = true
       return
     }
 
-    const fresh = news.filter(item => !seenRef.current.has(item))
-    news.forEach(item => seenRef.current.add(item))
-
+    const fresh = news.filter(item => !seen.has(item))
     if (!fresh.length) return
+
+    // Mark new items as seen immediately so they won't re-trigger
+    fresh.forEach(item => seen.add(item))
+    saveSeen(seen)
 
     clearTimeout(timerRef.current)
     setBanner(fresh[0])
@@ -50,10 +71,8 @@ export default function BreakingNewsBanner({ news }) {
         display: 'flex',
         alignItems: 'center',
         gap: '12px',
-        animation: 'slideDown 0.3s ease-out',
       }}
     >
-      {/* Flashing badge */}
       <span style={{
         flexShrink: 0,
         background: '#fbbf24',
@@ -62,14 +81,11 @@ export default function BreakingNewsBanner({ news }) {
         fontWeight: 900,
         padding: '3px 8px',
         borderRadius: '6px',
-        letterSpacing: '0.5px',
         whiteSpace: 'nowrap',
-        animation: 'pulse 1s infinite',
       }}>
         🚨 عاجل
       </span>
 
-      {/* News text */}
       <p style={{
         flex: 1,
         color: 'white',
@@ -81,7 +97,6 @@ export default function BreakingNewsBanner({ news }) {
         {banner}
       </p>
 
-      {/* Close */}
       <button
         onClick={() => { clearTimeout(timerRef.current); setBanner(null) }}
         style={{
