@@ -7,6 +7,10 @@ on:
       - 'worldcup/**'
       - '.github/workflows/deploy-worldcup.yml'
   workflow_dispatch:
+  # Re-run automatically whenever the Expo deploy overwrites gh-pages
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages"]
+    types: [completed]
 
 permissions:
   contents: write
