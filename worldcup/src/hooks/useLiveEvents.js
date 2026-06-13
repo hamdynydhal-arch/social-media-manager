@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 import data from '../data/data.json'
 import { playGoalSound, playNotificationSound, playWhistleSound, haptic } from '../utils/audioUtils'
 import confetti from 'canvas-confetti'
-
 const BASE = import.meta.env.BASE_URL
 
 /**
@@ -172,4 +171,67 @@ export function useLiveMatchEvents(favoriteTeams) {
     return () => clearInterval(interval)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamsKey])
+}
+
+/**
+ * Detects live score changes for favorite teams and fires goal notifications.
+ * Compares current match scores vs previously seen scores every time `matches` updates.
+ * First run seeds the scores without triggering any alert (prevents false alerts on load).
+ */
+export function useGoalDetection(matches, favoriteTeams) {
+  const prevRef = useRef(null) // null = first run (seed only)
+  const favKey  = JSON.stringify(favoriteTeams)
+
+  useEffect(() => {
+    if (!Array.isArray(matches) || !matches.length) return
+    if (!Array.isArray(favoriteTeams) || !favoriteTeams.length) return
+
+    // Build a snapshot of current live/finished scores
+    const snapshot = {}
+    matches.forEach(m => {
+      if (m.status === 'live' || m.status === 'finished') {
+        snapshot[m.id] = { home: Number(m.score_home ?? 0), away: Number(m.score_away ?? 0) }
+      }
+    })
+
+    if (prevRef.current === null) {
+      prevRef.current = snapshot
+      return // seed only — no notification on first load
+    }
+
+    const prev = prevRef.current
+
+    matches.forEach(m => {
+      const isFavMatch = favoriteTeams.includes(m.team_home) || favoriteTeams.includes(m.team_away)
+      if (!isFavMatch) return
+      if (m.status !== 'live' && m.status !== 'finished') return
+
+      const prevSnap  = prev[m.id] ?? { home: 0, away: 0 }
+      const currHome  = Number(m.score_home ?? 0)
+      const currAway  = Number(m.score_away ?? 0)
+      const homeTeam  = data.teams.find(t => t.id === m.team_home)
+      const awayTeam  = data.teams.find(t => t.id === m.team_away)
+
+      if (currHome > prevSnap.home) {
+        const isFavScorer = favoriteTeams.includes(m.team_home)
+        fireWorldCupAlert(
+          `🚨⚽ هدف! ${homeTeam?.flag ?? ''}${homeTeam?.name} ${currHome}-${currAway} ${awayTeam?.name ?? ''}`,
+          `د.${m.minute ?? '؟'} | ${isFavScorer ? '⭐ منتخبك يسجل!' : 'هدف في مباراتك المفضلة'}`,
+          'goal', isFavScorer
+        )
+      }
+
+      if (currAway > prevSnap.away) {
+        const isFavScorer = favoriteTeams.includes(m.team_away)
+        fireWorldCupAlert(
+          `🚨⚽ هدف! ${homeTeam?.name ?? ''} ${currHome}-${currAway} ${awayTeam?.flag ?? ''}${awayTeam?.name ?? ''}`,
+          `د.${m.minute ?? '؟'} | ${isFavScorer ? '⭐ منتخبك يسجل!' : 'هدف في مباراتك المفضلة'}`,
+          'goal', isFavScorer
+        )
+      }
+    })
+
+    prevRef.current = snapshot
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matches, favKey])
 }

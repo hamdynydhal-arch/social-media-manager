@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import { useLocalStorage } from './hooks/useLocalStorage'
-import { useLiveMatchEvents } from './hooks/useLiveEvents'
+import { useLiveMatchEvents, useGoalDetection } from './hooks/useLiveEvents'
 import { useLiveSimulator } from './hooks/useLiveSimulator'
 import { useInstallPrompt } from './hooks/useInstallPrompt'
 import { WorldCupProvider, useWorldCupData } from './context/WorldCupContext'
@@ -14,17 +14,19 @@ import BottomNav from './components/BottomNav'
 import InstallPrompt from './components/InstallPrompt'
 import ForceInstallModal from './components/ForceInstallModal'
 import NotificationSystem from './components/NotificationSystem'
+import BreakingNewsBanner from './components/BreakingNewsBanner'
 import TeamSelector from './components/TeamSelector'
 
 function AppInner() {
   // favoriteTeams: null = never configured, [] = watching all, [...] = specific teams
   const [favoriteTeams, setFavoriteTeams] = useLocalStorage('favorite_teams', null)
   const [showSelector, setShowSelector] = useState(favoriteTeams === null)
-  const { apiMode, lastUpdated } = useWorldCupData()
+  const { data, apiMode, lastUpdated } = useWorldCupData()
 
   const installState = useInstallPrompt()
 
   useLiveMatchEvents(favoriteTeams ?? [])
+  useGoalDetection(data.matches, favoriteTeams ?? [])
   const { running: simRunning, startSim, stopSim } = useLiveSimulator(favoriteTeams?.[0] ?? null)
 
   useEffect(() => {
@@ -110,6 +112,7 @@ function AppInner() {
         <InstallPrompt installState={installState} />
         <ForceInstallModal installState={installState} />
         <NotificationSystem />
+        <BreakingNewsBanner news={data.news} />
       </div>
     </HashRouter>
   )
