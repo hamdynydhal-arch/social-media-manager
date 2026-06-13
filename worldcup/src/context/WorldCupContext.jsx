@@ -181,7 +181,7 @@ function buildAutoEvents(match) {
 function applyTimeBasedStatus(matches) {
   const now = new Date(serverNow())
   return matches.map(match => {
-    if (match.status === 'live' || match.status === 'finished') return match
+    if (match.status === 'finished') return match   // only skip confirmed-finished matches
 
     const override       = LIVE_OVERRIDES[match.id]
     const scheduledStart = new Date(`${match.date}T${match.time}:00Z`)
@@ -190,7 +190,7 @@ function applyTimeBasedStatus(matches) {
       : scheduledStart
 
     const elapsed = (now - actualStart) / 60_000
-    if (elapsed < 0) return match   // hasn't started yet — keep as scheduled
+    if (elapsed < 0) return { ...match, status: 'scheduled' }   // future — force scheduled
 
     if (elapsed >= 110) {
       return {

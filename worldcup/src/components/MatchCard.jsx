@@ -77,7 +77,7 @@ export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick,
         {isLive && (
           <span className="live-badge">
             <span className="w-1.5 h-1.5 bg-white rounded-full" />
-            دقيقة {match.minute}
+            دقيقة <span dir="ltr" className="tabular-nums">{match.minute}</span>
           </span>
         )}
         {isFinished && (
