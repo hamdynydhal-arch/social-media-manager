@@ -1243,7 +1243,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 1,
+      "score_ht_away": 0
     },
     {
       "id": "M002",
@@ -1416,7 +1418,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 0,
+      "score_ht_away": 0
     },
     {
       "id": "M003",
@@ -1574,7 +1578,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 0,
+      "score_ht_away": 1
     },
     {
       "id": "M008",
@@ -1953,7 +1959,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 3,
+      "score_ht_away": 0
     },
     {
       "id": "M020",

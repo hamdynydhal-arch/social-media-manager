@@ -145,6 +145,54 @@ async function fetchWithProxy(url) {
   return null
 }
 
+// ── ESPN summary URL ──────────────────────────────────────────────────────────
+const ESPN_SUMMARY = id => `https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=${id}`
+
+// ── ESPN stats/lineup parsing helpers ────────────────────────────────────────
+function parseEspnBoxscoreStats(teams) {
+  if (!teams?.length) return null
+  const out = {}
+  for (const t of teams) {
+    const side = t.homeAway === 'home' ? 'home' : 'away'
+    const s = {}
+    for (const stat of t.statistics ?? []) {
+      const v = parseFloat(stat.displayValue?.replace('%', '')) || 0
+      switch (stat.name) {
+        case 'possessionPct':   s.possession       = v; break
+        case 'totalShots':      s.shots            = v; break
+        case 'shotsOnTarget':   s.shots_on_target  = v; break
+        case 'cornerKicks':     s.corners          = v; break
+        case 'fouls':           s.fouls            = v; break
+        case 'yellowCards':     s.yellow_cards     = v; break
+        case 'redCards':        s.red_cards        = v; break
+        case 'offsides':        s.offsides         = v; break
+        case 'saves':           s.saves            = v; break
+      }
+    }
+    if (Object.keys(s).length > 0) out[side] = s
+  }
+  return Object.keys(out).length === 2 ? out : null
+}
+
+function parseEspnRosters(rosters) {
+  if (!rosters?.length) return null
+  const out = {}
+  for (const r of rosters) {
+    const side = r.homeAway === 'home' ? 'home' : 'away'
+    if (r.formation) out[`formation_${side}`] = r.formation
+    const starters = (r.athletes ?? [])
+      .filter(a => a.starter !== false)
+      .map(a => ({
+        number:   a.jersey ?? '',
+        name:     a.athlete?.displayName ?? '',
+        position: a.position?.abbreviation ?? '',
+      }))
+      .filter(a => a.name)
+    if (starters.length > 0) out[side] = starters
+  }
+  return (out.home || out.away) ? out : null
+}
+
 // ── PRIMARY: openfootball match data ─────────────────────────────────────────
 async function fetchOpenfootballMatches() {
   const json = await safeFetch(OFB_MATCHES)
@@ -156,80 +204,121 @@ async function fetchOpenfootballMatches() {
     const awayId = OFB_TEAM_MAP[m.team2]
     if (!homeId || !awayId) continue
 
-    // Only return matches with a confirmed final score
     if (!m.score?.ft) continue
 
     const sh = m.score.ft[0]
     const sa = m.score.ft[1]
+    const htH = m.score.ht?.[0] ?? null
+    const htA = m.score.ht?.[1] ?? null
 
-    // Build goals array (English names — will be overridden by Arabic in data.json when available)
     const goals = [
       ...(m.goals1 ?? []).map(g => ({
-        team: homeId, player: g.name, minute: parseInt(g.minute) || 0, type: 'عادي',
+        team: homeId, player: g.name,
+        minute: parseInt(g.minute) || 0,
+        type: g.owngoal ? 'هدف ذاتي' : 'عادي',
       })),
       ...(m.goals2 ?? []).map(g => ({
-        team: awayId, player: g.name, minute: parseInt(g.minute) || 0, type: 'عادي',
+        team: awayId, player: g.name,
+        minute: parseInt(g.minute) || 0,
+        type: g.owngoal ? 'هدف ذاتي' : 'عادي',
       })),
     ].sort((a, b) => a.minute - b.minute)
 
-    result.push({ team_home: homeId, team_away: awayId, status: 'finished', score_home: sh, score_away: sa, goals })
-  }
-  return result.length > 0 ? result : null
-}
-
-// ── FALLBACK: ESPN live scores (during ongoing matches only) ──────────────────
-async function fetchEspnLive() {
-  const json = await fetchWithProxy(ESPN_SCOREBOARD)
-  if (!json?.events?.length) return null
-
-  const result = []
-  for (const event of json.events) {
-    const comp = event.competitions?.[0]
-    if (!comp) continue
-    const homeComp = comp.competitors?.find(c => c.homeAway === 'home')
-    const awayComp = comp.competitors?.find(c => c.homeAway === 'away')
-    if (!homeComp || !awayComp) continue
-    const homeId = ESPN_ABBR_MAP[homeComp.team?.abbreviation]
-    const awayId = ESPN_ABBR_MAP[awayComp.team?.abbreviation]
-    if (!homeId || !awayId) continue
-    const statusName = comp.status?.type?.name ?? 'STATUS_SCHEDULED'
-    const status = ESPN_STATUS_MAP[statusName] ?? 'scheduled'
-    if (status === 'scheduled') continue  // only return active matches
     result.push({
-      team_home: homeId, team_away: awayId, status,
-      minute: status === 'live' ? (comp.status?.displayClock ?? null) : null,
-      score_home: parseInt(homeComp.score ?? 0, 10),
-      score_away: parseInt(awayComp.score ?? 0, 10),
+      team_home: homeId, team_away: awayId,
+      status: 'finished',
+      score_home: sh, score_away: sa,
+      score_ht_home: htH, score_ht_away: htA,
+      goals,
     })
   }
   return result.length > 0 ? result : null
 }
 
-// ── Public: fetch all match data ──────────────────────────────────────────────
-export async function fetchEspnMatches() {
-  // openfootball gives us completed results (CORS-safe)
-  const ofb = await fetchOpenfootballMatches()
-  // ESPN gives us scores for currently-live matches (often CORS-blocked)
-  const espnLive = await fetchEspnLive()
+// ── SECONDARY: ESPN scoreboard — returns event IDs + live scores ──────────────
+async function fetchEspnScoreboard() {
+  // Try multiple date ranges so we capture live + recently-finished matches
+  const today    = new Date()
+  const yyyymmdd = d => d.toISOString().slice(0,10).replace(/-/g,'')
+  const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1)
 
-  if (!ofb && !espnLive) return null
+  for (const date of [yyyymmdd(today), yyyymmdd(yesterday)]) {
+    const url  = `${ESPN_SCOREBOARD}?dates=${date}&limit=20`
+    const json = await fetchWithProxy(url)
+    if (!json?.events?.length) continue
 
-  // Merge: start with openfootball completed results, overlay ESPN live on top
-  const merged = [...(ofb ?? [])]
-  if (espnLive) {
-    for (const live of espnLive) {
-      const idx = merged.findIndex(m => m.team_home === live.team_home && m.team_away === live.team_away)
-      if (idx >= 0) {
-        merged[idx] = { ...merged[idx], ...live }
-      } else {
-        merged.push(live)
-      }
+    const events = []
+    for (const ev of json.events) {
+      const comp = ev.competitions?.[0]
+      if (!comp) continue
+      const homeComp = comp.competitors?.find(c => c.homeAway === 'home')
+      const awayComp = comp.competitors?.find(c => c.homeAway === 'away')
+      if (!homeComp || !awayComp) continue
+      const homeId = ESPN_ABBR_MAP[homeComp.team?.abbreviation]
+      const awayId = ESPN_ABBR_MAP[awayComp.team?.abbreviation]
+      if (!homeId || !awayId) continue
+      const statusName = comp.status?.type?.name ?? 'STATUS_SCHEDULED'
+      const status     = ESPN_STATUS_MAP[statusName] ?? 'scheduled'
+      events.push({
+        eventId: ev.id, team_home: homeId, team_away: awayId, status,
+        minute:     status === 'live' ? (comp.status?.displayClock ?? null) : null,
+        score_home: parseInt(homeComp.score ?? 0, 10),
+        score_away: parseInt(awayComp.score ?? 0, 10),
+      })
     }
+    if (events.length > 0) return events
   }
-  return merged
+  return null
 }
 
-// ── Public: standings — always null (calculated locally in WorldCupContext) ───
+// ── Public: fetch all match scores (openfootball + ESPN live) ─────────────────
+export async function fetchEspnMatches() {
+  const [ofb, espnEvents] = await Promise.all([
+    fetchOpenfootballMatches(),
+    fetchEspnScoreboard(),
+  ])
+
+  if (!ofb && !espnEvents) return null
+
+  const merged = [...(ofb ?? [])]
+
+  for (const ev of espnEvents ?? []) {
+    const idx = merged.findIndex(
+      m => m.team_home === ev.team_home && m.team_away === ev.team_away
+    )
+    if (idx >= 0) {
+      merged[idx] = { ...merged[idx], ...ev }
+    } else if (ev.status !== 'scheduled') {
+      merged.push(ev)
+    }
+  }
+  return merged.length > 0 ? merged : null
+}
+
+// ── Public: fetch detailed stats + lineups for live/finished matches ──────────
+// Uses ESPN summary API (often CORS-blocked; silently returns null if unavailable).
+// Caller caches successful results so this is only re-fetched when data is missing.
+export async function fetchMatchDetails(activeMatchKeys) {
+  const events = await fetchEspnScoreboard()
+  if (!events?.length) return null
+
+  const details = {}
+  for (const ev of events) {
+    if (ev.status === 'scheduled') continue
+    const key = `${ev.team_home}_${ev.team_away}`
+    if (activeMatchKeys && !activeMatchKeys.has(key)) continue
+
+    const summary = await fetchWithProxy(ESPN_SUMMARY(ev.eventId))
+    if (!summary) continue
+
+    const stats  = parseEspnBoxscoreStats(summary.boxscore?.teams)
+    const lineup = parseEspnRosters(summary.rosters)
+    if (stats || lineup) details[key] = { stats, lineup }
+  }
+  return Object.keys(details).length > 0 ? details : null
+}
+
+// ── Public: standings — calculated locally, API not needed ───────────────────
 export async function fetchEspnStandings() {
   return null
 }

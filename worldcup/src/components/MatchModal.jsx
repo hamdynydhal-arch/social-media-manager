@@ -85,12 +85,16 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
 
   const totalVotes = votes.home + votes.draw + votes.away
 
-  // Lineup: prefer match-specific data from lineups.json, fall back to team.players
-  const matchLineup = lineupsData[match.id]
-  const homeTeamPlayers = matchLineup?.home || homeTeam?.players || []
-  const awayTeamPlayers = matchLineup?.away || awayTeam?.players || []
-  const homeFormation = matchLineup?.formation_home || ''
-  const awayFormation = matchLineup?.formation_away || ''
+  // Lineup: match.lineup (from ESPN live fetch) > lineups.json (static) > team.players
+  const dynamicLineup  = match.lineup                // set by WorldCupContext from ESPN
+  const staticLineup   = lineupsData[match.id]
+  const lineupSrc      = dynamicLineup ?? staticLineup
+  const homeTeamPlayers = lineupSrc?.home    || homeTeam?.players || []
+  const awayTeamPlayers = lineupSrc?.away    || awayTeam?.players || []
+  const homeFormation   = lineupSrc?.formation_home || ''
+  const awayFormation   = lineupSrc?.formation_away || ''
+  const hasLineup       = homeTeamPlayers.length > 0 || awayTeamPlayers.length > 0
+  const hasStats        = !!(match.stats?.home && match.stats?.away)
 
   const tabs = [
     { id: 'overview', label: 'نظرة عامة' },
@@ -187,6 +191,15 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {activeTab === 'overview' && (
             <>
+              {/* HT score card */}
+              {match.status === 'finished' && match.score_ht_home != null && (
+                <div className="flex items-center justify-center gap-4 text-xs text-slate-400 bg-slate-800/60 rounded-xl px-4 py-2">
+                  <span>{homeTeam.flag}</span>
+                  <span>نتيجة الشوط الأول:</span>
+                  <span className="text-white font-black">{match.score_ht_home} - {match.score_ht_away}</span>
+                  <span>{awayTeam.flag}</span>
+                </div>
+              )}
               {(match.goals ?? []).length > 0 && (
                 <div className="space-y-2">
                   <h4 className="text-sm font-bold text-slate-300">أهداف المباراة</h4>
@@ -303,50 +316,64 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
             )
           })()}
 
-          {activeTab === 'stats' && match.stats && (
-            <div className="space-y-3">
-              <div className="flex justify-between text-xs text-slate-400 mb-2">
-                <span className="font-bold text-white text-sm">{homeTeam.name}</span>
-                <span className="font-bold text-white text-sm">{awayTeam.name}</span>
+          {activeTab === 'stats' && (
+            hasStats ? (
+              <div className="space-y-3">
+                <div className="flex justify-between text-xs text-slate-400 mb-2">
+                  <span className="font-bold text-white text-sm">{homeTeam.name}</span>
+                  <span className="font-bold text-white text-sm">{awayTeam.name}</span>
+                </div>
+                {[
+                  { label: 'الاستحواذ %',       h: match.stats.home.possession,      a: match.stats.away.possession },
+                  { label: 'التسديدات',          h: match.stats.home.shots,           a: match.stats.away.shots },
+                  { label: 'على المرمى',         h: match.stats.home.shots_on_target, a: match.stats.away.shots_on_target },
+                  { label: 'الركنيات',           h: match.stats.home.corners,         a: match.stats.away.corners },
+                  { label: 'الأخطاء',            h: match.stats.home.fouls,           a: match.stats.away.fouls },
+                  { label: 'البطاقات الصفراء',   h: match.stats.home.yellow_cards,    a: match.stats.away.yellow_cards },
+                  { label: 'البطاقات الحمراء',   h: match.stats.home.red_cards,       a: match.stats.away.red_cards },
+                  { label: 'التمريرات',          h: match.stats.home.passes,          a: match.stats.away.passes },
+                  { label: 'دقة التمرير %',      h: match.stats.home.pass_accuracy,   a: match.stats.away.pass_accuracy },
+                  { label: 'التصدّيات',          h: match.stats.home.saves,           a: match.stats.away.saves },
+                ].filter(s => s.h != null || s.a != null).map((stat) => (
+                  <StatBar key={stat.label} label={stat.label} homeVal={stat.h} awayVal={stat.a} />
+                ))}
+                <p className="text-center text-xs text-slate-600 pt-1">يُحدَّث تلقائياً كل 120 ثانية</p>
               </div>
-              {[
-                { label: 'الاستحواذ %',       h: match.stats.home.possession,      a: match.stats.away.possession },
-                { label: 'التسديدات',          h: match.stats.home.shots,           a: match.stats.away.shots },
-                { label: 'على المرمى',         h: match.stats.home.shots_on_target, a: match.stats.away.shots_on_target },
-                { label: 'الركنيات',           h: match.stats.home.corners,         a: match.stats.away.corners },
-                { label: 'الأخطاء',            h: match.stats.home.fouls,           a: match.stats.away.fouls },
-                { label: 'البطاقات الصفراء',   h: match.stats.home.yellow_cards,    a: match.stats.away.yellow_cards },
-                { label: 'البطاقات الحمراء',   h: match.stats.home.red_cards,       a: match.stats.away.red_cards },
-                { label: 'التمريرات',          h: match.stats.home.passes,          a: match.stats.away.passes },
-                { label: 'دقة التمرير %',      h: match.stats.home.pass_accuracy,   a: match.stats.away.pass_accuracy },
-              ].map((stat) => (
-                <StatBar key={stat.label} label={stat.label} homeVal={stat.h} awayVal={stat.a} />
-              ))}
-            </div>
-          )}
-
-          {activeTab === 'stats' && !match.stats && (
-            <div className="text-center text-slate-400 py-8">
-              <p className="text-3xl mb-2">📊</p>
-              <p>
-                {match.status === 'scheduled'
-                  ? 'التشكيلة والإحصائيات ستتوفر قبل بداية المباراة بوقت قصير'
-                  : match.status === 'live'
-                  ? 'الإحصائيات قيد التحديث...'
-                  : 'الإحصائيات غير متاحة لهذه المباراة'}
-              </p>
-            </div>
+            ) : (
+              <div className="text-center text-slate-400 py-8 space-y-2">
+                <p className="text-3xl">📊</p>
+                {match.status === 'scheduled' ? (
+                  <p>الإحصائيات ستتوفر مع انطلاق المباراة</p>
+                ) : (
+                  <>
+                    <p className="font-bold text-slate-300">الإحصائيات التفصيلية قيد الجلب</p>
+                    <p className="text-xs text-slate-500">يُعاد المحاولة تلقائياً كل 120 ثانية</p>
+                    <div className="flex items-center justify-center gap-2 mt-3">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-xs text-emerald-400">جاري التحديث التلقائي...</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            )
           )}
 
           {activeTab === 'lineup' && (
-            homeTeamPlayers.length === 0 && awayTeamPlayers.length === 0 ? (
-              <div className="text-center text-slate-400 py-8">
-                <p className="text-3xl mb-2">📋</p>
-                <p>
-                  {match.status === 'scheduled'
-                    ? 'التشكيلة والإحصائيات ستتوفر قبل بداية المباراة بوقت قصير'
-                    : 'التشكيلة غير متاحة لهذه المباراة'}
-                </p>
+            !hasLineup ? (
+              <div className="text-center text-slate-400 py-8 space-y-2">
+                <p className="text-3xl">👥</p>
+                {match.status === 'scheduled' ? (
+                  <p>التشكيلة ستُعلَن قبيل انطلاق المباراة</p>
+                ) : (
+                  <>
+                    <p className="font-bold text-slate-300">التشكيلة قيد الجلب</p>
+                    <p className="text-xs text-slate-500">يُعاد المحاولة تلقائياً كل 120 ثانية</p>
+                    <div className="flex items-center justify-center gap-2 mt-3">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-xs text-emerald-400">جاري التحديث التلقائي...</span>
+                    </div>
+                  </>
+                )}
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">

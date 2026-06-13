@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
 import staticData from '../data/data.json'
-import { fetchEspnMatches, fetchEspnStandings, fetchRssNews } from '../services/openDataService'
+import { fetchEspnMatches, fetchEspnStandings, fetchRssNews, fetchMatchDetails } from '../services/openDataService'
 import { syncClock, serverNow } from '../utils/clockSync'
 
 const WorldCupCtx = createContext(null)
@@ -31,6 +31,19 @@ const HARDCODED_NEWS = [
   // M019 USA 4-1 PAR (Jun 13)
   '🏆 نهائي: الولايات المتحدة 4-1 باراغواي — بالوغان 31 و45+، رينا 90+',
 ]
+
+// ── Match details cache (stats + lineups from ESPN summary) ───────────────────
+// Keyed by "${team_home}_${team_away}". Persisted in localStorage so successful
+// fetches survive page reloads even when ESPN is temporarily unreachable.
+const MD_KEY = 'wc-match-details-v1'
+
+function loadMdCache() {
+  try { return JSON.parse(localStorage.getItem(MD_KEY) ?? '{}') } catch { return {} }
+}
+
+function saveMdCache(cache) {
+  try { localStorage.setItem(MD_KEY, JSON.stringify(cache)) } catch {}
+}
 
 // ── Cross-validation cache ─────────────────────────────────────────────────────
 // Persists API-confirmed match states in localStorage so that when the API is
@@ -250,9 +263,15 @@ export function WorldCupProvider({ children }) {
   const [lastUpdated,    setLastUpdated]    = useState(null)
   const [apiMode,        setApiMode]        = useState('loading')
   const cvCacheRef = useRef(loadCvCache())
+  // matchDetails: stats + lineups per match, keyed by "HOME_AWAY"
+  // Pre-seeded from localStorage so data survives page reloads
+  const mdCacheRef = useRef(loadMdCache())
+  const [matchDetails, setMatchDetails] = useState(() => loadMdCache())
 
   // computeData: derive all display data from current state
-  const computeData = useCallback((espnMatches, curEspnStandings, rssItems) => {
+  const computeData = useCallback((espnMatches, curEspnStandings, rssItems, curMd) => {
+    const md = curMd ?? {}
+
     const baseMatches = espnMatches
       ? staticData.matches.map(sm => {
           const live = espnMatches.find(
@@ -261,10 +280,12 @@ export function WorldCupProvider({ children }) {
           if (!live) return sm
           return {
             ...sm,
-            status:     live.status,
-            minute:     live.minute     ?? sm.minute,
-            score_home: live.score_home ?? sm.score_home,
-            score_away: live.score_away ?? sm.score_away,
+            status:         live.status,
+            minute:         live.minute         ?? sm.minute,
+            score_home:     live.score_home     ?? sm.score_home,
+            score_away:     live.score_away     ?? sm.score_away,
+            score_ht_home:  live.score_ht_home  ?? sm.score_ht_home ?? null,
+            score_ht_away:  live.score_ht_away  ?? sm.score_ht_away ?? null,
             goals: sm.goals?.length > 0 ? sm.goals : (live.goals ?? sm.goals ?? []),
           }
         })
@@ -273,7 +294,19 @@ export function WorldCupProvider({ children }) {
     // Cross-validation: override stale "scheduled" entries with cached live/finished data
     const cvMatches = applyCrossValidation(baseMatches, cvCacheRef.current)
 
-    const matches = applyTimeBasedStatus(cvMatches).map(buildAutoEvents)
+    // Merge ESPN stats/lineups from match-details cache into each match
+    const enrichedMatches = cvMatches.map(m => {
+      const key    = `${m.team_home}_${m.team_away}`
+      const detail = md[key]
+      if (!detail) return m
+      return {
+        ...m,
+        stats:  detail.stats  ?? m.stats,
+        lineup: detail.lineup ?? m.lineup,
+      }
+    })
+
+    const matches = applyTimeBasedStatus(enrichedMatches).map(buildAutoEvents)
 
     // Persist any newly confirmed live/finished states to the CV cache
     saveCvCache(matches)
@@ -286,15 +319,36 @@ export function WorldCupProvider({ children }) {
     return { matches, teams, news, stadiums: staticData.stadiums }
   }, [])
 
-  const [data, setData] = useState(() => computeData(null, null, null))
+  const [data, setData] = useState(() => computeData(null, null, null, loadMdCache()))
 
   // ── Global API refresh (120 s) ────────────────────────────────────────────
   const refresh = useCallback(async () => {
-    const [espnMatches, newEspnStandings, fetchedNews] = await Promise.all([
+    // Identify which live/finished matches still need stats/lineups
+    const currentMd   = mdCacheRef.current
+    const needsDetail = new Set(
+      staticData.matches
+        .filter(m => {
+          const elapsed = (serverNow() - new Date(`${m.date}T${m.time}:00Z`)) / 60_000
+          return elapsed > 0   // started or finished
+        })
+        .map(m => `${m.team_home}_${m.team_away}`)
+        .filter(key => !currentMd[key]?.stats)  // don't re-fetch if we have stats
+    )
+
+    const [espnMatches, newEspnStandings, fetchedNews, newDetails] = await Promise.all([
       fetchEspnMatches(),
       fetchEspnStandings(),
       fetchRssNews(),
+      needsDetail.size > 0 ? fetchMatchDetails(needsDetail) : Promise.resolve(null),
     ])
+
+    // Merge newly-fetched details into the persistent cache
+    if (newDetails) {
+      const merged = { ...currentMd, ...newDetails }
+      mdCacheRef.current = merged
+      saveMdCache(merged)
+      setMatchDetails(merged)
+    }
 
     const active = { scores: !!espnMatches, standings: !!newEspnStandings, news: !!fetchedNews }
     setSources(active)
@@ -303,21 +357,21 @@ export function WorldCupProvider({ children }) {
     setEspnOverrides(espnMatches)
     setEspnStandings(newEspnStandings)
     setRssNews(fetchedNews)
-    setData(computeData(espnMatches, newEspnStandings, fetchedNews))
+    setData(computeData(espnMatches, newEspnStandings, fetchedNews, mdCacheRef.current))
     setLastUpdated(new Date())
   }, [computeData])
 
   // ── 30-second tick: recompute live minutes (no API call) ──────────────────
   useEffect(() => {
-    const tick = () => setData(computeData(espnOverrides, espnStandings, rssNews))
+    const tick = () => setData(computeData(espnOverrides, espnStandings, rssNews, mdCacheRef.current))
     const id = setInterval(tick, 30_000)
     return () => clearInterval(id)
   }, [computeData, espnOverrides, espnStandings, rssNews])
 
   // ── Initial clock sync + load + 120-second API cycle ─────────────────────
   useEffect(() => {
-    syncClock().then(() => refresh())              // sync server time before first refresh
-    const id = setInterval(refresh, 120_000)      // global 2-minute polling
+    syncClock().then(() => refresh())
+    const id = setInterval(refresh, 120_000)
     return () => clearInterval(id)
   }, [refresh])
 
@@ -329,7 +383,7 @@ export function WorldCupProvider({ children }) {
   }, [refresh])
 
   return (
-    <WorldCupCtx.Provider value={{ data, apiMode, lastUpdated, sources, refresh }}>
+    <WorldCupCtx.Provider value={{ data, matchDetails, apiMode, lastUpdated, sources, refresh }}>
       {children}
     </WorldCupCtx.Provider>
   )
