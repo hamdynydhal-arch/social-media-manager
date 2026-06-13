@@ -23,7 +23,6 @@ export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick,
   const isLive = match.status === 'live'
   const isFinished = match.status === 'finished'
   const isScheduled = match.status === 'scheduled'
-  const isPending = match.status === 'pending'
 
   const matchDate = new Date(`${match.date}T${match.time}:00Z`)
   const localTime = matchDate.toLocaleTimeString('ar-SA-u-nu-latn', {
@@ -77,10 +76,7 @@ export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick,
         {isFinished && (
           <span className="text-xs text-slate-400 bg-slate-700/50 px-2 py-0.5 rounded-full">انتهت</span>
         )}
-        {isPending && (
-          <span className="text-xs text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full">⌛ انتظار النتيجة</span>
-        )}
-        {(isScheduled || isPending) && (
+        {isScheduled && (
           <span className="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">
             {localDate}
           </span>
@@ -95,11 +91,6 @@ export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick,
             <div className="text-center">
               <div className="text-xl font-black text-white">vs</div>
               <div className="text-xs text-slate-400 mt-1">{localTime}</div>
-            </div>
-          ) : isPending ? (
-            <div className="text-center">
-              <div className="text-2xl font-black text-slate-500">? - ?</div>
-              <div className="text-xs text-amber-500 mt-1">انتظار</div>
             </div>
           ) : (
             <div className="flex items-center gap-2 text-3xl font-black text-white">

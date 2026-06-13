@@ -32,7 +32,8 @@ function NextMatchCountdown({ match, homeTeam, awayTeam }) {
         <span>{awayTeam?.name}</span>
         <span className="text-xl">{awayTeam?.flag}</span>
       </div>
-      <div className="flex items-end justify-center gap-2">
+      {/* dir="ltr" forces hours→minutes→seconds left-to-right regardless of RTL page */}
+      <div dir="ltr" className="flex items-end justify-center gap-2">
         {days > 0 && (
           <>
             <div className="text-center">
@@ -44,17 +45,17 @@ function NextMatchCountdown({ match, homeTeam, awayTeam }) {
         )}
         <div className="text-center">
           <div className="text-3xl font-black text-white tabular-nums">{pad(hours)}</div>
-          <div className="text-xs text-slate-400">ساعة</div>
+          <div className="text-xs text-slate-400">س</div>
         </div>
         <div className="text-slate-500 text-2xl font-black mb-4">:</div>
         <div className="text-center">
           <div className="text-3xl font-black text-amber-400 tabular-nums">{pad(minutes)}</div>
-          <div className="text-xs text-slate-400">دقيقة</div>
+          <div className="text-xs text-slate-400">د</div>
         </div>
         <div className="text-slate-500 text-2xl font-black mb-4">:</div>
         <div className="text-center">
           <div className="text-3xl font-black text-amber-400 tabular-nums">{pad(seconds)}</div>
-          <div className="text-xs text-slate-400">ثانية</div>
+          <div className="text-xs text-slate-400">ث</div>
         </div>
       </div>
     </div>
@@ -89,13 +90,15 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
 
   const liveMatches = useMemo(() => matches.filter(m => m.status === 'live'), [matches])
 
-  const nextScheduledMatch = useMemo(
-    () => matches
-      .filter(m => m.status === 'scheduled')
-      .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))[0] ?? null,
-    [matches]
-  )
+  // Only the next match that hasn't started yet — compared by full UTC datetime
+  const nextScheduledMatch = useMemo(() => {
+    const now = new Date()
+    return matches
+      .filter(m => m.status === 'scheduled' && new Date(`${m.date}T${m.time}:00Z`) > now)
+      .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))[0] ?? null
+  }, [matches])
 
+  // Today's non-live matches (scheduled or finished on today's date)
   const todayMatches = useMemo(
     () => matches.filter(m => m.date === today && m.status !== 'live'),
     [matches, today]
@@ -104,9 +107,11 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
   const isFav = (m) => favoriteTeams.length > 0 &&
     (favoriteTeams.includes(m.team_home) || favoriteTeams.includes(m.team_away))
 
+  // Upcoming: only matches with a future UTC start time
   const upcomingMatches = useMemo(() => {
+    const now = new Date()
     const sorted = matches
-      .filter(m => m.status === 'scheduled' && m.date >= today)
+      .filter(m => m.status === 'scheduled' && new Date(`${m.date}T${m.time}:00Z`) > now)
       .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))
 
     if (favoriteTeams.length > 0) {
@@ -116,10 +121,10 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
     }
     return sorted.slice(0, 6)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [matches, JSON.stringify(favoriteTeams), today])
+  }, [matches, JSON.stringify(favoriteTeams)])
 
   const recentMatches = useMemo(
-    () => matches.filter(m => m.status === 'finished' || m.status === 'pending').slice(0, 4),
+    () => matches.filter(m => m.status === 'finished').slice(0, 4),
     [matches]
   )
 

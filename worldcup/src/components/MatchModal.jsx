@@ -133,11 +133,6 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                       {new Date(`${match.date}T${match.time}:00Z`).toLocaleDateString('ar-SA-u-nu-latn', { weekday: 'short', month: 'short', day: 'numeric' })}
                     </div>
                   </div>
-                ) : match.status === 'pending' ? (
-                  <div className="text-center">
-                    <div className="text-2xl text-slate-500 font-black">? - ?</div>
-                    <div className="text-xs text-amber-500 mt-1">⌛ جارٍ التحقق</div>
-                  </div>
                 ) : (
                   <div>
                     <div className="text-4xl font-black text-amber-400 score-glow">
@@ -331,8 +326,6 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                   ? 'التشكيلة والإحصائيات ستتوفر قبل بداية المباراة بوقت قصير'
                   : match.status === 'live'
                   ? 'الإحصائيات قيد التحديث...'
-                  : match.status === 'pending'
-                  ? 'جارٍ جلب بيانات المباراة، يرجى الانتظار'
                   : 'الإحصائيات غير متاحة لهذه المباراة'}
               </p>
             </div>
@@ -345,8 +338,6 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                 <p>
                   {match.status === 'scheduled'
                     ? 'التشكيلة والإحصائيات ستتوفر قبل بداية المباراة بوقت قصير'
-                    : match.status === 'pending'
-                    ? 'جارٍ جلب بيانات المباراة، يرجى الانتظار'
                     : 'التشكيلة غير متاحة لهذه المباراة'}
                 </p>
               </div>
