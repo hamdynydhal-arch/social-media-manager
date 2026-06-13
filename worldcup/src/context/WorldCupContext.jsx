@@ -55,6 +55,27 @@ function loadCvCache() {
   try { return JSON.parse(localStorage.getItem(CV_KEY) ?? '{}') } catch { return {} }
 }
 
+// Purge CV cache entries for matches whose corrected UTC start time is still
+// in the future.  Called once on startup so stale entries from a previously
+// wrong match time never survive a data.json schedule correction.
+function purgeStaleCvEntries() {
+  const cache = loadCvCache()
+  if (!Object.keys(cache).length) return
+  const now = serverNow()
+  const purged = {}
+  for (const [key, val] of Object.entries(cache)) {
+    // Find the real scheduled UTC time for this match pair
+    const [home, away] = key.split('_')
+    const match = staticData.matches.find(
+      m => m.team_home === home && m.team_away === away
+    )
+    if (!match) continue
+    const scheduledUtc = new Date(`${match.date}T${match.time}:00Z`).getTime()
+    if (scheduledUtc <= now) purged[key] = val   // keep only past matches
+  }
+  try { localStorage.setItem(CV_KEY, JSON.stringify(purged)) } catch {}
+}
+
 function saveCvCache(matches) {
   const states = {}
   for (const m of matches) {
@@ -199,12 +220,17 @@ function applyTimeBasedStatus(matches) {
 }
 
 // ── Cross-validation merge ────────────────────────────────────────────────────
-// If the live API confirms a match is live/finished but data.json still says
-// "scheduled", the cache immediately overrides — critical for wrong-date entries.
+// Applies cached live/finished states ONLY for matches whose UTC kickoff time
+// has already passed.  This prevents a stale cache entry (from a previously
+// wrong match time) from making a future match appear live or finished.
 function applyCrossValidation(matches, cvCache) {
   if (!Object.keys(cvCache).length) return matches
+  const now = serverNow()
   return matches.map(m => {
     if (m.status === 'live' || m.status === 'finished') return m
+    // Never override a match that hasn't started yet — cache might be stale
+    const scheduledUtc = new Date(`${m.date}T${m.time}:00Z`).getTime()
+    if (scheduledUtc > now) return m
     const key = `${m.team_home}_${m.team_away}`
     const cached = cvCache[key]
     if (!cached) return m
@@ -370,7 +396,12 @@ export function WorldCupProvider({ children }) {
 
   // ── Initial clock sync + load + 120-second API cycle ─────────────────────
   useEffect(() => {
-    syncClock().then(() => refresh())
+    // Sync clock first, then purge any stale CV cache entries from previous
+    // wrong match times, then do the first full refresh
+    syncClock().then(() => {
+      purgeStaleCvEntries()
+      refresh()
+    })
     const id = setInterval(refresh, 120_000)
     return () => clearInterval(id)
   }, [refresh])
