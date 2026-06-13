@@ -25,9 +25,16 @@ export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick,
   const isScheduled = match.status === 'scheduled'
 
   const matchDate = new Date(`${match.date}T${match.time}:00Z`)
+  // localTime: browser's own timezone — reflects user's actual country
   const localTime = matchDate.toLocaleTimeString('ar-SA-u-nu-latn', {
     hour: '2-digit',
     minute: '2-digit',
+  })
+  // utcTime: always UTC/GMT for reference
+  const utcTime = matchDate.toLocaleTimeString('ar-SA-u-nu-latn', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
   })
   const localDate = matchDate.toLocaleDateString('ar-SA-u-nu-latn', {
     weekday: 'short',
@@ -90,8 +97,8 @@ export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick,
           {isScheduled ? (
             <div className="text-center">
               <div className="text-xl font-black text-white">vs</div>
-              {/* localTime is converted from UTC to the device's local timezone */}
-              <div className="text-xs text-slate-400 mt-1">{localTime} <span className="text-slate-600">توقيتك</span></div>
+              <div dir="ltr" className="text-sm font-bold text-white mt-1">{localTime}</div>
+              <div className="text-xs text-slate-500 mt-0.5">{utcTime} <span className="text-slate-600">UTC</span></div>
             </div>
           ) : (
             <div className="flex items-center gap-2 text-3xl font-black text-white">

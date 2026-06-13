@@ -1130,42 +1130,106 @@
       "round": "الجولة الأولى",
       "matchday": 1,
       "goals": [
-        { "team": "MEX", "player": "خوليان كيمايونيس", "minute": 9,  "type": "عادي" },
-        { "team": "MEX", "player": "راؤول خيمينيز",    "minute": 67, "type": "عادي" }
+        {
+          "team": "MEX",
+          "player": "خوليان كيمايونيس",
+          "minute": 9,
+          "type": "عادي"
+        },
+        {
+          "team": "MEX",
+          "player": "راؤول خيمينيز",
+          "minute": 67,
+          "type": "عادي"
+        }
       ],
       "events": [
-        { "type": "kickoff",  "minute": 0,   "team": null,  "player": null,                  "detail": "انطلاق المباراة" },
-        { "type": "goal",     "minute": 9,   "team": "MEX", "player": "خوليان كيمايونيس",  "detail": "أول هدف في تاريخ مونديال 2026" },
-        { "type": "halftime", "minute": 45,  "team": null,  "player": null,                  "detail": "نهاية الشوط الأول — 1-0" },
-        { "type": "kickoff2", "minute": 46,  "team": null,  "player": null,                  "detail": "بداية الشوط الثاني" },
-        { "type": "red_card", "minute": 49,  "team": "RSA", "player": "سفيفيلو سيتولي",    "detail": "طرد لحرمان المنافس من فرصة واضحة — 10 لاعبين" },
-        { "type": "goal",     "minute": 67,  "team": "MEX", "player": "راؤول خيمينيز",      "detail": "رأسية من تمريرة روبيرتو ألفارادو — 2-0" },
-        { "type": "red_card", "minute": 84,  "team": "RSA", "player": "ثيمبا زواني",        "detail": "طرد بتدخل متهور — 9 لاعبين" },
-        { "type": "red_card", "minute": 92,  "team": "MEX", "player": "سيزار مونتيس",       "detail": "طرد في الوقت بدل الضائع — 10 لاعبين" },
-        { "type": "fulltime", "minute": 94,  "team": null,  "player": null,                  "detail": "صافرة النهاية — المكسيك 2-0 جنوب أفريقيا" }
+        {
+          "type": "kickoff",
+          "minute": 0,
+          "team": null,
+          "player": null,
+          "detail": "انطلاق المباراة"
+        },
+        {
+          "type": "goal",
+          "minute": 9,
+          "team": "MEX",
+          "player": "خوليان كيمايونيس",
+          "detail": "أول هدف في تاريخ مونديال 2026"
+        },
+        {
+          "type": "halftime",
+          "minute": 45,
+          "team": null,
+          "player": null,
+          "detail": "نهاية الشوط الأول — 1-0"
+        },
+        {
+          "type": "kickoff2",
+          "minute": 46,
+          "team": null,
+          "player": null,
+          "detail": "بداية الشوط الثاني"
+        },
+        {
+          "type": "red_card",
+          "minute": 49,
+          "team": "RSA",
+          "player": "سفيفيلو سيتولي",
+          "detail": "طرد لحرمان المنافس من فرصة واضحة — 10 لاعبين"
+        },
+        {
+          "type": "goal",
+          "minute": 67,
+          "team": "MEX",
+          "player": "راؤول خيمينيز",
+          "detail": "رأسية من تمريرة روبيرتو ألفارادو — 2-0"
+        },
+        {
+          "type": "red_card",
+          "minute": 84,
+          "team": "RSA",
+          "player": "ثيمبا زواني",
+          "detail": "طرد بتدخل متهور — 9 لاعبين"
+        },
+        {
+          "type": "red_card",
+          "minute": 92,
+          "team": "MEX",
+          "player": "سيزار مونتيس",
+          "detail": "طرد في الوقت بدل الضائع — 10 لاعبين"
+        },
+        {
+          "type": "fulltime",
+          "minute": 94,
+          "team": null,
+          "player": null,
+          "detail": "صافرة النهاية — المكسيك 2-0 جنوب أفريقيا"
+        }
       ],
       "stats": {
         "home": {
-          "possession":      60,
-          "shots":           16,
+          "possession": 60,
+          "shots": 16,
           "shots_on_target": 4,
-          "corners":         3,
-          "fouls":           12,
-          "yellow_cards":    1,
-          "red_cards":       1,
-          "passes":          520,
-          "pass_accuracy":   90
+          "corners": 3,
+          "fouls": 12,
+          "yellow_cards": 1,
+          "red_cards": 1,
+          "passes": 520,
+          "pass_accuracy": 90
         },
         "away": {
-          "possession":      40,
-          "shots":           3,
+          "possession": 40,
+          "shots": 3,
           "shots_on_target": 2,
-          "corners":         1,
-          "fouls":           11,
-          "yellow_cards":    1,
-          "red_cards":       2,
-          "passes":          335,
-          "pass_accuracy":   81
+          "corners": 1,
+          "fouls": 11,
+          "yellow_cards": 1,
+          "red_cards": 2,
+          "passes": 335,
+          "pass_accuracy": 81
         }
       },
       "weather": {
@@ -1183,8 +1247,8 @@
     },
     {
       "id": "M002",
-      "date": "2026-06-11",
-      "time": "23:00",
+      "date": "2026-06-12",
+      "time": "02:00",
       "status": "finished",
       "minute": null,
       "team_home": "KOR",
@@ -1196,49 +1260,149 @@
       "round": "الجولة الأولى",
       "matchday": 1,
       "goals": [
-        { "team": "CZE", "player": "لاديسلاف كريجيتشي", "minute": 59, "type": "رأسية",   "assist": "فلاديمير كوفال" },
-        { "team": "KOR", "player": "هوانغ إن-بوم",       "minute": 67, "type": "عادي",   "assist": "لي كانغ-إن" },
-        { "team": "KOR", "player": "أوه هيون-غيو",        "minute": 80, "type": "عادي",   "assist": "هوانغ إن-بوم" }
+        {
+          "team": "CZE",
+          "player": "لاديسلاف كريجيتشي",
+          "minute": 59,
+          "type": "رأسية",
+          "assist": "فلاديمير كوفال"
+        },
+        {
+          "team": "KOR",
+          "player": "هوانغ إن-بوم",
+          "minute": 67,
+          "type": "عادي",
+          "assist": "لي كانغ-إن"
+        },
+        {
+          "team": "KOR",
+          "player": "أوه هيون-غيو",
+          "minute": 80,
+          "type": "عادي",
+          "assist": "هوانغ إن-بوم"
+        }
       ],
       "events": [
-        { "type": "kickoff",      "minute": 0,  "detail": "انطلاق المباراة" },
-        { "type": "halftime",     "minute": 45, "detail": "نهاية الشوط الأول — 0-0" },
-        { "type": "kickoff2",     "minute": 46, "detail": "بداية الشوط الثاني" },
-        { "type": "goal",         "minute": 59, "team": "CZE", "player": "لاديسلاف كريجيتشي", "detail": "رأسية من رمية كوفال الطويلة" },
-        { "type": "substitution", "minute": 62, "team": "KOR", "player": "هوانغ هي-تشان",      "detail": "بديلاً عن لي جاي-سونغ" },
-        { "type": "substitution", "minute": 64, "team": "CZE", "player": "توماش تشوري",        "detail": "بديلاً عن باتريك شيك" },
-        { "type": "substitution", "minute": 64, "team": "CZE", "player": "لوكاش برووود",       "detail": "بديلاً عن ميخال ساديليك" },
-        { "type": "goal",         "minute": 67, "team": "KOR", "player": "هوانغ إن-بوم",       "detail": "تمريرة لي كانغ-إن" },
-        { "type": "substitution", "minute": 69, "team": "KOR", "player": "أوه هيون-غيو",       "detail": "بديلاً عن سون هيونغ-مين" },
-        { "type": "substitution", "minute": 69, "team": "KOR", "player": "أوم جي-سونغ",        "detail": "بديلاً عن لي تاي-سوك" },
-        { "type": "goal",         "minute": 80, "team": "KOR", "player": "أوه هيون-غيو",       "detail": "تمريرة هوانغ إن-بوم" },
-        { "type": "substitution", "minute": 84, "team": "KOR", "player": "كيم جين-غيو",        "detail": "بديلاً عن هوانغ إن-بوم" },
-        { "type": "substitution", "minute": 84, "team": "KOR", "player": "باك جين-سيوب",       "detail": "بديلاً عن بيك سونغ-هو" },
-        { "type": "yellow_card",  "minute": 88, "team": "KOR", "player": "لي غي-هيوك",         "detail": "تدخل على هلوجيك" },
-        { "type": "fulltime",     "minute": 94, "detail": "نهاية المباراة — 2-1" }
+        {
+          "type": "kickoff",
+          "minute": 0,
+          "detail": "انطلاق المباراة"
+        },
+        {
+          "type": "halftime",
+          "minute": 45,
+          "detail": "نهاية الشوط الأول — 0-0"
+        },
+        {
+          "type": "kickoff2",
+          "minute": 46,
+          "detail": "بداية الشوط الثاني"
+        },
+        {
+          "type": "goal",
+          "minute": 59,
+          "team": "CZE",
+          "player": "لاديسلاف كريجيتشي",
+          "detail": "رأسية من رمية كوفال الطويلة"
+        },
+        {
+          "type": "substitution",
+          "minute": 62,
+          "team": "KOR",
+          "player": "هوانغ هي-تشان",
+          "detail": "بديلاً عن لي جاي-سونغ"
+        },
+        {
+          "type": "substitution",
+          "minute": 64,
+          "team": "CZE",
+          "player": "توماش تشوري",
+          "detail": "بديلاً عن باتريك شيك"
+        },
+        {
+          "type": "substitution",
+          "minute": 64,
+          "team": "CZE",
+          "player": "لوكاش برووود",
+          "detail": "بديلاً عن ميخال ساديليك"
+        },
+        {
+          "type": "goal",
+          "minute": 67,
+          "team": "KOR",
+          "player": "هوانغ إن-بوم",
+          "detail": "تمريرة لي كانغ-إن"
+        },
+        {
+          "type": "substitution",
+          "minute": 69,
+          "team": "KOR",
+          "player": "أوه هيون-غيو",
+          "detail": "بديلاً عن سون هيونغ-مين"
+        },
+        {
+          "type": "substitution",
+          "minute": 69,
+          "team": "KOR",
+          "player": "أوم جي-سونغ",
+          "detail": "بديلاً عن لي تاي-سوك"
+        },
+        {
+          "type": "goal",
+          "minute": 80,
+          "team": "KOR",
+          "player": "أوه هيون-غيو",
+          "detail": "تمريرة هوانغ إن-بوم"
+        },
+        {
+          "type": "substitution",
+          "minute": 84,
+          "team": "KOR",
+          "player": "كيم جين-غيو",
+          "detail": "بديلاً عن هوانغ إن-بوم"
+        },
+        {
+          "type": "substitution",
+          "minute": 84,
+          "team": "KOR",
+          "player": "باك جين-سيوب",
+          "detail": "بديلاً عن بيك سونغ-هو"
+        },
+        {
+          "type": "yellow_card",
+          "minute": 88,
+          "team": "KOR",
+          "player": "لي غي-هيوك",
+          "detail": "تدخل على هلوجيك"
+        },
+        {
+          "type": "fulltime",
+          "minute": 94,
+          "detail": "نهاية المباراة — 2-1"
+        }
       ],
       "stats": {
         "home": {
-          "possession":      62,
-          "shots":           15,
+          "possession": 62,
+          "shots": 15,
           "shots_on_target": 7,
-          "corners":         4,
-          "fouls":           9,
-          "yellow_cards":    1,
-          "red_cards":       0,
-          "passes":          473,
-          "pass_accuracy":   99
+          "corners": 4,
+          "fouls": 9,
+          "yellow_cards": 1,
+          "red_cards": 0,
+          "passes": 473,
+          "pass_accuracy": 99
         },
         "away": {
-          "possession":      38,
-          "shots":           8,
+          "possession": 38,
+          "shots": 8,
           "shots_on_target": 4,
-          "corners":         5,
-          "fouls":           16,
-          "yellow_cards":    0,
-          "red_cards":       0,
-          "passes":          314,
-          "pass_accuracy":   null
+          "corners": 5,
+          "fouls": 16,
+          "yellow_cards": 0,
+          "red_cards": 0,
+          "passes": 314,
+          "pass_accuracy": null
         }
       },
       "weather": {
@@ -1256,8 +1420,8 @@
     },
     {
       "id": "M003",
-      "date": "2026-06-15",
-      "time": "19:00",
+      "date": "2026-06-19",
+      "time": "01:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "MEX",
@@ -1285,8 +1449,8 @@
     },
     {
       "id": "M004",
-      "date": "2026-06-15",
-      "time": "23:00",
+      "date": "2026-06-18",
+      "time": "16:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "RSA",
@@ -1314,8 +1478,8 @@
     },
     {
       "id": "M005",
-      "date": "2026-06-19",
-      "time": "22:00",
+      "date": "2026-06-25",
+      "time": "01:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "MEX",
@@ -1343,8 +1507,8 @@
     },
     {
       "id": "M006",
-      "date": "2026-06-19",
-      "time": "22:00",
+      "date": "2026-06-25",
+      "time": "01:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "RSA",
@@ -1374,17 +1538,30 @@
       "id": "M007",
       "date": "2026-06-12",
       "time": "19:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "CAN",
       "team_away": "BIH",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 1,
+      "score_away": 1,
       "stadium_id": "STA12",
       "group": "B",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "BIH",
+          "player": "Jovo Lukić",
+          "minute": 21,
+          "type": "عادي"
+        },
+        {
+          "team": "CAN",
+          "player": "Cyle Larin",
+          "minute": 78,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -1401,8 +1578,8 @@
     },
     {
       "id": "M008",
-      "date": "2026-06-12",
-      "time": "23:00",
+      "date": "2026-06-13",
+      "time": "19:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "QAT",
@@ -1430,8 +1607,8 @@
     },
     {
       "id": "M009",
-      "date": "2026-06-16",
-      "time": "19:00",
+      "date": "2026-06-18",
+      "time": "22:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "CAN",
@@ -1459,8 +1636,8 @@
     },
     {
       "id": "M010",
-      "date": "2026-06-16",
-      "time": "23:00",
+      "date": "2026-06-18",
+      "time": "19:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "BIH",
@@ -1488,8 +1665,8 @@
     },
     {
       "id": "M011",
-      "date": "2026-06-20",
-      "time": "22:00",
+      "date": "2026-06-24",
+      "time": "19:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "CAN",
@@ -1517,8 +1694,8 @@
     },
     {
       "id": "M012",
-      "date": "2026-06-20",
-      "time": "22:00",
+      "date": "2026-06-24",
+      "time": "19:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "BIH",
@@ -1547,7 +1724,7 @@
     {
       "id": "M013",
       "date": "2026-06-13",
-      "time": "19:00",
+      "time": "22:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "BRA",
@@ -1575,8 +1752,8 @@
     },
     {
       "id": "M014",
-      "date": "2026-06-13",
-      "time": "23:00",
+      "date": "2026-06-14",
+      "time": "01:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "HAI",
@@ -1604,8 +1781,8 @@
     },
     {
       "id": "M015",
-      "date": "2026-06-17",
-      "time": "19:00",
+      "date": "2026-06-20",
+      "time": "00:30",
       "status": "scheduled",
       "minute": null,
       "team_home": "BRA",
@@ -1633,8 +1810,8 @@
     },
     {
       "id": "M016",
-      "date": "2026-06-17",
-      "time": "23:00",
+      "date": "2026-06-19",
+      "time": "22:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "MAR",
@@ -1662,7 +1839,7 @@
     },
     {
       "id": "M017",
-      "date": "2026-06-21",
+      "date": "2026-06-24",
       "time": "22:00",
       "status": "scheduled",
       "minute": null,
@@ -1691,7 +1868,7 @@
     },
     {
       "id": "M018",
-      "date": "2026-06-21",
+      "date": "2026-06-24",
       "time": "22:00",
       "status": "scheduled",
       "minute": null,
@@ -1720,19 +1897,50 @@
     },
     {
       "id": "M019",
-      "date": "2026-06-12",
-      "time": "21:00",
-      "status": "scheduled",
+      "date": "2026-06-13",
+      "time": "01:00",
+      "status": "finished",
       "minute": null,
       "team_home": "USA",
       "team_away": "PAR",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 4,
+      "score_away": 1,
       "stadium_id": "STA01",
       "group": "D",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "USA",
+          "player": "Damian Bobadilla",
+          "minute": 7,
+          "type": "عادي"
+        },
+        {
+          "team": "USA",
+          "player": "Folarin Balogun",
+          "minute": 31,
+          "type": "عادي"
+        },
+        {
+          "team": "USA",
+          "player": "Folarin Balogun",
+          "minute": 45,
+          "type": "عادي"
+        },
+        {
+          "team": "PAR",
+          "player": "Mauricio",
+          "minute": 73,
+          "type": "عادي"
+        },
+        {
+          "team": "USA",
+          "player": "Giovanni Reyna",
+          "minute": 90,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -1749,8 +1957,8 @@
     },
     {
       "id": "M020",
-      "date": "2026-06-13",
-      "time": "01:00",
+      "date": "2026-06-14",
+      "time": "04:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "AUS",
@@ -1778,8 +1986,8 @@
     },
     {
       "id": "M021",
-      "date": "2026-06-17",
-      "time": "21:00",
+      "date": "2026-06-19",
+      "time": "19:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "USA",
@@ -1807,8 +2015,8 @@
     },
     {
       "id": "M022",
-      "date": "2026-06-18",
-      "time": "01:00",
+      "date": "2026-06-20",
+      "time": "03:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "PAR",
@@ -1836,8 +2044,8 @@
     },
     {
       "id": "M023",
-      "date": "2026-06-21",
-      "time": "22:00",
+      "date": "2026-06-26",
+      "time": "02:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "USA",
@@ -1865,8 +2073,8 @@
     },
     {
       "id": "M024",
-      "date": "2026-06-21",
-      "time": "22:00",
+      "date": "2026-06-26",
+      "time": "02:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "PAR",
@@ -1895,7 +2103,7 @@
     {
       "id": "M025",
       "date": "2026-06-14",
-      "time": "19:00",
+      "time": "17:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "GER",
@@ -1952,8 +2160,8 @@
     },
     {
       "id": "M027",
-      "date": "2026-06-18",
-      "time": "19:00",
+      "date": "2026-06-20",
+      "time": "20:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "GER",
@@ -1981,8 +2189,8 @@
     },
     {
       "id": "M028",
-      "date": "2026-06-18",
-      "time": "23:00",
+      "date": "2026-06-21",
+      "time": "00:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "CUW",
@@ -2010,8 +2218,8 @@
     },
     {
       "id": "M029",
-      "date": "2026-06-22",
-      "time": "22:00",
+      "date": "2026-06-25",
+      "time": "20:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "GER",
@@ -2039,8 +2247,8 @@
     },
     {
       "id": "M030",
-      "date": "2026-06-22",
-      "time": "22:00",
+      "date": "2026-06-25",
+      "time": "20:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "CUW",
@@ -2069,7 +2277,7 @@
     {
       "id": "M031",
       "date": "2026-06-14",
-      "time": "21:00",
+      "time": "20:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "NED",
@@ -2098,7 +2306,7 @@
     {
       "id": "M032",
       "date": "2026-06-15",
-      "time": "01:00",
+      "time": "02:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "SWE",
@@ -2127,7 +2335,7 @@
     {
       "id": "M033",
       "date": "2026-06-20",
-      "time": "19:00",
+      "time": "17:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "NED",
@@ -2155,8 +2363,8 @@
     },
     {
       "id": "M034",
-      "date": "2026-06-20",
-      "time": "23:00",
+      "date": "2026-06-21",
+      "time": "04:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "JPN",
@@ -2185,7 +2393,7 @@
     {
       "id": "M035",
       "date": "2026-06-25",
-      "time": "22:00",
+      "time": "23:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "NED",
@@ -2214,7 +2422,7 @@
     {
       "id": "M036",
       "date": "2026-06-25",
-      "time": "22:00",
+      "time": "23:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "JPN",
@@ -2271,8 +2479,8 @@
     },
     {
       "id": "M038",
-      "date": "2026-06-15",
-      "time": "23:00",
+      "date": "2026-06-16",
+      "time": "01:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "IRN",
@@ -2300,7 +2508,7 @@
     },
     {
       "id": "M039",
-      "date": "2026-06-19",
+      "date": "2026-06-21",
       "time": "19:00",
       "status": "scheduled",
       "minute": null,
@@ -2329,8 +2537,8 @@
     },
     {
       "id": "M040",
-      "date": "2026-06-19",
-      "time": "23:00",
+      "date": "2026-06-22",
+      "time": "01:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "EGY",
@@ -2358,8 +2566,8 @@
     },
     {
       "id": "M041",
-      "date": "2026-06-23",
-      "time": "22:00",
+      "date": "2026-06-27",
+      "time": "03:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "BEL",
@@ -2387,8 +2595,8 @@
     },
     {
       "id": "M042",
-      "date": "2026-06-23",
-      "time": "22:00",
+      "date": "2026-06-27",
+      "time": "03:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "EGY",
@@ -2417,7 +2625,7 @@
     {
       "id": "M043",
       "date": "2026-06-15",
-      "time": "21:00",
+      "time": "16:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "ESP",
@@ -2445,8 +2653,8 @@
     },
     {
       "id": "M044",
-      "date": "2026-06-16",
-      "time": "01:00",
+      "date": "2026-06-15",
+      "time": "22:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "KSA",
@@ -2474,8 +2682,8 @@
     },
     {
       "id": "M045",
-      "date": "2026-06-20",
-      "time": "21:00",
+      "date": "2026-06-21",
+      "time": "16:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "ESP",
@@ -2504,7 +2712,7 @@
     {
       "id": "M046",
       "date": "2026-06-21",
-      "time": "01:00",
+      "time": "22:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "CPV",
@@ -2532,8 +2740,8 @@
     },
     {
       "id": "M047",
-      "date": "2026-06-24",
-      "time": "22:00",
+      "date": "2026-06-27",
+      "time": "00:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "ESP",
@@ -2561,8 +2769,8 @@
     },
     {
       "id": "M048",
-      "date": "2026-06-24",
-      "time": "22:00",
+      "date": "2026-06-27",
+      "time": "00:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "CPV",
@@ -2620,7 +2828,7 @@
     {
       "id": "M050",
       "date": "2026-06-16",
-      "time": "23:00",
+      "time": "22:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "IRQ",
@@ -2648,8 +2856,8 @@
     },
     {
       "id": "M051",
-      "date": "2026-06-20",
-      "time": "19:00",
+      "date": "2026-06-22",
+      "time": "21:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "FRA",
@@ -2677,8 +2885,8 @@
     },
     {
       "id": "M052",
-      "date": "2026-06-20",
-      "time": "23:00",
+      "date": "2026-06-23",
+      "time": "00:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "SEN",
@@ -2706,8 +2914,8 @@
     },
     {
       "id": "M053",
-      "date": "2026-06-24",
-      "time": "22:00",
+      "date": "2026-06-26",
+      "time": "19:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "FRA",
@@ -2735,8 +2943,8 @@
     },
     {
       "id": "M054",
-      "date": "2026-06-24",
-      "time": "22:00",
+      "date": "2026-06-26",
+      "time": "19:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "SEN",
@@ -2764,8 +2972,8 @@
     },
     {
       "id": "M055",
-      "date": "2026-06-16",
-      "time": "21:00",
+      "date": "2026-06-17",
+      "time": "01:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "ARG",
@@ -2794,7 +3002,7 @@
     {
       "id": "M056",
       "date": "2026-06-17",
-      "time": "01:00",
+      "time": "04:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "AUT",
@@ -2822,8 +3030,8 @@
     },
     {
       "id": "M057",
-      "date": "2026-06-21",
-      "time": "19:00",
+      "date": "2026-06-22",
+      "time": "17:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "ARG",
@@ -2851,8 +3059,8 @@
     },
     {
       "id": "M058",
-      "date": "2026-06-21",
-      "time": "23:00",
+      "date": "2026-06-23",
+      "time": "03:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "ALG",
@@ -2880,8 +3088,8 @@
     },
     {
       "id": "M059",
-      "date": "2026-06-25",
-      "time": "22:00",
+      "date": "2026-06-28",
+      "time": "02:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "ARG",
@@ -2909,8 +3117,8 @@
     },
     {
       "id": "M060",
-      "date": "2026-06-25",
-      "time": "22:00",
+      "date": "2026-06-28",
+      "time": "02:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "ALG",
@@ -2939,7 +3147,7 @@
     {
       "id": "M061",
       "date": "2026-06-17",
-      "time": "19:00",
+      "time": "17:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "POR",
@@ -2967,8 +3175,8 @@
     },
     {
       "id": "M062",
-      "date": "2026-06-17",
-      "time": "23:00",
+      "date": "2026-06-18",
+      "time": "02:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "UZB",
@@ -2996,8 +3204,8 @@
     },
     {
       "id": "M063",
-      "date": "2026-06-22",
-      "time": "19:00",
+      "date": "2026-06-23",
+      "time": "17:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "POR",
@@ -3025,8 +3233,8 @@
     },
     {
       "id": "M064",
-      "date": "2026-06-22",
-      "time": "23:00",
+      "date": "2026-06-24",
+      "time": "02:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "COD",
@@ -3054,8 +3262,8 @@
     },
     {
       "id": "M065",
-      "date": "2026-06-26",
-      "time": "22:00",
+      "date": "2026-06-27",
+      "time": "23:30",
       "status": "scheduled",
       "minute": null,
       "team_home": "POR",
@@ -3083,8 +3291,8 @@
     },
     {
       "id": "M066",
-      "date": "2026-06-26",
-      "time": "22:00",
+      "date": "2026-06-27",
+      "time": "23:30",
       "status": "scheduled",
       "minute": null,
       "team_home": "COD",
@@ -3113,7 +3321,7 @@
     {
       "id": "M067",
       "date": "2026-06-17",
-      "time": "21:00",
+      "time": "20:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "ENG",
@@ -3141,8 +3349,8 @@
     },
     {
       "id": "M068",
-      "date": "2026-06-18",
-      "time": "01:00",
+      "date": "2026-06-17",
+      "time": "23:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "GHA",
@@ -3170,8 +3378,8 @@
     },
     {
       "id": "M069",
-      "date": "2026-06-22",
-      "time": "21:00",
+      "date": "2026-06-23",
+      "time": "20:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "ENG",
@@ -3200,7 +3408,7 @@
     {
       "id": "M070",
       "date": "2026-06-23",
-      "time": "01:00",
+      "time": "23:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "CRO",
@@ -3228,8 +3436,8 @@
     },
     {
       "id": "M071",
-      "date": "2026-06-26",
-      "time": "22:00",
+      "date": "2026-06-27",
+      "time": "21:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "ENG",
@@ -3257,8 +3465,8 @@
     },
     {
       "id": "M072",
-      "date": "2026-06-26",
-      "time": "22:00",
+      "date": "2026-06-27",
+      "time": "21:00",
       "status": "scheduled",
       "minute": null,
       "team_home": "CRO",
