@@ -172,16 +172,24 @@ function buildAutoEvents(match) {
   }
 }
 
+// ── Parse ESPN displayClock ("82:15", "45+3:21") → integer play-minute ────────
+function parseDisplayClock(clock) {
+  if (!clock) return null
+  const withPlus = clock.match(/^(\d+)\+(\d+)/)
+  if (withPlus) return parseInt(withPlus[1]) + parseInt(withPlus[2])
+  const plain = clock.match(/^(\d+)/)
+  if (plain) return parseInt(plain[1])
+  return null
+}
+
 // ── Time-based live status ────────────────────────────────────────────────────
-// Uses server-corrected time (serverNow) to be immune to device clock drift.
-// Applies to ALL matches: once the scheduled UTC kickoff time passes the match
-// transitions live → finished automatically.  LIVE_OVERRIDES provide confirmed
-// scores/goals; without them scores stay null (displayed as "?" in the UI)
-// until the ESPN API fills them in.
-function applyTimeBasedStatus(matches) {
-  const now = new Date(serverNow())
+// Priority 1: ESPN real broadcast minute (extrapolated from last fetch timestamp)
+// Priority 2: Wall-clock elapsed from kickoff (fallback when ESPN is unavailable)
+// Never overwrites a confirmed "finished" match.
+function applyTimeBasedStatus(matches, espnMinCache) {
+  const nowMs = serverNow()
   return matches.map(match => {
-    if (match.status === 'finished') return match   // only skip confirmed-finished matches
+    if (match.status === 'finished') return match
 
     const override       = LIVE_OVERRIDES[match.id]
     const scheduledStart = new Date(`${match.date}T${match.time}:00Z`)
@@ -189,32 +197,39 @@ function applyTimeBasedStatus(matches) {
       ? new Date(scheduledStart.getTime() + override.kickoff_offset_min * 60_000)
       : scheduledStart
 
-    const elapsed = (now - actualStart) / 60_000
-    if (elapsed < 0) return { ...match, status: 'scheduled' }   // future — force scheduled
+    const elapsed = (nowMs - actualStart.getTime()) / 60_000
+    if (elapsed < 0) return { ...match, status: 'scheduled' }
 
-    if (elapsed >= 110) {
+    if (elapsed >= 120) {
       return {
-        ...match,
-        status: 'finished',
-        // Only set scores when we have confirmed data; null → shown as "?" in UI
+        ...match, status: 'finished',
         score_home: override?.score_home ?? match.score_home ?? null,
         score_away: override?.score_away ?? match.score_away ?? null,
-        goals: override?.goals ?? match.goals ?? [],
+        goals:      override?.goals      ?? match.goals      ?? [],
       }
     }
 
+    // ── Minute: prefer real ESPN broadcast clock, extrapolate forward ──────
+    const key    = `${match.team_home}_${match.team_away}`
+    const cached = espnMinCache?.[key]
     let minute
-    if      (elapsed <= 45) minute = `${Math.floor(elapsed)}'`
-    else if (elapsed <= 60) minute = 'HT'
-    else                    minute = `${Math.floor(45 + (elapsed - 60))}'`
+
+    if (cached && (nowMs - cached.fetchedAt) < 4 * 60_000) {
+      // Real data from ESPN — add seconds elapsed since the fetch
+      const playMin = Math.min(130, cached.playMin + Math.floor((nowMs - cached.fetchedAt) / 60_000))
+      minute = `${playMin}'`
+    } else {
+      // Fallback: wall-clock calculation (play_time = elapsed − 15 min HT)
+      if      (elapsed <= 45) minute = `${Math.max(1, Math.floor(elapsed))}'`
+      else if (elapsed <= 60) minute = 'HT'
+      else                    minute = `${Math.floor(45 + (elapsed - 60))}'`
+    }
 
     return {
-      ...match,
-      status: 'live',
-      minute,
+      ...match, status: 'live', minute,
       score_home: override?.score_home ?? match.score_home ?? null,
       score_away: override?.score_away ?? match.score_away ?? null,
-      goals: override?.goals ?? match.goals ?? [],
+      goals:      override?.goals      ?? match.goals      ?? [],
     }
   })
 }
@@ -288,14 +303,16 @@ export function WorldCupProvider({ children }) {
   const [sources,        setSources]        = useState({ scores: false, standings: false, news: false })
   const [lastUpdated,    setLastUpdated]    = useState(null)
   const [apiMode,        setApiMode]        = useState('loading')
-  const cvCacheRef = useRef(loadCvCache())
-  // matchDetails: stats + lineups per match, keyed by "HOME_AWAY"
-  // Pre-seeded from localStorage so data survives page reloads
-  const mdCacheRef = useRef(loadMdCache())
+  const cvCacheRef    = useRef(loadCvCache())
+  const mdCacheRef    = useRef(loadMdCache())
+  // ESPN real-minute cache: { "HOME_AWAY": { playMin, fetchedAt } }
+  // Populated whenever ESPN scoreboard returns a live match with a clock.
+  // Survives the 30s tick (in-memory only; not localStorage — intentionally fresh each session).
+  const espnMinCache  = useRef({})
   const [matchDetails, setMatchDetails] = useState(() => loadMdCache())
 
   // computeData: derive all display data from current state
-  const computeData = useCallback((espnMatches, curEspnStandings, rssItems, curMd) => {
+  const computeData = useCallback((espnMatches, curEspnStandings, rssItems, curMd, curEspnMin) => {
     const md = curMd ?? {}
 
     const baseMatches = espnMatches
@@ -332,7 +349,7 @@ export function WorldCupProvider({ children }) {
       }
     })
 
-    const matches = applyTimeBasedStatus(enrichedMatches).map(buildAutoEvents)
+    const matches = applyTimeBasedStatus(enrichedMatches, curEspnMin ?? {}).map(buildAutoEvents)
 
     // Persist any newly confirmed live/finished states to the CV cache
     saveCvCache(matches)
@@ -345,20 +362,19 @@ export function WorldCupProvider({ children }) {
     return { matches, teams, news, stadiums: staticData.stadiums }
   }, [])
 
-  const [data, setData] = useState(() => computeData(null, null, null, loadMdCache()))
+  const [data, setData] = useState(() => computeData(null, null, null, loadMdCache(), {}))
 
   // ── Global API refresh (120 s) ────────────────────────────────────────────
   const refresh = useCallback(async () => {
-    // Identify which live/finished matches still need stats/lineups
     const currentMd   = mdCacheRef.current
     const needsDetail = new Set(
       staticData.matches
         .filter(m => {
           const elapsed = (serverNow() - new Date(`${m.date}T${m.time}:00Z`)) / 60_000
-          return elapsed > 0   // started or finished
+          return elapsed > 0
         })
         .map(m => `${m.team_home}_${m.team_away}`)
-        .filter(key => !currentMd[key]?.stats)  // don't re-fetch if we have stats
+        .filter(key => !currentMd[key]?.stats)
     )
 
     const [espnMatches, newEspnStandings, fetchedNews, newDetails] = await Promise.all([
@@ -368,7 +384,18 @@ export function WorldCupProvider({ children }) {
       needsDetail.size > 0 ? fetchMatchDetails(needsDetail) : Promise.resolve(null),
     ])
 
-    // Merge newly-fetched details into the persistent cache
+    // Store real ESPN broadcast minutes with fetch timestamp for extrapolation
+    if (espnMatches) {
+      const now = serverNow()
+      for (const ev of espnMatches) {
+        if (ev.status !== 'live' || !ev.minute) continue
+        const playMin = parseDisplayClock(ev.minute)
+        if (playMin !== null) {
+          espnMinCache.current[`${ev.team_home}_${ev.team_away}`] = { playMin, fetchedAt: now }
+        }
+      }
+    }
+
     if (newDetails) {
       const merged = { ...currentMd, ...newDetails }
       mdCacheRef.current = merged
@@ -383,13 +410,13 @@ export function WorldCupProvider({ children }) {
     setEspnOverrides(espnMatches)
     setEspnStandings(newEspnStandings)
     setRssNews(fetchedNews)
-    setData(computeData(espnMatches, newEspnStandings, fetchedNews, mdCacheRef.current))
+    setData(computeData(espnMatches, newEspnStandings, fetchedNews, mdCacheRef.current, espnMinCache.current))
     setLastUpdated(new Date())
   }, [computeData])
 
   // ── 30-second tick: recompute live minutes (no API call) ──────────────────
   useEffect(() => {
-    const tick = () => setData(computeData(espnOverrides, espnStandings, rssNews, mdCacheRef.current))
+    const tick = () => setData(computeData(espnOverrides, espnStandings, rssNews, mdCacheRef.current, espnMinCache.current))
     const id = setInterval(tick, 30_000)
     return () => clearInterval(id)
   }, [computeData, espnOverrides, espnStandings, rssNews])
