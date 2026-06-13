@@ -30,8 +30,8 @@ registerRoute(
   })
 )
 
-const ICON  = '/wc26/icons/icon-192.png'
-const SOUND = '/wc26/sounds/whistle.wav'
+const ICON  = '/social-media-manager/world-cup/icons/icon-192.png'
+const SOUND = '/social-media-manager/world-cup/sounds/whistle.wav'
 
 // Vibration: referee whistle (short-short-long) — works on Android lock screen
 const WHISTLE_VIB  = [300, 100, 300, 100, 800]
@@ -102,7 +102,7 @@ self.addEventListener('notificationclick', event => {
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
       if (list.length > 0) return list[0].focus()
-      return clients.openWindow('/wc26/')
+      return clients.openWindow('/social-media-manager/world-cup/')
     })
   )
 })
