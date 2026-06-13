@@ -133,32 +133,46 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
 
       <div className="flex-1 px-4 py-4 space-y-6 pb-24">
 
-        {/* ── Install banner (always shown when not installed) ── */}
+        {/* ── Download / Install banner ── */}
         {canInstall && (
-          <div className="rounded-3xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)', border: '2px solid rgba(52,211,153,0.4)', boxShadow: '0 8px 32px rgba(16,185,129,0.35)' }}>
+          <div className="rounded-3xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%)', border: '2px solid rgba(129,140,248,0.4)', boxShadow: '0 8px 32px rgba(99,102,241,0.35)' }}>
             <div className="px-5 pt-5 pb-2 text-center">
               <div className="text-5xl mb-2 animate-bounce">📲</div>
               <h2 className="text-xl font-black text-white leading-tight mb-1">
-                للحصول على التنبيهات الحية
+                نزّل التطبيق على أندرويد
               </h2>
-              <p className="text-emerald-200 text-sm font-bold mb-1">
-                يجب تثبيت التطبيق الآن
+              <p className="text-indigo-200 text-sm font-bold mb-1">
+                إشعارات الأهداف والمباريات مباشرةً على شاشتك
               </p>
-              <p className="text-emerald-300/70 text-xs leading-relaxed">
-                أهداف فورية • إشعارات في الخلفية • يعمل بدون إنترنت
+              <p className="text-indigo-300/70 text-xs leading-relaxed">
+                أهداف فورية • اهتزاز وصوت صافرة • يعمل بدون إنترنت
               </p>
             </div>
-            <div className="px-4 pb-4 pt-3">
-              <button
-                onClick={handleInstall}
-                className="w-full py-4 rounded-2xl font-black text-slate-900 text-lg transition-all active:scale-95 flex items-center justify-center gap-3"
-                style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 4px 20px rgba(52,211,153,0.5)' }}
+            <div className="px-4 pb-4 pt-3 space-y-2">
+              {/* Primary: Download APK */}
+              <a
+                href="https://github.com/hamdynydhal-arch/social-media-manager/releases/download/apk-latest/app-release.apk"
+                download
+                className="w-full py-4 rounded-2xl font-black text-white text-lg transition-all active:scale-95 flex items-center justify-center gap-3"
+                style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', boxShadow: '0 4px 20px rgba(99,102,241,0.5)', textDecoration: 'none', display: 'flex' }}
               >
-                <span>📲 تثبيت التطبيق الآن</span>
-              </button>
-              <p className="text-center text-emerald-400/60 text-xs mt-2">
-                {isIOS ? 'أضفه إلى الشاشة الرئيسية عبر Safari' : 'تثبيت سريع — لمسة واحدة'}
-              </p>
+                <span>⬇️ تنزيل APK أندرويد</span>
+              </a>
+              {/* Secondary: PWA install if prompt available */}
+              {!isIOS && (
+                <button
+                  onClick={handleInstall}
+                  className="w-full py-2.5 rounded-xl font-bold text-indigo-300 text-sm transition-all active:scale-95 border border-indigo-500/30"
+                  style={{ background: 'rgba(99,102,241,0.1)' }}
+                >
+                  أو أضف إلى الشاشة الرئيسية (PWA)
+                </button>
+              )}
+              {isIOS && (
+                <p className="text-center text-indigo-400/60 text-xs">
+                  iOS: افتح في Safari ← مشاركة ← أضف إلى الشاشة الرئيسية
+                </p>
+              )}
             </div>
           </div>
         )}

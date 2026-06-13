@@ -153,63 +153,75 @@ export default function Settings({
         )}
       </div>
 
-      {/* ── Install App ── */}
-      {isInstalled ? (
-        <div className="card p-4 border-emerald-500/30 bg-emerald-900/10">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-2xl flex-shrink-0">✅</div>
-            <div>
-              <p className="font-bold text-emerald-400 text-sm">التطبيق مثبت بالفعل</p>
-              <p className="text-slate-400 text-xs mt-0.5">تستمتع بتجربة PWA كاملة مع إشعارات في الخلفية</p>
-            </div>
-          </div>
+      {/* ── Download APK / Install ── */}
+      <div
+        className="rounded-3xl overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #3730a3 100%)',
+          border: '2px solid rgba(129,140,248,0.4)',
+          boxShadow: '0 8px 32px rgba(99,102,241,0.3)',
+        }}
+      >
+        <div className="px-5 pt-5 pb-3 text-center">
+          <div className="text-5xl mb-2">📲</div>
+          <h2 className="text-lg font-black text-white mb-1">
+            {isInstalled ? '✅ التطبيق مثبت' : 'نزّل تطبيق أندرويد APK'}
+          </h2>
+          <p className="text-indigo-200 text-sm">
+            {isInstalled
+              ? 'تستمتع بتجربة كاملة مع إشعارات في الخلفية'
+              : 'إشعارات الأهداف الفورية • صوت وارتجاج • يعمل بدون إنترنت'}
+          </p>
         </div>
-      ) : (
-        <div
-          className="rounded-3xl overflow-hidden"
-          style={{
-            background: 'linear-gradient(135deg, #064e3b 0%, #065f46 60%, #047857 100%)',
-            border: '2px solid rgba(52,211,153,0.4)',
-            boxShadow: '0 8px 32px rgba(16,185,129,0.3)',
-          }}
-        >
-          <div className="px-5 pt-5 pb-3 text-center">
-            <div className="text-5xl mb-2 animate-bounce">📲</div>
-            <h2 className="text-lg font-black text-white mb-1">تثبيت التطبيق</h2>
-            <p className="text-emerald-200 text-sm">إشعارات الأهداف الفورية • يعمل بدون إنترنت</p>
-          </div>
-          <div className="px-4 pb-5 space-y-2.5">
-            {isIOS ? (
-              <>
-                <button
-                  onClick={() => setShowIOSModal(true)}
-                  className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95"
-                  style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 4px 20px rgba(52,211,153,0.5)' }}
-                >
-                  📲 كيفية التثبيت على iPhone / iPad
-                </button>
-                <p className="text-center text-emerald-400/70 text-xs">يتطلب متصفح Safari</p>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={handleInstall}
-                  disabled={installing}
-                  className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95 disabled:opacity-60"
-                  style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 4px 20px rgba(52,211,153,0.5)' }}
-                >
-                  {installing ? '⏳ جاري التثبيت...' : '📲 تثبيت التطبيق الآن'}
-                </button>
-                <p className="text-center text-emerald-400/70 text-xs">
-                  {hasNativePrompt
-                    ? 'سيظهر مربع التثبيت الأصلي من Chrome/Android فوراً'
-                    : 'اضغط وسنوضح لك الطريقة خطوة بخطوة'}
-                </p>
-              </>
-            )}
-          </div>
+        <div className="px-4 pb-5 space-y-2.5">
+          {/* Primary: APK download */}
+          <a
+            href="https://github.com/hamdynydhal-arch/social-media-manager/releases/download/apk-latest/app-release.apk"
+            download
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              width: '100%',
+              padding: '1rem',
+              borderRadius: '1rem',
+              background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+              boxShadow: '0 4px 20px rgba(99,102,241,0.5)',
+              color: 'white',
+              fontWeight: 900,
+              fontSize: '1.05rem',
+              textDecoration: 'none',
+            }}
+          >
+            ⬇️ تنزيل APK أندرويد
+          </a>
+          <p className="text-center text-indigo-300/60 text-xs">
+            فعّل "مصادر غير معروفة" في إعدادات الهاتف قبل التثبيت
+          </p>
+
+          {/* Secondary: PWA install */}
+          {!isInstalled && !isIOS && (
+            <button
+              onClick={handleInstall}
+              disabled={installing}
+              className="w-full py-2.5 rounded-xl font-bold text-indigo-300 text-sm transition-all active:scale-95 border border-indigo-500/30 disabled:opacity-50"
+              style={{ background: 'rgba(99,102,241,0.1)' }}
+            >
+              {installing ? '⏳ جاري التثبيت...' : 'أو أضف إلى الشاشة الرئيسية (PWA)'}
+            </button>
+          )}
+          {!isInstalled && isIOS && (
+            <button
+              onClick={() => setShowIOSModal(true)}
+              className="w-full py-2.5 rounded-xl font-bold text-indigo-300 text-sm border border-indigo-500/30"
+              style={{ background: 'rgba(99,102,241,0.1)' }}
+            >
+              📲 تثبيت على iPhone عبر Safari
+            </button>
+          )}
         </div>
-      )}
+      </div>
 
       {/* ── Real Test Notification ── */}
       <div className="card p-4 border-amber-500/30 bg-gradient-to-r from-amber-900/15 to-transparent">

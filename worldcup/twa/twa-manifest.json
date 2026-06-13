@@ -1,0 +1,31 @@
+{
+  "packageId": "com.hamdynydhal.worldcup2026",
+  "host": "hamdynydhal-arch.github.io",
+  "name": "كأس العالم 2026",
+  "launcherName": "كأس العالم",
+  "display": "standalone",
+  "themeColor": "#0f172a",
+  "navigationColor": "#0f172a",
+  "navigationDividerColor": "#0f172a",
+  "backgroundColor": "#0f172a",
+  "enableNotifications": true,
+  "startUrl": "/social-media-manager/world-cup/",
+  "iconUrl": "https://hamdynydhal-arch.github.io/social-media-manager/world-cup/icons/icon-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "../worldcup.keystore",
+    "alias": "worldcup"
+  },
+  "appVersion": "1",
+  "appVersionName": "1.0.0",
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://hamdynydhal-arch.github.io/social-media-manager/world-cup/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": { "enabled": false },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "retainedBundles": []
+}

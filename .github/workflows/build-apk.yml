@@ -1,0 +1,90 @@
+name: Build World Cup APK
+
+on:
+  push:
+    branches: [claude/world-cup-pwa-app-jfg1rv]
+    paths:
+      - 'worldcup/twa/**'
+      - '.github/workflows/build-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Bubblewrap CLI
+        run: npm install -g @bubblewrap/cli@latest
+
+      - name: Init Bubblewrap project
+        working-directory: worldcup/twa
+        env:
+          BUBBLEWRAP_JDK_PATH: ${{ env.JAVA_HOME }}
+          BUBBLEWRAP_ANDROID_SDK_PATH: ${{ env.ANDROID_HOME }}
+        run: |
+          bubblewrap init \
+            --manifest https://hamdynydhal-arch.github.io/social-media-manager/world-cup/manifest.webmanifest \
+            --directory build \
+            --skipPwaValidation || true
+
+      - name: Copy keystore and manifest into build dir
+        working-directory: worldcup/twa
+        run: |
+          cp worldcup.keystore build/worldcup.keystore
+          cp twa-manifest.json build/twa-manifest.json
+
+      - name: Build APK with Bubblewrap
+        working-directory: worldcup/twa/build
+        env:
+          BUBBLEWRAP_JDK_PATH: ${{ env.JAVA_HOME }}
+          BUBBLEWRAP_ANDROID_SDK_PATH: ${{ env.ANDROID_HOME }}
+        run: |
+          bubblewrap build \
+            --skipPwaValidation \
+            --keystore worldcup.keystore \
+            --keystorePassword worldcup2026 \
+            --keyAlias worldcup \
+            --keyPassword worldcup2026
+
+      - name: Find APK
+        id: find_apk
+        working-directory: worldcup/twa/build
+        run: |
+          APK=$(find . -name "*.apk" | head -1)
+          echo "apk_path=worldcup/twa/build/$APK" >> $GITHUB_OUTPUT
+          echo "Found APK: $APK"
+
+      - name: Upload APK to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-latest
+          name: كأس العالم 2026 — APK أندرويد
+          body: |
+            ## تحميل تطبيق كأس العالم 2026 على الأندرويد
+
+            ### خطوات التثبيت:
+            1. حمّل ملف `WorldCup2026.apk`
+            2. افتح إعدادات الهاتف ← الأمان ← فعّل "مصادر غير معروفة"
+            3. افتح ملف APK وثبّت التطبيق
+            4. استمتع بالتنبيهات الفورية للأهداف والمباريات! ⚽
+
+            ---
+            🔴 يتطلب أندرويد 5.0 أو أحدث
+          files: |
+            ${{ steps.find_apk.outputs.apk_path }}
+          draft: false
+          prerelease: false
