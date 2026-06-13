@@ -119,7 +119,7 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
   }, [matches, JSON.stringify(favoriteTeams), today])
 
   const recentMatches = useMemo(
-    () => matches.filter(m => m.status === 'finished').slice(0, 4),
+    () => matches.filter(m => m.status === 'finished' || m.status === 'pending').slice(0, 4),
     [matches]
   )
 

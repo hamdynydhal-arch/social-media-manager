@@ -22,9 +22,15 @@ export default function Matches({ favoriteTeams = [] }) {
 
   const filtered = useMemo(() => {
     let list = matches
-    if (filter !== 'all') list = list.filter(m => m.status === filter)
+    if (filter !== 'all') {
+      list = list.filter(m =>
+        filter === 'finished'
+          ? (m.status === 'finished' || m.status === 'pending')
+          : m.status === filter
+      )
+    }
     return list.sort((a, b) => {
-      const order = { live: 0, scheduled: 1, finished: 2 }
+      const order = { live: 0, scheduled: 1, finished: 2, pending: 2 }
       if (order[a.status] !== order[b.status]) return order[a.status] - order[b.status]
       return `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`)
     })

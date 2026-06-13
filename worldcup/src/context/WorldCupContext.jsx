@@ -122,13 +122,17 @@ function applyTimeBasedStatus(matches) {
     if (elapsed < 0) return match
 
     if (elapsed >= 110) {
-      return {
-        ...match,
-        status: 'finished',
-        score_home: override?.score_home ?? match.score_home ?? 0,
-        score_away: override?.score_away ?? match.score_away ?? 0,
-        goals: override?.goals ?? match.goals,
+      if (override) {
+        return {
+          ...match,
+          status: 'finished',
+          score_home: override.score_home ?? match.score_home ?? 0,
+          score_away: override.score_away ?? match.score_away ?? 0,
+          goals: override.goals ?? match.goals,
+        }
       }
+      // Match time has fully elapsed but no confirmed score — await real API data
+      return { ...match, status: 'pending', score_home: null, score_away: null }
     }
 
     let minute
@@ -140,8 +144,8 @@ function applyTimeBasedStatus(matches) {
       ...match,
       status: 'live',
       minute,
-      score_home: override?.score_home ?? 0,
-      score_away: override?.score_away ?? 0,
+      score_home: override?.score_home ?? match.score_home,
+      score_away: override?.score_away ?? match.score_away,
       goals: override?.goals ?? match.goals,
     }
   })

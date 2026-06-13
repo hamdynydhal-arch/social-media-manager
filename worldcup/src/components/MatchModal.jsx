@@ -129,11 +129,19 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
                     <div className="text-xs text-slate-400 mt-1">
                       {new Date(`${match.date}T${match.time}:00Z`).toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })}
                     </div>
+                    <div className="text-xs text-slate-500 mt-0.5">
+                      {new Date(`${match.date}T${match.time}:00Z`).toLocaleDateString('ar-SA-u-nu-latn', { weekday: 'short', month: 'short', day: 'numeric' })}
+                    </div>
+                  </div>
+                ) : match.status === 'pending' ? (
+                  <div className="text-center">
+                    <div className="text-2xl text-slate-500 font-black">? - ?</div>
+                    <div className="text-xs text-amber-500 mt-1">⌛ جارٍ التحقق</div>
                   </div>
                 ) : (
                   <div>
                     <div className="text-4xl font-black text-amber-400 score-glow">
-                      {match.score_home} - {match.score_away}
+                      {match.score_home ?? '?'} - {match.score_away ?? '?'}
                     </div>
                     {match.status === 'live' && (
                       <div className="live-badge mt-1 mx-auto w-fit">
@@ -177,10 +185,10 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {activeTab === 'overview' && (
             <>
-              {match.goals.length > 0 && (
+              {(match.goals ?? []).length > 0 && (
                 <div className="space-y-2">
                   <h4 className="text-sm font-bold text-slate-300">أهداف المباراة</h4>
-                  {match.goals.map((goal, i) => {
+                  {(match.goals ?? []).map((goal, i) => {
                     const isHome = goal.team === homeTeam.id
                     return (
                       <div key={i} className={`flex items-center gap-3 ${isHome ? '' : 'flex-row-reverse'}`}>
@@ -244,7 +252,7 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
           {activeTab === 'events' && (() => {
             // empty [] → fall through to goals; also fix type so icon renders correctly
             const evtList = (match.events?.length > 0 ? match.events : null)
-              ?? match.goals.map(g => ({ ...g, type: 'goal' }))
+              ?? (match.goals ?? []).map(g => ({ ...g, type: 'goal' }))
             const homeId = homeTeam.id
             const GOAL_TYPES = new Set(['goal', 'عادي', 'رأسية', 'ركلة جزاء', 'penalty', 'own_goal'])
             const eventIcon = t => {
@@ -318,7 +326,15 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
           {activeTab === 'stats' && !match.stats && (
             <div className="text-center text-slate-400 py-8">
               <p className="text-3xl mb-2">📊</p>
-              <p>الإحصائيات ستتوفر بعد بدء المباراة</p>
+              <p>
+                {match.status === 'scheduled'
+                  ? 'التشكيلة والإحصائيات ستتوفر قبل بداية المباراة بوقت قصير'
+                  : match.status === 'live'
+                  ? 'الإحصائيات قيد التحديث...'
+                  : match.status === 'pending'
+                  ? 'جارٍ جلب بيانات المباراة، يرجى الانتظار'
+                  : 'الإحصائيات غير متاحة لهذه المباراة'}
+              </p>
             </div>
           )}
 
@@ -326,7 +342,13 @@ export default function MatchModal({ match, homeTeam, awayTeam, stadium, onClose
             homeTeamPlayers.length === 0 && awayTeamPlayers.length === 0 ? (
               <div className="text-center text-slate-400 py-8">
                 <p className="text-3xl mb-2">📋</p>
-                <p>التشكيلة ستُعلن قبل المباراة بساعة</p>
+                <p>
+                  {match.status === 'scheduled'
+                    ? 'التشكيلة والإحصائيات ستتوفر قبل بداية المباراة بوقت قصير'
+                    : match.status === 'pending'
+                    ? 'جارٍ جلب بيانات المباراة، يرجى الانتظار'
+                    : 'التشكيلة غير متاحة لهذه المباراة'}
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
