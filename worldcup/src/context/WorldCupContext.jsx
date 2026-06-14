@@ -19,17 +19,19 @@ const LIVE_OVERRIDES = {
 }
 
 // ── Breaking news — confirmed real results from openfootball API ──────────────
+// Each entry carries the timestamp of the match's final whistle (UTC).
+// Items older than 24 h are suppressed by buildNews().
 const HARDCODED_NEWS = [
-  // M001 MEX 2-0 RSA (Jun 11)
-  '🏆 نهائي: المكسيك 2-0 جنوب أفريقيا — مباراة الافتتاح | مونديال 2026',
-  '⚽ خوليان كيمايونيس يسجل أول أهداف مونديال 2026 — الدقيقة 9 (MEX)',
-  '⚽ راؤول خيمينيز يضاعف بهدف الدقيقة 67 (MEX)',
-  // M002 KOR 2-1 CZE (Jun 12)
-  '🏆 نهائي: كوريا الجنوبية 2-1 التشيك — كريجتشي 59، هوانغ 67، أوه 80',
-  // M007 CAN 1-1 BIH (Jun 12)
-  '🏆 نهائي: كندا 1-1 البوسنة — لوكيتش 21، لارين 78',
-  // M019 USA 4-1 PAR (Jun 13)
-  '🏆 نهائي: الولايات المتحدة 4-1 باراغواي — بالوغان 31 و45+، رينا 90+',
+  // M001 MEX 2-0 RSA (Jun 11, KO 19:00 UTC → end ~21:30)
+  { text: '🏆 نهائي: المكسيك 2-0 جنوب أفريقيا — مباراة الافتتاح | مونديال 2026', timestamp: '2026-06-11T21:30:00Z' },
+  { text: '⚽ خوليان كيمايونيس يسجل أول أهداف مونديال 2026 — الدقيقة 9 (MEX)',   timestamp: '2026-06-11T21:30:00Z' },
+  { text: '⚽ راؤول خيمينيز يضاعف بهدف الدقيقة 67 (MEX)',                         timestamp: '2026-06-11T21:30:00Z' },
+  // M002 KOR 2-1 CZE (Jun 12, KO 02:00 UTC → end ~04:30)
+  { text: '🏆 نهائي: كوريا الجنوبية 2-1 التشيك — كريجتشي 59، هوانغ 67، أوه 80',  timestamp: '2026-06-12T04:30:00Z' },
+  // M007 CAN 1-1 BIH (Jun 12, KO 19:00 UTC → end ~21:30)
+  { text: '🏆 نهائي: كندا 1-1 البوسنة — لوكيتش 21، لارين 78',                    timestamp: '2026-06-12T21:30:00Z' },
+  // M019 USA 4-1 PAR (Jun 13, KO 01:00 UTC → end ~03:30)
+  { text: '🏆 نهائي: الولايات المتحدة 4-1 باراغواي — بالوغان 31 و45+، رينا 90+', timestamp: '2026-06-13T03:30:00Z' },
 ]
 
 // ── Match details cache (stats + lineups from ESPN summary) ───────────────────
@@ -277,8 +279,13 @@ function buildAutoNews(matches, teams) {
 }
 
 function buildResultsNews(matches, teams) {
+  const cutoff = Date.now() - 24 * 3600_000
   return matches
-    .filter(m => m.status === 'finished' && m.score_home != null)
+    .filter(m => {
+      if (m.status !== 'finished' || m.score_home == null) return false
+      const endMs = new Date(`${m.date}T${m.time}:00Z`).getTime() + 105 * 60_000
+      return endMs > cutoff
+    })
     .map(m => {
       const home = teams.find(t => t.id === m.team_home)?.name ?? m.team_home
       const away = teams.find(t => t.id === m.team_away)?.name ?? m.team_away
@@ -287,16 +294,28 @@ function buildResultsNews(matches, teams) {
 }
 
 function buildNews(matches, teams, rssItems) {
+  const cutoff = Date.now() - 24 * 3600_000
+  const isFresh = ts => !ts || new Date(ts).getTime() > cutoff
+
+  const freshHardcoded = HARDCODED_NEWS
+    .filter(item => isFresh(item.timestamp))
+    .map(item => item.text)
+
   const liveNews   = buildAutoNews(matches, teams)
   const resultNews = buildResultsNews(matches, teams)
-  const base       = rssItems ?? staticData.news
-  const combined   = [
-    ...HARDCODED_NEWS,
-    ...liveNews.filter(n => !HARDCODED_NEWS.includes(n)),
-    ...resultNews.filter(n => !HARDCODED_NEWS.some(h => h.includes(n.split(': ')[1] ?? ''))),
+
+  // When RSS is unavailable fall back to static news, filtered by age
+  const base = rssItems ?? staticData.news
+    .filter(item => isFresh(typeof item === 'object' ? item.timestamp : null))
+    .map(item => typeof item === 'object' ? item.text : item)
+
+  const combined = [
+    ...freshHardcoded,
+    ...liveNews.filter(n => !freshHardcoded.includes(n)),
+    ...resultNews.filter(n => !freshHardcoded.some(h => h.includes(n.split(': ')[1] ?? ''))),
     ...base,
   ]
-  return [...new Set(combined)]
+  return [...new Set(combined)].filter(Boolean)
 }
 
 export function WorldCupProvider({ children }) {
