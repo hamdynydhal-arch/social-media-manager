@@ -18,23 +18,34 @@ function useCountdown(targetISO) {
 function NextMatchCountdown({ match, homeTeam, awayTeam }) {
   const diff = useCountdown(`${match.date}T${match.time}:00Z`)
   if (diff <= 0) return null
-  const totalSec = Math.floor(diff / 1000)
-  const days    = Math.floor(totalSec / 86400)
-  const hours   = Math.floor((totalSec % 86400) / 3600)
-  const minutes = Math.floor((totalSec % 3600) / 60)
-  const seconds = totalSec % 60
+  const totalSec  = Math.floor(diff / 1000)
+  const days      = Math.floor(totalSec / 86400)
+  const hours     = Math.floor((totalSec % 86400) / 3600)
+  const minutes   = Math.floor((totalSec % 3600) / 60)
+  const seconds   = totalSec % 60
   const pad = n => String(n).padStart(2, '0')
+  const isImminent = diff < 60 * 60_000  // less than 60 min
+
   return (
-    <div className="card p-4 border-amber-500/20 bg-gradient-to-r from-amber-900/15 to-transparent">
-      <p className="text-xs text-amber-400 font-bold text-center mb-2">⏱️ العد التنازلي للمباراة القادمة</p>
+    <div
+      className="card p-4"
+      style={isImminent ? {
+        background: 'linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%)',
+        border: '2px solid rgba(239,68,68,0.6)',
+        boxShadow: '0 0 24px rgba(239,68,68,0.35)',
+        animation: 'pulse 1.5s ease-in-out infinite',
+      } : {}}
+    >
+      <p className={`text-xs font-bold text-center mb-2 ${isImminent ? 'text-red-300' : 'text-amber-400'}`}>
+        {isImminent ? '🚨 المباراة على وشك الانطلاق!' : '⏱️ العد التنازلي للمباراة القادمة'}
+      </p>
       <div className="flex items-center justify-center gap-2 mb-3 text-sm font-bold text-white">
         <span className="text-xl">{homeTeam?.flag}</span>
         <span>{homeTeam?.name}</span>
-        <span className="text-slate-500 text-xs px-1">vs</span>
+        <span className="text-slate-400 text-xs px-1">vs</span>
         <span>{awayTeam?.name}</span>
         <span className="text-xl">{awayTeam?.flag}</span>
       </div>
-      {/* dir="ltr" forces hours→minutes→seconds left-to-right regardless of RTL page */}
       <div dir="ltr" className="flex items-end justify-center gap-2">
         {days > 0 && (
           <>
@@ -46,17 +57,17 @@ function NextMatchCountdown({ match, homeTeam, awayTeam }) {
           </>
         )}
         <div className="text-center">
-          <div className="text-3xl font-black text-white tabular-nums">{pad(hours)}</div>
+          <div className={`text-3xl font-black tabular-nums ${isImminent ? 'text-red-300' : 'text-white'}`}>{pad(hours)}</div>
           <div className="text-xs text-slate-400">س</div>
         </div>
         <div className="text-slate-500 text-2xl font-black mb-4">:</div>
         <div className="text-center">
-          <div className="text-3xl font-black text-amber-400 tabular-nums">{pad(minutes)}</div>
+          <div className={`text-3xl font-black tabular-nums ${isImminent ? 'text-red-200' : 'text-amber-400'}`}>{pad(minutes)}</div>
           <div className="text-xs text-slate-400">د</div>
         </div>
         <div className="text-slate-500 text-2xl font-black mb-4">:</div>
         <div className="text-center">
-          <div className="text-3xl font-black text-amber-400 tabular-nums">{pad(seconds)}</div>
+          <div className={`text-3xl font-black tabular-nums ${isImminent ? 'text-white' : 'text-amber-400'}`}>{pad(seconds)}</div>
           <div className="text-xs text-slate-400">ث</div>
         </div>
       </div>

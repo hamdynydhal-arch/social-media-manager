@@ -174,11 +174,78 @@ async function backgroundScoreCheck() {
   await swSet('bg-scores', next)
 }
 
+const DATA_JSON = '/social-media-manager/world-cup/data.json'
+
+async function backgroundPreMatchCheck() {
+  let schedData
+  try {
+    const res = await fetch(DATA_JSON, { cache: 'no-store', signal: AbortSignal.timeout(8000) })
+    if (!res.ok) return
+    schedData = await res.json()
+  } catch { return }
+
+  const matches = schedData.matches ?? []
+  const teams   = schedData.teams   ?? []
+  const now     = Date.now()
+  const fired   = (await swGet('pre-match-v1')) ?? {}
+  let changed   = false
+
+  for (const m of matches) {
+    const matchMs = new Date(`${m.date}T${m.time}:00Z`).getTime()
+    const diffMin = (matchMs - now) / 60_000
+    if (diffMin < -5 || diffMin > 75) continue  // outside any alert window
+
+    const home = teams.find(t => t.id === m.team_home)
+    const away = teams.find(t => t.id === m.team_away)
+    const label = `${home?.name ?? m.team_home} ضد ${away?.name ?? m.team_away}`
+    const remMin = Math.max(1, Math.round(diffMin))
+
+    const THRESHOLDS = [
+      { key: `${m.id}_60`, min: 50, max: 70, label: 'ساعة' },
+      { key: `${m.id}_30`, min: 20, max: 40, label: 'نصف ساعة' },
+      { key: `${m.id}_10`, min:  5, max: 15, label: '10 دقائق' },
+      { key: `${m.id}_kick`, min: -5, max: 5, label: 'صافرة البداية' },
+    ]
+
+    for (const t of THRESHOLDS) {
+      if (diffMin < t.min || diffMin > t.max) continue
+      if (fired[t.key]) continue
+
+      fired[t.key] = now
+      changed = true
+
+      const isKick = t.key.endsWith('_kick')
+      await self.registration.showNotification(
+        isKick
+          ? `🔴 صافرة البداية! ${label}`
+          : `⏰ ${t.label} على الانطلاق! ${label}`,
+        {
+          body:               isKick
+            ? `${home?.flag ?? ''}${home?.name} vs ${away?.flag ?? ''}${away?.name} — الآن!`
+            : `${home?.flag ?? ''}${home?.name} vs ${away?.flag ?? ''}${away?.name} — ${remMin} دقيقة`,
+          icon:               ICON,
+          badge:              ICON,
+          dir:                'rtl',
+          lang:               'ar',
+          tag:                t.key,
+          renotify:           true,
+          vibrate:            isKick ? WHISTLE_VIB : STANDARD_VIB,
+          requireInteraction: true,
+          silent:             false,
+        }
+      )
+      if (isKick) notifyClients()
+    }
+  }
+
+  if (changed) await swSet('pre-match-v1', fired)
+}
+
 // ── Periodic Background Sync (fires when app is closed on Android Chrome) ─────
 self.addEventListener('periodicsync', event => {
   if (event.tag === 'wc-live-check') {
     event.waitUntil(
-      Promise.all([backgroundScoreCheck(), checkApkUpdate()])
+      Promise.all([backgroundScoreCheck(), backgroundPreMatchCheck(), checkApkUpdate()])
     )
   }
 })
