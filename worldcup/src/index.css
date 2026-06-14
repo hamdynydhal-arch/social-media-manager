@@ -130,3 +130,27 @@ body {
   font-variant-numeric: tabular-nums lining-nums;
   font-feature-settings: "lnum" 1, "tnum" 1;
 }
+
+.bell-ring {
+  display: inline-block;
+  transform-origin: 50% 0%;
+  animation: bellRing 1.4s ease-in-out infinite;
+}
+
+@keyframes bellRing {
+  0%, 50%, 100% { transform: rotate(0deg); }
+  8%  { transform: rotate(18deg); }
+  16% { transform: rotate(-15deg); }
+  24% { transform: rotate(12deg); }
+  32% { transform: rotate(-9deg); }
+  40% { transform: rotate(5deg); }
+}
+
+.notif-glow {
+  animation: notifGlow 2s ease-in-out infinite;
+}
+
+@keyframes notifGlow {
+  0%, 100% { box-shadow: 0 0 24px rgba(239,68,68,0.5); }
+  50%       { box-shadow: 0 0 50px rgba(239,68,68,0.9), 0 0 80px rgba(239,68,68,0.4); }
+}

@@ -5,22 +5,21 @@ export default function NotificationSystem() {
   const [permission, setPermission] = useState(
     () => (typeof Notification !== 'undefined' ? Notification.permission : 'default')
   )
-  const [toast, setToast] = useState(null)
+  const [toast, setToast]           = useState(null)
   const [showPrompt, setShowPrompt] = useState(false)
-  const toastTimer = useRef(null)
+  const toastTimer                  = useRef(null)
 
-  // Show permission prompt: immediately on first visit, or again after 15 min if still default
+  // Show modal 2 s after first visit; re-show after 20 min if still undecided
   useEffect(() => {
     if (permission !== 'default') return
-    // Show right away on first load
-    const t1 = setTimeout(() => setShowPrompt(true), 1500)
-    // Re-show after 15 min if still not decided
+    const t1 = setTimeout(() => setShowPrompt(true), 2000)
     const t2 = setTimeout(() => {
       if (Notification.permission === 'default') setShowPrompt(true)
-    }, 15 * 60_000)
+    }, 20 * 60_000)
     return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [permission])
 
+  // Listen for in-app alert events fired by useLiveEvents
   useEffect(() => {
     const onAlert = (e) => {
       const { title, body, icon, isFav } = e.detail ?? {}
@@ -55,59 +54,168 @@ export default function NotificationSystem() {
 
   return (
     <>
-      {/* Permission prompt — prominent, explains native phone notifications */}
+      {/* ── Permission modal ─────────────────────────────────────────────── */}
       {showPrompt && permission === 'default' && (
         <div
-          dir="rtl"
-          style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9990, padding: '12px 12px 0' }}
+          className="modal-backdrop"
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9990,
+            background: 'rgba(0,0,0,0.90)',
+            backdropFilter: 'blur(10px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '20px',
+          }}
+          onClick={e => e.target === e.currentTarget && setShowPrompt(false)}
         >
           <div
+            dir="rtl"
+            className="modal-content notif-glow"
             style={{
-              background: 'linear-gradient(135deg, #78350f 0%, #92400e 50%, #78350f 100%)',
-              border: '2px solid #fbbf24',
-              borderRadius: '16px',
-              padding: '14px',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.7)',
+              background: 'linear-gradient(160deg, #1c0505 0%, #3b0a0a 45%, #1c0505 100%)',
+              border: '2px solid #ef4444',
+              borderRadius: '28px',
+              padding: '28px 22px 22px',
+              maxWidth: '400px',
+              width: '100%',
+              boxShadow: '0 24px 80px rgba(0,0,0,0.9)',
+              position: 'relative',
+              overflow: 'hidden',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-              <span style={{ fontSize: '2.2rem', flexShrink: 0 }}>🔔</span>
+            {/* Radial glow behind bell */}
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, height: '170px',
+              background: 'radial-gradient(ellipse at 50% -10%, rgba(239,68,68,0.35) 0%, transparent 70%)',
+              pointerEvents: 'none',
+            }} />
+
+            {/* Close button */}
+            <button
+              onClick={() => setShowPrompt(false)}
+              style={{
+                position: 'absolute', top: '14px', left: '14px',
+                color: '#6b7280', fontSize: '1.1rem',
+                background: 'none', border: 'none', cursor: 'pointer',
+                width: '30px', height: '30px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >✕</button>
+
+            {/* Bell icon — rings on loop */}
+            <div style={{ textAlign: 'center', marginBottom: '14px', position: 'relative' }}>
+              <span
+                className="bell-ring"
+                style={{ fontSize: '3.8rem', filter: 'drop-shadow(0 0 16px rgba(239,68,68,0.8))' }}
+              >
+                🔔
+              </span>
+            </div>
+
+            {/* Title */}
+            <h2 style={{
+              textAlign: 'center', color: '#fff',
+              fontSize: '1.3rem', fontWeight: 900,
+              margin: '0 0 6px', lineHeight: 1.3,
+            }}>
+              لا تفوتك لحظة في
+              <span style={{ color: '#f87171' }}> كأس العالم 2026</span>
+            </h2>
+            <p style={{
+              textAlign: 'center', color: '#fca5a5',
+              fontSize: '0.82rem', margin: '0 0 18px', lineHeight: 1.5,
+            }}>
+              فعّل الإشعارات لتصلك التنبيهات فورياً على شاشة هاتفك
+            </p>
+
+            {/* Benefits list */}
+            <div style={{
+              background: 'rgba(239,68,68,0.1)',
+              border: '1px solid rgba(239,68,68,0.25)',
+              borderRadius: '14px',
+              padding: '14px 16px',
+              marginBottom: '16px',
+              display: 'flex', flexDirection: 'column', gap: '10px',
+            }}>
+              {[
+                ['⚽', 'إشعار فوري عند كل هدف مع صوت وارتجاج'],
+                ['⏰', 'تنبيه قبل انطلاق كل مباراة بـ 30 دقيقة'],
+                ['📵', 'تعمل حتى عندما يكون التطبيق مغلقاً'],
+              ].map(([icon, text]) => (
+                <div key={text} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>{icon}</span>
+                  <span style={{ color: '#fde8e8', fontSize: '0.87rem', fontWeight: 600 }}>{text}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Preview mini-toast */}
+            <div style={{
+              background: 'linear-gradient(135deg, #cc0000 0%, #ff1a1a 50%, #cc0000 100%)',
+              border: '2px solid #ffdd00',
+              borderRadius: '14px',
+              padding: '10px 12px',
+              marginBottom: '18px',
+              display: 'flex', alignItems: 'center', gap: '10px',
+            }}>
+              <span style={{ fontSize: '1.7rem', lineHeight: 1 }}>⚽</span>
               <div style={{ flex: 1 }}>
-                <p style={{ fontWeight: 900, color: '#fff', fontSize: '1rem', margin: 0 }}>
-                  فعّل الإشعارات على شاشة هاتفك
+                <p style={{ color: '#fff', fontWeight: 900, fontSize: '0.85rem', margin: 0, lineHeight: 1.3 }}>
+                  🚨 هدف! المغرب 1-0 فرنسا
                 </p>
-                <p style={{ color: '#fde68a', fontSize: '0.82rem', margin: '4px 0 0', lineHeight: 1.4 }}>
-                  تنبيه قبل كل مباراة بـ 30 دقيقة + إشعار فوري عند كل هدف — حتى عندما يكون التطبيق مغلقاً
+                <p style={{ color: '#ffe4e4', fontSize: '0.75rem', margin: '3px 0 0', fontWeight: 600 }}>
+                  ⭐ منتخبك يسجل! — د.67
                 </p>
               </div>
-              <button
-                onClick={() => setShowPrompt(false)}
-                style={{ color: '#fca5a5', fontSize: '1.1rem', background: 'none', border: 'none', cursor: 'pointer', padding: '2px', flexShrink: 0 }}
-              >✕</button>
+              <span style={{
+                fontSize: '0.65rem', color: '#ffdd00', fontWeight: 900,
+                border: '1px solid #ffdd00', borderRadius: '6px',
+                padding: '2px 6px', whiteSpace: 'nowrap', flexShrink: 0,
+              }}>
+                معاينة
+              </span>
             </div>
-            <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
-              <button
-                onClick={requestPermission}
-                style={{
-                  flex: 1, background: '#fbbf24', color: '#78350f',
-                  border: 'none', borderRadius: '10px', padding: '10px',
-                  fontWeight: 900, fontSize: '0.9rem', cursor: 'pointer',
-                }}
-              >
-                🔔 تفعيل الإشعارات الآن
-              </button>
-              <button
-                onClick={() => setShowPrompt(false)}
-                style={{ color: '#fca5a5', fontSize: '0.85rem', background: 'none', border: 'none', cursor: 'pointer', padding: '0 8px' }}
-              >
-                لاحقاً
-              </button>
-            </div>
+
+            {/* Enable button */}
+            <button
+              onClick={requestPermission}
+              style={{
+                width: '100%',
+                background: 'linear-gradient(135deg, #b91c1c 0%, #ef4444 50%, #b91c1c 100%)',
+                color: '#fff',
+                border: '2px solid #fca5a5',
+                borderRadius: '16px',
+                padding: '15px',
+                fontSize: '1.05rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+                boxShadow: '0 0 28px rgba(239,68,68,0.55)',
+                marginBottom: '10px',
+                letterSpacing: '0.01em',
+                transition: 'transform 0.15s',
+              }}
+              onMouseDown={e => (e.currentTarget.style.transform = 'scale(0.97)')}
+              onMouseUp={e => (e.currentTarget.style.transform = 'scale(1)')}
+              onTouchStart={e => (e.currentTarget.style.transform = 'scale(0.97)')}
+              onTouchEnd={e => (e.currentTarget.style.transform = 'scale(1)')}
+            >
+              🔔 تفعيل الإشعارات الآن
+            </button>
+
+            <button
+              onClick={() => setShowPrompt(false)}
+              style={{
+                width: '100%', background: 'none', border: 'none',
+                color: '#6b7280', fontSize: '0.83rem',
+                cursor: 'pointer', padding: '6px',
+              }}
+            >
+              لاحقاً — سأفعّلها من الإعدادات
+            </button>
           </div>
         </div>
       )}
 
-      {/* In-app alert toast — red, bold, impossible to miss */}
+      {/* ── In-app alert toast ───────────────────────────────────────────── */}
       {toast && (
         <div
           style={{ direction: 'rtl' }}
@@ -133,47 +241,34 @@ export default function NotificationSystem() {
                 {toast.icon}
               </span>
               <div className="flex-1 min-w-0">
-                <p
-                  style={{
-                    fontWeight: 900,
-                    color: '#ffffff',
-                    fontSize: toast.isFav ? '1.15rem' : '1rem',
-                    lineHeight: 1.3,
-                    textShadow: '0 1px 4px rgba(0,0,0,0.5)',
-                  }}
-                >
+                <p style={{
+                  fontWeight: 900, color: '#ffffff',
+                  fontSize: toast.isFav ? '1.15rem' : '1rem',
+                  lineHeight: 1.3, textShadow: '0 1px 4px rgba(0,0,0,0.5)',
+                }}>
                   {toast.title}
                 </p>
-                <p
-                  style={{
-                    fontWeight: 700,
-                    color: '#ffe4e4',
-                    fontSize: '0.9rem',
-                    marginTop: '0.3rem',
-                    lineHeight: 1.4,
-                  }}
-                >
+                <p style={{
+                  fontWeight: 700, color: '#ffe4e4',
+                  fontSize: '0.9rem', marginTop: '0.3rem', lineHeight: 1.4,
+                }}>
                   {toast.body}
                 </p>
               </div>
               <button
-                onClick={() => setToast(null)}
+                onClick={() => { clearTimeout(toastTimer.current); setToast(null) }}
                 style={{ color: '#ffaaaa', fontSize: '1.2rem' }}
                 className="hover:text-white p-1 flex-shrink-0"
               >
                 ✕
               </button>
             </div>
-            {/* Fav team gold accent bar */}
             {toast.isFav && (
-              <div
-                style={{
-                  height: '4px',
-                  background: 'linear-gradient(90deg, transparent, #ffdd00, transparent)',
-                  borderRadius: '2px',
-                  marginTop: '10px',
-                }}
-              />
+              <div style={{
+                height: '4px',
+                background: 'linear-gradient(90deg, transparent, #ffdd00, transparent)',
+                borderRadius: '2px', marginTop: '10px',
+              }} />
             )}
           </div>
         </div>
