@@ -7,6 +7,7 @@ export default function NotificationSystem() {
   )
   const [toast, setToast]           = useState(null)
   const [showPrompt, setShowPrompt] = useState(false)
+  const [forceShow,  setForceShow]  = useState(false)   // manual trigger ignores permission state
   const toastTimer                  = useRef(null)
 
   // Show modal 2 s after first visit for non-granted states; re-show after 20 min
@@ -19,9 +20,9 @@ export default function NotificationSystem() {
     return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [permission])
 
-  // Allow any component to force-open the modal via custom event
+  // Allow any component to force-open the modal via custom event (bypasses permission check)
   useEffect(() => {
-    const onForce = () => setShowPrompt(true)
+    const onForce = () => { setShowPrompt(true); setForceShow(true) }
     window.addEventListener('wc-show-notif-prompt', onForce)
     return () => window.removeEventListener('wc-show-notif-prompt', onForce)
   }, [])
@@ -47,6 +48,7 @@ export default function NotificationSystem() {
     const result = await Notification.requestPermission()
     setPermission(result)
     setShowPrompt(false)
+    setForceShow(false)
     if (result === 'granted') {
       showToast({
         title: '✅ تم تفعيل الإشعارات',
@@ -62,7 +64,7 @@ export default function NotificationSystem() {
   return (
     <>
       {/* ── Permission modal ─────────────────────────────────────────────── */}
-      {showPrompt && permission !== 'granted' && (
+      {showPrompt && (permission !== 'granted' || forceShow) && (
         <div
           className="modal-backdrop"
           style={{
@@ -98,7 +100,7 @@ export default function NotificationSystem() {
 
             {/* Close button */}
             <button
-              onClick={() => setShowPrompt(false)}
+              onClick={() => { setShowPrompt(false); setForceShow(false) }}
               style={{
                 position: 'absolute', top: '14px', left: '14px',
                 color: '#6b7280', fontSize: '1.1rem',
@@ -133,6 +135,26 @@ export default function NotificationSystem() {
             }}>
               فعّل الإشعارات لتصلك التنبيهات فورياً على شاشة هاتفك
             </p>
+
+            {/* Granted state — confirmation */}
+            {permission === 'granted' && (
+              <div style={{
+                background: 'rgba(16,185,129,0.12)',
+                border: '1px solid rgba(16,185,129,0.35)',
+                borderRadius: '14px',
+                padding: '16px',
+                marginBottom: '16px',
+                textAlign: 'center',
+              }}>
+                <p style={{ fontSize: '2rem', margin: '0 0 8px' }}>✅</p>
+                <p style={{ color: '#34d399', fontWeight: 900, fontSize: '1rem', margin: '0 0 6px' }}>
+                  الإشعارات مفعّلة بالفعل!
+                </p>
+                <p style={{ color: '#6ee7b7', fontSize: '0.82rem', lineHeight: 1.6, margin: 0 }}>
+                  ستصلك تنبيهات الأهداف والمباريات فوراً حتى عند إغلاق التطبيق
+                </p>
+              </div>
+            )}
 
             {/* Benefits list */}
             <div style={{
@@ -227,7 +249,7 @@ export default function NotificationSystem() {
             )}
 
             <button
-              onClick={() => setShowPrompt(false)}
+              onClick={() => { setShowPrompt(false); setForceShow(false) }}
               style={{
                 width: '100%', background: 'none', border: 'none',
                 color: '#6b7280', fontSize: '0.83rem',
