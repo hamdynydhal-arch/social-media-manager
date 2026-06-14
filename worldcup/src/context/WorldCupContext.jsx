@@ -200,7 +200,10 @@ function applyTimeBasedStatus(matches, espnMinCache) {
     const elapsed = (nowMs - actualStart.getTime()) / 60_000
     if (elapsed < 0) return { ...match, status: 'scheduled' }
 
-    if (elapsed >= 120) {
+    if (elapsed >= 145) {
+      // Very conservative backstop — only fires if NO data source has confirmed
+      // the match is finished after 145 min elapsed (group stage max ~125 min).
+      // In practice Sofascore / openfootball will set status='finished' long before this.
       return {
         ...match, status: 'finished',
         score_home: override?.score_home ?? match.score_home ?? null,

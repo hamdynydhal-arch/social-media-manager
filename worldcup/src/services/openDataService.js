@@ -4,15 +4,76 @@
  *  PRIMARY  → openfootball/worldcup.json on GitHub raw
  *             Auto-updated after every match. CORS: * (GitHub CDN).
  *
+ *  LIVE     → Sofascore public API (no key; used by sofascore.com's own web app,
+ *             so it has permissive CORS from browsers). Returns real-time scores,
+ *             match status (1st half / HT / 2nd half / finished), and live minute.
+ *             Falls back silently when unreachable.
+ *
  *  NEWS     → rss2json.com (free, 1 000 req/day) with Arabic RSS feeds first,
  *             then feed2json.org as secondary converter, then English fallbacks.
  *
- *  FALLBACK → ESPN scoreboard via proxy chain when openfootball has no data yet
- *             (i.e. during a match that hasn't finished).
+ *  FALLBACK → ESPN scoreboard via proxy chain when the above have no data yet.
  */
 
 // ── Primary: openfootball GitHub raw (no CORS issues) ─────────────────────────
 const OFB_MATCHES = 'https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json'
+
+// ── Live scores: Sofascore public API ─────────────────────────────────────────
+// Used by sofascore.com's React web app → CORS-open from browsers.
+// Returns live minute, real-time status (1st half / HT / 2nd half / finished),
+// and current score. No API key required.
+const SFS_LIVE = 'https://api.sofascore.com/api/v1/sport/football/live'
+const SFS_DATE = d => `https://api.sofascore.com/api/v1/sport/football/scheduled-events/${d}`
+
+// Sofascore status codes → our status
+const SFS_STATUS = {
+  0: 'scheduled', 1: 'scheduled',
+  6: 'live',   // 1st half
+  7: 'live',   // 2nd half
+  30: 'live',  // halftime (shown as 'live' with minute='HT')
+  31: 'live',  // extra time 1st half
+  32: 'live',  // extra time HT
+  33: 'live',  // extra time 2nd half
+  100: 'finished', 110: 'finished', 120: 'finished',
+}
+
+// All 48 WC 2026 teams for filtering Sofascore's universe of events
+const WC_TEAM_SET = new Set([
+  'MEX','RSA','KOR','CZE','CAN','BIH','QAT','SUI',
+  'BRA','MAR','HAI','SCO','USA','PAR','AUS','TUR',
+  'GER','CUW','CIV','ECU','NED','JPN','SWE','TUN',
+  'BEL','EGY','IRN','NZL','ESP','CPV','KSA','URU',
+  'FRA','SEN','IRQ','NOR','ARG','ALG','AUT','JOR',
+  'POR','COD','UZB','COL','ENG','CRO','GHA','PAN',
+])
+
+// Sofascore team display name → our internal ID
+const SFS_TEAM_MAP = {
+  'Mexico': 'MEX', 'South Africa': 'RSA',
+  'South Korea': 'KOR', 'Korea Republic': 'KOR',
+  'Czech Republic': 'CZE', 'Czechia': 'CZE',
+  'Canada': 'CAN',
+  'Bosnia & Herzegovina': 'BIH', 'Bosnia and Herzegovina': 'BIH',
+  'Bosnia-Herzegovina': 'BIH',
+  'Qatar': 'QAT', 'Switzerland': 'SUI',
+  'Brazil': 'BRA', 'Morocco': 'MAR', 'Haiti': 'HAI', 'Scotland': 'SCO',
+  'USA': 'USA', 'United States': 'USA',
+  'Paraguay': 'PAR', 'Australia': 'AUS',
+  'Turkey': 'TUR', 'Türkiye': 'TUR',
+  'Germany': 'GER', 'Curaçao': 'CUW', 'Curacao': 'CUW',
+  "Côte d'Ivoire": 'CIV', "Cote d'Ivoire": 'CIV', 'Ivory Coast': 'CIV',
+  'Ecuador': 'ECU', 'Netherlands': 'NED', 'Japan': 'JPN',
+  'Sweden': 'SWE', 'Tunisia': 'TUN', 'Belgium': 'BEL', 'Egypt': 'EGY',
+  'Iran': 'IRN', 'New Zealand': 'NZL', 'Spain': 'ESP',
+  'Cape Verde': 'CPV', 'Saudi Arabia': 'KSA', 'Uruguay': 'URU',
+  'France': 'FRA', 'Senegal': 'SEN', 'Iraq': 'IRQ', 'Norway': 'NOR',
+  'Argentina': 'ARG', 'Algeria': 'ALG', 'Austria': 'AUT', 'Jordan': 'JOR',
+  'Portugal': 'POR',
+  'DR Congo': 'COD', 'Congo DR': 'COD', 'Democratic Republic of Congo': 'COD',
+  'Congo': 'COD',
+  'Uzbekistan': 'UZB', 'Colombia': 'COL', 'England': 'ENG',
+  'Croatia': 'CRO', 'Ghana': 'GHA', 'Panama': 'PAN',
+}
 
 // ── Secondary: ESPN scoreboard (often CORS-blocked, used as last resort) ──────
 const ESPN_SCOREBOARD = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard'
@@ -271,27 +332,106 @@ async function fetchEspnScoreboard() {
   return null
 }
 
-// ── Public: fetch all match scores (openfootball + ESPN live) ─────────────────
-export async function fetchEspnMatches() {
-  const [ofb, espnEvents] = await Promise.all([
-    fetchOpenfootballMatches(),
-    fetchEspnScoreboard(),
+// ── Sofascore live events (real-time — updates every few seconds) ─────────────
+async function fetchSofascoreEvents() {
+  const today = new Date().toISOString().slice(0, 10)
+  const yest  = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10)
+
+  // Fetch live + today's schedule + yesterday (for matches that started before midnight UTC)
+  const [liveJson, todayJson, yestJson] = await Promise.all([
+    safeFetch(SFS_LIVE),
+    safeFetch(SFS_DATE(today)),
+    safeFetch(SFS_DATE(yest)),
   ])
 
-  if (!ofb && !espnEvents) return null
+  // Merge all events; live API takes priority (has real-time minute)
+  const allEventsMap = new Map()
+  for (const ev of [...(yestJson?.events ?? []), ...(todayJson?.events ?? [])]) {
+    allEventsMap.set(ev.id, ev)
+  }
+  for (const ev of liveJson?.events ?? []) {
+    allEventsMap.set(ev.id, ev)  // live version overrides scheduled
+  }
+
+  if (!allEventsMap.size) return null
+
+  const result = []
+  for (const ev of allEventsMap.values()) {
+    const homeId = SFS_TEAM_MAP[ev.homeTeam?.name] ?? SFS_TEAM_MAP[ev.homeTeam?.shortName]
+    const awayId = SFS_TEAM_MAP[ev.awayTeam?.name] ?? SFS_TEAM_MAP[ev.awayTeam?.shortName]
+    if (!homeId || !awayId) continue
+    if (!WC_TEAM_SET.has(homeId) || !WC_TEAM_SET.has(awayId)) continue
+
+    const code   = ev.status?.code ?? 0
+    const status = SFS_STATUS[code] ?? 'scheduled'
+
+    // Real match minute from Sofascore (updates every ~30 s in their API)
+    let minute = null
+    if (status === 'live') {
+      if (code === 30 || code === 32) {
+        minute = 'HT'
+      } else {
+        const played = ev.time?.played
+        if (played != null) minute = `${played}'`
+      }
+    }
+
+    const htH = ev.homeScore?.period1 ?? null
+    const htA = ev.awayScore?.period1 ?? null
+
+    result.push({
+      team_home: homeId, team_away: awayId,
+      status, minute,
+      score_home: ev.homeScore?.current ?? null,
+      score_away: ev.awayScore?.current ?? null,
+      score_ht_home: status !== 'scheduled' ? htH : null,
+      score_ht_away: status !== 'scheduled' ? htA : null,
+    })
+  }
+  return result.length > 0 ? result : null
+}
+
+// ── Public: fetch all match scores (openfootball + Sofascore + ESPN) ──────────
+export async function fetchEspnMatches() {
+  const [ofb, sfsEvents, espnEvents] = await Promise.all([
+    fetchOpenfootballMatches(),
+    fetchSofascoreEvents(),   // real-time live minutes — highest priority for live data
+    fetchEspnScoreboard(),    // ESPN fallback
+  ])
+
+  if (!ofb && !sfsEvents && !espnEvents) return null
 
   const merged = [...(ofb ?? [])]
 
+  // Sofascore: apply live status/minute/score; never downgrade confirmed-finished to scheduled
+  for (const ev of sfsEvents ?? []) {
+    const idx = merged.findIndex(m => m.team_home === ev.team_home && m.team_away === ev.team_away)
+    if (idx >= 0) {
+      const cur = merged[idx]
+      merged[idx] = {
+        ...cur,
+        status:        ev.status !== 'scheduled' ? ev.status : cur.status,
+        minute:        ev.minute  ?? cur.minute,
+        score_home:    ev.score_home  != null ? ev.score_home  : cur.score_home,
+        score_away:    ev.score_away  != null ? ev.score_away  : cur.score_away,
+        score_ht_home: ev.score_ht_home != null ? ev.score_ht_home : cur.score_ht_home,
+        score_ht_away: ev.score_ht_away != null ? ev.score_ht_away : cur.score_ht_away,
+      }
+    } else if (ev.status !== 'scheduled') {
+      merged.push(ev)
+    }
+  }
+
+  // ESPN as additional fallback
   for (const ev of espnEvents ?? []) {
-    const idx = merged.findIndex(
-      m => m.team_home === ev.team_home && m.team_away === ev.team_away
-    )
+    const idx = merged.findIndex(m => m.team_home === ev.team_home && m.team_away === ev.team_away)
     if (idx >= 0) {
       merged[idx] = { ...merged[idx], ...ev }
     } else if (ev.status !== 'scheduled') {
       merged.push(ev)
     }
   }
+
   return merged.length > 0 ? merged : null
 }
 
