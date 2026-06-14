@@ -258,6 +258,18 @@ export default function Settings({
           <span className="text-slate-300 text-sm">حالة الإشعارات</span>
           <span className={`text-sm font-bold ${notifStatusColor}`}>{notifStatusLabel}</span>
         </div>
+        {/* Open notification permission modal */}
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent('wc-show-notif-prompt'))}
+          className="w-full py-3 rounded-xl font-bold text-white text-sm mb-3 transition-all active:scale-95"
+          style={{
+            background: 'linear-gradient(135deg, #b91c1c 0%, #ef4444 50%, #b91c1c 100%)',
+            boxShadow: '0 0 18px rgba(239,68,68,0.45)',
+            border: '2px solid rgba(252,165,165,0.4)',
+          }}
+        >
+          🔔 نافذة تفعيل الإشعارات
+        </button>
         {notifPerm === 'granted' && (
           <div className="bg-emerald-900/20 border border-emerald-500/20 rounded-xl px-3 py-2 mb-3 space-y-1 text-xs text-slate-400">
             <p>⏰ إشعار قبل المباراة بـ <span className="text-emerald-400 font-bold">ساعة كاملة</span></p>

@@ -9,15 +9,22 @@ export default function NotificationSystem() {
   const [showPrompt, setShowPrompt] = useState(false)
   const toastTimer                  = useRef(null)
 
-  // Show modal 2 s after first visit; re-show after 20 min if still undecided
+  // Show modal 2 s after first visit for non-granted states; re-show after 20 min
   useEffect(() => {
-    if (permission !== 'default') return
+    if (permission === 'granted') return
     const t1 = setTimeout(() => setShowPrompt(true), 2000)
     const t2 = setTimeout(() => {
-      if (Notification.permission === 'default') setShowPrompt(true)
+      if (Notification.permission !== 'granted') setShowPrompt(true)
     }, 20 * 60_000)
     return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [permission])
+
+  // Allow any component to force-open the modal via custom event
+  useEffect(() => {
+    const onForce = () => setShowPrompt(true)
+    window.addEventListener('wc-show-notif-prompt', onForce)
+    return () => window.removeEventListener('wc-show-notif-prompt', onForce)
+  }, [])
 
   // Listen for in-app alert events fired by useLiveEvents
   useEffect(() => {
@@ -55,7 +62,7 @@ export default function NotificationSystem() {
   return (
     <>
       {/* ── Permission modal ─────────────────────────────────────────────── */}
-      {showPrompt && permission === 'default' && (
+      {showPrompt && permission !== 'granted' && (
         <div
           className="modal-backdrop"
           style={{
@@ -175,31 +182,49 @@ export default function NotificationSystem() {
               </span>
             </div>
 
-            {/* Enable button */}
-            <button
-              onClick={requestPermission}
-              style={{
-                width: '100%',
-                background: 'linear-gradient(135deg, #b91c1c 0%, #ef4444 50%, #b91c1c 100%)',
-                color: '#fff',
-                border: '2px solid #fca5a5',
-                borderRadius: '16px',
-                padding: '15px',
-                fontSize: '1.05rem',
-                fontWeight: 900,
-                cursor: 'pointer',
-                boxShadow: '0 0 28px rgba(239,68,68,0.55)',
+            {/* Enable / re-enable button */}
+            {permission === 'denied' ? (
+              <div style={{
+                background: 'rgba(239,68,68,0.12)',
+                border: '1px solid rgba(239,68,68,0.3)',
+                borderRadius: '14px',
+                padding: '14px',
                 marginBottom: '10px',
-                letterSpacing: '0.01em',
-                transition: 'transform 0.15s',
-              }}
-              onMouseDown={e => (e.currentTarget.style.transform = 'scale(0.97)')}
-              onMouseUp={e => (e.currentTarget.style.transform = 'scale(1)')}
-              onTouchStart={e => (e.currentTarget.style.transform = 'scale(0.97)')}
-              onTouchEnd={e => (e.currentTarget.style.transform = 'scale(1)')}
-            >
-              🔔 تفعيل الإشعارات الآن
-            </button>
+                textAlign: 'center',
+              }}>
+                <p style={{ color: '#fca5a5', fontWeight: 700, fontSize: '0.9rem', margin: '0 0 8px' }}>
+                  🚫 الإشعارات محظورة على هذا المتصفح
+                </p>
+                <p style={{ color: '#9ca3af', fontSize: '0.8rem', lineHeight: 1.6, margin: 0 }}>
+                  لإعادة التفعيل: افتح <strong style={{ color: '#fde8e8' }}>إعدادات المتصفح</strong> ← إعدادات الموقع ← الإشعارات ← اضغط &quot;سماح&quot;
+                </p>
+              </div>
+            ) : (
+              <button
+                onClick={requestPermission}
+                style={{
+                  width: '100%',
+                  background: 'linear-gradient(135deg, #b91c1c 0%, #ef4444 50%, #b91c1c 100%)',
+                  color: '#fff',
+                  border: '2px solid #fca5a5',
+                  borderRadius: '16px',
+                  padding: '15px',
+                  fontSize: '1.05rem',
+                  fontWeight: 900,
+                  cursor: 'pointer',
+                  boxShadow: '0 0 28px rgba(239,68,68,0.55)',
+                  marginBottom: '10px',
+                  letterSpacing: '0.01em',
+                  transition: 'transform 0.15s',
+                }}
+                onMouseDown={e => (e.currentTarget.style.transform = 'scale(0.97)')}
+                onMouseUp={e => (e.currentTarget.style.transform = 'scale(1)')}
+                onTouchStart={e => (e.currentTarget.style.transform = 'scale(0.97)')}
+                onTouchEnd={e => (e.currentTarget.style.transform = 'scale(1)')}
+              >
+                🔔 تفعيل الإشعارات الآن
+              </button>
+            )}
 
             <button
               onClick={() => setShowPrompt(false)}
