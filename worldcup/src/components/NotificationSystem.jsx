@@ -9,11 +9,16 @@ export default function NotificationSystem() {
   const [showPrompt, setShowPrompt] = useState(false)
   const toastTimer = useRef(null)
 
+  // Show permission prompt: immediately on first visit, or again after 15 min if still default
   useEffect(() => {
-    if (permission === 'default') {
-      const t = setTimeout(() => setShowPrompt(true), 4000)
-      return () => clearTimeout(t)
-    }
+    if (permission !== 'default') return
+    // Show right away on first load
+    const t1 = setTimeout(() => setShowPrompt(true), 1500)
+    // Re-show after 15 min if still not decided
+    const t2 = setTimeout(() => {
+      if (Notification.permission === 'default') setShowPrompt(true)
+    }, 15 * 60_000)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [permission])
 
   useEffect(() => {
@@ -50,36 +55,50 @@ export default function NotificationSystem() {
 
   return (
     <>
-      {/* Permission prompt banner */}
+      {/* Permission prompt — prominent, explains native phone notifications */}
       {showPrompt && permission === 'default' && (
         <div
-          style={{ direction: 'rtl' }}
-          className="fixed top-4 left-4 right-4 z-50 safe-top animate-slideUp"
+          dir="rtl"
+          style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9990, padding: '12px 12px 0' }}
         >
-          <div className="rounded-2xl p-4 border border-amber-500/40 bg-gradient-to-r from-amber-900/90 to-slate-800/90 backdrop-blur-lg shadow-2xl">
-            <div className="flex items-start gap-3">
-              <span className="text-3xl flex-shrink-0">🔔</span>
-              <div className="flex-1">
-                <p className="font-black text-white text-base leading-tight">فعّل إشعارات الأهداف</p>
-                <p className="text-amber-200 text-sm mt-1">
-                  تنبيهات الأهداف والنتائج حتى والتطبيق في الخلفية
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #78350f 0%, #92400e 50%, #78350f 100%)',
+              border: '2px solid #fbbf24',
+              borderRadius: '16px',
+              padding: '14px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.7)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+              <span style={{ fontSize: '2.2rem', flexShrink: 0 }}>🔔</span>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontWeight: 900, color: '#fff', fontSize: '1rem', margin: 0 }}>
+                  فعّل الإشعارات على شاشة هاتفك
+                </p>
+                <p style={{ color: '#fde68a', fontSize: '0.82rem', margin: '4px 0 0', lineHeight: 1.4 }}>
+                  تنبيه قبل كل مباراة بـ 30 دقيقة + إشعار فوري عند كل هدف — حتى عندما يكون التطبيق مغلقاً
                 </p>
               </div>
               <button
                 onClick={() => setShowPrompt(false)}
-                className="text-slate-400 hover:text-white p-1 flex-shrink-0 text-lg"
+                style={{ color: '#fca5a5', fontSize: '1.1rem', background: 'none', border: 'none', cursor: 'pointer', padding: '2px', flexShrink: 0 }}
               >✕</button>
             </div>
-            <div className="flex gap-2 mt-3">
+            <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
               <button
                 onClick={requestPermission}
-                className="btn-gold flex-1 text-sm py-2.5 font-black"
+                style={{
+                  flex: 1, background: '#fbbf24', color: '#78350f',
+                  border: 'none', borderRadius: '10px', padding: '10px',
+                  fontWeight: 900, fontSize: '0.9rem', cursor: 'pointer',
+                }}
               >
-                🔔 تفعيل الإشعارات
+                🔔 تفعيل الإشعارات الآن
               </button>
               <button
                 onClick={() => setShowPrompt(false)}
-                className="text-slate-400 text-sm px-3 hover:text-white"
+                style={{ color: '#fca5a5', fontSize: '0.85rem', background: 'none', border: 'none', cursor: 'pointer', padding: '0 8px' }}
               >
                 لاحقاً
               </button>

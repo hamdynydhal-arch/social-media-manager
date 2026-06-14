@@ -5,9 +5,9 @@ import confetti from 'canvas-confetti'
 const BASE = import.meta.env.BASE_URL
 
 /**
- * Show a system notification via ServiceWorker.showNotification() for maximum
- * background delivery (bypasses the postMessage path, lives in the SW directly).
- * Falls back to postMessage then new Notification().
+ * Show a system notification via ServiceWorker.showNotification() for native
+ * phone delivery (notification shade, lock screen, sound).
+ * Falls back to postMessage → new Notification().
  */
 async function swNotify(title, opts) {
   if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return
@@ -43,7 +43,7 @@ export function fireWorldCupAlert(title, body, type = 'notification', isFav = fa
   // ── Audio + haptic ──────────────────────────────────────────────────────────
   if (type === 'goal') {
     playGoalSound()
-    try { confetti({ particleCount: isFav ? 200 : 120, spread: 70, origin: { y: 0.6 } }) } catch {}
+    try { confetti({ particleCount: isFav ? 200 : 100, spread: 70, origin: { y: 0.6 } }) } catch {}
     haptic(isFav ? [100, 50, 100, 50, 200, 50, 200] : [100, 50, 100, 50, 200])
   } else if (['whistle', 'halftime', 'fulltime'].includes(type)) {
     playWhistleSound()
@@ -53,26 +53,26 @@ export function fireWorldCupAlert(title, body, type = 'notification', isFav = fa
     haptic(isFav ? [100, 50, 100] : [50])
   }
 
-  // ── System notification via SW ──────────────────────────────────────────────
+  // ── Native OS notification via SW (appears on phone screen even when app is background) ──
   const iconUrl = BASE + 'icons/icon-192.png'
   const vibrate = type === 'goal'
     ? (isFav ? [100, 50, 100, 50, 200, 50, 200] : [100, 50, 100, 50, 200])
-    : [200]
+    : [200, 100, 200]
 
   swNotify(title, {
     body,
-    icon: iconUrl,
-    badge: iconUrl,
-    dir: 'rtl',
-    lang: 'ar',
-    tag: type + (isFav ? '-fav' : ''),
-    renotify: true,
+    icon:               iconUrl,
+    badge:              iconUrl,
+    dir:                'rtl',
+    lang:               'ar',
+    tag:                type + (isFav ? '-fav' : ''),
+    renotify:           true,
     vibrate,
-    requireInteraction: isFav,   // ← stay visible until user dismisses
-    silent: false,
+    requireInteraction: true,   // always stay visible until user dismisses
+    silent:             false,
   })
 
-  // ── In-app toast ────────────────────────────────────────────────────────────
+  // ── In-app red toast ────────────────────────────────────────────────────────
   const icons = {
     goal: '⚽', whistle: '🎺', halftime: '⏸️',
     fulltime: '🏁', warning: '⏰', notification: '🔔',
@@ -83,28 +83,40 @@ export function fireWorldCupAlert(title, body, type = 'notification', isFav = fa
 }
 
 /**
- * Hook: schedules match notifications for every team in favoriteTeams[].
- * - 60 minutes before → reminder
- * - 10 minutes before → "get ready"
- * - At kickoff        → whistle alert
- * - Live on load      → live score alert
+ * Request notification permission proactively when a match is imminent.
+ * Only prompts if permission is still 'default' (not yet decided by user).
+ */
+async function ensureNotificationPermission() {
+  if (typeof Notification === 'undefined') return
+  if (Notification.permission !== 'default') return
+  try { await Notification.requestPermission() } catch { /* ignore */ }
+}
+
+/**
+ * Schedules match notifications for all followed matches:
+ *   - 60 min before  → reminder
+ *   - 30 min before  → "نصف ساعة" warning     ← NEW
+ *   - 10 min before  → "استعد"
+ *   - At kickoff     → whistle alert
+ *   - Live on load   → live score alert
  *
- * Each notification uses reg.showNotification() so it survives foreground→background.
- * requireInteraction:true keeps fav-team notifications on screen until dismissed.
+ * favoriteTeams = []  → "watch all" mode: every WC match triggers alerts
+ * favoriteTeams = [...] → only matches involving those teams
  */
 export function useLiveMatchEvents(favoriteTeams) {
   const firedRef = useRef(new Set())
-  const teamsKey  = JSON.stringify(favoriteTeams)
+  const teamsKey = JSON.stringify(favoriteTeams)
 
   useEffect(() => {
-    const teams = Array.isArray(favoriteTeams) ? favoriteTeams : []
-    if (teams.length === 0) return
+    const teams    = Array.isArray(favoriteTeams) ? favoriteTeams : []
+    const watchAll = teams.length === 0   // [] = watch all WC matches
 
     const check = () => {
       const now = Date.now()
 
       data.matches.forEach(match => {
-        if (!teams.includes(match.team_home) && !teams.includes(match.team_away)) return
+        // Skip matches not involving followed teams (unless watch-all mode)
+        if (!watchAll && !teams.includes(match.team_home) && !teams.includes(match.team_away)) return
 
         const home    = data.teams.find(t => t.id === match.team_home)
         const away    = data.teams.find(t => t.id === match.team_away)
@@ -112,20 +124,36 @@ export function useLiveMatchEvents(favoriteTeams) {
         const matchMs = new Date(`${match.date}T${match.time}:00Z`).getTime()
         const diffMin = (matchMs - now) / 60_000
 
-        const favNames = teams
-          .filter(id => id === match.team_home || id === match.team_away)
-          .map(id => data.teams.find(t => t.id === id)?.name)
-          .filter(Boolean)
-          .join(' / ')
+        const favNames = watchAll
+          ? `${home?.name ?? match.team_home} / ${away?.name ?? match.team_away}`
+          : teams
+              .filter(id => id === match.team_home || id === match.team_away)
+              .map(id => data.teams.find(t => t.id === id)?.name)
+              .filter(Boolean)
+              .join(' / ')
 
         // ── 60-min reminder ─────────────────────────────────────────────────
         const k60 = `${match.id}_60`
-        if (diffMin > 10 && diffMin <= 61 && !firedRef.current.has(k60)) {
+        if (diffMin > 30 && diffMin <= 61 && !firedRef.current.has(k60)) {
           firedRef.current.add(k60)
+          ensureNotificationPermission()
           const delay = Math.max(0, matchMs - now - 60 * 60_000)
           setTimeout(() => fireWorldCupAlert(
             `🚨 ساعة على الانطلاق! ${home?.name} ضد ${away?.name}`,
             `${favNames} | ${stadium?.city ?? ''} — استعد! 📺`,
+            'warning', true
+          ), delay)
+        }
+
+        // ── 30-min reminder ─────────────────────────────────────────────────
+        const k30 = `${match.id}_30`
+        if (diffMin > 10 && diffMin <= 31 && !firedRef.current.has(k30)) {
+          firedRef.current.add(k30)
+          ensureNotificationPermission()
+          const delay = Math.max(0, matchMs - now - 30 * 60_000)
+          setTimeout(() => fireWorldCupAlert(
+            `⏰ نصف ساعة على الانطلاق! ${home?.name} ضد ${away?.name}`,
+            `${favNames} | ${stadium?.city ?? ''} — 30 دقيقة ⚽📺`,
             'warning', true
           ), delay)
         }
@@ -174,19 +202,21 @@ export function useLiveMatchEvents(favoriteTeams) {
 }
 
 /**
- * Detects live score changes for favorite teams and fires goal notifications.
- * Compares current match scores vs previously seen scores every time `matches` updates.
- * First run seeds the scores without triggering any alert (prevents false alerts on load).
+ * Detects live score changes and fires goal notifications.
+ * Fires for ALL live matches — favorite-team goals get louder treatment.
+ * First run seeds scores without triggering alerts (prevents false alerts on load).
  */
 export function useGoalDetection(matches, favoriteTeams) {
-  const prevRef = useRef(null) // null = first run (seed only)
+  const prevRef = useRef(null)
   const favKey  = JSON.stringify(favoriteTeams)
 
   useEffect(() => {
     if (!Array.isArray(matches) || !matches.length) return
-    if (!Array.isArray(favoriteTeams) || !favoriteTeams.length) return
 
-    // Build a snapshot of current live/finished scores
+    const teams    = Array.isArray(favoriteTeams) ? favoriteTeams : []
+    const watchAll = teams.length === 0
+
+    // Build snapshot of current live/finished scores for ALL matches
     const snapshot = {}
     matches.forEach(m => {
       if (m.status === 'live' || m.status === 'finished') {
@@ -202,30 +232,34 @@ export function useGoalDetection(matches, favoriteTeams) {
     const prev = prevRef.current
 
     matches.forEach(m => {
-      const isFavMatch = favoriteTeams.includes(m.team_home) || favoriteTeams.includes(m.team_away)
-      if (!isFavMatch) return
+      // Always check all live/finished matches (not just favorites)
       if (m.status !== 'live' && m.status !== 'finished') return
 
-      const prevSnap  = prev[m.id] ?? { home: 0, away: 0 }
-      const currHome  = Number(m.score_home ?? 0)
-      const currAway  = Number(m.score_away ?? 0)
-      const homeTeam  = data.teams.find(t => t.id === m.team_home)
-      const awayTeam  = data.teams.find(t => t.id === m.team_away)
+      const prevSnap = prev[m.id] ?? { home: 0, away: 0 }
+      const currHome = Number(m.score_home ?? 0)
+      const currAway = Number(m.score_away ?? 0)
 
+      // No change in score → skip
+      if (currHome === prevSnap.home && currAway === prevSnap.away) return
+
+      const homeTeam = data.teams.find(t => t.id === m.team_home)
+      const awayTeam = data.teams.find(t => t.id === m.team_away)
+
+      // isFav = true when the scoring team is a followed team (or watch-all mode)
       if (currHome > prevSnap.home) {
-        const isFavScorer = favoriteTeams.includes(m.team_home)
+        const isFavScorer = watchAll || teams.includes(m.team_home)
         fireWorldCupAlert(
           `🚨⚽ هدف! ${homeTeam?.flag ?? ''}${homeTeam?.name} ${currHome}-${currAway} ${awayTeam?.name ?? ''}`,
-          `د.${m.minute ?? '؟'} | ${isFavScorer ? '⭐ منتخبك يسجل!' : 'هدف في مباراتك المفضلة'}`,
+          `د.${m.minute ?? '؟'} | ${isFavScorer ? '⭐ منتخبك يسجل!' : 'هدف في كأس العالم'}`,
           'goal', isFavScorer
         )
       }
 
       if (currAway > prevSnap.away) {
-        const isFavScorer = favoriteTeams.includes(m.team_away)
+        const isFavScorer = watchAll || teams.includes(m.team_away)
         fireWorldCupAlert(
           `🚨⚽ هدف! ${homeTeam?.name ?? ''} ${currHome}-${currAway} ${awayTeam?.flag ?? ''}${awayTeam?.name ?? ''}`,
-          `د.${m.minute ?? '؟'} | ${isFavScorer ? '⭐ منتخبك يسجل!' : 'هدف في مباراتك المفضلة'}`,
+          `د.${m.minute ?? '؟'} | ${isFavScorer ? '⭐ منتخبك يسجل!' : 'هدف في كأس العالم'}`,
           'goal', isFavScorer
         )
       }
