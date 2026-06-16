@@ -38,6 +38,13 @@ export default function AppLayout() {
           tabBarIcon: () => <Text className="text-xl">⚙️</Text>,
         }}
       />
+      <Tabs.Screen
+        name="subscription"
+        options={{
+          title: 'الاشتراك',
+          tabBarIcon: () => <Text className="text-xl">💎</Text>,
+        }}
+      />
     </Tabs>
   );
 }
