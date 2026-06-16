@@ -47,6 +47,15 @@ jobs:
       - name: Add 404.html for SPA routing
         run: cp dist/index.html dist/404.html
 
+      # Carry the World Cup PWA into this deploy so force_orphan never deletes it
+      - name: Preserve World Cup PWA
+        run: |
+          git fetch origin gh-pages 2>/dev/null || true
+          git checkout origin/gh-pages -- world-cup 2>/dev/null \
+            && mv world-cup ./app/dist/ \
+            || echo "world-cup not on gh-pages yet — skipping"
+        working-directory: .
+
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
