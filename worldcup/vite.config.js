@@ -2,8 +2,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+const BASE = process.env.VITE_BASE_URL ?? '/social-media-manager/world-cup/'
+
 export default defineConfig({
-  base: '/social-media-manager/world-cup/',
+  base: BASE,
   plugins: [
     react(),
     VitePWA({
@@ -20,8 +22,8 @@ export default defineConfig({
         background_color: '#0f172a',
         display: 'standalone',
         orientation: 'portrait',
-        scope: '/social-media-manager/world-cup/',
-        start_url: '/social-media-manager/world-cup/',
+        scope: BASE,
+        start_url: BASE,
         lang: 'ar',
         dir: 'rtl',
         icons: [
@@ -36,3 +38,4 @@ export default defineConfig({
     })
   ]
 })
+

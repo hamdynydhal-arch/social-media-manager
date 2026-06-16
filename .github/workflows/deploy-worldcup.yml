@@ -37,6 +37,8 @@ jobs:
       - name: Build
         working-directory: worldcup
         run: npm run build
+        env:
+          VITE_BASE_URL: /social-media-manager/world-cup/
 
       - name: Deploy to gh-pages/world-cup (keeps Expo app intact)
         uses: peaceiris/actions-gh-pages@v3

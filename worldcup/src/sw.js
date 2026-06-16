@@ -30,8 +30,10 @@ registerRoute(
   })
 )
 
-const ICON  = '/social-media-manager/world-cup/icons/icon-192.png'
-const SOUND = '/social-media-manager/world-cup/sounds/whistle.wav'
+// Derive base from service worker scope — works on any hosting (GitHub Pages, Netlify, etc.)
+const BASE = self.registration.scope  // always ends with '/'
+const ICON  = BASE + 'icons/icon-192.png'
+const SOUND = BASE + 'sounds/whistle.wav'
 
 const WHISTLE_VIB  = [300, 100, 300, 100, 800]
 const STANDARD_VIB = [200, 100, 200]
@@ -40,7 +42,7 @@ const STANDARD_VIB = [200, 100, 200]
 const OFB_URL = 'https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json'
 
 // APK version manifest (same origin — always fresh)
-const VERSION_URL = '/social-media-manager/world-cup/version.json'
+const VERSION_URL = BASE + 'version.json'
 
 // ── Lightweight Cache store for SW-private state ─────────────────────────────
 const SW_STATE = 'wc-sw-state-v1'
@@ -174,7 +176,7 @@ async function backgroundScoreCheck() {
   await swSet('bg-scores', next)
 }
 
-const DATA_JSON = '/social-media-manager/world-cup/data.json'
+const DATA_JSON = BASE + 'data.json'
 
 async function backgroundPreMatchCheck() {
   let schedData
@@ -322,7 +324,7 @@ self.addEventListener('notificationclick', event => {
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
       if (list.length > 0) return list[0].focus()
-      return clients.openWindow('/social-media-manager/world-cup/')
+      return clients.openWindow(BASE)
     })
   )
 })
