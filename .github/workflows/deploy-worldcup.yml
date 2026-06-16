@@ -1,0 +1,48 @@
+name: Deploy World Cup PWA
+
+on:
+  push:
+    branches: [claude/world-cup-pwa-app-jfg1rv]
+    paths:
+      - 'worldcup/**'
+      - '.github/workflows/deploy-worldcup.yml'
+  workflow_dispatch:
+  # Re-run automatically whenever the Expo deploy overwrites gh-pages
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Always checkout the worldcup branch regardless of what triggered this workflow
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/world-cup-pwa-app-jfg1rv
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: worldcup/package-lock.json
+
+      - name: Install dependencies
+        working-directory: worldcup
+        run: npm install --legacy-peer-deps
+
+      - name: Build
+        working-directory: worldcup
+        run: npm run build
+
+      - name: Deploy to gh-pages/world-cup (keeps Expo app intact)
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: worldcup/dist
+          destination_dir: world-cup
+          keep_files: true
+          commit_message: 'Deploy World Cup app to /world-cup/ [skip ci]'
