@@ -1,0 +1,63 @@
+{
+  "M001": {
+    "formation_home": "4-3-3",
+    "formation_away": "4-4-2",
+    "home": [
+      { "number": 1,  "name": "خوسيه رانخيل",      "position": "حارس" },
+      { "number": 21, "name": "خيسوس غايارو",       "position": "ظهير أيسر" },
+      { "number": 15, "name": "يوهان فاسكيز",       "position": "قلب دفاع" },
+      { "number": 3,  "name": "سيزار مونتيس",       "position": "قلب دفاع" },
+      { "number": 4,  "name": "إسرائيل رييس",       "position": "ظهير أيمن",  "rating": 7.2 },
+      { "number": 5,  "name": "إيريك ليرا",         "position": "وسط دفاعي",  "rating": 7.4 },
+      { "number": 8,  "name": "ألفارو فيدالغو",     "position": "وسط" },
+      { "number": 18, "name": "برايان غوتييريز",    "position": "وسط" },
+      { "number": 7,  "name": "خوليان كيمايونيس",   "position": "جناح أيمن",  "rating": 8.6 },
+      { "number": 9,  "name": "راؤول خيمينيز",      "position": "مهاجم",      "rating": 7.6 },
+      { "number": 14, "name": "روبيرتو ألفارادو",   "position": "جناح أيسر",  "rating": 8.2 }
+    ],
+    "away": [
+      { "number": 1,  "name": "رونوين ويليامز",     "position": "حارس" },
+      { "number": 3,  "name": "أوبري موديبا",       "position": "ظهير أيسر" },
+      { "number": 2,  "name": "خولوسو مودو",        "position": "ظهير أيمن" },
+      { "number": 5,  "name": "نكوسيناثي سيبسكي",  "position": "قلب دفاع" },
+      { "number": 6,  "name": "مبيكيزيلي مبوكازي",  "position": "قلب دفاع" },
+      { "number": 4,  "name": "إيمي أوكون",         "position": "وسط دفاعي" },
+      { "number": 8,  "name": "سفيفيلو سيتولي",    "position": "وسط" },
+      { "number": 7,  "name": "جيدين آدامز",        "position": "وسط" },
+      { "number": 10, "name": "تيبوهو موكوينا",    "position": "وسط هجومي" },
+      { "number": 11, "name": "إقرام راينر",        "position": "مهاجم" },
+      { "number": 14, "name": "لايل فوستر",         "position": "جناح أيسر" }
+    ]
+  },
+  "M002": {
+    "formation_home": "4-3-3",
+    "formation_away": "3-4-3",
+    "home": [
+      { "number": 31, "name": "كيم سونغ-غيو",      "position": "حارس",        "rating": 7.4 },
+      { "number": 15, "name": "سيول يونغ-وو",      "position": "ظهير أيمن" },
+      { "number": 3,  "name": "كيم مين-جاي",       "position": "قلب دفاع" },
+      { "number": 5,  "name": "لي هان-بوم",        "position": "قلب دفاع" },
+      { "number": 2,  "name": "لي غي-هيوك",        "position": "ظهير أيسر" },
+      { "number": 6,  "name": "لي تاي-سوك",        "position": "وسط دفاعي",   "subbed_off": 69,  "rating": 7.2 },
+      { "number": 8,  "name": "هوانغ إن-بوم",      "position": "وسط",          "subbed_off": 84,  "rating": 8.9 },
+      { "number": 18, "name": "بيك سونغ-هو",       "position": "وسط",          "subbed_off": 84 },
+      { "number": 17, "name": "لي كانغ-إن",        "position": "جناح أيمن",   "rating": 8.1 },
+      { "number": 11, "name": "لي جاي-سونغ",       "position": "جناح أيسر",   "subbed_off": 62 },
+      { "number": 7,  "name": "سون هيونغ-مين",     "position": "مهاجم",        "subbed_off": 69 },
+      { "number": 9,  "name": "أوه هيون-غيو",      "position": "مهاجم",        "subbed_on":  69,  "rating": 7.5 }
+    ],
+    "away": [
+      { "number": 1,  "name": "ماتيي كوفار",        "position": "حارس" },
+      { "number": 2,  "name": "فلاديمير كوفال",     "position": "ظهير أيمن" },
+      { "number": 5,  "name": "توماش هولييش",       "position": "قلب دفاع" },
+      { "number": 6,  "name": "دافيد دوديرا",       "position": "قلب دفاع" },
+      { "number": 3,  "name": "لاديسلاف كريجيتشي", "position": "ظهير أيسر",  "rating": 7.1 },
+      { "number": 15, "name": "ياروسلاف زيليني",   "position": "قلب دفاع" },
+      { "number": 8,  "name": "توماش سوتشيك",      "position": "وسط" },
+      { "number": 11, "name": "ميخال ساديليك",      "position": "وسط",          "subbed_off": 64 },
+      { "number": 7,  "name": "آدم هلوجيك",         "position": "جناح أيمن" },
+      { "number": 10, "name": "باتريك شيك",         "position": "مهاجم",        "subbed_off": 64 },
+      { "number": 17, "name": "بافيل سولتس",        "position": "جناح أيسر" }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.hamdynydhal.worldcup2026",
+    "sha256_cert_fingerprints": [
+      "7A:BA:30:E2:34:B2:B3:D9:98:D2:3C:0F:79:C6:B6:A8:2E:31:17:41:E0:CE:15:7D:19:07:AD:19:B0:2F:93:5B"
+    ]
+  }
+}]

@@ -8,6 +8,8 @@ build/
 *.pem
 android/
 ios/
+# Allow TWA Android project (not Expo's android/ output)
+!worldcup/twa/android/
 
 # Supabase local dev
 .supabase/
