@@ -14,7 +14,7 @@ export const serverNow = () => Date.now() + _offsetMs
 export const isSynced  = () => _synced
 
 export async function syncClock() {
-  const PROBE = '/social-media-manager/world-cup/version.json'
+  const PROBE = import.meta.env.BASE_URL + 'version.json'
   try {
     const t0  = Date.now()
     const res = await fetch(PROBE, {

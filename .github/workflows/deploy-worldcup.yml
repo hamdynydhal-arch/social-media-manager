@@ -15,7 +15,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # Always checkout the worldcup branch regardless of what triggered this workflow
       - uses: actions/checkout@v4
         with:
           ref: claude/world-cup-pwa-app-jfg1rv
@@ -34,13 +33,14 @@ jobs:
         working-directory: worldcup
         run: npm run build
         env:
-          VITE_BASE_URL: /social-media-manager/world-cup/
+          VITE_BASE_URL: /world-cup/
 
-      - name: Deploy to gh-pages/world-cup (keeps Expo app intact)
+      - name: Deploy to hamdynydhal-arch/world-cup gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          personal_token: ${{ secrets.WORLDCUP_DEPLOY_TOKEN }}
+          external_repository: hamdynydhal-arch/world-cup
           publish_dir: worldcup/dist
-          destination_dir: world-cup
-          keep_files: true
-          commit_message: 'Deploy World Cup app to /world-cup/ [skip ci]'
+          publish_branch: gh-pages
+          force_orphan: true
+          commit_message: 'Deploy World Cup PWA [skip ci]'
