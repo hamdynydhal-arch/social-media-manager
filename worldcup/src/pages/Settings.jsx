@@ -394,7 +394,7 @@ export default function Settings({
           {[
             { label: 'نتائج المباريات', src: 'openfootball / GitHub', active: sources?.scores },
             { label: 'ترتيب المجموعات', src: 'محسوب محلياً من النتائج', active: true },
-            { label: 'أخبار عاجلة', src: 'BBC / Sky / Reddit WC', active: sources?.news },
+            { label: 'أخبار عاجلة', src: 'BBC عربي / الجزيرة', active: sources?.news },
           ].map(({ label, src, active }) => (
             <div key={label} className="flex items-center justify-between bg-slate-700/30 rounded-xl px-3 py-2">
               <div>

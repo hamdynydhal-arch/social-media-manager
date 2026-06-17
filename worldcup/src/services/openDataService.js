@@ -88,7 +88,7 @@ const ALLORIGINS_GET = url => `https://api.allorigins.win/get?url=${encodeURICom
 const RSS2JSON   = url => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=15`
 const FEED2JSON  = url => `https://feed2json.org/convert?url=${encodeURIComponent(url)}`
 
-// BBC/Sky first (CDN often serves with CORS *), then Arabic sources
+// Arabic sports RSS sources — used exclusively to guarantee Arabic content
 const RSS_FEEDS_AR = [
   'https://feeds.bbci.co.uk/arabic/sport/rss.xml',
   'https://www.aljazeera.net/rss/sports.xml',
@@ -516,14 +516,20 @@ function parseRssXml(xmlText) {
     if (doc.querySelector('parsererror')) return null
     const items = [...doc.querySelectorAll('item, entry')]
     if (!items.length) return null
-    return items.slice(0, 15).map(el => {
+    const cutoff = Date.now() - 24 * 3600_000
+    const parsed = items.slice(0, 20).map(el => {
       const title = (el.querySelector('title')?.textContent ?? '').trim()
+      if (!title) return null
       const pub   = el.querySelector('pubDate, updated, published')?.textContent
-      const time  = pub
-        ? new Date(pub).toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
+      const pubMs = pub ? new Date(pub).getTime() : null
+      if (pubMs !== null && !isNaN(pubMs) && pubMs < cutoff) return null
+      const time  = (pubMs && !isNaN(pubMs))
+        ? new Date(pubMs).toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
         : ''
-      return time ? `${time} — ${title}` : title
+      return { text: time ? `${time} — ${title}` : title, pubMs: pubMs ?? 0 }
     }).filter(Boolean)
+    parsed.sort((a, b) => b.pubMs - a.pubMs)
+    return parsed.slice(0, 15).map(p => p.text)
   } catch { return null }
 }
 
@@ -532,17 +538,22 @@ function parseRssXml(xmlText) {
 async function fetchRedditNews() {
   const json = await safeFetch(REDDIT_WC)
   if (!json?.data?.children?.length) return null
+  const cutoff = Date.now() - 24 * 3600_000
   const items = json.data.children
     .map(post => {
       const d = post.data
-      if (d.score < 10) return null                    // higher bar for Reddit
-      if (!isSportsRelated(d.title)) return null       // reject off-topic posts
-      const time = new Date(d.created_utc * 1000)
+      if (d.score < 10) return null
+      if (!isSportsRelated(d.title)) return null
+      const pubMs = (d.created_utc ?? 0) * 1000
+      if (pubMs < cutoff) return null
+      const time = new Date(pubMs)
         .toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
-      return `${time} — ${d.title}`
+      return { text: `${time} — ${d.title}`, pubMs }
     })
     .filter(Boolean)
+    .sort((a, b) => b.pubMs - a.pubMs)
     .slice(0, 10)
+    .map(p => p.text)
   return items.length > 0 ? items : null
 }
 
@@ -583,34 +594,30 @@ async function tryFeed(feed, applyFilter) {
 
 // ── Public: news feed ─────────────────────────────────────────────────────────
 export async function fetchRssNews() {
-  // 1. Arabic sources first — content is already Arabic and sports-specific
+  // Arabic sources only — guarantees all displayed news is in Arabic.
+  // If both feeds are unreachable, returns null and the caller falls back to
+  // staticData.news (also Arabic).
   for (const feed of RSS_FEEDS_AR) {
     const items = await tryFeed(feed, false)
     if (items?.length) return items
   }
-
-  // 2. English football RSS — apply sports filter to be safe
-  for (const feed of RSS_FEEDS_EN) {
-    const items = await tryFeed(feed, true)
-    if (items?.length) return items
-  }
-
-  // 3. Reddit as last resort — sports filter applied inside fetchRedditNews()
-  const reddit = await fetchRedditNews()
-  if (reddit) return reddit
-
   return null
 }
 
 function formatItems(items, applyFilter = false) {
-  return items.slice(0, 15).map(item => {
+  const cutoff = Date.now() - 24 * 3600_000
+  const parsed = items.slice(0, 20).map(item => {
     const title = item.title?.trim() ?? ''
     if (!title) return null
     if (applyFilter && !isSportsRelated(title)) return null
-    const pub = item.pubDate || item.date_published
-    const time = pub
-      ? new Date(pub).toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
+    const pub   = item.pubDate || item.date_published
+    const pubMs = pub ? new Date(pub).getTime() : null
+    if (pubMs !== null && !isNaN(pubMs) && pubMs < cutoff) return null
+    const time  = (pubMs && !isNaN(pubMs))
+      ? new Date(pubMs).toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
       : ''
-    return time ? `${time} — ${title}` : title
+    return { text: time ? `${time} — ${title}` : title, pubMs: pubMs ?? 0 }
   }).filter(Boolean)
+  parsed.sort((a, b) => b.pubMs - a.pubMs)
+  return parsed.slice(0, 15).map(p => p.text)
 }

@@ -286,6 +286,7 @@ function buildResultsNews(matches, teams) {
       const endMs = new Date(`${m.date}T${m.time}:00Z`).getTime() + 105 * 60_000
       return endMs > cutoff
     })
+    .sort((a, b) => new Date(`${b.date}T${b.time}:00Z`) - new Date(`${a.date}T${a.time}:00Z`))
     .map(m => {
       const home = teams.find(t => t.id === m.team_home)?.name ?? m.team_home
       const away = teams.find(t => t.id === m.team_away)?.name ?? m.team_away
@@ -297,22 +298,29 @@ function buildNews(matches, teams, rssItems) {
   const cutoff = Date.now() - 24 * 3600_000
   const isFresh = ts => !ts || new Date(ts).getTime() > cutoff
 
+  // Newest hardcoded items first
   const freshHardcoded = HARDCODED_NEWS
     .filter(item => isFresh(item.timestamp))
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
     .map(item => item.text)
 
   const liveNews   = buildAutoNews(matches, teams)
-  const resultNews = buildResultsNews(matches, teams)
+  const resultNews = buildResultsNews(matches, teams)  // already sorted newest first
 
   // When RSS is unavailable fall back to static news, filtered by age
   const base = rssItems ?? staticData.news
     .filter(item => isFresh(typeof item === 'object' ? item.timestamp : null))
     .map(item => typeof item === 'object' ? item.text : item)
 
+  // Priority: live (most urgent) → hardcoded results (newest first) →
+  // auto-results not already in hardcoded → RSS/static base
   const combined = [
+    ...liveNews,
     ...freshHardcoded,
-    ...liveNews.filter(n => !freshHardcoded.includes(n)),
-    ...resultNews.filter(n => !freshHardcoded.some(h => h.includes(n.split(': ')[1] ?? ''))),
+    ...resultNews.filter(n => {
+      const scorePart = n.split(': ').slice(1).join(': ')
+      return !freshHardcoded.some(h => h.includes(scorePart))
+    }),
     ...base,
   ]
   return [...new Set(combined)].filter(Boolean)
