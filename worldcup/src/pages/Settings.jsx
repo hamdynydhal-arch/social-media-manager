@@ -153,73 +153,35 @@ export default function Settings({
         )}
       </div>
 
-      {/* ── Download APK / Install ── */}
+      {/* ── Install ── */}
       <div
         className="rounded-3xl overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #3730a3 100%)',
-          border: '2px solid rgba(129,140,248,0.4)',
-          boxShadow: '0 8px 32px rgba(99,102,241,0.3)',
+          background: 'linear-gradient(180deg, #0f2d1f 0%, #0a1628 100%)',
+          border: '1.5px solid rgba(52,211,153,0.35)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 32px rgba(16,185,129,0.12)',
         }}
       >
         <div className="px-5 pt-5 pb-3 text-center">
           <div className="text-5xl mb-2">📲</div>
           <h2 className="text-lg font-black text-white mb-1">
-            {isInstalled ? '✅ التطبيق مثبت' : 'نزّل تطبيق أندرويد APK'}
+            {isInstalled ? '✅ التطبيق مثبت' : 'ثبّت التطبيق الآن!'}
           </h2>
-          <p className="text-indigo-200 text-sm">
+          <p className="text-emerald-300 text-sm">
             {isInstalled
               ? 'تستمتع بتجربة كاملة مع إشعارات في الخلفية'
-              : 'إشعارات الأهداف الفورية • صوت وارتجاج • يعمل بدون إنترنت'}
+              : 'كأس العالم 2026 — إشعارات الأهداف الفورية'}
           </p>
         </div>
-        <div className="px-4 pb-5 space-y-2.5">
-          {/* Primary: APK download */}
-          <a
-            href={`${BASE}FIFAWKPRTNH2026.apk`}
-            download="FIFAWKPRTNH2026.apk"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.5rem',
-              width: '100%',
-              padding: '1rem',
-              borderRadius: '1rem',
-              background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
-              boxShadow: '0 4px 20px rgba(99,102,241,0.5)',
-              color: 'white',
-              fontWeight: 900,
-              fontSize: '1.05rem',
-              textDecoration: 'none',
-            }}
+        <div className="px-4 pb-5">
+          <button
+            onClick={handleInstall}
+            disabled={installing || isInstalled}
+            className="w-full py-4 rounded-2xl font-black text-slate-900 text-base transition-all active:scale-95 disabled:opacity-70"
+            style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)', boxShadow: '0 6px 24px rgba(52,211,153,0.45)' }}
           >
-            ⬇️ تنزيل APK أندرويد
-          </a>
-          <p className="text-center text-indigo-300/60 text-xs">
-            فعّل "مصادر غير معروفة" في إعدادات الهاتف قبل التثبيت
-          </p>
-
-          {/* Secondary: PWA install */}
-          {!isInstalled && !isIOS && (
-            <button
-              onClick={handleInstall}
-              disabled={installing}
-              className="w-full py-2.5 rounded-xl font-bold text-indigo-300 text-sm transition-all active:scale-95 border border-indigo-500/30 disabled:opacity-50"
-              style={{ background: 'rgba(99,102,241,0.1)' }}
-            >
-              {installing ? '⏳ جاري التثبيت...' : 'أو أضف إلى الشاشة الرئيسية (PWA)'}
-            </button>
-          )}
-          {!isInstalled && isIOS && (
-            <button
-              onClick={() => setShowIOSModal(true)}
-              className="w-full py-2.5 rounded-xl font-bold text-indigo-300 text-sm border border-indigo-500/30"
-              style={{ background: 'rgba(99,102,241,0.1)' }}
-            >
-              📲 تثبيت على iPhone عبر Safari
-            </button>
-          )}
+            {isInstalled ? '✅ التطبيق مثبت بالفعل' : installing ? '⏳ جاري التثبيت...' : '📲 تثبيت التطبيق الآن'}
+          </button>
         </div>
       </div>
 
