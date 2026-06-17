@@ -244,7 +244,7 @@ async function backgroundNewsCheck() {
         tag:                `news-${post.id}`,
         renotify:           true,
         vibrate:            NEWS_VIB,
-        requireInteraction: false,
+        requireInteraction: true,
         silent:             false,
       })
     } catch { /* notification permission denied */ }
@@ -292,7 +292,7 @@ self.addEventListener('message', event => {
           tag:                'test-news-' + Date.now(),
           renotify:           true,
           vibrate:            NEWS_VIB,
-          requireInteraction: false,
+          requireInteraction: true,
           silent:             false,
         })
       } catch {}
@@ -316,7 +316,7 @@ self.addEventListener('message', event => {
         tag,
         renotify:           true,
         vibrate:            NEWS_VIB,
-        requireInteraction: false,
+        requireInteraction: true,
         silent:             false,
       }).catch(() => {})
     )
