@@ -1,44 +1,59 @@
-v6.2.0 — STABLE
-commit: d7dcac8
+v6.3.0 — STABLE
+commit: dfd896d
 date: 2026-06-17
 
-## ما يجب الحفاظ عليه — لا تُعدّل هذه الميزات
+════════════════════════════════════════════════════════
+  قواعد صارمة — لا تُعدَّل هذه الميزات دون طلب صريح
+════════════════════════════════════════════════════════
 
-### v6.0.0 — التثبيت وزر الإنستول
-- useInstallPrompt hook يُدير beforeinstallprompt بشكل صحيح
-- triggerInstall() تمسح الـ event بعد الاستخدام (accept + dismiss)
-- انتظار 1.5 ثانية للـ prompt قبل الانتقال للدليل اليدوي
-- دليل Android Bottom-Sheet مع mockup شريط Chrome
-- دليل iOS بخطوات Safari Share
+  1. useInstallPrompt.js  — منطق triggerInstall وإدارة deferredPrompt
+  2. الأيقونات            — icon-192/512/maskable لا تُستبدل
+  3. sw.js ICON           — يبقى base64 data URL (ليس URL خارجي)
+  4. sw.js requireInteraction — يبقى true على جميع الإشعارات
+  5. HeadsUpNotifModal.jsx — لا يُحذف
+  6. badge-96.png         — لا يُحذف ولا يُستبدل
+  7. openDataService.js   — RSS_FEEDS_AR أول، Reddit آخر + فلتر رياضي
+  8. "النتيجة النهائية"  — لا تعود إلى "نهائي"
 
-### v6.1.0 — الشعار والأيقونة
-- icon-192.png: كأس ذهبية + كرة + 3 نجوم + "2026" (cairosvg)
-- icon-512.png: نفس التصميم 512×512
-- icon-maskable-512.png: مع safe-zone 80%
-- favicon.svg: نسخة مبسطة
-- vite.config.js: أيقونات منفصلة any / maskable
+════════════════════════════════════════════════════════
+  سجل الإصدارات
+════════════════════════════════════════════════════════
 
-### v6.1.1 — الأخبار العاجلة الخارجية
-- playBreakingNewsSound() في audioUtils.js
-- backgroundNewsCheck() في sw.js (Reddit API)
-- NEWS_ALERT handler في sw.js
-- TEST_BREAKING_NEWS handler في sw.js
-- BreakingNewsBanner.jsx: صوت + إشعار SW
-- App.jsx: PLAY_BREAKING_NEWS listener
-- زر اختبار الإشعار الخارجي في Settings.jsx
+v6.0.0 — زر التثبيت
+  - useInstallPrompt hook يُدير beforeinstallprompt
+  - triggerInstall() يمسح الـ event بعد accept وdismiss
+  - انتظار 1.5 ث للـ prompt قبل عرض الدليل اليدوي
+  - دليل Android bottom-sheet مع mockup شريط Chrome
+  - دليل iOS بخطوات Safari Share
 
-### v6.2.0 — أيقونة الإشعار + Heads-Up Guide
-- badge-96.png: كرة قدم بيضاء على خلفية شفافة (status bar badge)
-- sw.js: BADGE_ICON منفصل عن ICON
-- sw.js: ICON مضمّن كـ base64 data URL (حل مشكلة المربع الأبيض)
-- sw.js: requireInteraction: true على جميع أنواع الإشعارات
-- HeadsUpNotifModal.jsx: دليل خطوة بخطوة لتفعيل heads-up على Android
-- Settings.jsx: زر أزرق يفتح الـ Modal
-- Settings.jsx: sendRealTestNotification يمر عبر SW postMessage
+v6.1.0 — الشعار والأيقونة
+  - icon-192.png: كأس ذهبية + كرة + 3 نجوم + "2026"
+  - icon-512.png + icon-maskable-512.png
+  - favicon.svg محدّث
+  - vite.config.js: أيقونات any/maskable منفصلة
 
-## قواعد ثابتة
-- لا تُغيّر useInstallPrompt.js دون سبب وجيه
-- لا تُغيّر الأيقونات (icon-192/512/maskable) إلا بطلب صريح
-- لا تُغيّر ICON = base64 في sw.js إلى URL
-- لا تُغيّر requireInteraction إلى false
-- لا تُحذف HeadsUpNotifModal.jsx
+v6.1.1 — الأخبار العاجلة الخارجية
+  - playBreakingNewsSound() في audioUtils.js
+  - backgroundNewsCheck() في sw.js (مصدر: Reddit r/worldcup)
+  - NEWS_ALERT + TEST_BREAKING_NEWS handlers في sw.js
+  - BreakingNewsBanner.jsx: صوت + إشعار SW
+  - App.jsx: PLAY_BREAKING_NEWS listener
+  - زر اختبار الإشعار الخارجي في Settings
+
+v6.2.0 — أيقونة الإشعار + Heads-Up
+  - badge-96.png: كرة قدم بيضاء / خلفية شفافة
+  - sw.js BADGE_ICON منفصل عن ICON
+  - sw.js ICON = base64 data URL مضمّن (حل المربع الأبيض)
+  - requireInteraction: true على جميع أنواع الإشعارات
+  - HeadsUpNotifModal.jsx: دليل تفعيل heads-up خطوة بخطوة
+  - Settings: زر أزرق يفتح المودال
+  - sendRealTestNotification يمر عبر SW postMessage
+
+v6.3.0 — جودة البيانات والأخبار
+  - فلتر رياضي isSportsRelated() في openDataService.js وsw.js
+  - مصادر عربية (BBC عربي، الجزيرة) تُجرَّب أولاً
+  - Reddit مُخفَّض لآخر الاحتياطات + حد نقاط 5→10
+  - "النتيجة النهائية" بدلاً من "نهائي" في buildResultsNews
+    وفي HARDCODED_NEWS (5 مواضع)
+  - مدرب تونس: صبري لمواشي → هيرفي رونار
+  - الإصدار 6.3.0 يظهر في صفحة الإعدادات وpackage.json
