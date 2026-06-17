@@ -89,13 +89,16 @@ const RSS2JSON   = url => `https://api.rss2json.com/v1/api.json?rss_url=${encode
 const FEED2JSON  = url => `https://feed2json.org/convert?url=${encodeURIComponent(url)}`
 
 // BBC/Sky first (CDN often serves with CORS *), then Arabic sources
-const RSS_FEEDS = [
-  'https://feeds.bbci.co.uk/sport/football/rss.xml',
-  'https://www.skysports.com/rss/12040',
+const RSS_FEEDS_AR = [
   'https://feeds.bbci.co.uk/arabic/sport/rss.xml',
   'https://www.aljazeera.net/rss/sports.xml',
+]
+const RSS_FEEDS_EN = [
+  'https://feeds.bbci.co.uk/sport/football/rss.xml',
+  'https://www.skysports.com/rss/12040',
   'https://www.goal.com/en/feeds/news',
 ]
+const RSS_FEEDS = [...RSS_FEEDS_AR, ...RSS_FEEDS_EN]
 
 // Reddit r/worldcup JSON API — CORS * guaranteed, no proxy needed
 const REDDIT_WC = 'https://www.reddit.com/r/worldcup/new.json?limit=20&t=day'
@@ -472,6 +475,40 @@ export async function fetchEspnStandings() {
   return null
 }
 
+// ── Sports-only keyword filter — rejects political / off-topic content ────────
+const _SPORTS_KW = [
+  // World Cup / FIFA
+  'world cup','worldcup','fifa','2026','wc26',
+  // Match / game
+  'match','game','fixture','kick off','kickoff','halftime','extra time','shootout',
+  'draw','win','beat','defeat','score','result','final','semi','quarter','knockout',
+  'group stage','round of',
+  // Players / teams
+  'goal','goals','hat-trick','penalty','free kick','offside','var','red card',
+  'yellow card','referee','lineup','squad','coach','manager','player','transfer',
+  'injury','suspension','striker','goalkeeper','defender','midfielder','winger',
+  // Sport words
+  'soccer','football',
+  // Arabic sport
+  'كأس','كرة','مباراة','هدف','ملعب','منتخب','لاعب','مدرب','تأهل','مجموعة',
+  'نتيجة','تصفيات','ركلة','ضربة','حكم','دوري','تسجيل','فريق','مباريات',
+  // WC 2026 team names (covers "Iran scored" but not "Iran deal")
+  'brazil','argentina','france','spain','england','germany','portugal','morocco',
+  'saudi','japan','mexico','canada','australia','netherlands','belgium','croatia',
+  'uruguay','senegal','ecuador','colombia','turkey','czech','scotland','egypt',
+  'algeria','norway','jordan','iraq','ghana','panama','haiti','paraguay',
+  'البرازيل','الأرجنتين','فرنسا','إسبانيا','إنجلترا','ألمانيا','البرتغال',
+  'المغرب','السعودية','اليابان','أمريكا','المكسيك','كندا','هولندا','بلجيكا',
+  'كرواتيا','أوروغواي','السنغال','كولومبيا','تركيا','الجزائر','النرويج',
+  'الأردن','العراق','غانا','البراغواي','هايتي',
+]
+
+function isSportsRelated(title) {
+  if (!title) return false
+  const t = title.toLowerCase()
+  return _SPORTS_KW.some(kw => t.includes(kw))
+}
+
 // ── Parse raw RSS/Atom XML ────────────────────────────────────────────────────
 function parseRssXml(xmlText) {
   try {
@@ -491,74 +528,85 @@ function parseRssXml(xmlText) {
 }
 
 // ── Reddit r/worldcup — CORS * guaranteed ────────────────────────────────────
+// Used as LAST resort only; English posts filtered to sports content.
 async function fetchRedditNews() {
   const json = await safeFetch(REDDIT_WC)
   if (!json?.data?.children?.length) return null
   const items = json.data.children
     .map(post => {
       const d = post.data
-      if (d.score < 5) return null
+      if (d.score < 10) return null                    // higher bar for Reddit
+      if (!isSportsRelated(d.title)) return null       // reject off-topic posts
       const time = new Date(d.created_utc * 1000)
         .toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
       return `${time} — ${d.title}`
     })
     .filter(Boolean)
-    .slice(0, 15)
+    .slice(0, 10)
   return items.length > 0 ? items : null
+}
+
+// ── Try one RSS feed through all proxy options ────────────────────────────────
+async function tryFeed(feed, applyFilter) {
+  const attempt = async text => {
+    if (!text) return null
+    const items = parseRssXml(text)
+    if (!items?.length) return null
+    return applyFilter ? items.filter(t => isSportsRelated(t)) : items
+  }
+  for (const getter of [
+    () => safeText(feed),
+    () => safeText(CORSPROXY(feed)),
+    () => safeText(ALLORIGINS(feed)),
+    () => safeText(THINGPROXY(feed)),
+  ]) {
+    const result = await attempt(await getter())
+    if (result?.length) return result
+  }
+  const wrapped = await safeFetch(ALLORIGINS_GET(feed))
+  if (wrapped?.contents) {
+    const r = await attempt(wrapped.contents)
+    if (r?.length) return r
+  }
+  const j1 = await safeFetch(RSS2JSON(feed))
+  if (j1?.status === 'ok' && j1.items?.length > 0) {
+    const r = formatItems(j1.items, applyFilter)
+    if (r?.length) return r
+  }
+  const j2 = await safeFetch(FEED2JSON(feed))
+  if (j2?.items?.length > 0) {
+    const r = formatItems(j2.items, applyFilter)
+    if (r?.length) return r
+  }
+  return null
 }
 
 // ── Public: news feed ─────────────────────────────────────────────────────────
 export async function fetchRssNews() {
-  // Try Reddit first — CORS * guaranteed, no proxy needed, fast
+  // 1. Arabic sources first — content is already Arabic and sports-specific
+  for (const feed of RSS_FEEDS_AR) {
+    const items = await tryFeed(feed, false)
+    if (items?.length) return items
+  }
+
+  // 2. English football RSS — apply sports filter to be safe
+  for (const feed of RSS_FEEDS_EN) {
+    const items = await tryFeed(feed, true)
+    if (items?.length) return items
+  }
+
+  // 3. Reddit as last resort — sports filter applied inside fetchRedditNews()
   const reddit = await fetchRedditNews()
   if (reddit) return reddit
-
-  // Fallback: RSS feeds via proxy chain
-  for (const feed of RSS_FEEDS) {
-    // 0. Direct (BBC/Sky CDN often serves with CORS *)
-    const direct = await safeText(feed)
-    if (direct) {
-      const items = parseRssXml(direct)
-      if (items?.length > 0) return items
-    }
-    // 1. corsproxy.io — good IP reputation, no rate limit
-    const c1 = await safeText(CORSPROXY(feed))
-    if (c1) {
-      const items = parseRssXml(c1)
-      if (items?.length > 0) return items
-    }
-    // 2. allorigins /raw
-    const c2 = await safeText(ALLORIGINS(feed))
-    if (c2) {
-      const items = parseRssXml(c2)
-      if (items?.length > 0) return items
-    }
-    // 3. thingproxy
-    const c3 = await safeText(THINGPROXY(feed))
-    if (c3) {
-      const items = parseRssXml(c3)
-      if (items?.length > 0) return items
-    }
-    // 4. allorigins /get (JSON wrapper)
-    const wrapped = await safeFetch(ALLORIGINS_GET(feed))
-    if (wrapped?.contents) {
-      const items = parseRssXml(wrapped.contents)
-      if (items?.length > 0) return items
-    }
-    // 5. rss2json.com (1 000 req/day)
-    const j1 = await safeFetch(RSS2JSON(feed))
-    if (j1?.status === 'ok' && j1.items?.length > 0) return formatItems(j1.items)
-    // 6. feed2json.org
-    const j2 = await safeFetch(FEED2JSON(feed))
-    if (j2?.items?.length > 0) return formatItems(j2.items)
-  }
 
   return null
 }
 
-function formatItems(items) {
+function formatItems(items, applyFilter = false) {
   return items.slice(0, 15).map(item => {
     const title = item.title?.trim() ?? ''
+    if (!title) return null
+    if (applyFilter && !isSportsRelated(title)) return null
     const pub = item.pubDate || item.date_published
     const time = pub
       ? new Date(pub).toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })

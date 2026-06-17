@@ -205,6 +205,28 @@ async function backgroundPreMatchCheck() {
   if (changed) await swSet('pre-match-v1', fired)
 }
 
+// ── Sports keyword filter — same list as openDataService.js ──────────────────
+const _BG_SPORTS_KW = [
+  'world cup','worldcup','fifa','2026','wc26',
+  'match','game','fixture','kick off','kickoff','halftime','extra time','shootout',
+  'draw','win','beat','defeat','score','result','final','semi','quarter','knockout',
+  'group stage','round of','goal','goals','hat-trick','penalty','free kick',
+  'offside','var','red card','yellow card','referee','lineup','squad',
+  'coach','manager','player','transfer','injury','suspension',
+  'striker','goalkeeper','defender','midfielder','winger','soccer','football',
+  'كأس','كرة','مباراة','هدف','ملعب','منتخب','لاعب','مدرب','تأهل','مجموعة',
+  'نتيجة','تصفيات','ركلة','ضربة','حكم','دوري','تسجيل','فريق',
+  'brazil','argentina','france','spain','england','germany','portugal','morocco',
+  'saudi','japan','mexico','canada','australia','netherlands','belgium','croatia',
+  'uruguay','senegal','ecuador','colombia','turkey','egypt','algeria','norway',
+  'jordan','iraq','ghana','panama','haiti','paraguay','قطر','السعودية','المغرب',
+]
+function _bgIsSports(title) {
+  if (!title) return false
+  const t = title.toLowerCase()
+  return _BG_SPORTS_KW.some(kw => t.includes(kw))
+}
+
 // ── Background breaking-news check ───────────────────────────────────────────
 async function backgroundNewsCheck() {
   let posts
@@ -227,8 +249,9 @@ async function backgroundNewsCheck() {
   for (const post of posts) {
     if (notified >= 2) break
     if (seen.has(post.id)) continue
-    if ((post.score ?? 0) < 5) continue
-    if ((now - (post.created_utc ?? 0)) > 7200) continue // older than 2 h
+    if ((post.score ?? 0) < 10) continue                  // higher bar
+    if ((now - (post.created_utc ?? 0)) > 7200) continue  // older than 2 h
+    if (!_bgIsSports(post.title ?? '')) continue          // reject off-topic
 
     seen.add(post.id)
     hasNew   = true
