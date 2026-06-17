@@ -57,13 +57,13 @@
       "coach": "خافيير أغويري",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
+        "goals_for": 2,
         "goals_against": 0,
-        "points": 0
+        "points": 3
       },
       "players": []
     },
@@ -77,12 +77,12 @@
       "coach": "هوغو بروس",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
+        "losses": 1,
         "goals_for": 0,
-        "goals_against": 0,
+        "goals_against": 2,
         "points": 0
       },
       "players": []
@@ -97,13 +97,13 @@
       "coach": "هونغ مايونغ-بو",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 2,
+        "goals_against": 1,
+        "points": 3
       },
       "players": []
     },
@@ -117,12 +117,12 @@
       "coach": "ميروسلاف كوبيك",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
+        "losses": 1,
+        "goals_for": 1,
+        "goals_against": 2,
         "points": 0
       },
       "players": []
@@ -137,13 +137,13 @@
       "coach": "جيسي مارش",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 1,
+        "goals_against": 1,
+        "points": 1
       },
       "players": []
     },
@@ -157,13 +157,13 @@
       "coach": "سيرجي باربارير",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 1,
+        "goals_against": 1,
+        "points": 1
       },
       "players": []
     },
@@ -177,13 +177,13 @@
       "coach": "خولين لوبيتيغي",
       "isArab": true,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 1,
+        "goals_against": 1,
+        "points": 1
       },
       "players": []
     },
@@ -197,13 +197,13 @@
       "coach": "مورات ياكين",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 1,
+        "goals_against": 1,
+        "points": 1
       },
       "players": []
     },
@@ -217,13 +217,13 @@
       "coach": "كارلو أنتشيلوتي",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 1,
+        "goals_against": 1,
+        "points": 1
       },
       "players": []
     },
@@ -237,13 +237,13 @@
       "coach": "محمد وهبي",
       "isArab": true,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 1,
+        "goals_against": 1,
+        "points": 1
       },
       "players": []
     },
@@ -257,12 +257,12 @@
       "coach": "سيباستيان مينييه",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
+        "losses": 1,
         "goals_for": 0,
-        "goals_against": 0,
+        "goals_against": 1,
         "points": 0
       },
       "players": []
@@ -277,13 +277,13 @@
       "coach": "ستيف كلارك",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
+        "goals_for": 1,
         "goals_against": 0,
-        "points": 0
+        "points": 3
       },
       "players": []
     },
@@ -297,13 +297,13 @@
       "coach": "ماوريسيو بوكيتينو",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 4,
+        "goals_against": 1,
+        "points": 3
       },
       "players": []
     },
@@ -317,12 +317,12 @@
       "coach": "غوستافو ألفارو",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
+        "losses": 1,
+        "goals_for": 1,
+        "goals_against": 4,
         "points": 0
       },
       "players": []
@@ -337,13 +337,13 @@
       "coach": "توني بوبوفيتش",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
+        "goals_for": 2,
         "goals_against": 0,
-        "points": 0
+        "points": 3
       },
       "players": []
     },
@@ -357,12 +357,12 @@
       "coach": "فينشينسو مونتيلا",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
+        "losses": 1,
         "goals_for": 0,
-        "goals_against": 0,
+        "goals_against": 2,
         "points": 0
       },
       "players": []
@@ -377,13 +377,13 @@
       "coach": "يوليان ناغلسمان",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 7,
+        "goals_against": 1,
+        "points": 3
       },
       "players": []
     },
@@ -397,12 +397,12 @@
       "coach": "ديك أدفوكات",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
+        "losses": 1,
+        "goals_for": 1,
+        "goals_against": 7,
         "points": 0
       },
       "players": []
@@ -417,13 +417,13 @@
       "coach": "إيمرس فاي",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
+        "goals_for": 1,
         "goals_against": 0,
-        "points": 0
+        "points": 3
       },
       "players": []
     },
@@ -437,12 +437,12 @@
       "coach": "سيباستيان بيكاشيشي",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
+        "losses": 1,
         "goals_for": 0,
-        "goals_against": 0,
+        "goals_against": 1,
         "points": 0
       },
       "players": []
@@ -457,13 +457,13 @@
       "coach": "رونالد كومان",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 2,
+        "goals_against": 2,
+        "points": 1
       },
       "players": []
     },
@@ -477,13 +477,13 @@
       "coach": "هاجيمي موريياسو",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 2,
+        "goals_against": 2,
+        "points": 1
       },
       "players": []
     },
@@ -497,13 +497,13 @@
       "coach": "يون دال توماسون",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 5,
+        "goals_against": 1,
+        "points": 3
       },
       "players": []
     },
@@ -517,12 +517,12 @@
       "coach": "صبري لمواشي",
       "isArab": true,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
+        "losses": 1,
+        "goals_for": 1,
+        "goals_against": 5,
         "points": 0
       },
       "players": []
@@ -537,13 +537,13 @@
       "coach": "رودي غارسيا",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 1,
+        "goals_against": 1,
+        "points": 1
       },
       "players": []
     },
@@ -557,13 +557,13 @@
       "coach": "حسام حسن",
       "isArab": true,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 1,
+        "goals_against": 1,
+        "points": 1
       },
       "players": []
     },
@@ -577,13 +577,13 @@
       "coach": "أمير غالينويي",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 2,
+        "goals_against": 2,
+        "points": 1
       },
       "players": []
     },
@@ -597,13 +597,13 @@
       "coach": "دارن بازلي",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 2,
+        "goals_against": 2,
+        "points": 1
       },
       "players": []
     },
@@ -617,13 +617,13 @@
       "coach": "لويس دي لا فوينتي",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
         "goals_for": 0,
         "goals_against": 0,
-        "points": 0
+        "points": 1
       },
       "players": []
     },
@@ -637,13 +637,13 @@
       "coach": "بوبيستا",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
         "goals_for": 0,
         "goals_against": 0,
-        "points": 0
+        "points": 1
       },
       "players": []
     },
@@ -657,13 +657,13 @@
       "coach": "خيورخيوس دونيس",
       "isArab": true,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 1,
+        "goals_against": 1,
+        "points": 1
       },
       "players": []
     },
@@ -677,13 +677,13 @@
       "coach": "مارسيلو بييلسا",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
-        "draws": 0,
+        "draws": 1,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 1,
+        "goals_against": 1,
+        "points": 1
       },
       "players": []
     },
@@ -697,13 +697,13 @@
       "coach": "ديدييه ديشان",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 3,
+        "goals_against": 1,
+        "points": 3
       },
       "players": []
     },
@@ -717,12 +717,12 @@
       "coach": "بابي تياو",
       "isArab": false,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
+        "losses": 1,
+        "goals_for": 1,
+        "goals_against": 3,
         "points": 0
       },
       "players": []
@@ -737,12 +737,12 @@
       "coach": "غراهام أرنولد",
       "isArab": true,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
+        "losses": 1,
+        "goals_for": 1,
+        "goals_against": 4,
         "points": 0
       },
       "players": []
@@ -757,13 +757,13 @@
       "coach": "ستولي سولباكن",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 4,
+        "goals_against": 1,
+        "points": 3
       },
       "players": []
     },
@@ -777,13 +777,13 @@
       "coach": "ليونيل سكالوني",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
+        "goals_for": 3,
         "goals_against": 0,
-        "points": 0
+        "points": 3
       },
       "players": []
     },
@@ -797,12 +797,12 @@
       "coach": "فلاديمير بيتكوفيتش",
       "isArab": true,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
+        "losses": 1,
         "goals_for": 0,
-        "goals_against": 0,
+        "goals_against": 3,
         "points": 0
       },
       "players": []
@@ -817,13 +817,13 @@
       "coach": "رالف رانغنيك",
       "isArab": false,
       "stats": {
-        "played": 0,
-        "wins": 0,
+        "played": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
-        "points": 0
+        "goals_for": 3,
+        "goals_against": 1,
+        "points": 3
       },
       "players": []
     },
@@ -837,12 +837,12 @@
       "coach": "جمال السلامي",
       "isArab": true,
       "stats": {
-        "played": 0,
+        "played": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
-        "goals_for": 0,
-        "goals_against": 0,
+        "losses": 1,
+        "goals_for": 1,
+        "goals_against": 3,
         "points": 0
       },
       "players": []
@@ -1610,17 +1610,30 @@
       "id": "M008",
       "date": "2026-06-13",
       "time": "19:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "QAT",
       "team_away": "SUI",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 1,
+      "score_away": 1,
       "stadium_id": "STA02",
       "group": "B",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "SUI",
+          "player": "Breel Embolo",
+          "minute": 17,
+          "type": "عادي"
+        },
+        {
+          "team": "QAT",
+          "player": "Boualem Khoukhi",
+          "minute": 90,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -1633,7 +1646,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 0,
+      "score_ht_away": 1
     },
     {
       "id": "M009",
@@ -1755,17 +1770,30 @@
       "id": "M013",
       "date": "2026-06-13",
       "time": "22:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "BRA",
       "team_away": "MAR",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 1,
+      "score_away": 1,
       "stadium_id": "STA01",
       "group": "C",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "MAR",
+          "player": "Ismael Saibari",
+          "minute": 21,
+          "type": "عادي"
+        },
+        {
+          "team": "BRA",
+          "player": "Vinícius Júnior",
+          "minute": 32,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -1778,23 +1806,32 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 1,
+      "score_ht_away": 1
     },
     {
       "id": "M014",
       "date": "2026-06-14",
       "time": "01:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "HAI",
       "team_away": "SCO",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 0,
+      "score_away": 1,
       "stadium_id": "STA06",
       "group": "C",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "SCO",
+          "player": "John McGinn",
+          "minute": 28,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -1807,7 +1844,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 0,
+      "score_ht_away": 1
     },
     {
       "id": "M015",
@@ -1991,17 +2030,30 @@
       "id": "M020",
       "date": "2026-06-14",
       "time": "04:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "AUS",
       "team_away": "TUR",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 2,
+      "score_away": 0,
       "stadium_id": "STA08",
       "group": "D",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "AUS",
+          "player": "Nestory Irankunda",
+          "minute": 27,
+          "type": "عادي"
+        },
+        {
+          "team": "AUS",
+          "player": "Connor Metcalfe",
+          "minute": 75,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -2014,7 +2066,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 1,
+      "score_ht_away": 0
     },
     {
       "id": "M021",
@@ -2136,17 +2190,66 @@
       "id": "M025",
       "date": "2026-06-14",
       "time": "17:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "GER",
       "team_away": "CUW",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 7,
+      "score_away": 1,
       "stadium_id": "STA04",
       "group": "E",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "GER",
+          "player": "Felix Nmecha",
+          "minute": 6,
+          "type": "عادي"
+        },
+        {
+          "team": "CUW",
+          "player": "Livano Comenencia",
+          "minute": 21,
+          "type": "عادي"
+        },
+        {
+          "team": "GER",
+          "player": "Nico Schlotterbeck",
+          "minute": 38,
+          "type": "عادي"
+        },
+        {
+          "team": "GER",
+          "player": "Kai Havertz",
+          "minute": 45,
+          "type": "عادي"
+        },
+        {
+          "team": "GER",
+          "player": "Jamal Musiala",
+          "minute": 47,
+          "type": "عادي"
+        },
+        {
+          "team": "GER",
+          "player": "Nathaniel Brown",
+          "minute": 68,
+          "type": "عادي"
+        },
+        {
+          "team": "GER",
+          "player": "Deniz Undav",
+          "minute": 78,
+          "type": "عادي"
+        },
+        {
+          "team": "GER",
+          "player": "Kai Havertz",
+          "minute": 88,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -2159,23 +2262,32 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 3,
+      "score_ht_away": 1
     },
     {
       "id": "M026",
       "date": "2026-06-14",
       "time": "23:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "CIV",
       "team_away": "ECU",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 1,
+      "score_away": 0,
       "stadium_id": "STA07",
       "group": "E",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "CIV",
+          "player": "Amad Diallo",
+          "minute": 90,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -2188,7 +2300,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 0,
+      "score_ht_away": 0
     },
     {
       "id": "M027",
@@ -2310,17 +2424,42 @@
       "id": "M031",
       "date": "2026-06-14",
       "time": "20:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "NED",
       "team_away": "JPN",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 2,
+      "score_away": 2,
       "stadium_id": "STA02",
       "group": "F",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "NED",
+          "player": "Virgil van Dijk",
+          "minute": 51,
+          "type": "عادي"
+        },
+        {
+          "team": "JPN",
+          "player": "Keito Nakamura",
+          "minute": 57,
+          "type": "عادي"
+        },
+        {
+          "team": "NED",
+          "player": "Crysencio Summerville",
+          "minute": 64,
+          "type": "عادي"
+        },
+        {
+          "team": "JPN",
+          "player": "Daichi Kamada",
+          "minute": 88,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -2333,23 +2472,62 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 0,
+      "score_ht_away": 0
     },
     {
       "id": "M032",
       "date": "2026-06-15",
       "time": "02:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "SWE",
       "team_away": "TUN",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 5,
+      "score_away": 1,
       "stadium_id": "STA15",
       "group": "F",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "SWE",
+          "player": "Yasin Ayari",
+          "minute": 7,
+          "type": "عادي"
+        },
+        {
+          "team": "SWE",
+          "player": "Alexander Isak",
+          "minute": 30,
+          "type": "عادي"
+        },
+        {
+          "team": "TUN",
+          "player": "Omar Rekik",
+          "minute": 43,
+          "type": "عادي"
+        },
+        {
+          "team": "SWE",
+          "player": "Viktor Gyökeres",
+          "minute": 59,
+          "type": "عادي"
+        },
+        {
+          "team": "SWE",
+          "player": "Mattias Svanberg",
+          "minute": 84,
+          "type": "عادي"
+        },
+        {
+          "team": "SWE",
+          "player": "Yasin Ayari",
+          "minute": 90,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -2362,7 +2540,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 2,
+      "score_ht_away": 1
     },
     {
       "id": "M033",
@@ -2484,17 +2664,30 @@
       "id": "M037",
       "date": "2026-06-15",
       "time": "19:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "BEL",
       "team_away": "EGY",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 1,
+      "score_away": 1,
       "stadium_id": "STA10",
       "group": "G",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "EGY",
+          "player": "Emam Ashour",
+          "minute": 19,
+          "type": "عادي"
+        },
+        {
+          "team": "BEL",
+          "player": "Mohamed Hany",
+          "minute": 66,
+          "type": "هدف ذاتي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -2507,23 +2700,50 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 0,
+      "score_ht_away": 1
     },
     {
       "id": "M038",
       "date": "2026-06-16",
       "time": "01:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "IRN",
       "team_away": "NZL",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 2,
+      "score_away": 2,
       "stadium_id": "STA11",
       "group": "G",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "NZL",
+          "player": "Elijah Just",
+          "minute": 7,
+          "type": "عادي"
+        },
+        {
+          "team": "IRN",
+          "player": "Ramin Rezaeian",
+          "minute": 32,
+          "type": "عادي"
+        },
+        {
+          "team": "NZL",
+          "player": "Elijah Just",
+          "minute": 54,
+          "type": "عادي"
+        },
+        {
+          "team": "IRN",
+          "player": "Mohammad Mohebbi",
+          "minute": 64,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -2536,7 +2756,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 1,
+      "score_ht_away": 1
     },
     {
       "id": "M039",
@@ -2658,12 +2880,12 @@
       "id": "M043",
       "date": "2026-06-15",
       "time": "16:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "ESP",
       "team_away": "CPV",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 0,
+      "score_away": 0,
       "stadium_id": "STA03",
       "group": "H",
       "round": "الجولة الأولى",
@@ -2681,23 +2903,38 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 0,
+      "score_ht_away": 0
     },
     {
       "id": "M044",
       "date": "2026-06-15",
       "time": "22:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "KSA",
       "team_away": "URU",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 1,
+      "score_away": 1,
       "stadium_id": "STA13",
       "group": "H",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "KSA",
+          "player": "Abdulelah Al-Amri",
+          "minute": 41,
+          "type": "عادي"
+        },
+        {
+          "team": "URU",
+          "player": "Maxi Araújo",
+          "minute": 80,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -2710,7 +2947,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 1,
+      "score_ht_away": 0
     },
     {
       "id": "M045",
@@ -2832,17 +3071,42 @@
       "id": "M049",
       "date": "2026-06-16",
       "time": "19:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "FRA",
       "team_away": "SEN",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 3,
+      "score_away": 1,
       "stadium_id": "STA01",
       "group": "I",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "FRA",
+          "player": "Kylian Mbappé",
+          "minute": 66,
+          "type": "عادي"
+        },
+        {
+          "team": "FRA",
+          "player": "Bradley Barcola",
+          "minute": 82,
+          "type": "عادي"
+        },
+        {
+          "team": "FRA",
+          "player": "Kylian Mbappé",
+          "minute": 90,
+          "type": "عادي"
+        },
+        {
+          "team": "SEN",
+          "player": "Ibrahim Mbaye",
+          "minute": 90,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -2855,23 +3119,56 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 0,
+      "score_ht_away": 0
     },
     {
       "id": "M050",
       "date": "2026-06-16",
       "time": "22:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "IRQ",
       "team_away": "NOR",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 1,
+      "score_away": 4,
       "stadium_id": "STA09",
       "group": "I",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "NOR",
+          "player": "Erling Haaland",
+          "minute": 29,
+          "type": "عادي"
+        },
+        {
+          "team": "IRQ",
+          "player": "Aymen Hussein",
+          "minute": 39,
+          "type": "عادي"
+        },
+        {
+          "team": "NOR",
+          "player": "Erling Haaland",
+          "minute": 43,
+          "type": "عادي"
+        },
+        {
+          "team": "NOR",
+          "player": "Leo Østigard",
+          "minute": 76,
+          "type": "عادي"
+        },
+        {
+          "team": "NOR",
+          "player": "Aymen Hussein",
+          "minute": 90,
+          "type": "هدف ذاتي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -2884,7 +3181,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 1,
+      "score_ht_away": 2
     },
     {
       "id": "M051",
@@ -3006,17 +3305,36 @@
       "id": "M055",
       "date": "2026-06-17",
       "time": "01:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "ARG",
       "team_away": "ALG",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 3,
+      "score_away": 0,
       "stadium_id": "STA05",
       "group": "J",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "ARG",
+          "player": "Lionel Messi",
+          "minute": 17,
+          "type": "عادي"
+        },
+        {
+          "team": "ARG",
+          "player": "Lionel Messi",
+          "minute": 60,
+          "type": "عادي"
+        },
+        {
+          "team": "ARG",
+          "player": "Lionel Messi",
+          "minute": 76,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -3029,23 +3347,50 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 1,
+      "score_ht_away": 0
     },
     {
       "id": "M056",
       "date": "2026-06-17",
       "time": "04:00",
-      "status": "scheduled",
+      "status": "finished",
       "minute": null,
       "team_home": "AUT",
       "team_away": "JOR",
-      "score_home": null,
-      "score_away": null,
+      "score_home": 3,
+      "score_away": 1,
       "stadium_id": "STA07",
       "group": "J",
       "round": "الجولة الأولى",
       "matchday": 1,
-      "goals": [],
+      "goals": [
+        {
+          "team": "AUT",
+          "player": "Romano Schmid",
+          "minute": 21,
+          "type": "عادي"
+        },
+        {
+          "team": "JOR",
+          "player": "Ali Olwan",
+          "minute": 50,
+          "type": "عادي"
+        },
+        {
+          "team": "AUT",
+          "player": "Yazan Al-Arab",
+          "minute": 76,
+          "type": "هدف ذاتي"
+        },
+        {
+          "team": "AUT",
+          "player": "Marko Arnautovic",
+          "minute": 90,
+          "type": "عادي"
+        }
+      ],
       "stats": null,
       "weather": {
         "temp": 25,
@@ -3058,7 +3403,9 @@
         "home": 100,
         "draw": 60,
         "away": 80
-      }
+      },
+      "score_ht_home": 1,
+      "score_ht_away": 0
     },
     {
       "id": "M057",
