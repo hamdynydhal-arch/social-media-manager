@@ -277,6 +277,30 @@ self.addEventListener('message', event => {
     return
   }
 
+  // Dev/QA: trigger background news check immediately + fire a sample notification
+  if (event.data?.type === 'TEST_BREAKING_NEWS') {
+    event.waitUntil((async () => {
+      // 1. Immediate sample notification — visible even when Chrome is backgrounded
+      try {
+        await self.registration.showNotification('🚨 اختبار — خبر عاجل', {
+          body:               'هذا إشعار تجريبي — الأخبار العاجلة تعمل في الخلفية ✅',
+          icon:               ICON,
+          badge:              ICON,
+          dir:                'rtl',
+          lang:               'ar',
+          tag:                'test-news-' + Date.now(),
+          renotify:           true,
+          vibrate:            NEWS_VIB,
+          requireInteraction: false,
+          silent:             false,
+        })
+      } catch {}
+      // 2. Also run the real background news check right now
+      await backgroundNewsCheck()
+    })())
+    return
+  }
+
   // App detected new breaking news → show system notification on the phone screen
   if (event.data?.type === 'NEWS_ALERT') {
     const { text, id } = event.data

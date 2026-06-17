@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { playGoalSound, playNotificationSound, playWhistleSound } from '../utils/audioUtils'
+import { playGoalSound, playNotificationSound, playWhistleSound, playBreakingNewsSound } from '../utils/audioUtils'
 import { fireWorldCupAlert } from '../hooks/useLiveEvents'
 import { useWorldCupData } from '../context/WorldCupContext'
 import confetti from 'canvas-confetti'
@@ -20,6 +20,7 @@ export default function Settings({
     () => (typeof Notification !== 'undefined' ? Notification.permission : 'default')
   )
   const [testStatus, setTestStatus] = useState(null)
+  const [bgTestStatus, setBgTestStatus] = useState(null) // 'sending'|'sent'|'denied'|null
   const [installing, setInstalling] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
   const [refreshResult, setRefreshResult] = useState(null) // 'ok' | null
@@ -312,6 +313,50 @@ export default function Settings({
             ▶️ تشغيل وضع المحاكاة ({firstFavTeam.flag} {firstFavTeam.name})
           </button>
         )}
+      </div>
+
+      {/* ── External Notification Test ── */}
+      <div className="card p-4 border-red-500/30 bg-gradient-to-r from-red-900/15 to-transparent">
+        <h3 className="font-bold text-white mb-1 flex items-center gap-2">🚨 اختبار الإشعار الخارجي</h3>
+        <p className="text-slate-400 text-xs mb-3 leading-relaxed">
+          اضغط الزر ← اضغط زر الهوم لإغلاق التطبيق ← اسحب شريط الإشعارات للأسفل ← ستجد الإشعار مع الاهتزاز والرنة
+        </p>
+        <button
+          onClick={async () => {
+            if (bgTestStatus === 'sending') return
+            // Request notification permission first if needed
+            if (typeof Notification !== 'undefined' && Notification.permission !== 'granted') {
+              const p = await Notification.requestPermission()
+              if (p !== 'granted') { setBgTestStatus('denied'); setTimeout(() => setBgTestStatus(null), 4000); return }
+            }
+            setBgTestStatus('sending')
+            // Play sound locally too
+            playBreakingNewsSound()
+            // Send to SW for system notification
+            if (navigator.serviceWorker?.controller) {
+              navigator.serviceWorker.controller.postMessage({ type: 'TEST_BREAKING_NEWS' })
+              setBgTestStatus('sent')
+              setTimeout(() => setBgTestStatus(null), 5000)
+            } else {
+              setBgTestStatus('denied')
+              setTimeout(() => setBgTestStatus(null), 4000)
+            }
+          }}
+          disabled={bgTestStatus === 'sending'}
+          className="w-full py-4 rounded-2xl font-black text-white text-base transition-all active:scale-95 disabled:opacity-60"
+          style={{
+            background:
+              bgTestStatus === 'sent'   ? 'linear-gradient(135deg, #10b981, #059669)'
+              : bgTestStatus === 'denied' ? 'linear-gradient(135deg, #ef4444, #dc2626)'
+              : 'linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #dc2626 100%)',
+            boxShadow: bgTestStatus === 'sent' ? '0 6px 24px rgba(16,185,129,0.4)' : '0 6px 24px rgba(220,38,38,0.45)',
+          }}
+        >
+          {bgTestStatus === 'sending' && '⏳ جاري الإرسال...'}
+          {bgTestStatus === 'sent'    && '✅ أُرسل! اضغط الهوم والتحقق من الإشعارات'}
+          {bgTestStatus === 'denied'  && '🚫 فعّل الإشعارات أولاً في الإعدادات'}
+          {!bgTestStatus              && '🚨 اختبار إشعار الأخبار العاجلة الآن'}
+        </button>
       </div>
 
       {/* ── Sound FX Test ── */}
