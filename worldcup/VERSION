@@ -1,0 +1,18 @@
+6.1.0
+
+النسخة السادسة — v6.1.0 (stable)
+Commit: 3d80b30
+Date: 2026-06-17
+Branch: claude/world-cup-pwa-app-jfg1rv
+
+ما يُمنع المساس به:
+- الشعار الرسمي (icon-192.png, icon-512.png, icon-maskable-512.png, favicon.svg)
+- منطق تثبيت PWA (useInstallPrompt + triggerInstall)
+- الساعة المباشرة في الترويسة
+- النقطة الخضراء/الصفراء (green=live, amber=limited)
+- سلسلة الـ proxy لـ openfootball
+- زر التحديث الفوري مع التغذية الراجعة
+- نظام الإشعارات والصوت
+- Chrome install guide (bottom sheet)
+
+أي تطوير قادم يُبنى فوق هذه النسخة ولا يمسها.
