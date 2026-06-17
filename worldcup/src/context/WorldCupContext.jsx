@@ -274,7 +274,12 @@ function buildAutoNews(matches, teams) {
       const away = teams.find(t => t.id === m.team_away)
       const sh = m.score_home ?? '?'
       const sa = m.score_away ?? '?'
-      return `🔴 مباشر: ${home?.name ?? m.team_home} ${sh}-${sa} ${away?.name ?? m.team_away} — الدقيقة ${m.minute}`
+      let text = `🔴 مباشر: ${home?.name ?? m.team_home} ${sh}-${sa} ${away?.name ?? m.team_away} — الدقيقة ${m.minute}`
+      if (m.goals?.length > 0 && (Number(sh) > 0 || Number(sa) > 0)) {
+        const lastGoal = [...m.goals].sort((a, b) => b.minute - a.minute)[0]
+        text += ` — ⚽ ${lastGoal.player} ${lastGoal.minute}'`
+      }
+      return text
     })
 }
 
@@ -290,7 +295,15 @@ function buildResultsNews(matches, teams) {
     .map(m => {
       const home = teams.find(t => t.id === m.team_home)?.name ?? m.team_home
       const away = teams.find(t => t.id === m.team_away)?.name ?? m.team_away
-      return `📋 النتيجة النهائية: ${home} ${m.score_home}-${m.score_away} ${away}`
+      let text = `📋 النتيجة النهائية: ${home} ${m.score_home}-${m.score_away} ${away}`
+      if (m.goals?.length > 0) {
+        const scorers = [...m.goals]
+          .sort((a, b) => a.minute - b.minute)
+          .map(g => `${g.player} ${g.minute}'`)
+          .join('، ')
+        text += ` — ⚽ ${scorers}`
+      }
+      return text
     })
 }
 
@@ -313,12 +326,14 @@ function buildNews(matches, teams, rssItems) {
     .map(item => typeof item === 'object' ? item.text : item)
 
   // Priority: live (most urgent) → hardcoded results (newest first) →
-  // auto-results not already in hardcoded → RSS/static base
+  // auto-results not already in hardcoded → WC26 RSS
   const combined = [
     ...liveNews,
     ...freshHardcoded,
     ...resultNews.filter(n => {
-      const scorePart = n.split(': ').slice(1).join(': ')
+      // Extract "HOME X-Y AWAY" before any goalscorer suffix (— ⚽ ...)
+      const afterLabel = n.replace('📋 النتيجة النهائية: ', '')
+      const scorePart  = afterLabel.split(' — ')[0].trim()
       return !freshHardcoded.some(h => h.includes(scorePart))
     }),
     ...base,

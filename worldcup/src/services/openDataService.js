@@ -515,6 +515,51 @@ function isSportsRelated(title) {
   return _SPORTS_KW.some(kw => t.includes(kw))
 }
 
+// ── WC26-specific filter — only articles explicitly about WC2026 pass ──────────
+// An article must either (a) mention the tournament by name, OR (b) name 2+ WC26
+// teams (typical match headline), OR (c) name 1 team + a result/goal keyword.
+const _WC26_TOURNAMENT_KW = [
+  'world cup','worldcup','wc26','wc2026','2026 world','fifa world cup',
+  'كأس العالم','مونديال',
+]
+
+const _WC26_TEAM_NAMES = [
+  // Arabic
+  'البرازيل','الأرجنتين','فرنسا','إسبانيا','إنجلترا','ألمانيا','البرتغال',
+  'المغرب','السعودية','اليابان','المكسيك','كندا','هولندا','بلجيكا',
+  'كرواتيا','أوروغواي','السنغال','كولومبيا','تركيا','الجزائر','النرويج',
+  'الأردن','العراق','غانا','باراغواي','هايتي','تونس','الولايات المتحدة',
+  'أستراليا','إيران','نيوزيلندا','كاب فيردي','الإكوادور','السويد',
+  'مصر','سويسرا','قطر','البوسنة','اسكتلندا','جنوب أفريقيا','كوريا الجنوبية',
+  'التشيك','كوراساو','كوت ديفوار','أوزبكستان','الكونغو','بنما',
+  // English
+  'brazil','argentina','france','spain','england','germany','portugal','morocco',
+  'saudi arabia','japan','mexico','canada','australia','netherlands','belgium',
+  'croatia','uruguay','senegal','ecuador','colombia','turkey','czech republic',
+  'scotland','egypt','algeria','norway','jordan','iraq','ghana','panama',
+  'haiti','paraguay','tunisia','iran','new zealand','cape verde','sweden',
+  'qatar','bosnia','switzerland','south africa','south korea','usa',
+  'united states','curacao','ivory coast','uzbekistan','congo',
+]
+
+const _WC26_RESULT_KW = [
+  'هدف','أهداف','نتيجة','فوز','هزيمة','تعادل','يسجل','يفوز',
+  'goal','score','result','win','beat','defeat','draw',
+]
+
+function isWC26News(title) {
+  if (!title) return false
+  const t = title.toLowerCase()
+  // (a) Tournament name mentioned explicitly
+  if (_WC26_TOURNAMENT_KW.some(kw => t.includes(kw))) return true
+  // (b) Two or more WC26 team names → almost certainly a match report
+  const teamHits = _WC26_TEAM_NAMES.filter(tm => t.includes(tm)).length
+  if (teamHits >= 2) return true
+  // (c) One WC26 team + result/goal keyword
+  if (teamHits >= 1 && _WC26_RESULT_KW.some(kw => t.includes(kw))) return true
+  return false
+}
+
 // ── Non-sports blacklist — explicit rejection of political / off-topic items ───
 // Terms that can NEVER appear in a genuine sports news headline.
 // Checked first (before the whitelist) for belt-and-suspenders filtering.
@@ -589,7 +634,7 @@ async function fetchRedditNews() {
     .map(post => {
       const d = post.data
       if (d.score < 10) return null
-      if (!isSportsRelated(d.title)) return null
+      if (!isWC26News(d.title)) return null
       const pubMs = (d.created_utc ?? 0) * 1000
       if (pubMs < cutoff) return null
       const time = new Date(pubMs)
@@ -609,8 +654,8 @@ async function tryFeed(feed, applyFilter) {
     if (!text) return null
     const items = parseRssXml(text)            // blacklist already applied inside
     if (!items?.length) return null
-    // Whitelist additionally applied when caller requests stricter filtering
-    return applyFilter ? items.filter(t => isSportsRelated(t)) : items
+    // WC26-specific filter — only articles about WC2026 matches pass
+    return applyFilter ? items.filter(t => isWC26News(t)) : items
   }
   for (const getter of [
     () => safeText(feed),
@@ -657,7 +702,7 @@ function formatItems(items, applyFilter = false) {
     const title = item.title?.trim() ?? ''
     if (!title) return null
     if (isNonSports(title)) return null
-    if (applyFilter && !isSportsRelated(title)) return null
+    if (applyFilter && !isWC26News(title)) return null
     const pub   = item.pubDate || item.date_published
     const pubMs = pub ? new Date(pub).getTime() : null
     if (pubMs !== null && !isNaN(pubMs) && pubMs < cutoff) return null

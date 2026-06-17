@@ -1,5 +1,5 @@
-v6.3.2 — STABLE
-commit: d845cae
+v6.3.3 — STABLE
+commit: pending
 date: 2026-06-18
 
 ════════════════════════════════════════════════════════
@@ -16,6 +16,8 @@ date: 2026-06-18
   8. "النتيجة النهائية"  — لا تعود إلى "نهائي"
   9. WorldCupContext.jsx  — setInterval(refresh, 60_000) لا يعود إلى 120_000
  10. openDataService.js  — _NON_SPORTS_KW blacklist + isSportsRelated على المصادر العربية
+ 11. openDataService.js  — isWC26News() يُطبَّق على كل RSS (بدل isSportsRelated)
+ 12. WorldCupContext.jsx — buildResultsNews + buildAutoNews يُظهران الهدّافين دائماً
 
 ════════════════════════════════════════════════════════
   سجل الإصدارات
@@ -64,6 +66,18 @@ v6.3.1 — التحديث التلقائي
   - WorldCupContext.jsx: setInterval(refresh, 120_000) → 60_000
   - Settings.jsx: النص "يتجدد كل دقيقتين" → "يتجدد كل دقيقة"
   - زر التحديث اليدوي محفوظ بدون تغيير
+
+v6.3.3 — أخبار كأس العالم فقط + هدّافو المباريات
+
+  - isWC26News(): فلتر جديد أصارم من isSportsRelated — يشترط ذكر
+    "كأس العالم"/"مونديال"/"world cup" أو اسمَي منتخبَين WC26 أو
+    منتخب + كلمة نتيجة/هدف — يحل محل isSportsRelated في RSS
+  - _WC26_TOURNAMENT_KW + _WC26_TEAM_NAMES: 48 منتخباً AR+EN
+  - buildResultsNews(): يُضيف هدّافي كل مباراة وتوقيت أهدافهم
+    مثال: المكسيك 2-0 جنوب أفريقيا — ⚽ كيمايونيس 9'، خيمينيز 67'
+  - buildAutoNews(): يُضيف آخر هدف في المباريات المباشرة
+  - buildNews() dedup: يستخرج "HOME X-Y AWAY" قبل علامة الهدّاف
+    لمقارنة صحيحة مع HARDCODED_NEWS
 
 v6.3.2 — فلتر الأخبار المزدوج
   - _NON_SPORTS_KW: blacklist لـ 40+ مصطلح سياسي/عسكري/اقتصادي/صحي (عربي+إنجليزي)
