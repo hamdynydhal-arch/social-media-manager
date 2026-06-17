@@ -41,17 +41,21 @@ export function useInstallPrompt() {
   }, [])
 
   const triggerInstall = async () => {
-    // Prefer React state, fall back to window global
     const prompt = installPrompt ?? window.deferredPrompt
     if (!prompt) return false
-    await prompt.prompt()
-    const { outcome } = await prompt.userChoice
-    if (outcome === 'accepted') {
+    try {
+      await prompt.prompt()
+      const { outcome } = await prompt.userChoice
+      // Clear the spent event regardless of outcome — browser will re-fire when ready
       window.deferredPrompt = null
       setInstallPrompt(null)
-      setIsInstalled(true)
+      if (outcome === 'accepted') setIsInstalled(true)
+      return outcome === 'accepted'
+    } catch {
+      window.deferredPrompt = null
+      setInstallPrompt(null)
+      return false
     }
-    return outcome === 'accepted'
   }
 
   return {

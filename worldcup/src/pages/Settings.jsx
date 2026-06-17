@@ -13,7 +13,7 @@ export default function Settings({
   installState = {},
 }) {
   const { data, sources, refresh } = useWorldCupData()
-  const { isInstalled, isIOS } = installState
+  const { isInstalled, isIOS, installPrompt, triggerInstall } = installState
   const firstFavTeam = data.teams.find(t => t.id === favoriteTeams?.[0])
 
   const [notifPerm, setNotifPerm] = useState(
@@ -25,28 +25,14 @@ export default function Settings({
   const [refreshResult, setRefreshResult] = useState(null) // 'ok' | null
   const [showIOSModal, setShowIOSModal] = useState(false)
   const [showAndroidModal, setShowAndroidModal] = useState(false)
-  const [hasNativePrompt, setHasNativePrompt] = useState(() => !!window.deferredPrompt)
-
-  useEffect(() => {
-    const onPrompt = () => setHasNativePrompt(true)
-    const onInstalled = () => setHasNativePrompt(false)
-    window.addEventListener('beforeinstallprompt', onPrompt)
-    window.addEventListener('appinstalled', onInstalled)
-    return () => {
-      window.removeEventListener('beforeinstallprompt', onPrompt)
-      window.removeEventListener('appinstalled', onInstalled)
-    }
-  }, [])
 
   // ── Install ─────────────────────────────────────────────────────────────────
   const handleInstall = async () => {
     if (isIOS) { setShowIOSModal(true); return }
-    if (!window.deferredPrompt) { setShowAndroidModal(true); return }
+    if (!installPrompt) { setShowAndroidModal(true); return }
     setInstalling(true)
     try {
-      await window.deferredPrompt.prompt()
-      const { outcome } = await window.deferredPrompt.userChoice
-      if (outcome === 'accepted') window.deferredPrompt = null
+      await triggerInstall()
     } finally {
       setInstalling(false)
     }
@@ -388,7 +374,7 @@ export default function Settings({
         <h3 className="font-bold text-white mb-3">📱 معلومات التطبيق</h3>
         <div className="space-y-2 text-sm">
           {[
-            { label: 'الإصدار', val: '5.0.0' },
+            { label: 'الإصدار', val: '6.0.0' },
             { label: 'البطولة', val: 'كأس العالم FIFA 2026' },
             { label: 'الدول المستضيفة', val: 'الولايات المتحدة • كندا • المكسيك' },
             { label: 'المنتخبات', val: `${data.teams.length} منتخب` },
