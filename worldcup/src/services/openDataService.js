@@ -257,10 +257,15 @@ function parseEspnRosters(rosters) {
 // ── PRIMARY: openfootball match data ─────────────────────────────────────────
 async function fetchOpenfootballMatches() {
   const json = await safeFetch(OFB_MATCHES)
-  if (!json?.matches?.length) return null
+  if (!json) return null  // network/HTTP failure → truly unreachable
+
+  // openfootball 2026 uses rounds[].matches, not a flat matches array
+  const allMatches = json.matches?.length
+    ? json.matches
+    : (json.rounds ?? []).flatMap(r => r.matches ?? [])
 
   const result = []
-  for (const m of json.matches) {
+  for (const m of allMatches) {
     const homeId = OFB_TEAM_MAP[m.team1]
     const awayId = OFB_TEAM_MAP[m.team2]
     if (!homeId || !awayId) continue
@@ -293,7 +298,7 @@ async function fetchOpenfootballMatches() {
       goals,
     })
   }
-  return result.length > 0 ? result : null
+  return result  // [] = source reachable but no finished matches yet
 }
 
 // ── SECONDARY: ESPN scoreboard — returns event IDs + live scores ──────────────
@@ -399,7 +404,7 @@ export async function fetchEspnMatches() {
     fetchEspnScoreboard(),    // ESPN fallback
   ])
 
-  if (!ofb && !sfsEvents && !espnEvents) return null
+  if (ofb === null && sfsEvents === null && espnEvents === null) return null
 
   const merged = [...(ofb ?? [])]
 
@@ -432,7 +437,7 @@ export async function fetchEspnMatches() {
     }
   }
 
-  return merged.length > 0 ? merged : null
+  return merged
 }
 
 // ── Public: fetch detailed stats + lineups for live/finished matches ──────────
@@ -488,7 +493,7 @@ async function fetchRedditNews() {
   const items = json.data.children
     .map(post => {
       const d = post.data
-      if (d.score < 20) return null
+      if (d.score < 5) return null
       const time = new Date(d.created_utc * 1000)
         .toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })
       return `${time} — ${d.title}`
@@ -500,7 +505,11 @@ async function fetchRedditNews() {
 
 // ── Public: news feed ─────────────────────────────────────────────────────────
 export async function fetchRssNews() {
-  // Try each RSS feed with multiple proxy strategies
+  // Try Reddit first — CORS * guaranteed, no proxy needed, fast
+  const reddit = await fetchRedditNews()
+  if (reddit) return reddit
+
+  // Fallback: RSS feeds via proxy chain
   for (const feed of RSS_FEEDS) {
     // 0. Direct (BBC/Sky CDN often serves with CORS *)
     const direct = await safeText(feed)
@@ -540,8 +549,7 @@ export async function fetchRssNews() {
     if (j2?.items?.length > 0) return formatItems(j2.items)
   }
 
-  // Last resort: Reddit r/worldcup (CORS * — always works)
-  return fetchRedditNews()
+  return null
 }
 
 function formatItems(items) {
