@@ -33,13 +33,13 @@ jobs:
         working-directory: worldcup
         run: npm run build
         env:
-          VITE_BASE_URL: /world-cup/
+          VITE_BASE_URL: /worldcup-2026/
 
-      - name: Deploy to hamdynydhal-arch/world-cup gh-pages
+      - name: Deploy to hamdynydhal-arch/worldcup-2026 gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.WORLDCUP_DEPLOY_TOKEN }}
-          external_repository: hamdynydhal-arch/world-cup
+          external_repository: hamdynydhal-arch/worldcup-2026
           publish_dir: worldcup/dist
           publish_branch: gh-pages
           force_orphan: true
