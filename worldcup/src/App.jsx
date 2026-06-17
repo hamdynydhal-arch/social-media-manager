@@ -23,6 +23,13 @@ function AppInner() {
   const [showSelector, setShowSelector] = useState(favoriteTeams === null)
   const { data, apiMode, lastUpdated } = useWorldCupData()
 
+  // Live clock — updates every second so date+time are always current
+  const [now, setNow] = useState(() => new Date())
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000)
+    return () => clearInterval(id)
+  }, [])
+
   const installState = useInstallPrompt()
 
   useLiveMatchEvents(favoriteTeams ?? [])
@@ -101,17 +108,17 @@ function AppInner() {
               </div>
             </Link>
             <div className="flex items-center gap-2">
-              {apiMode === 'live' && lastUpdated && (
-                <span className="text-xs text-emerald-400 font-medium">
-                  {lastUpdated.toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit' })}
+              <div className="flex flex-col items-end gap-0.5">
+                <span className="text-xs text-slate-400 leading-none">
+                  {now.toLocaleDateString('ar-SA-u-nu-latn', { day: 'numeric', month: 'short' })}
                 </span>
-              )}
-              <span className="text-xs text-slate-500">
-                {new Date().toLocaleDateString('ar-SA-u-nu-latn', { day: 'numeric', month: 'short' })}
-              </span>
+                <span className="text-xs text-emerald-400 font-medium tabular-nums leading-none">
+                  {now.toLocaleTimeString('ar-SA-u-nu-latn', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                </span>
+              </div>
               <div
-                className={`w-2 h-2 rounded-full animate-pulse ${apiMode === 'live' ? 'bg-emerald-400' : 'bg-amber-400'}`}
-                title={apiMode === 'live' ? 'بيانات حية' : 'وضع ثابت'}
+                className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
+                title={apiMode === 'live' ? 'بيانات حية' : 'وضع محلي — جاهز للاتصال'}
               />
             </div>
           </div>

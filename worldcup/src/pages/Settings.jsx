@@ -354,7 +354,7 @@ export default function Settings({
         </div>
         {lastUpdated && (
           <p className="text-xs text-slate-500 text-center mb-2">
-            آخر تحديث: {lastUpdated.toLocaleTimeString('ar-SA-u-nu-latn')} — يتجدد كل 60 ثانية
+            آخر تحديث: {lastUpdated.toLocaleTimeString('ar-SA-u-nu-latn')} — يتجدد كل دقيقتين
           </p>
         )}
         <button
