@@ -1,5 +1,5 @@
-v6.3.3 — STABLE
-commit: 19f272e
+v6.3.4 — STABLE
+commit: f0765a5
 date: 2026-06-18
 
 ════════════════════════════════════════════════════════
@@ -7,26 +7,30 @@ date: 2026-06-18
 ════════════════════════════════════════════════════════
 
   ── الإشعارات ──
-  1. sw.js ICON           — يبقى base64 data URL (ليس URL خارجي)
+  1. sw.js ICON              — يبقى base64 data URL (ليس URL خارجي)
   2. sw.js requireInteraction — يبقى true على جميع أنواع الإشعارات
-  3. badge-96.png         — لا يُحذف ولا يُستبدل
-  4. HeadsUpNotifModal.jsx — لا يُحذف
+  3. badge-96.png            — لا يُحذف ولا يُستبدل
+  4. HeadsUpNotifModal.jsx   — لا يُحذف
 
   ── الأيقونات والتثبيت ──
-  5. الأيقونات            — icon-192/512/maskable لا تُستبدل
-  6. useInstallPrompt.js  — منطق triggerInstall وإدارة deferredPrompt
+  5. الأيقونات               — icon-192/512/maskable لا تُستبدل
+  6. useInstallPrompt.js     — منطق triggerInstall وإدارة deferredPrompt
 
   ── الأخبار والبيانات ──
-  7. openDataService.js   — fetchRssNews() يستخدم RSS_FEEDS_AR فقط (لا إنجليزي)
-  8. openDataService.js   — isWC26News() هو الفلتر المُطبَّق على RSS (لا isSportsRelated)
-  9. openDataService.js   — _NON_SPORTS_KW blacklist مُطبَّق دائماً في parseRssXml + formatItems
- 10. openDataService.js   — parseRssXml + formatItems يحذفان الأخبار أكثر من 24 ساعة
- 11. openDataService.js   — نتائج RSS مرتّبة من الأحدث للأقدم (pubMs desc)
- 12. WorldCupContext.jsx  — buildResultsNews يُظهر الهدّافين مع دقائق أهدافهم
- 13. WorldCupContext.jsx  — buildAutoNews يُضيف آخر هدف في المباريات المباشرة
- 14. WorldCupContext.jsx  — buildNews: ترتيب [مباشر → HARDCODED → نتائج → RSS]
- 15. WorldCupContext.jsx  — setInterval(refresh, 60_000) لا يعود إلى 120_000
- 16. WorldCupContext.jsx  — HARDCODED_NEWS: "النتيجة النهائية" لا تعود إلى "نهائي"
+  7. openDataService.js      — fetchRssNews() يستخدم RSS_FEEDS_AR فقط (لا إنجليزي)
+  8. openDataService.js      — isWC26News() هو الفلتر على RSS (لا isSportsRelated)
+  9. openDataService.js      — _NON_SPORTS_KW blacklist مُطبَّق دائماً
+ 10. openDataService.js      — parseRssXml + formatItems يحذفان أخبار +24 ساعة
+ 11. openDataService.js      — نتائج RSS مرتّبة من الأحدث للأقدم
+ 12. WorldCupContext.jsx     — buildResultsNews يُظهر الهدّافين ودقائق أهدافهم
+ 13. WorldCupContext.jsx     — buildAutoNews يُظهر آخر هدف في المباراة المباشرة
+ 14. WorldCupContext.jsx     — ترتيب buildNews: مباشر → HARDCODED → نتائج → RSS
+ 15. WorldCupContext.jsx     — setInterval(refresh, 60_000) لا يعود إلى 120_000
+ 16. WorldCupContext.jsx     — "النتيجة النهائية" لا تعود إلى "نهائي"
+
+  ── صفحة الإعدادات ──
+ 17. Settings.jsx            — ترتيب الإشعارات: إعدادات → هدف → عاجل → أصوات → محاكي
+ 18. Settings.jsx            — الأقسام الأربعة للإشعارات لا تُحذف (كل منها يختبر نوعاً مختلفاً)
 
 ════════════════════════════════════════════════════════
   بنية فلتر الأخبار — يُمنع تبسيطها أو حذف أي طبقة
@@ -44,9 +48,24 @@ date: 2026-06-18
     مُطبَّق في tryFeed() وformatItems() وfetchRedditNews().
 
   مصادر الأخبار الداخلية (دائماً في الشريط — لا تعتمد على RSS):
-    • buildAutoNews()   → مباريات مباشرة مع آخر هدف
+    • buildAutoNews()    → مباريات مباشرة مع آخر هدف
     • buildResultsNews() → نتائج آخر 24 ساعة مع الهدّافين
-    • HARDCODED_NEWS    → نتائج مُدخَلة يدوياً مُفصَّلة
+    • HARDCODED_NEWS     → نتائج مُدخَلة يدوياً مُفصَّلة
+
+════════════════════════════════════════════════════════
+  ترتيب صفحة الإعدادات — لا يتغيّر
+════════════════════════════════════════════════════════
+
+  1.  ⭐ المنتخبات المفضلة
+  2.  📲 تثبيت التطبيق
+  3.  🔔 إعدادات الإشعارات    ← setup أولاً
+  4.  📳 اختبار الشاشة والصوت ← إشعار هدف
+  5.  🚨 اختبار الإشعار الخارجي ← إشعار عاجل
+  6.  🔊 اختبار المؤثرات الصوتية
+  7.  🎮 محاكي المباريات
+  8.  🏟️ الملاعب
+  9.  🌐 مصادر البيانات
+  10. 📱 معلومات التطبيق
 
 ════════════════════════════════════════════════════════
   سجل الإصدارات
@@ -55,58 +74,38 @@ date: 2026-06-18
 v6.0.0 — زر التثبيت
   - useInstallPrompt hook يُدير beforeinstallprompt
   - triggerInstall() يمسح الـ event بعد accept وdismiss
-  - انتظار 1.5 ث للـ prompt قبل عرض الدليل اليدوي
-  - دليل Android bottom-sheet مع mockup شريط Chrome
-  - دليل iOS بخطوات Safari Share
+  - دليل Android bottom-sheet + دليل iOS Safari
 
 v6.1.0 — الشعار والأيقونة
-  - icon-192.png: كأس ذهبية + كرة + 3 نجوم + "2026"
-  - icon-512.png + icon-maskable-512.png
-  - favicon.svg محدّث
+  - icon-192/512/maskable + favicon.svg
   - vite.config.js: أيقونات any/maskable منفصلة
 
 v6.1.1 — الأخبار العاجلة الخارجية
-  - playBreakingNewsSound() في audioUtils.js
-  - backgroundNewsCheck() في sw.js (مصدر: Reddit r/worldcup)
-  - NEWS_ALERT + TEST_BREAKING_NEWS handlers في sw.js
-  - BreakingNewsBanner.jsx: صوت + إشعار SW
-  - App.jsx: PLAY_BREAKING_NEWS listener
-  - زر اختبار الإشعار الخارجي في Settings
+  - playBreakingNewsSound() + backgroundNewsCheck() في sw.js
+  - BreakingNewsBanner.jsx + زر اختبار الإشعار الخارجي
 
 v6.2.0 — أيقونة الإشعار + Heads-Up
-  - badge-96.png: كرة قدم بيضاء / خلفية شفافة
-  - sw.js BADGE_ICON منفصل عن ICON
-  - sw.js ICON = base64 data URL مضمّن (حل المربع الأبيض)
-  - requireInteraction: true على جميع أنواع الإشعارات
-  - HeadsUpNotifModal.jsx: دليل تفعيل heads-up خطوة بخطوة
-  - Settings: زر أزرق يفتح المودال
-  - sendRealTestNotification يمر عبر SW postMessage
+  - sw.js ICON = base64 data URL (حل المربع الأبيض)
+  - requireInteraction: true على جميع الإشعارات
+  - HeadsUpNotifModal.jsx + badge-96.png
 
 v6.3.0 — جودة البيانات والأخبار
-  - فلتر رياضي isSportsRelated() في openDataService.js وsw.js
-  - مصادر عربية (BBC عربي، الجزيرة) تُجرَّب أولاً
-  - Reddit مُخفَّض لآخر الاحتياطات + حد نقاط 5→10
-  - "النتيجة النهائية" بدلاً من "نهائي" (5 مواضع)
-  - مدرب تونس: صبري لمواشي → هيرفي رونار
-  - الإصدار 6.3.0 يظهر في الإعدادات وpackage.json
+  - فلتر isSportsRelated + مصادر عربية أولاً
+  - "النتيجة النهائية" + مدرب تونس → هيرفي رونار
+  - الإصدار 6.3.0 في الإعدادات وpackage.json
 
 v6.3.1 — التحديث التلقائي
-  - setInterval(refresh) 120 ث → 60 ث
-  - النص "يتجدد كل دقيقتين" → "يتجدد كل دقيقة"
-  - زر التحديث اليدوي محفوظ
+  - setInterval 120 ث → 60 ث + زر التحديث اليدوي
 
 v6.3.2 — فلتر الأخبار المزدوج
-  - _NON_SPORTS_KW blacklist: 40+ مصطلح سياسي/عسكري/اقتصادي/صحي
-  - isNonSports(): مُطبَّق دائماً قبل أي فلتر آخر
-  - فلتر الـ whitelist يُطبَّق الآن على المصادر العربية أيضاً
-  - توسيع _SPORTS_KW: +25 مصطلح رياضي عربي
+  - _NON_SPORTS_KW blacklist (40+ مصطلح) + isNonSports()
+  - المصادر العربية تخضع للـ whitelist أيضاً
 
 v6.3.3 — أخبار كأس العالم فقط + هدّافو المباريات
-  - isWC26News(): فلتر WC26-صارم يحل محل isSportsRelated في RSS
-  - _WC26_TOURNAMENT_KW + _WC26_TEAM_NAMES: 48 منتخباً AR+EN
-  - buildResultsNews(): هدّافو المباراة + دقائق الأهداف
-  - buildAutoNews(): آخر هدف في المباريات المباشرة
-  - ترتيب الأخبار: مباشر → HARDCODED → نتائج → RSS
-  - dedup محسَّن: يستخرج "HOME X-Y AWAY" قبل لاحقة الهدّافين
-  - fetchRssNews(): مصادر عربية فقط (لا إنجليزي، لا Reddit)
-  - أخبار RSS: فلتر 24 ساعة + ترتيب من الأحدث
+  - isWC26News() يحل محل isSportsRelated في RSS
+  - buildResultsNews + buildAutoNews يُظهران الهدّافين
+  - fetchRssNews(): مصادر عربية فقط، فلتر 24 ساعة، أحدث أولاً
+
+v6.3.4 — ترتيب صفحة الإعدادات
+  - إعادة ترتيب أقسام الإشعارات: setup → هدف → عاجل → أصوات → محاكي
+  - لا حذف — كل قسم يختبر نوعاً مختلفاً من الإشعارات
