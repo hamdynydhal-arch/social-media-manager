@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-const BASE = process.env.VITE_BASE_URL ?? '/worldcup-2026/'
+const BASE = process.env.VITE_BASE_URL ?? '/'
 
 export default defineConfig({
   base: BASE,

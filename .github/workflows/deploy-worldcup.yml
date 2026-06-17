@@ -33,7 +33,7 @@ jobs:
         working-directory: worldcup
         run: npm run build
         env:
-          VITE_BASE_URL: /worldcup-2026/
+          VITE_BASE_URL: /
 
       - name: Deploy to hamdynydhal-arch/worldcup-2026 gh-pages
         uses: peaceiris/actions-gh-pages@v3
@@ -43,4 +43,5 @@ jobs:
           publish_dir: worldcup/dist
           publish_branch: gh-pages
           force_orphan: true
-          commit_message: 'Deploy World Cup PWA [skip ci]'
+          cname: wc26.prtnh.com
+          commit_message: 'Deploy World Cup PWA to wc26.prtnh.com [skip ci]'
