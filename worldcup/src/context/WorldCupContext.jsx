@@ -447,7 +447,7 @@ export function WorldCupProvider({ children }) {
     return () => clearInterval(id)
   }, [computeData, espnOverrides, espnStandings, rssNews])
 
-  // ── Initial clock sync + load + 120-second API cycle ─────────────────────
+  // ── Initial clock sync + load + 60-second API cycle ──────────────────────
   useEffect(() => {
     // Sync clock first, then purge any stale CV cache entries from previous
     // wrong match times, then do the first full refresh
@@ -455,7 +455,7 @@ export function WorldCupProvider({ children }) {
       purgeStaleCvEntries()
       refresh()
     })
-    const id = setInterval(refresh, 120_000)
+    const id = setInterval(refresh, 60_000)
     return () => clearInterval(id)
   }, [refresh])
 
