@@ -31,9 +31,10 @@ registerRoute(
 )
 
 // Derive base from service worker scope — works on any hosting (GitHub Pages, Netlify, etc.)
-const BASE = self.registration.scope  // always ends with '/'
-const ICON  = BASE + 'icons/icon-192.png'
-const SOUND = BASE + 'sounds/whistle.wav'
+const BASE       = self.registration.scope  // always ends with '/'
+const ICON       = BASE + 'icons/icon-192.png'
+const BADGE_ICON = BASE + 'icons/badge-96.png'
+const SOUND      = BASE + 'sounds/whistle.wav'
 
 const WHISTLE_VIB  = [300, 100, 300, 100, 800]
 const STANDARD_VIB = [200, 100, 200]
@@ -110,7 +111,7 @@ async function backgroundScoreCheck() {
           `🚨⚽ هدف! ${m.team1?.name} ${sh}–${sa} ${m.team2?.name}`,
           {
             body:               isFavScorer ? '⭐ منتخبك يسجل!' : 'هدف في مباراتك المفضلة',
-            icon: ICON, badge: ICON, dir: 'rtl', lang: 'ar',
+            icon: ICON, badge: BADGE_ICON, dir: 'rtl', lang: 'ar',
             tag: `bg-${id}-h${sh}`, renotify: true,
             vibrate: WHISTLE_VIB, requireInteraction: true, silent: false,
           }
@@ -124,7 +125,7 @@ async function backgroundScoreCheck() {
           `🚨⚽ هدف! ${m.team1?.name} ${sh}–${sa} ${m.team2?.name}`,
           {
             body:               isFavScorer ? '⭐ منتخبك يسجل!' : 'هدف في مباراتك المفضلة',
-            icon: ICON, badge: ICON, dir: 'rtl', lang: 'ar',
+            icon: ICON, badge: BADGE_ICON, dir: 'rtl', lang: 'ar',
             tag: `bg-${id}-a${sa}`, renotify: true,
             vibrate: WHISTLE_VIB, requireInteraction: true, silent: false,
           }
@@ -187,7 +188,7 @@ async function backgroundPreMatchCheck() {
             ? `${home?.flag ?? ''}${home?.name} vs ${away?.flag ?? ''}${away?.name} — الآن!`
             : `${home?.flag ?? ''}${home?.name} vs ${away?.flag ?? ''}${away?.name} — ${remMin} دقيقة`,
           icon:               ICON,
-          badge:              ICON,
+          badge:              BADGE_ICON,
           dir:                'rtl',
           lang:               'ar',
           tag:                t.key,
@@ -237,7 +238,7 @@ async function backgroundNewsCheck() {
       await self.registration.showNotification('🚨 خبر عاجل — كأس العالم 2026', {
         body:               (post.title ?? '').slice(0, 120),
         icon:               ICON,
-        badge:              ICON,
+        badge:              BADGE_ICON,
         dir:                'ltr',
         lang:               'en',
         tag:                `news-${post.id}`,
@@ -285,7 +286,7 @@ self.addEventListener('message', event => {
         await self.registration.showNotification('🚨 اختبار — خبر عاجل', {
           body:               'هذا إشعار تجريبي — الأخبار العاجلة تعمل في الخلفية ✅',
           icon:               ICON,
-          badge:              ICON,
+          badge:              BADGE_ICON,
           dir:                'rtl',
           lang:               'ar',
           tag:                'test-news-' + Date.now(),
@@ -309,7 +310,7 @@ self.addEventListener('message', event => {
       self.registration.showNotification('🚨 خبر عاجل — كأس العالم 2026', {
         body:               (text ?? '').slice(0, 130),
         icon:               ICON,
-        badge:              ICON,
+        badge:              BADGE_ICON,
         dir:                'rtl',
         lang:               'ar',
         tag,
@@ -333,7 +334,7 @@ self.addEventListener('message', event => {
       self.registration.showNotification(title, {
         body:                body ?? '',
         icon:                ICON,
-        badge:               ICON,
+        badge:               BADGE_ICON,
         dir:                 'rtl',
         lang:                'ar',
         tag:                 tag ?? 'wc-alert',
@@ -354,7 +355,7 @@ self.addEventListener('push', event => {
     self.registration.showNotification(d.title ?? '🚨 كأس العالم 2026', {
       body:               d.body ?? '',
       icon:               ICON,
-      badge:              ICON,
+      badge:              BADGE_ICON,
       dir:                'rtl',
       lang:               'ar',
       tag:                'wc-push',
