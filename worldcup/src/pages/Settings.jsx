@@ -29,13 +29,44 @@ export default function Settings({
   // ── Install ─────────────────────────────────────────────────────────────────
   const handleInstall = async () => {
     if (isIOS) { setShowIOSModal(true); return }
-    if (!installPrompt) { setShowAndroidModal(true); return }
-    setInstalling(true)
-    try {
-      await triggerInstall()
-    } finally {
-      setInstalling(false)
+
+    // Prompt already captured — trigger immediately
+    if (installPrompt) {
+      setInstalling(true)
+      try { await triggerInstall() }
+      finally { setInstalling(false) }
+      return
     }
+
+    // No prompt yet — wait up to 1.5 s in case Chrome fires it shortly after mount
+    setInstalling(true)
+    const gotPrompt = await new Promise(resolve => {
+      if (window.deferredPrompt) { resolve(true); return }
+      const timer = setTimeout(() => resolve(false), 1500)
+      window.addEventListener('beforeinstallprompt', function handler(e) {
+        e.preventDefault()
+        window.deferredPrompt = e
+        clearTimeout(timer)
+        window.removeEventListener('beforeinstallprompt', handler)
+        resolve(true)
+      })
+    })
+    setInstalling(false)
+
+    if (gotPrompt && window.deferredPrompt) {
+      setInstalling(true)
+      try {
+        await window.deferredPrompt.prompt()
+        const { outcome } = await window.deferredPrompt.userChoice
+        window.deferredPrompt = null
+        if (outcome === 'accepted') return
+      } finally {
+        setInstalling(false)
+      }
+    }
+
+    // Truly unavailable — show polished Chrome guide
+    setShowAndroidModal(true)
   }
 
   // ── Notification handlers ───────────────────────────────────────────────────
@@ -395,46 +426,100 @@ export default function Settings({
         <p className="text-center text-slate-500 text-xs mt-1">يعمل بدون إنترنت • إشعارات فورية • RTL عربي</p>
       </div>
 
-      {/* ── Android Manual Install Modal ── */}
+      {/* ── Android Chrome Install Guide ── */}
       {showAndroidModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md px-4"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/85 backdrop-blur-md"
           onClick={() => setShowAndroidModal(false)}
         >
           <div
-            className="w-full max-w-sm rounded-3xl overflow-hidden"
+            className="w-full max-w-sm rounded-t-3xl overflow-hidden pb-safe"
             style={{
-              background: 'linear-gradient(180deg, #0f172a 0%, #0a1628 100%)',
-              border: '1.5px solid rgba(52,211,153,0.3)',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
+              background: 'linear-gradient(180deg, #0f2d1f 0%, #0a1628 100%)',
+              border: '1.5px solid rgba(52,211,153,0.35)',
+              borderBottom: 'none',
+              boxShadow: '0 -16px 60px rgba(0,0,0,0.8), 0 0 40px rgba(16,185,129,0.12)',
             }}
             onClick={e => e.stopPropagation()}
           >
-            <div className="text-center px-6 pt-7 pb-4">
-              <div className="text-6xl mb-2">📲</div>
-              <h3 className="text-xl font-black text-white mb-1">تثبيت التطبيق يدوياً</h3>
+            {/* Handle */}
+            <div className="flex justify-center pt-3 pb-1">
+              <div className="w-10 h-1 rounded-full bg-slate-600" />
             </div>
-            <div className="px-5 pb-3 space-y-2.5">
-              {[
-                { n: '1', text: 'افتح النقاط الثلاث (⋮) في أعلى متصفح Chrome' },
-                { n: '2', text: 'اختر "إضافة إلى الشاشة الرئيسية" أو "تثبيت التطبيق"' },
-                { n: '3', text: 'اضغط "إضافة" أو "تثبيت" للتأكيد' },
-              ].map(({ n, text }) => (
-                <div key={n} className="flex items-center gap-3 bg-slate-800/70 rounded-2xl px-4 py-3">
-                  <div className="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center flex-shrink-0">
-                    <span className="text-emerald-400 font-black text-sm">{n}</span>
+
+            <div className="text-center px-5 pt-2 pb-3">
+              <div className="text-4xl mb-1">📲</div>
+              <h3 className="text-lg font-black text-white">ثبّت التطبيق على هاتفك</h3>
+              <p className="text-emerald-400 text-xs mt-0.5">اختر الطريقة الأسرع لك</p>
+            </div>
+
+            <div className="px-4 space-y-3 pb-4">
+              {/* Method 1 — address bar icon */}
+              <div
+                className="rounded-2xl overflow-hidden"
+                style={{ border: '1px solid rgba(52,211,153,0.4)', background: 'rgba(16,185,129,0.08)' }}
+              >
+                <div className="px-3 pt-3 pb-2">
+                  <p className="text-emerald-300 text-xs font-black mb-2 text-center">الطريقة الأسرع — أيقونة شريط العنوان</p>
+                  {/* Chrome address bar mockup */}
+                  <div
+                    className="rounded-xl px-3 py-2 flex items-center gap-1.5 mb-2"
+                    style={{ background: '#202124', border: '1px solid #3c4043' }}
+                  >
+                    <span className="text-slate-400 text-xs">🔒</span>
+                    <span className="text-slate-300 text-xs flex-1 truncate font-mono">wc26.prtnh.com</span>
+                    {/* Install icon indicator */}
+                    <span
+                      className="text-base font-black animate-pulse"
+                      style={{ color: '#34d399', fontSize: '18px', lineHeight: 1 }}
+                    >⊕</span>
+                    <span className="text-slate-500 text-sm">⋮</span>
                   </div>
-                  <p className="text-slate-300 text-sm leading-snug">{text}</p>
+                  <p className="text-center text-white text-xs font-bold">
+                    اضغط على <span className="text-emerald-400 text-base font-black">⊕</span> في شريط العنوان
+                  </p>
                 </div>
-              ))}
-            </div>
-            <div className="px-5 pb-6 pt-2">
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-2">
+                <div className="flex-1 h-px bg-slate-700" />
+                <span className="text-slate-500 text-xs">أو عبر قائمة Chrome</span>
+                <div className="flex-1 h-px bg-slate-700" />
+              </div>
+
+              {/* Method 2 — Chrome menu */}
+              <div className="space-y-1.5">
+                {[
+                  { n: '1', icon: '⋮', text: 'اضغط النقاط الثلاث أعلى Chrome' },
+                  { n: '2', icon: '📲', text: 'اختر "تثبيت التطبيق" أو "إضافة للشاشة الرئيسية"' },
+                  { n: '3', icon: '✅', text: 'اضغط "تثبيت" للتأكيد' },
+                ].map(({ n, icon, text }) => (
+                  <div key={n} className="flex items-center gap-2.5 bg-slate-800/60 rounded-xl px-3 py-2">
+                    <div className="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-black text-xs">{n}</span>
+                    </div>
+                    <span className="text-lg flex-shrink-0">{icon}</span>
+                    <p className="text-slate-300 text-sm leading-tight">{text}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Reload hint */}
+              <button
+                onClick={() => { setShowAndroidModal(false); window.location.reload() }}
+                className="w-full py-2.5 rounded-xl text-sm font-bold text-emerald-400 transition-all active:scale-95"
+                style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(52,211,153,0.3)' }}
+              >
+                🔄 أعد تحميل الصفحة وحاول مجدداً
+              </button>
+
               <button
                 onClick={() => setShowAndroidModal(false)}
-                className="w-full py-3.5 rounded-2xl font-black text-slate-900 text-sm transition-all active:scale-95"
+                className="w-full py-3 rounded-2xl font-black text-slate-900 text-sm transition-all active:scale-95"
                 style={{ background: 'linear-gradient(135deg, #34d399, #10b981)', boxShadow: '0 4px 16px rgba(52,211,153,0.35)' }}
               >
-                فهمت، شكراً!
+                فهمت!
               </button>
             </div>
           </div>
