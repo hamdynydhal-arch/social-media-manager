@@ -475,7 +475,7 @@ export async function fetchEspnStandings() {
   return null
 }
 
-// ── Sports-only keyword filter — rejects political / off-topic content ────────
+// ── Sports-only keyword filter — whitelist ────────────────────────────────────
 const _SPORTS_KW = [
   // World Cup / FIFA
   'world cup','worldcup','fifa','2026','wc26',
@@ -483,30 +483,75 @@ const _SPORTS_KW = [
   'match','game','fixture','kick off','kickoff','halftime','extra time','shootout',
   'draw','win','beat','defeat','score','result','final','semi','quarter','knockout',
   'group stage','round of',
-  // Players / teams
+  // Players / teams / action
   'goal','goals','hat-trick','penalty','free kick','offside','var','red card',
   'yellow card','referee','lineup','squad','coach','manager','player','transfer',
   'injury','suspension','striker','goalkeeper','defender','midfielder','winger',
   // Sport words
-  'soccer','football',
-  // Arabic sport
+  'soccer','football','sport','sporting','athletics',
+  // Arabic sport — core
   'كأس','كرة','مباراة','هدف','ملعب','منتخب','لاعب','مدرب','تأهل','مجموعة',
-  'نتيجة','تصفيات','ركلة','ضربة','حكم','دوري','تسجيل','فريق','مباريات',
+  'نتيجة','تصفيات','ركلة','دوري','تسجيل','فريق','مباريات','رياضة','رياضي',
+  // Arabic sport — results / match events
+  'فوز','هزيمة','تعادل','انتصار','إقصاء','شوط','ضربة جزاء','طرد','إنذار',
+  'حارس المرمى','خط الدفاع','تسديدة','ركلة حرة','تمريرة','تمرير',
+  // Arabic sport — tournament
+  'بطولة','مونديال','فيفا','كأس العالم','دور الثمانية','دور الـ','الدور',
+  'ربع النهائي','نصف النهائي','المجموعات','نقاط الترتيب',
   // WC 2026 team names (covers "Iran scored" but not "Iran deal")
   'brazil','argentina','france','spain','england','germany','portugal','morocco',
   'saudi','japan','mexico','canada','australia','netherlands','belgium','croatia',
   'uruguay','senegal','ecuador','colombia','turkey','czech','scotland','egypt',
   'algeria','norway','jordan','iraq','ghana','panama','haiti','paraguay',
   'البرازيل','الأرجنتين','فرنسا','إسبانيا','إنجلترا','ألمانيا','البرتغال',
-  'المغرب','السعودية','اليابان','أمريكا','المكسيك','كندا','هولندا','بلجيكا',
-  'كرواتيا','أوروغواي','السنغال','كولومبيا','تركيا','الجزائر','النرويج',
-  'الأردن','العراق','غانا','البراغواي','هايتي',
+  'المغرب','السعودية','اليابان','الولايات المتحدة','المكسيك','كندا','هولندا',
+  'بلجيكا','كرواتيا','أوروغواي','السنغال','كولومبيا','تركيا','الجزائر',
+  'النرويج','الأردن','العراق','غانا','باراغواي','هايتي','تونس','المنتخب',
 ]
 
 function isSportsRelated(title) {
   if (!title) return false
   const t = title.toLowerCase()
   return _SPORTS_KW.some(kw => t.includes(kw))
+}
+
+// ── Non-sports blacklist — explicit rejection of political / off-topic items ───
+// Terms that can NEVER appear in a genuine sports news headline.
+// Checked first (before the whitelist) for belt-and-suspenders filtering.
+const _NON_SPORTS_KW = [
+  // Arabic — political
+  'وزير الخارجية','وزير الداخلية','وزير المالية','وزير الطاقة',
+  'برلمان','مجلس النواب','مجلس الشيوخ','انتخابات','استفتاء',
+  'مذكرة تفاهم','اتفاقية سلام','وقف إطلاق النار','هدنة','مفاوضات سلام',
+  'دبلوماسية','سفارة','سفير','قنصلية','علاقات دولية',
+  // Arabic — military / security
+  'قوات مسلحة','جيش نظامي','صاروخ','غارة جوية','عمليات عسكرية',
+  'مسيّرة','طائرة مسيّرة','انفجار','هجوم إرهابي',
+  // Arabic — judiciary / crime
+  'محكمة جنائية','مذكرة اعتقال','احتجاز سياسي','محاكمة',
+  // Arabic — economy / finance
+  'ناتج محلي إجمالي','ميزانية الدولة','أسواق المال','تضخم اقتصادي',
+  'نفط خام','غاز طبيعي','أسعار النفط','عملة رقمية',
+  // Arabic — health
+  'وباء','جائحة','لقاح طبي','وفيات جماعية','صحة عامة',
+  // English — political
+  'memorandum of understanding','diplomatic relations','bilateral agreement',
+  'foreign minister','interior minister','parliament','senate bill',
+  'election results','referendum','peace treaty','ceasefire deal',
+  // English — military
+  'armed forces','missile strike','airstrike','drone strike','warfare',
+  'military operation','terrorist attack',
+  // English — economy / finance
+  'inflation rate','gdp growth','budget deficit','crude oil prices',
+  'stock market crash','interest rate hike',
+  // English — health
+  'pandemic','vaccine rollout','public health emergency',
+]
+
+function isNonSports(title) {
+  if (!title) return false
+  const t = title.toLowerCase()
+  return _NON_SPORTS_KW.some(kw => t.includes(kw))
 }
 
 // ── Parse raw RSS/Atom XML ────────────────────────────────────────────────────
@@ -520,6 +565,7 @@ function parseRssXml(xmlText) {
     const parsed = items.slice(0, 20).map(el => {
       const title = (el.querySelector('title')?.textContent ?? '').trim()
       if (!title) return null
+      if (isNonSports(title)) return null
       const pub   = el.querySelector('pubDate, updated, published')?.textContent
       const pubMs = pub ? new Date(pub).getTime() : null
       if (pubMs !== null && !isNaN(pubMs) && pubMs < cutoff) return null
@@ -561,8 +607,9 @@ async function fetchRedditNews() {
 async function tryFeed(feed, applyFilter) {
   const attempt = async text => {
     if (!text) return null
-    const items = parseRssXml(text)
+    const items = parseRssXml(text)            // blacklist already applied inside
     if (!items?.length) return null
+    // Whitelist additionally applied when caller requests stricter filtering
     return applyFilter ? items.filter(t => isSportsRelated(t)) : items
   }
   for (const getter of [
@@ -598,7 +645,7 @@ export async function fetchRssNews() {
   // If both feeds are unreachable, returns null and the caller falls back to
   // staticData.news (also Arabic).
   for (const feed of RSS_FEEDS_AR) {
-    const items = await tryFeed(feed, false)
+    const items = await tryFeed(feed, true)    // sports whitelist on Arabic feeds too
     if (items?.length) return items
   }
   return null
@@ -609,6 +656,7 @@ function formatItems(items, applyFilter = false) {
   const parsed = items.slice(0, 20).map(item => {
     const title = item.title?.trim() ?? ''
     if (!title) return null
+    if (isNonSports(title)) return null
     if (applyFilter && !isSportsRelated(title)) return null
     const pub   = item.pubDate || item.date_published
     const pubMs = pub ? new Date(pub).getTime() : null

@@ -1,5 +1,5 @@
-v6.3.1 — STABLE
-commit: cd968a2
+v6.3.2 — STABLE
+commit: pending
 date: 2026-06-18
 
 ════════════════════════════════════════════════════════
@@ -15,6 +15,7 @@ date: 2026-06-18
   7. openDataService.js   — RSS_FEEDS_AR أول، Reddit آخر + فلتر رياضي
   8. "النتيجة النهائية"  — لا تعود إلى "نهائي"
   9. WorldCupContext.jsx  — setInterval(refresh, 60_000) لا يعود إلى 120_000
+ 10. openDataService.js  — _NON_SPORTS_KW blacklist + isSportsRelated على المصادر العربية
 
 ════════════════════════════════════════════════════════
   سجل الإصدارات
@@ -63,3 +64,10 @@ v6.3.1 — التحديث التلقائي
   - WorldCupContext.jsx: setInterval(refresh, 120_000) → 60_000
   - Settings.jsx: النص "يتجدد كل دقيقتين" → "يتجدد كل دقيقة"
   - زر التحديث اليدوي محفوظ بدون تغيير
+
+v6.3.2 — فلتر الأخبار المزدوج
+  - _NON_SPORTS_KW: blacklist لـ 40+ مصطلح سياسي/عسكري/اقتصادي/صحي (عربي+إنجليزي)
+  - isNonSports(): يرفض أي خبر يحتوي كلمة من الـ blacklist (مُطبَّق دائماً)
+  - parseRssXml() + formatItems(): يطبّقان isNonSports() قبل أي فلتر آخر
+  - fetchRssNews(): المصادر العربية الآن تخضع لـ isSportsRelated() أيضاً
+  - توسيع _SPORTS_KW: إضافة 25+ مصطلح رياضي عربي (فوز، هزيمة، بطولة، مونديال...)
