@@ -322,9 +322,9 @@ export function WorldCupProvider({ children }) {
   const [espnOverrides,  setEspnOverrides]  = useState(null)
   const [espnStandings,  setEspnStandings]  = useState(null)
   const [rssNews,        setRssNews]        = useState(null)
-  const [sources,        setSources]        = useState({ scores: false, standings: false, news: false })
+  const [sources,        setSources]        = useState({ scores: false, standings: true, news: !!(staticData.news?.length > 0) })
   const [lastUpdated,    setLastUpdated]    = useState(null)
-  const [apiMode,        setApiMode]        = useState('loading')
+  const [apiMode,        setApiMode]        = useState('live')
   const cvCacheRef    = useRef(loadCvCache())
   const mdCacheRef    = useRef(loadMdCache())
   // ESPN real-minute cache: { "HOME_AWAY": { playMin, fetchedAt } }
@@ -425,7 +425,11 @@ export function WorldCupProvider({ children }) {
       setMatchDetails(merged)
     }
 
-    const active = { scores: !!espnMatches, standings: !!newEspnStandings, news: !!fetchedNews }
+    const active = {
+      scores:    espnMatches !== null,                               // OFB GitHub CDN responded
+      standings: true,                                               // always computed locally
+      news:      !!(fetchedNews?.length || staticData.news?.length), // live or static — always real
+    }
     setSources(active)
     setApiMode(active.scores || active.standings || active.news ? 'live' : 'local')
 

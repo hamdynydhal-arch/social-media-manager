@@ -171,9 +171,9 @@ const ESPN_STATUS_MAP = {
 }
 
 // ── Fetch helpers ─────────────────────────────────────────────────────────────
-async function safeFetch(url) {
+async function safeFetch(url, ms = 10000) {
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(8000) })
+    const res = await fetch(url, { signal: AbortSignal.timeout(ms) })
     if (!res.ok) return null
     return res.json()
   } catch {
@@ -181,9 +181,9 @@ async function safeFetch(url) {
   }
 }
 
-async function safeText(url) {
+async function safeText(url, ms = 10000) {
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(8000) })
+    const res = await fetch(url, { signal: AbortSignal.timeout(ms) })
     if (!res.ok) return null
     return res.text()
   } catch {
@@ -256,7 +256,7 @@ function parseEspnRosters(rosters) {
 
 // ── PRIMARY: openfootball match data ─────────────────────────────────────────
 async function fetchOpenfootballMatches() {
-  const json = await safeFetch(OFB_MATCHES)
+  const json = await safeFetch(OFB_MATCHES, 18000)  // 18 s — primary source, tolerate slow mobile
   if (!json) return null  // network/HTTP failure → truly unreachable
 
   // openfootball 2026 uses rounds[].matches, not a flat matches array
