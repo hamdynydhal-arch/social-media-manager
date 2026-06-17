@@ -1,4 +1,4 @@
-// v20 — APK auto-update check via Periodic Background Sync
+// v21 — APK auto-update check via Periodic Background Sync
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
