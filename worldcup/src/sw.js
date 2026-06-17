@@ -37,6 +37,7 @@ const SOUND = BASE + 'sounds/whistle.wav'
 
 const WHISTLE_VIB  = [300, 100, 300, 100, 800]
 const STANDARD_VIB = [200, 100, 200]
+const NEWS_VIB     = [100, 80, 100, 80, 200, 80, 500]
 
 // Live scores source (CORS * — GitHub CDN)
 const OFB_URL = 'https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json'
@@ -59,11 +60,17 @@ async function swSet(key, value) {
   )
 }
 
-// ── Broadcast PLAY_WHISTLE to all open tabs ───────────────────────────────────
+// ── Broadcast messages to all open tabs ──────────────────────────────────────
 function notifyClients() {
   return clients
     .matchAll({ type: 'window', includeUncontrolled: true })
     .then(list => list.forEach(c => c.postMessage({ type: 'PLAY_WHISTLE' })))
+}
+
+function notifyNewsClients() {
+  return clients
+    .matchAll({ type: 'window', includeUncontrolled: true })
+    .then(list => list.forEach(c => c.postMessage({ type: 'PLAY_BREAKING_NEWS' })))
 }
 
 // ── Background goal detection ─────────────────────────────────────────────────
@@ -197,11 +204,62 @@ async function backgroundPreMatchCheck() {
   if (changed) await swSet('pre-match-v1', fired)
 }
 
+// ── Background breaking-news check ───────────────────────────────────────────
+async function backgroundNewsCheck() {
+  let posts
+  try {
+    const res = await fetch('https://www.reddit.com/r/worldcup/hot.json?limit=12', {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(10000),
+    })
+    if (!res.ok) return
+    const json = await res.json()
+    posts = json?.data?.children?.map(c => c.data) ?? []
+  } catch { return }
+
+  const now     = Date.now() / 1000
+  const seenRaw = (await swGet('news-seen')) ?? []
+  const seen    = new Set(seenRaw)
+  let hasNew    = false
+  let notified  = 0
+
+  for (const post of posts) {
+    if (notified >= 2) break
+    if (seen.has(post.id)) continue
+    if ((post.score ?? 0) < 5) continue
+    if ((now - (post.created_utc ?? 0)) > 7200) continue // older than 2 h
+
+    seen.add(post.id)
+    hasNew   = true
+    notified++
+
+    try {
+      await self.registration.showNotification('🚨 خبر عاجل — كأس العالم 2026', {
+        body:               (post.title ?? '').slice(0, 120),
+        icon:               ICON,
+        badge:              ICON,
+        dir:                'ltr',
+        lang:               'en',
+        tag:                `news-${post.id}`,
+        renotify:           true,
+        vibrate:            NEWS_VIB,
+        requireInteraction: false,
+        silent:             false,
+      })
+    } catch { /* notification permission denied */ }
+  }
+
+  if (hasNew) {
+    await swSet('news-seen', [...seen].slice(-100))
+    notifyNewsClients()
+  }
+}
+
 // ── Periodic Background Sync (fires when app is closed on Android Chrome) ─────
 self.addEventListener('periodicsync', event => {
   if (event.tag === 'wc-live-check') {
     event.waitUntil(
-      Promise.all([backgroundScoreCheck(), backgroundPreMatchCheck()])
+      Promise.all([backgroundScoreCheck(), backgroundPreMatchCheck(), backgroundNewsCheck()])
     )
   }
 })
@@ -216,6 +274,27 @@ self.addEventListener('message', event => {
   // App sends favorite team IDs so SW can check them in the background
   if (event.data?.type === 'SET_FAVORITES') {
     event.waitUntil(swSet('favs', event.data.favorites ?? []))
+    return
+  }
+
+  // App detected new breaking news → show system notification on the phone screen
+  if (event.data?.type === 'NEWS_ALERT') {
+    const { text, id } = event.data
+    const tag = `news-app-${(id ?? text ?? '').slice(0, 40).replace(/\s+/g, '_')}`
+    event.waitUntil(
+      self.registration.showNotification('🚨 خبر عاجل — كأس العالم 2026', {
+        body:               (text ?? '').slice(0, 130),
+        icon:               ICON,
+        badge:              ICON,
+        dir:                'rtl',
+        lang:               'ar',
+        tag,
+        renotify:           true,
+        vibrate:            NEWS_VIB,
+        requireInteraction: false,
+        silent:             false,
+      }).catch(() => {})
+    )
     return
   }
 

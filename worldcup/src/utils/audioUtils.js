@@ -99,6 +99,34 @@ export function playWhistleSound() {
   }
 }
 
+export function playBreakingNewsSound() {
+  // Urgent staccato vibration: 3 short bursts + 1 sustained
+  haptic([100, 80, 100, 80, 200, 80, 500])
+  try {
+    const ctx = getCtx()
+    // 3 sharp alarm pips then a lower sustained tone
+    const BURSTS = [
+      { t0: 0.00, freq: 1380, dur: 0.13 },
+      { t0: 0.24, freq: 1380, dur: 0.13 },
+      { t0: 0.48, freq: 1380, dur: 0.13 },
+      { t0: 0.72, freq:  960, dur: 0.35 },
+    ]
+    BURSTS.forEach(({ t0, freq, dur }) => {
+      const osc  = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.type = 'sawtooth'
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + t0)
+      osc.frequency.linearRampToValueAtTime(freq * 0.88, ctx.currentTime + t0 + dur)
+      gain.gain.setValueAtTime(0.38, ctx.currentTime + t0)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t0 + dur)
+      osc.start(ctx.currentTime + t0)
+      osc.stop(ctx.currentTime + t0 + dur + 0.02)
+    })
+  } catch {}
+}
+
 export function haptic(pattern = [50]) {
   if (navigator.vibrate) navigator.vibrate(pattern)
 }

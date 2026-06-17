@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { playBreakingNewsSound } from '../utils/audioUtils'
 
 const STORAGE_KEY = 'wc-seen-news'
 
@@ -45,6 +46,19 @@ export default function BreakingNewsBanner({ news }) {
     // Mark new items as seen immediately so they won't re-trigger
     fresh.forEach(item => seen.add(item))
     saveSeen(seen)
+
+    // 1. Play breaking-news sound + vibration (app is open)
+    playBreakingNewsSound()
+
+    // 2. Fire system notification so it shows on the phone's external screen
+    //    (works even when app is in a background tab)
+    if (navigator.serviceWorker?.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'NEWS_ALERT',
+        text: fresh[0],
+        id:   fresh[0].slice(0, 50),
+      })
+    }
 
     clearTimeout(timerRef.current)
     setBanner(fresh[0])

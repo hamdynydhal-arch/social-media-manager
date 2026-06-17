@@ -5,7 +5,7 @@ import { useLiveMatchEvents, useGoalDetection } from './hooks/useLiveEvents'
 import { useLiveSimulator } from './hooks/useLiveSimulator'
 import { useInstallPrompt } from './hooks/useInstallPrompt'
 import { WorldCupProvider, useWorldCupData } from './context/WorldCupContext'
-import { playWhistleSound } from './utils/audioUtils'
+import { playWhistleSound, playBreakingNewsSound } from './utils/audioUtils'
 import Home from './pages/Home'
 import Matches from './pages/Matches'
 import Groups from './pages/Groups'
@@ -72,10 +72,11 @@ function AppInner() {
     document.documentElement.classList.add('dark')
   }, [])
 
-  // Listen for SW→page audio trigger (fired when SW shows a background notification)
+  // Listen for SW→page audio triggers
   useEffect(() => {
     const onSwMsg = (e) => {
-      if (e.data?.type === 'PLAY_WHISTLE') playWhistleSound()
+      if (e.data?.type === 'PLAY_WHISTLE')        playWhistleSound()
+      if (e.data?.type === 'PLAY_BREAKING_NEWS')  playBreakingNewsSound()
     }
     navigator.serviceWorker?.addEventListener('message', onSwMsg)
     return () => navigator.serviceWorker?.removeEventListener('message', onSwMsg)
