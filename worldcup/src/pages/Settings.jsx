@@ -163,7 +163,7 @@ export default function Settings({
         </button>
         {favoriteTeams?.length > 0 && (
           <p className="text-xs text-emerald-400/70 text-center mt-2">
-            ستصلك إشعارات المباريات قبل ساعة، وقبل 10 دقائق، وعند الانطلاق
+            ستصلك إشعارات المباريات قبل ساعة، وقبل نصف ساعة، وقبل 10 دقائق، وعند الانطلاق
           </p>
         )}
       </div>
@@ -228,6 +228,7 @@ export default function Settings({
           <>
             <div className="bg-emerald-900/20 border border-emerald-500/20 rounded-xl px-3 py-2 mb-3 space-y-1 text-xs text-slate-400">
               <p>⏰ إشعار قبل المباراة بـ <span className="text-emerald-400 font-bold">ساعة كاملة</span></p>
+              <p>⏰ إشعار قبل المباراة بـ <span className="text-emerald-400 font-bold">نصف ساعة</span></p>
               <p>⏰ إشعار قبل المباراة بـ <span className="text-emerald-400 font-bold">10 دقائق</span></p>
               <p>🎺 إشعار عند <span className="text-emerald-400 font-bold">صافرة الانطلاق</span></p>
             </div>
