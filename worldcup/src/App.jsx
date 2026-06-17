@@ -117,8 +117,8 @@ function AppInner() {
                 </span>
               </div>
               <div
-                className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
-                title={apiMode === 'live' ? 'بيانات حية' : 'وضع محلي — جاهز للاتصال'}
+                className={`w-2 h-2 rounded-full animate-pulse ${apiMode === 'live' ? 'bg-emerald-400' : 'bg-amber-400'}`}
+                title={apiMode === 'live' ? 'متصل — بيانات حية' : 'اتصال محدود — وضع محلي'}
               />
             </div>
           </div>
