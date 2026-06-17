@@ -12,7 +12,7 @@ export default function LoginScreen() {
     setLoading(true);
     setError(null);
     const redirectTo = Platform.OS === 'web'
-      ? 'https://hamdynydhal-arch.github.io/social-media-manager'
+      ? 'https://smm.prtnh.com'
       : 'social-media-manager://';
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',

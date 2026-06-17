@@ -41,7 +41,7 @@ const PLATFORM_CONFIG: Record<string, {
   },
 };
 
-const APP_BASE_URL = 'https://hamdynydhal-arch.github.io/social-media-manager';
+const APP_BASE_URL = 'https://smm.prtnh.com';
 
 Deno.serve(async (req) => {
   const url = new URL(req.url);
