@@ -256,8 +256,12 @@ function parseEspnRosters(rosters) {
 
 // ── PRIMARY: openfootball match data ─────────────────────────────────────────
 async function fetchOpenfootballMatches() {
-  const json = await safeFetch(OFB_MATCHES, 18000)  // 18 s — primary source, tolerate slow mobile
-  if (!json) return null  // network/HTTP failure → truly unreachable
+  // Try direct GitHub CDN first, then proxy chain if ISP blocks it
+  let json = await safeFetch(OFB_MATCHES, 18000)
+  if (!json) json = await safeFetch(CORSPROXY(OFB_MATCHES), 12000)
+  if (!json) json = await safeFetch(ALLORIGINS(OFB_MATCHES), 12000)
+  if (!json) json = await safeFetch(THINGPROXY(OFB_MATCHES), 12000)
+  if (!json) return null  // all routes failed → truly unreachable
 
   // openfootball 2026 uses rounds[].matches, not a flat matches array
   const allMatches = json.matches?.length

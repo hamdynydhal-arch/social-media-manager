@@ -426,7 +426,7 @@ export function WorldCupProvider({ children }) {
     }
 
     const active = {
-      scores:    espnMatches !== null,                               // OFB GitHub CDN responded
+      scores:    true,                                               // static data always present; live via OFB+proxies
       standings: true,                                               // always computed locally
       news:      !!(fetchedNews?.length || staticData.news?.length), // live or static — always real
     }

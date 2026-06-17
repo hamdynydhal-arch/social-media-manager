@@ -21,6 +21,8 @@ export default function Settings({
   )
   const [testStatus, setTestStatus] = useState(null)
   const [installing, setInstalling] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+  const [refreshResult, setRefreshResult] = useState(null) // 'ok' | null
   const [showIOSModal, setShowIOSModal] = useState(false)
   const [showAndroidModal, setShowAndroidModal] = useState(false)
   const [hasNativePrompt, setHasNativePrompt] = useState(() => !!window.deferredPrompt)
@@ -358,10 +360,25 @@ export default function Settings({
           </p>
         )}
         <button
-          onClick={refresh}
-          className="w-full py-2.5 bg-slate-700/80 border border-slate-600/50 text-white text-sm rounded-xl hover:bg-slate-600/80 transition-colors"
+          onClick={async () => {
+            if (refreshing) return
+            setRefreshing(true)
+            setRefreshResult(null)
+            await refresh()
+            setRefreshing(false)
+            setRefreshResult('ok')
+            setTimeout(() => setRefreshResult(null), 3000)
+          }}
+          disabled={refreshing}
+          className={`w-full py-2.5 border text-sm rounded-xl transition-all ${
+            refreshResult === 'ok'
+              ? 'bg-emerald-600/30 border-emerald-500/60 text-emerald-300'
+              : refreshing
+              ? 'bg-slate-700/50 border-slate-600/30 text-slate-400'
+              : 'bg-slate-700/80 border-slate-600/50 text-white hover:bg-slate-600/80'
+          }`}
         >
-          🔄 تحديث فوري
+          {refreshing ? '⏳ جاري التحديث...' : refreshResult === 'ok' ? '✅ تم التحديث' : '🔄 تحديث فوري'}
         </button>
         <p className="text-center text-slate-600 text-xs mt-2">لا يتطلب مفاتيح API أو حسابات خارجية</p>
       </div>
