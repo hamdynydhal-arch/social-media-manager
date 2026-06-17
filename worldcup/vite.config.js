@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-const BASE = process.env.VITE_BASE_URL ?? '/social-media-manager/world-cup/'
+const BASE = process.env.VITE_BASE_URL ?? '/world-cup/'
 
 export default defineConfig({
   base: BASE,
