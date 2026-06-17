@@ -200,34 +200,6 @@ export default function Settings({
         </div>
       </div>
 
-      {/* ── Real Test Notification ── */}
-      <div className="card p-4 border-amber-500/30 bg-gradient-to-r from-amber-900/15 to-transparent">
-        <h3 className="font-bold text-white mb-1 flex items-center gap-2">📳 اختبار إشعار الشاشة والصوت</h3>
-        <p className="text-slate-400 text-xs mb-3 leading-relaxed">
-          اضغط الزر لإرسال إشعار حقيقي يظهر على شاشتك من الأعلى — حتى لو أغلقت التطبيق — مع صوت وتنبيه.
-        </p>
-        <button
-          onClick={sendRealTestNotification}
-          disabled={testStatus === 'sending'}
-          className="w-full py-4 rounded-2xl font-black text-white text-base transition-all active:scale-95 disabled:opacity-60"
-          style={{
-            background:
-              testStatus === 'ok' ? 'linear-gradient(135deg, #10b981, #059669)'
-              : testStatus === 'denied' ? 'linear-gradient(135deg, #ef4444, #dc2626)'
-              : 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-            boxShadow: '0 6px 24px rgba(245,158,11,0.35)',
-          }}
-        >
-          {testStatus === 'sending' && '⏳ جاري الإرسال...'}
-          {testStatus === 'ok' && '✅ وصل الإشعار بنجاح!'}
-          {testStatus === 'denied' && '🚫 الإشعارات محظورة — افتح إعدادات المتصفح'}
-          {!testStatus && '📳 اختبار إشعار الشاشة والصوت الآن'}
-        </button>
-        {notifPerm !== 'granted' && !testStatus && (
-          <p className="text-center text-amber-400/70 text-xs mt-2">سيُطلب منك السماح بالإشعارات عند الضغط</p>
-        )}
-      </div>
-
       {/* ── Notifications ── */}
       <div className="card p-4">
         <h3 className="font-bold text-white mb-3 flex items-center gap-2">🔔 إعدادات الإشعارات</h3>
@@ -274,35 +246,31 @@ export default function Settings({
         )}
       </div>
 
-      {/* ── Live Simulator ── */}
-      <div className="card p-4 border-blue-500/20">
-        <h3 className="font-bold text-white mb-1 flex items-center gap-2">🎮 محاكي المباريات الحية</h3>
+      {/* ── Real Test Notification ── */}
+      <div className="card p-4 border-amber-500/30 bg-gradient-to-r from-amber-900/15 to-transparent">
+        <h3 className="font-bold text-white mb-1 flex items-center gap-2">📳 اختبار إشعار الشاشة والصوت</h3>
         <p className="text-slate-400 text-xs mb-3 leading-relaxed">
-          يُشغّل مباراة وهمية لمنتخبك المفضل ويُطلق إشعاراً وصوتاً كل 10 ثوانٍ لاختبار تجربة البث الحي كاملةً.
+          اضغط الزر لإرسال إشعار حقيقي يظهر على شاشتك من الأعلى — حتى لو أغلقت التطبيق — مع صوت وتنبيه.
         </p>
-        {!firstFavTeam ? (
-          <p className="text-amber-400 text-xs text-center py-2">اختر منتخباً مفضلاً أولاً لتفعيل المحاكي</p>
-        ) : simRunning ? (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 bg-emerald-900/30 border border-emerald-500/30 rounded-xl px-3 py-2">
-              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse flex-shrink-0" />
-              <span className="text-emerald-400 text-xs font-bold">المحاكاة تعمل — ترقّب الإشعارات كل 10 ثوانٍ</span>
-            </div>
-            <button
-              onClick={onStopSim}
-              className="w-full py-2.5 bg-red-600/80 border border-red-500/50 text-white text-sm font-bold rounded-xl hover:bg-red-500/80 transition-colors active:scale-95"
-            >
-              ⏹️ إيقاف المحاكاة
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={onStartSim}
-            className="w-full py-3 rounded-xl font-bold text-white text-sm transition-all active:scale-95"
-            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)', boxShadow: '0 4px 16px rgba(59,130,246,0.35)' }}
-          >
-            ▶️ تشغيل وضع المحاكاة ({firstFavTeam.flag} {firstFavTeam.name})
-          </button>
+        <button
+          onClick={sendRealTestNotification}
+          disabled={testStatus === 'sending'}
+          className="w-full py-4 rounded-2xl font-black text-white text-base transition-all active:scale-95 disabled:opacity-60"
+          style={{
+            background:
+              testStatus === 'ok' ? 'linear-gradient(135deg, #10b981, #059669)'
+              : testStatus === 'denied' ? 'linear-gradient(135deg, #ef4444, #dc2626)'
+              : 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+            boxShadow: '0 6px 24px rgba(245,158,11,0.35)',
+          }}
+        >
+          {testStatus === 'sending' && '⏳ جاري الإرسال...'}
+          {testStatus === 'ok' && '✅ وصل الإشعار بنجاح!'}
+          {testStatus === 'denied' && '🚫 الإشعارات محظورة — افتح إعدادات المتصفح'}
+          {!testStatus && '📳 اختبار إشعار الشاشة والصوت الآن'}
+        </button>
+        {notifPerm !== 'granted' && !testStatus && (
+          <p className="text-center text-amber-400/70 text-xs mt-2">سيُطلب منك السماح بالإشعارات عند الضغط</p>
         )}
       </div>
 
@@ -368,6 +336,38 @@ export default function Settings({
             </button>
           ))}
         </div>
+      </div>
+
+      {/* ── Live Simulator ── */}
+      <div className="card p-4 border-blue-500/20">
+        <h3 className="font-bold text-white mb-1 flex items-center gap-2">🎮 محاكي المباريات الحية</h3>
+        <p className="text-slate-400 text-xs mb-3 leading-relaxed">
+          يُشغّل مباراة وهمية لمنتخبك المفضل ويُطلق إشعاراً وصوتاً كل 10 ثوانٍ لاختبار تجربة البث الحي كاملةً.
+        </p>
+        {!firstFavTeam ? (
+          <p className="text-amber-400 text-xs text-center py-2">اختر منتخباً مفضلاً أولاً لتفعيل المحاكي</p>
+        ) : simRunning ? (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 bg-emerald-900/30 border border-emerald-500/30 rounded-xl px-3 py-2">
+              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse flex-shrink-0" />
+              <span className="text-emerald-400 text-xs font-bold">المحاكاة تعمل — ترقّب الإشعارات كل 10 ثوانٍ</span>
+            </div>
+            <button
+              onClick={onStopSim}
+              className="w-full py-2.5 bg-red-600/80 border border-red-500/50 text-white text-sm font-bold rounded-xl hover:bg-red-500/80 transition-colors active:scale-95"
+            >
+              ⏹️ إيقاف المحاكاة
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={onStartSim}
+            className="w-full py-3 rounded-xl font-bold text-white text-sm transition-all active:scale-95"
+            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)', boxShadow: '0 4px 16px rgba(59,130,246,0.35)' }}
+          >
+            ▶️ تشغيل وضع المحاكاة ({firstFavTeam.flag} {firstFavTeam.name})
+          </button>
+        )}
       </div>
 
       {/* ── Stadiums ── */}
