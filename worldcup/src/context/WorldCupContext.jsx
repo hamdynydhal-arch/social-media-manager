@@ -23,15 +23,15 @@ const LIVE_OVERRIDES = {
 // Items older than 24 h are suppressed by buildNews().
 const HARDCODED_NEWS = [
   // M001 MEX 2-0 RSA (Jun 11, KO 19:00 UTC → end ~21:30)
-  { text: '🏆 نهائي: المكسيك 2-0 جنوب أفريقيا — مباراة الافتتاح | مونديال 2026', timestamp: '2026-06-11T21:30:00Z' },
+  { text: '🏆 النتيجة النهائية: المكسيك 2-0 جنوب أفريقيا — مباراة الافتتاح | مونديال 2026', timestamp: '2026-06-11T21:30:00Z' },
   { text: '⚽ خوليان كيمايونيس يسجل أول أهداف مونديال 2026 — الدقيقة 9 (MEX)',   timestamp: '2026-06-11T21:30:00Z' },
   { text: '⚽ راؤول خيمينيز يضاعف بهدف الدقيقة 67 (MEX)',                         timestamp: '2026-06-11T21:30:00Z' },
   // M002 KOR 2-1 CZE (Jun 12, KO 02:00 UTC → end ~04:30)
-  { text: '🏆 نهائي: كوريا الجنوبية 2-1 التشيك — كريجتشي 59، هوانغ 67، أوه 80',  timestamp: '2026-06-12T04:30:00Z' },
+  { text: '🏆 النتيجة النهائية: كوريا الجنوبية 2-1 التشيك — كريجتشي 59، هوانغ 67، أوه 80',  timestamp: '2026-06-12T04:30:00Z' },
   // M007 CAN 1-1 BIH (Jun 12, KO 19:00 UTC → end ~21:30)
-  { text: '🏆 نهائي: كندا 1-1 البوسنة — لوكيتش 21، لارين 78',                    timestamp: '2026-06-12T21:30:00Z' },
+  { text: '🏆 النتيجة النهائية: كندا 1-1 البوسنة — لوكيتش 21، لارين 78',                    timestamp: '2026-06-12T21:30:00Z' },
   // M019 USA 4-1 PAR (Jun 13, KO 01:00 UTC → end ~03:30)
-  { text: '🏆 نهائي: الولايات المتحدة 4-1 باراغواي — بالوغان 31 و45+، رينا 90+', timestamp: '2026-06-13T03:30:00Z' },
+  { text: '🏆 النتيجة النهائية: الولايات المتحدة 4-1 باراغواي — بالوغان 31 و45+، رينا 90+', timestamp: '2026-06-13T03:30:00Z' },
 ]
 
 // ── Match details cache (stats + lineups from ESPN summary) ───────────────────
@@ -289,7 +289,7 @@ function buildResultsNews(matches, teams) {
     .map(m => {
       const home = teams.find(t => t.id === m.team_home)?.name ?? m.team_home
       const away = teams.find(t => t.id === m.team_away)?.name ?? m.team_away
-      return `📋 نهائي: ${home} ${m.score_home}-${m.score_away} ${away}`
+      return `📋 النتيجة النهائية: ${home} ${m.score_home}-${m.score_away} ${away}`
     })
 }
 
