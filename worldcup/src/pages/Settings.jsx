@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { playGoalSound, playNotificationSound, playWhistleSound, playBreakingNewsSound } from '../utils/audioUtils'
 import { fireWorldCupAlert } from '../hooks/useLiveEvents'
 import { useWorldCupData } from '../context/WorldCupContext'
+import HeadsUpNotifModal from '../components/HeadsUpNotifModal'
 import confetti from 'canvas-confetti'
 
 const BASE = import.meta.env.BASE_URL
@@ -26,6 +27,7 @@ export default function Settings({
   const [refreshResult, setRefreshResult] = useState(null) // 'ok' | null
   const [showIOSModal, setShowIOSModal] = useState(false)
   const [showAndroidModal, setShowAndroidModal] = useState(false)
+  const [showHeadsUpModal, setShowHeadsUpModal] = useState(false)
 
   // ── Install ─────────────────────────────────────────────────────────────────
   const handleInstall = async () => {
@@ -106,28 +108,21 @@ export default function Settings({
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } })
     if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200])
 
-    const iconUrl = BASE + 'icons/icon-192.png'
+    // Route through SW so the inline base64 icon is used (avoids white-square on Android)
     const title = '⚽ هدف! — اختبار إشعار كأس العالم 2026'
-    const opts = {
-      body: 'نجح الاختبار! هكذا ستظهر إشعارات الأهداف والمباريات على شاشتك حتى عند إغلاق التطبيق.',
-      icon: iconUrl, badge: iconUrl,
-      dir: 'rtl', lang: 'ar',
-      tag: 'wc-test-goal', renotify: true,
-      vibrate: [100, 50, 100, 50, 200],
-    }
-    try {
-      if ('serviceWorker' in navigator) {
-        const reg = await navigator.serviceWorker.ready
-        await reg.showNotification(title, opts)
-      } else {
-        new Notification(title, opts)
-      }
+    const body  = 'نجح الاختبار! هكذا ستظهر إشعارات الأهداف والمباريات حتى عند إغلاق التطبيق.'
+    if (navigator.serviceWorker?.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'SHOW_NOTIFICATION',
+        title,
+        body,
+        tag: 'wc-test-goal',
+        vibrate: [100, 50, 100, 50, 200],
+        requireInteraction: true,
+      })
       setTestStatus('ok')
-    } catch {
-      try {
-        navigator.serviceWorker?.controller?.postMessage({ type: 'SHOW_NOTIFICATION', title, body: opts.body, tag: 'wc-test-goal', vibrate: opts.vibrate })
-        setTestStatus('ok')
-      } catch { setTestStatus('denied') }
+    } else {
+      setTestStatus('denied')
     }
     setTimeout(() => setTestStatus(null), 4000)
   }
@@ -236,50 +231,46 @@ export default function Settings({
       {/* ── Notifications ── */}
       <div className="card p-4">
         <h3 className="font-bold text-white mb-3 flex items-center gap-2">🔔 إعدادات الإشعارات</h3>
+
+        {/* Status row */}
         <div className="flex items-center justify-between mb-3 bg-slate-700/30 rounded-xl px-3 py-2">
           <span className="text-slate-300 text-sm">حالة الإشعارات</span>
           <span className={`text-sm font-bold ${notifStatusColor}`}>{notifStatusLabel}</span>
         </div>
-        {/* Open notification permission modal */}
+
+        {/* Heads-up setup — primary CTA */}
         <button
-          onClick={() => window.dispatchEvent(new CustomEvent('wc-show-notif-prompt'))}
-          className="w-full py-3 rounded-xl font-bold text-white text-sm mb-3 transition-all active:scale-95"
+          onClick={() => setShowHeadsUpModal(true)}
+          className="w-full py-3.5 rounded-2xl font-black text-white text-sm mb-3 transition-all active:scale-95 flex items-center justify-center gap-2"
           style={{
-            background: 'linear-gradient(135deg, #b91c1c 0%, #ef4444 50%, #b91c1c 100%)',
-            boxShadow: '0 0 18px rgba(239,68,68,0.45)',
-            border: '2px solid rgba(252,165,165,0.4)',
+            background: 'linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #1d4ed8 100%)',
+            boxShadow: '0 0 22px rgba(59,130,246,0.5)',
+            border: '2px solid rgba(147,197,253,0.35)',
           }}
         >
-          🔔 نافذة تفعيل الإشعارات
+          <span className="text-xl">🔔</span>
+          <span>إعداد الإشعارات الفورية فوق التطبيقات</span>
         </button>
+
         {notifPerm === 'granted' && (
-          <div className="bg-emerald-900/20 border border-emerald-500/20 rounded-xl px-3 py-2 mb-3 space-y-1 text-xs text-slate-400">
-            <p>⏰ إشعار قبل المباراة بـ <span className="text-emerald-400 font-bold">ساعة كاملة</span></p>
-            <p>⏰ إشعار قبل المباراة بـ <span className="text-emerald-400 font-bold">10 دقائق</span></p>
-            <p>🎺 إشعار عند <span className="text-emerald-400 font-bold">صافرة الانطلاق</span></p>
-          </div>
-        )}
-        {notifPerm !== 'granted' && notifPerm !== 'denied' && (
-          <button
-            onClick={requestNotifPermission}
-            className="w-full py-3 rounded-xl font-bold text-white text-sm mb-2 transition-all active:scale-95"
-            style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', boxShadow: '0 4px 16px rgba(245,158,11,0.35)' }}
-          >
-            🔔 تفعيل إشعارات الأهداف والمباريات
-          </button>
+          <>
+            <div className="bg-emerald-900/20 border border-emerald-500/20 rounded-xl px-3 py-2 mb-3 space-y-1 text-xs text-slate-400">
+              <p>⏰ إشعار قبل المباراة بـ <span className="text-emerald-400 font-bold">ساعة كاملة</span></p>
+              <p>⏰ إشعار قبل المباراة بـ <span className="text-emerald-400 font-bold">10 دقائق</span></p>
+              <p>🎺 إشعار عند <span className="text-emerald-400 font-bold">صافرة الانطلاق</span></p>
+            </div>
+            <button
+              onClick={() => fireWorldCupAlert('🔔 اختبار الإشعارات', 'إشعارات كأس العالم 2026 تعمل بشكل صحيح!', 'notification')}
+              className="w-full py-2.5 bg-slate-700/80 border border-slate-600/50 text-white text-sm rounded-xl hover:bg-slate-600/80 transition-colors"
+            >
+              🧪 إشعار داخلي تجريبي
+            </button>
+          </>
         )}
         {notifPerm === 'denied' && (
           <p className="text-xs text-red-400 text-center px-2">
-            الإشعارات محظورة في إعدادات المتصفح. افتح إعدادات المتصفح وأعد السماح لهذا الموقع.
+            الإشعارات محظورة — افتح Chrome ← إعدادات ← إعدادات المواقع ← الإشعارات وأعد السماح.
           </p>
-        )}
-        {notifPerm === 'granted' && (
-          <button
-            onClick={() => fireWorldCupAlert('🔔 اختبار الإشعارات', 'إشعارات كأس العالم 2026 تعمل بشكل صحيح!', 'notification')}
-            className="w-full py-2.5 bg-slate-700/80 border border-slate-600/50 text-white text-sm rounded-xl hover:bg-slate-600/80 transition-colors"
-          >
-            🧪 إشعار داخلي تجريبي
-          </button>
         )}
       </div>
 
@@ -470,6 +461,15 @@ export default function Settings({
         <p className="text-center text-slate-400 text-sm">🏆 كأس العالم 2026 — متابع من كل مكان</p>
         <p className="text-center text-slate-500 text-xs mt-1">يعمل بدون إنترنت • إشعارات فورية • RTL عربي</p>
       </div>
+
+      {/* ── Heads-Up Notification Setup Modal ── */}
+      {showHeadsUpModal && (
+        <HeadsUpNotifModal
+          onClose={() => setShowHeadsUpModal(false)}
+          notifPerm={notifPerm}
+          setNotifPerm={setNotifPerm}
+        />
+      )}
 
       {/* ── Android Chrome Install Guide ── */}
       {showAndroidModal && (
