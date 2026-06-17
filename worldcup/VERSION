@@ -1,18 +1,44 @@
-6.1.0
+v6.2.0 — STABLE
+commit: d7dcac8
+date: 2026-06-17
 
-النسخة السادسة — v6.1.0 (stable)
-Commit: 3d80b30
-Date: 2026-06-17
-Branch: claude/world-cup-pwa-app-jfg1rv
+## ما يجب الحفاظ عليه — لا تُعدّل هذه الميزات
 
-ما يُمنع المساس به:
-- الشعار الرسمي (icon-192.png, icon-512.png, icon-maskable-512.png, favicon.svg)
-- منطق تثبيت PWA (useInstallPrompt + triggerInstall)
-- الساعة المباشرة في الترويسة
-- النقطة الخضراء/الصفراء (green=live, amber=limited)
-- سلسلة الـ proxy لـ openfootball
-- زر التحديث الفوري مع التغذية الراجعة
-- نظام الإشعارات والصوت
-- Chrome install guide (bottom sheet)
+### v6.0.0 — التثبيت وزر الإنستول
+- useInstallPrompt hook يُدير beforeinstallprompt بشكل صحيح
+- triggerInstall() تمسح الـ event بعد الاستخدام (accept + dismiss)
+- انتظار 1.5 ثانية للـ prompt قبل الانتقال للدليل اليدوي
+- دليل Android Bottom-Sheet مع mockup شريط Chrome
+- دليل iOS بخطوات Safari Share
 
-أي تطوير قادم يُبنى فوق هذه النسخة ولا يمسها.
+### v6.1.0 — الشعار والأيقونة
+- icon-192.png: كأس ذهبية + كرة + 3 نجوم + "2026" (cairosvg)
+- icon-512.png: نفس التصميم 512×512
+- icon-maskable-512.png: مع safe-zone 80%
+- favicon.svg: نسخة مبسطة
+- vite.config.js: أيقونات منفصلة any / maskable
+
+### v6.1.1 — الأخبار العاجلة الخارجية
+- playBreakingNewsSound() في audioUtils.js
+- backgroundNewsCheck() في sw.js (Reddit API)
+- NEWS_ALERT handler في sw.js
+- TEST_BREAKING_NEWS handler في sw.js
+- BreakingNewsBanner.jsx: صوت + إشعار SW
+- App.jsx: PLAY_BREAKING_NEWS listener
+- زر اختبار الإشعار الخارجي في Settings.jsx
+
+### v6.2.0 — أيقونة الإشعار + Heads-Up Guide
+- badge-96.png: كرة قدم بيضاء على خلفية شفافة (status bar badge)
+- sw.js: BADGE_ICON منفصل عن ICON
+- sw.js: ICON مضمّن كـ base64 data URL (حل مشكلة المربع الأبيض)
+- sw.js: requireInteraction: true على جميع أنواع الإشعارات
+- HeadsUpNotifModal.jsx: دليل خطوة بخطوة لتفعيل heads-up على Android
+- Settings.jsx: زر أزرق يفتح الـ Modal
+- Settings.jsx: sendRealTestNotification يمر عبر SW postMessage
+
+## قواعد ثابتة
+- لا تُغيّر useInstallPrompt.js دون سبب وجيه
+- لا تُغيّر الأيقونات (icon-192/512/maskable) إلا بطلب صريح
+- لا تُغيّر ICON = base64 في sw.js إلى URL
+- لا تُغيّر requireInteraction إلى false
+- لا تُحذف HeadsUpNotifModal.jsx
