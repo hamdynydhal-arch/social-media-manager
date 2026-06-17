@@ -3,21 +3,50 @@ commit: 19f272e
 date: 2026-06-18
 
 ════════════════════════════════════════════════════════
-  قواعد صارمة — لا تُعدَّل هذه الميزات دون طلب صريح
+  قواعد صارمة — لا تُعدَّل هذه العناصر دون طلب صريح
 ════════════════════════════════════════════════════════
 
-  1. useInstallPrompt.js  — منطق triggerInstall وإدارة deferredPrompt
-  2. الأيقونات            — icon-192/512/maskable لا تُستبدل
-  3. sw.js ICON           — يبقى base64 data URL (ليس URL خارجي)
-  4. sw.js requireInteraction — يبقى true على جميع الإشعارات
-  5. HeadsUpNotifModal.jsx — لا يُحذف
-  6. badge-96.png         — لا يُحذف ولا يُستبدل
-  7. openDataService.js   — RSS_FEEDS_AR أول، Reddit آخر + فلتر رياضي
-  8. "النتيجة النهائية"  — لا تعود إلى "نهائي"
-  9. WorldCupContext.jsx  — setInterval(refresh, 60_000) لا يعود إلى 120_000
- 10. openDataService.js  — _NON_SPORTS_KW blacklist + isSportsRelated على المصادر العربية
- 11. openDataService.js  — isWC26News() يُطبَّق على كل RSS (بدل isSportsRelated)
- 12. WorldCupContext.jsx — buildResultsNews + buildAutoNews يُظهران الهدّافين دائماً
+  ── الإشعارات ──
+  1. sw.js ICON           — يبقى base64 data URL (ليس URL خارجي)
+  2. sw.js requireInteraction — يبقى true على جميع أنواع الإشعارات
+  3. badge-96.png         — لا يُحذف ولا يُستبدل
+  4. HeadsUpNotifModal.jsx — لا يُحذف
+
+  ── الأيقونات والتثبيت ──
+  5. الأيقونات            — icon-192/512/maskable لا تُستبدل
+  6. useInstallPrompt.js  — منطق triggerInstall وإدارة deferredPrompt
+
+  ── الأخبار والبيانات ──
+  7. openDataService.js   — fetchRssNews() يستخدم RSS_FEEDS_AR فقط (لا إنجليزي)
+  8. openDataService.js   — isWC26News() هو الفلتر المُطبَّق على RSS (لا isSportsRelated)
+  9. openDataService.js   — _NON_SPORTS_KW blacklist مُطبَّق دائماً في parseRssXml + formatItems
+ 10. openDataService.js   — parseRssXml + formatItems يحذفان الأخبار أكثر من 24 ساعة
+ 11. openDataService.js   — نتائج RSS مرتّبة من الأحدث للأقدم (pubMs desc)
+ 12. WorldCupContext.jsx  — buildResultsNews يُظهر الهدّافين مع دقائق أهدافهم
+ 13. WorldCupContext.jsx  — buildAutoNews يُضيف آخر هدف في المباريات المباشرة
+ 14. WorldCupContext.jsx  — buildNews: ترتيب [مباشر → HARDCODED → نتائج → RSS]
+ 15. WorldCupContext.jsx  — setInterval(refresh, 60_000) لا يعود إلى 120_000
+ 16. WorldCupContext.jsx  — HARDCODED_NEWS: "النتيجة النهائية" لا تعود إلى "نهائي"
+
+════════════════════════════════════════════════════════
+  بنية فلتر الأخبار — يُمنع تبسيطها أو حذف أي طبقة
+════════════════════════════════════════════════════════
+
+  الطبقة 1 — Blacklist (isNonSports):
+    يرفض أي خبر يحتوي مصطلحاً سياسياً/عسكرياً/اقتصادياً/صحياً.
+    مُطبَّق دائماً في parseRssXml() وformatItems().
+
+  الطبقة 2 — WC26 Whitelist (isWC26News):
+    يقبل الخبر فقط إذا توفّر أحد الشروط الثلاثة:
+      (أ) يذكر "كأس العالم" / "مونديال" / "world cup" / "wc26"
+      (ب) يحتوي اسمَي منتخبَين WC26 (تقرير مباراة)
+      (ج) يحتوي اسم منتخب واحد + كلمة نتيجة/هدف
+    مُطبَّق في tryFeed() وformatItems() وfetchRedditNews().
+
+  مصادر الأخبار الداخلية (دائماً في الشريط — لا تعتمد على RSS):
+    • buildAutoNews()   → مباريات مباشرة مع آخر هدف
+    • buildResultsNews() → نتائج آخر 24 ساعة مع الهدّافين
+    • HARDCODED_NEWS    → نتائج مُدخَلة يدوياً مُفصَّلة
 
 ════════════════════════════════════════════════════════
   سجل الإصدارات
@@ -57,31 +86,27 @@ v6.3.0 — جودة البيانات والأخبار
   - فلتر رياضي isSportsRelated() في openDataService.js وsw.js
   - مصادر عربية (BBC عربي، الجزيرة) تُجرَّب أولاً
   - Reddit مُخفَّض لآخر الاحتياطات + حد نقاط 5→10
-  - "النتيجة النهائية" بدلاً من "نهائي" في buildResultsNews
-    وفي HARDCODED_NEWS (5 مواضع)
+  - "النتيجة النهائية" بدلاً من "نهائي" (5 مواضع)
   - مدرب تونس: صبري لمواشي → هيرفي رونار
-  - الإصدار 6.3.0 يظهر في صفحة الإعدادات وpackage.json
+  - الإصدار 6.3.0 يظهر في الإعدادات وpackage.json
 
 v6.3.1 — التحديث التلقائي
-  - WorldCupContext.jsx: setInterval(refresh, 120_000) → 60_000
-  - Settings.jsx: النص "يتجدد كل دقيقتين" → "يتجدد كل دقيقة"
-  - زر التحديث اليدوي محفوظ بدون تغيير
-
-v6.3.3 — أخبار كأس العالم فقط + هدّافو المباريات
-
-  - isWC26News(): فلتر جديد أصارم من isSportsRelated — يشترط ذكر
-    "كأس العالم"/"مونديال"/"world cup" أو اسمَي منتخبَين WC26 أو
-    منتخب + كلمة نتيجة/هدف — يحل محل isSportsRelated في RSS
-  - _WC26_TOURNAMENT_KW + _WC26_TEAM_NAMES: 48 منتخباً AR+EN
-  - buildResultsNews(): يُضيف هدّافي كل مباراة وتوقيت أهدافهم
-    مثال: المكسيك 2-0 جنوب أفريقيا — ⚽ كيمايونيس 9'، خيمينيز 67'
-  - buildAutoNews(): يُضيف آخر هدف في المباريات المباشرة
-  - buildNews() dedup: يستخرج "HOME X-Y AWAY" قبل علامة الهدّاف
-    لمقارنة صحيحة مع HARDCODED_NEWS
+  - setInterval(refresh) 120 ث → 60 ث
+  - النص "يتجدد كل دقيقتين" → "يتجدد كل دقيقة"
+  - زر التحديث اليدوي محفوظ
 
 v6.3.2 — فلتر الأخبار المزدوج
-  - _NON_SPORTS_KW: blacklist لـ 40+ مصطلح سياسي/عسكري/اقتصادي/صحي (عربي+إنجليزي)
-  - isNonSports(): يرفض أي خبر يحتوي كلمة من الـ blacklist (مُطبَّق دائماً)
-  - parseRssXml() + formatItems(): يطبّقان isNonSports() قبل أي فلتر آخر
-  - fetchRssNews(): المصادر العربية الآن تخضع لـ isSportsRelated() أيضاً
-  - توسيع _SPORTS_KW: إضافة 25+ مصطلح رياضي عربي (فوز، هزيمة، بطولة، مونديال...)
+  - _NON_SPORTS_KW blacklist: 40+ مصطلح سياسي/عسكري/اقتصادي/صحي
+  - isNonSports(): مُطبَّق دائماً قبل أي فلتر آخر
+  - فلتر الـ whitelist يُطبَّق الآن على المصادر العربية أيضاً
+  - توسيع _SPORTS_KW: +25 مصطلح رياضي عربي
+
+v6.3.3 — أخبار كأس العالم فقط + هدّافو المباريات
+  - isWC26News(): فلتر WC26-صارم يحل محل isSportsRelated في RSS
+  - _WC26_TOURNAMENT_KW + _WC26_TEAM_NAMES: 48 منتخباً AR+EN
+  - buildResultsNews(): هدّافو المباراة + دقائق الأهداف
+  - buildAutoNews(): آخر هدف في المباريات المباشرة
+  - ترتيب الأخبار: مباشر → HARDCODED → نتائج → RSS
+  - dedup محسَّن: يستخرج "HOME X-Y AWAY" قبل لاحقة الهدّافين
+  - fetchRssNews(): مصادر عربية فقط (لا إنجليزي، لا Reddit)
+  - أخبار RSS: فلتر 24 ساعة + ترتيب من الأحدث
