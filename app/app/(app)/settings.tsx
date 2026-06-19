@@ -1,15 +1,165 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Platform, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '../../src/lib/supabase';
+import { router } from 'expo-router';
+
+const isWeb = Platform.OS === 'web';
+
+const SETTINGS_GROUPS = [
+  {
+    title: 'الحساب',
+    items: [
+      { icon: '🔗', label: 'المنصات المرتبطة', sub: 'إدارة حسابات التواصل الاجتماعي', route: '/(app)/accounts' },
+      { icon: '💎', label: 'الاشتراك والفوترة', sub: 'إدارة خطتك وتجديد الاشتراك', route: '/(app)/subscription' },
+    ],
+  },
+  {
+    title: 'التطبيق',
+    items: [
+      { icon: '🔔', label: 'الإشعارات', sub: 'تحكّم في تنبيهات التطبيق', route: null },
+      { icon: '🌐', label: 'اللغة والمنطقة', sub: 'العربية — قطر', route: null },
+      { icon: '🎨', label: 'المظهر', sub: 'الوضع الفاتح', route: null },
+    ],
+  },
+  {
+    title: 'المساعدة والدعم',
+    items: [
+      { icon: '❓', label: 'مركز المساعدة', sub: 'الأسئلة الشائعة والأدلة', route: null },
+      { icon: '💬', label: 'تواصل معنا', sub: 'نرد خلال 24 ساعة', route: null },
+      { icon: '⭐', label: 'قيّم التطبيق', sub: 'شاركنا رأيك', route: null },
+    ],
+  },
+];
 
 export default function SettingsScreen() {
+  async function handleSignOut() {
+    if (isWeb) {
+      await supabase.auth.signOut();
+    } else {
+      Alert.alert(
+        'تسجيل الخروج',
+        'هل أنت متأكد من تسجيل الخروج؟',
+        [
+          { text: 'إلغاء', style: 'cancel' },
+          { text: 'تسجيل الخروج', style: 'destructive', onPress: () => supabase.auth.signOut() },
+        ],
+      );
+    }
+  }
+
   return (
-    <View className="flex-1 items-center justify-center bg-white px-6" style={{ direction: 'rtl' }}>
-      <TouchableOpacity
-        onPress={() => supabase.auth.signOut()}
-        className="bg-red-500 rounded-xl px-8 py-3"
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F7FF' }}>
+      <ScrollView
+        contentContainerStyle={{
+          paddingBottom: 40,
+          ...(isWeb ? { maxWidth: 700, alignSelf: 'center' as const, width: '100%' } : {}),
+        }}
+        showsVerticalScrollIndicator={false}
       >
-        <Text className="text-white font-semibold text-base">تسجيل الخروج</Text>
-      </TouchableOpacity>
-    </View>
+        {/* ── Header ── */}
+        <View style={{
+          backgroundColor: '#4338CA',
+          paddingHorizontal: 20, paddingTop: 22, paddingBottom: 36,
+          borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
+          marginBottom: -18, overflow: 'hidden',
+        }}>
+          <View style={{
+            position: 'absolute', top: -20, right: -20, width: 100, height: 100,
+            borderRadius: 50, backgroundColor: 'rgba(129,140,248,0.2)',
+          }} />
+          <Text style={{ color: 'rgba(199,210,254,0.7)', fontSize: 13, textAlign: 'right' }}>تخصيص التجربة</Text>
+          <Text style={{ color: '#FFF', fontSize: 24, fontWeight: '900', textAlign: 'right' }}>الإعدادات</Text>
+        </View>
+
+        <View style={{ paddingHorizontal: 16, paddingTop: 30 }}>
+
+          {/* ── Profile card ── */}
+          <View style={{
+            backgroundColor: '#FFF', borderRadius: 22, padding: 20,
+            flexDirection: 'row', alignItems: 'center',
+            marginBottom: 24,
+            shadowColor: '#4338CA', shadowOpacity: 0.08, shadowRadius: 14, elevation: 4,
+            borderWidth: 1, borderColor: '#EEF2FF',
+          }}>
+            <TouchableOpacity
+              onPress={handleSignOut}
+              activeOpacity={0.8}
+              style={{
+                backgroundColor: '#FEF2F2', borderRadius: 12,
+                paddingHorizontal: 14, paddingVertical: 8,
+                borderWidth: 1, borderColor: '#FECACA',
+              }}
+            >
+              <Text style={{ color: '#DC2626', fontSize: 13, fontWeight: '700' }}>خروج</Text>
+            </TouchableOpacity>
+            <View style={{ flex: 1, alignItems: 'flex-end', marginRight: 14 }}>
+              <Text style={{ fontSize: 16, fontWeight: '800', color: '#111827' }}>حسابي</Text>
+              <Text style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>
+                مسجّل الدخول عبر Google
+              </Text>
+            </View>
+            <View style={{
+              width: 52, height: 52, borderRadius: 18,
+              backgroundColor: '#EEF2FF', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Text style={{ fontSize: 28 }}>👤</Text>
+            </View>
+          </View>
+
+          {/* ── Settings groups ── */}
+          {SETTINGS_GROUPS.map(group => (
+            <View key={group.title} style={{ marginBottom: 20 }}>
+              <Text style={{
+                fontSize: 12, fontWeight: '700', color: '#6B7280',
+                textAlign: 'right', marginBottom: 8, marginRight: 4,
+                textTransform: 'uppercase', letterSpacing: 0.5,
+              }}>
+                {group.title}
+              </Text>
+              <View style={{
+                backgroundColor: '#FFF', borderRadius: 20,
+                shadowColor: '#000', shadowOpacity: 0.04, shadowRadius: 10, elevation: 2,
+                borderWidth: 1, borderColor: '#F0F4FF',
+                overflow: 'hidden',
+              }}>
+                {group.items.map((item, i) => (
+                  <TouchableOpacity
+                    key={item.label}
+                    onPress={() => item.route && router.push(item.route as any)}
+                    activeOpacity={item.route ? 0.7 : 1}
+                    style={{
+                      flexDirection: 'row', alignItems: 'center',
+                      paddingVertical: 14, paddingHorizontal: 16,
+                      borderBottomWidth: i < group.items.length - 1 ? 1 : 0,
+                      borderBottomColor: '#F3F4F6',
+                    }}
+                  >
+                    {item.route && (
+                      <Text style={{ color: '#D1D5DB', fontSize: 18 }}>←</Text>
+                    )}
+                    <View style={{ flex: 1, alignItems: 'flex-end', marginRight: item.route ? 10 : 0 }}>
+                      <Text style={{ fontSize: 14, fontWeight: '600', color: '#374151' }}>{item.label}</Text>
+                      <Text style={{ fontSize: 11, color: '#9CA3AF', marginTop: 1 }}>{item.sub}</Text>
+                    </View>
+                    <View style={{
+                      width: 38, height: 38, borderRadius: 12,
+                      backgroundColor: '#F5F7FF', alignItems: 'center', justifyContent: 'center',
+                      marginRight: 12,
+                    }}>
+                      <Text style={{ fontSize: 18 }}>{item.icon}</Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          ))}
+
+          {/* ── App version ── */}
+          <Text style={{ textAlign: 'center', color: '#D1D5DB', fontSize: 12, marginTop: 8 }}>
+            منصة المحتوى — الإصدار 1.0.0
+          </Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
