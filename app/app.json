@@ -39,7 +39,18 @@
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png",
-      "output": "single"
+      "output": "single",
+      "name": "منصة المحتوى",
+      "shortName": "المحتوى",
+      "description": "أدِر جميع حساباتك على وسائل التواصل من مكان واحد",
+      "themeColor": "#06B6D4",
+      "backgroundColor": "#0C0820",
+      "display": "standalone",
+      "orientation": "portrait",
+      "startUrl": "/",
+      "scope": "/",
+      "lang": "ar",
+      "dir": "rtl"
     },
 
     "experiments": {

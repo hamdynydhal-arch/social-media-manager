@@ -47,10 +47,33 @@ jobs:
       - name: Add CNAME for custom domain
         run: echo "smm.prtnh.com" > dist/CNAME
 
-      - name: Inject HTTPS redirect into HTML
+      - name: Inject HTTPS redirect and PWA meta tags into HTML
         run: |
           REDIRECT='<script>if(location.protocol!=="https:"&&location.hostname!=="localhost"){location.replace("https://"+location.host+location.pathname+location.search);}</script>'
-          sed -i "s|</head>|${REDIRECT}</head>|" dist/index.html
+          PWA_META='<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="المحتوى"><meta name="theme-color" content="#06B6D4"><link rel="apple-touch-icon" href="/assets/icon.png"><link rel="manifest" href="/manifest.json">'
+          sed -i "s|</head>|${PWA_META}${REDIRECT}</head>|" dist/index.html
+
+      - name: Generate manifest.json
+        run: |
+          cat > dist/manifest.json << 'EOF'
+          {
+            "name": "منصة المحتوى",
+            "short_name": "المحتوى",
+            "description": "أدِر جميع حساباتك على وسائل التواصل من مكان واحد",
+            "start_url": "/",
+            "scope": "/",
+            "display": "standalone",
+            "orientation": "portrait",
+            "background_color": "#0C0820",
+            "theme_color": "#06B6D4",
+            "lang": "ar",
+            "dir": "rtl",
+            "icons": [
+              { "src": "/assets/icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+              { "src": "/assets/icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+            ]
+          }
+          EOF
 
       - name: Add 404.html for SPA routing
         run: cp dist/index.html dist/404.html
