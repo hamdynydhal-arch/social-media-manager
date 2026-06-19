@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../src/lib/supabase';
+import { Colors, Shadows, Radii } from '../../src/constants/theme';
 
 const isWeb = Platform.OS === 'web';
 
@@ -14,14 +15,14 @@ interface UserProfile {
 }
 
 const STATS = [
-  { label: 'منصات مرتبطة', value: '—', icon: '🔗', color: '#0891B2', bg: '#ECFEFF' },
-  { label: 'منشورات الشهر', value: '—', icon: '📝', color: '#9333EA', bg: '#F5F3FF' },
-  { label: 'تفاعلات', value: '—', icon: '💬', color: '#D97706', bg: '#FFFBEB' },
+  { label: 'منصات مرتبطة', value: '—', icon: '🔗', color: Colors.cyan.DEFAULT, bg: Colors.cyan.faint },
+  { label: 'منشورات الشهر', value: '—', icon: '📝', color: Colors.purple.DEFAULT, bg: Colors.purple.faint },
+  { label: 'تفاعلات', value: '—', icon: '💬', color: Colors.gold.dark, bg: Colors.gold.faint },
 ];
 
 const QUICK_ACTIONS = [
-  { label: 'إنشاء منشور جديد', sub: 'انشر على جميع منصاتك دفعة واحدة', icon: '✏️', color: '#0891B2', route: '/(app)/new-post' },
-  { label: 'ربط حساب جديد', sub: 'اربط X، LinkedIn، Facebook وغيرها', icon: '🔗', color: '#9333EA', route: '/(app)/accounts' },
+  { label: 'إنشاء منشور جديد', sub: 'انشر على جميع منصاتك دفعة واحدة', icon: '✏️', color: Colors.cyan.DEFAULT, route: '/(app)/new-post' },
+  { label: 'ربط حساب جديد', sub: 'اربط X، LinkedIn، Facebook وغيرها', icon: '🔗', color: Colors.purple.DEFAULT, route: '/(app)/accounts' },
 ];
 
 const CHECKLIST = [
@@ -49,7 +50,7 @@ export default function DashboardScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F8FF' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView
         contentContainerStyle={{
           paddingBottom: 36,
@@ -59,7 +60,7 @@ export default function DashboardScreen() {
       >
         {/* ── Header ── */}
         <View style={{
-          backgroundColor: '#0C1040',
+          backgroundColor: Colors.dark.header,
           paddingHorizontal: 20, paddingTop: 22, paddingBottom: 36,
           borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
           marginBottom: -18, overflow: 'hidden',
@@ -134,7 +135,7 @@ export default function DashboardScreen() {
           </View>
 
           {/* ── Quick actions ── */}
-          <Text style={{ fontSize: 16, fontWeight: '800', color: '#0D0A2E', textAlign: 'right', marginBottom: 12 }}>
+          <Text style={{ fontSize: 16, fontWeight: '800', color: Colors.dark.header, textAlign: 'right', marginBottom: 12 }}>
             إجراءات سريعة
           </Text>
           <View style={{ gap: 12, marginBottom: 28 }}>
@@ -171,7 +172,7 @@ export default function DashboardScreen() {
             shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 12, elevation: 2,
             borderWidth: 1, borderColor: '#F0F0FF', marginBottom: 20,
           }}>
-            <Text style={{ fontSize: 16, fontWeight: '800', color: '#0D0A2E', textAlign: 'right', marginBottom: 14 }}>
+            <Text style={{ fontSize: 16, fontWeight: '800', color: Colors.dark.header, textAlign: 'right', marginBottom: 14 }}>
               🎯 خطواتك الأولى
             </Text>
             {CHECKLIST.map((item, i) => (
