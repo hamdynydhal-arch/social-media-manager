@@ -1,9 +1,16 @@
-import { View, Text, TouchableOpacity, ScrollView, Platform, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Platform, Alert, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '../../src/lib/supabase';
 import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
 
 const isWeb = Platform.OS === 'web';
+
+interface UserProfile {
+  name: string | null;
+  email: string | null;
+  avatar: string | null;
+}
 
 const SETTINGS_GROUPS = [
   {
@@ -17,7 +24,7 @@ const SETTINGS_GROUPS = [
     title: 'التطبيق',
     items: [
       { icon: '🔔', label: 'الإشعارات', sub: 'تحكّم في تنبيهات التطبيق', route: null },
-      { icon: '🌐', label: 'اللغة والمنطقة', sub: 'العربية — قطر', route: null },
+      { icon: '🌐', label: 'اللغة والمنطقة', sub: 'العربية', route: null },
       { icon: '🎨', label: 'المظهر', sub: 'الوضع الفاتح', route: null },
     ],
   },
@@ -32,18 +39,29 @@ const SETTINGS_GROUPS = [
 ];
 
 export default function SettingsScreen() {
+  const [profile, setProfile] = useState<UserProfile>({ name: null, email: null, avatar: null });
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      const meta = user.user_metadata ?? {};
+      setProfile({
+        name: meta.full_name ?? meta.name ?? meta.display_name ?? null,
+        email: user.email ?? null,
+        avatar: meta.avatar_url ?? meta.picture ?? null,
+      });
+    });
+  }, []);
+
   async function handleSignOut() {
+    const doSignOut = () => supabase.auth.signOut();
     if (isWeb) {
-      await supabase.auth.signOut();
+      doSignOut();
     } else {
-      Alert.alert(
-        'تسجيل الخروج',
-        'هل أنت متأكد من تسجيل الخروج؟',
-        [
-          { text: 'إلغاء', style: 'cancel' },
-          { text: 'تسجيل الخروج', style: 'destructive', onPress: () => supabase.auth.signOut() },
-        ],
-      );
+      Alert.alert('تسجيل الخروج', 'هل أنت متأكد؟', [
+        { text: 'إلغاء', style: 'cancel' },
+        { text: 'تسجيل الخروج', style: 'destructive', onPress: doSignOut },
+      ]);
     }
   }
 
@@ -76,33 +94,59 @@ export default function SettingsScreen() {
           {/* ── Profile card ── */}
           <View style={{
             backgroundColor: '#FFF', borderRadius: 22, padding: 20,
-            flexDirection: 'row', alignItems: 'center',
             marginBottom: 24,
             shadowColor: '#4338CA', shadowOpacity: 0.08, shadowRadius: 14, elevation: 4,
             borderWidth: 1, borderColor: '#EEF2FF',
           }}>
-            <TouchableOpacity
-              onPress={handleSignOut}
-              activeOpacity={0.8}
-              style={{
-                backgroundColor: '#FEF2F2', borderRadius: 12,
-                paddingHorizontal: 14, paddingVertical: 8,
-                borderWidth: 1, borderColor: '#FECACA',
-              }}
-            >
-              <Text style={{ color: '#DC2626', fontSize: 13, fontWeight: '700' }}>خروج</Text>
-            </TouchableOpacity>
-            <View style={{ flex: 1, alignItems: 'flex-end', marginRight: 14 }}>
-              <Text style={{ fontSize: 16, fontWeight: '800', color: '#111827' }}>حسابي</Text>
-              <Text style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>
-                مسجّل الدخول عبر Google
-              </Text>
-            </View>
-            <View style={{
-              width: 52, height: 52, borderRadius: 18,
-              backgroundColor: '#EEF2FF', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <Text style={{ fontSize: 28 }}>👤</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {/* Sign out button */}
+              <TouchableOpacity
+                onPress={handleSignOut}
+                activeOpacity={0.8}
+                style={{
+                  backgroundColor: '#FEF2F2', borderRadius: 12,
+                  paddingHorizontal: 14, paddingVertical: 8,
+                  borderWidth: 1, borderColor: '#FECACA',
+                }}
+              >
+                <Text style={{ color: '#DC2626', fontSize: 13, fontWeight: '700' }}>خروج</Text>
+              </TouchableOpacity>
+
+              {/* Name & email */}
+              <View style={{ flex: 1, alignItems: 'flex-end', marginHorizontal: 14 }}>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#111827' }}>
+                  {profile.name ?? 'المستخدم'}
+                </Text>
+                {profile.email && (
+                  <Text style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>{profile.email}</Text>
+                )}
+                <View style={{
+                  flexDirection: 'row', alignItems: 'center', gap: 4,
+                  marginTop: 4, backgroundColor: '#EEF2FF',
+                  paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8,
+                }}>
+                  <Text style={{ fontSize: 10, color: '#4F46E5', fontWeight: '700' }}>Google Account</Text>
+                  <Text style={{ fontSize: 10 }}>G</Text>
+                </View>
+              </View>
+
+              {/* Avatar */}
+              {profile.avatar ? (
+                <Image
+                  source={{ uri: profile.avatar }}
+                  style={{
+                    width: 54, height: 54, borderRadius: 18,
+                    borderWidth: 2, borderColor: '#EEF2FF',
+                  }}
+                />
+              ) : (
+                <View style={{
+                  width: 54, height: 54, borderRadius: 18,
+                  backgroundColor: '#EEF2FF', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <Text style={{ fontSize: 28 }}>👤</Text>
+                </View>
+              )}
             </View>
           </View>
 
@@ -110,17 +154,16 @@ export default function SettingsScreen() {
           {SETTINGS_GROUPS.map(group => (
             <View key={group.title} style={{ marginBottom: 20 }}>
               <Text style={{
-                fontSize: 12, fontWeight: '700', color: '#6B7280',
+                fontSize: 11, fontWeight: '700', color: '#9CA3AF',
                 textAlign: 'right', marginBottom: 8, marginRight: 4,
-                textTransform: 'uppercase', letterSpacing: 0.5,
+                textTransform: 'uppercase', letterSpacing: 0.8,
               }}>
                 {group.title}
               </Text>
               <View style={{
                 backgroundColor: '#FFF', borderRadius: 20,
                 shadowColor: '#000', shadowOpacity: 0.04, shadowRadius: 10, elevation: 2,
-                borderWidth: 1, borderColor: '#F0F4FF',
-                overflow: 'hidden',
+                borderWidth: 1, borderColor: '#F0F4FF', overflow: 'hidden',
               }}>
                 {group.items.map((item, i) => (
                   <TouchableOpacity
@@ -134,17 +177,14 @@ export default function SettingsScreen() {
                       borderBottomColor: '#F3F4F6',
                     }}
                   >
-                    {item.route && (
-                      <Text style={{ color: '#D1D5DB', fontSize: 18 }}>←</Text>
-                    )}
+                    {item.route && <Text style={{ color: '#D1D5DB', fontSize: 18 }}>←</Text>}
                     <View style={{ flex: 1, alignItems: 'flex-end', marginRight: item.route ? 10 : 0 }}>
                       <Text style={{ fontSize: 14, fontWeight: '600', color: '#374151' }}>{item.label}</Text>
                       <Text style={{ fontSize: 11, color: '#9CA3AF', marginTop: 1 }}>{item.sub}</Text>
                     </View>
                     <View style={{
                       width: 38, height: 38, borderRadius: 12,
-                      backgroundColor: '#F5F7FF', alignItems: 'center', justifyContent: 'center',
-                      marginRight: 12,
+                      backgroundColor: '#F5F7FF', alignItems: 'center', justifyContent: 'center', marginRight: 12,
                     }}>
                       <Text style={{ fontSize: 18 }}>{item.icon}</Text>
                     </View>
@@ -154,7 +194,6 @@ export default function SettingsScreen() {
             </View>
           ))}
 
-          {/* ── App version ── */}
           <Text style={{ textAlign: 'center', color: '#D1D5DB', fontSize: 12, marginTop: 8 }}>
             منصة المحتوى — الإصدار 1.0.0
           </Text>

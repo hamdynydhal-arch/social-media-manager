@@ -1,8 +1,17 @@
-import { View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Platform, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { supabase } from '../../src/lib/supabase';
 
 const isWeb = Platform.OS === 'web';
+
+interface UserProfile {
+  name: string | null;
+  firstName: string | null;
+  email: string | null;
+  avatar: string | null;
+}
 
 const STATS = [
   { label: 'منصات مرتبطة', value: '—', icon: '🔗', color: '#4F46E5', bg: '#EEF2FF' },
@@ -22,6 +31,23 @@ const CHECKLIST = [
 ];
 
 export default function DashboardScreen() {
+  const [profile, setProfile] = useState<UserProfile>({ name: null, firstName: null, email: null, avatar: null });
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      const meta = user.user_metadata ?? {};
+      const fullName: string = meta.full_name ?? meta.name ?? meta.display_name ?? '';
+      const firstName = fullName.split(' ')[0] ?? null;
+      setProfile({
+        name: fullName || null,
+        firstName: firstName || null,
+        email: user.email ?? null,
+        avatar: meta.avatar_url ?? meta.picture ?? null,
+      });
+    });
+  }, []);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F7FF' }}>
       <ScrollView
@@ -46,17 +72,30 @@ export default function DashboardScreen() {
             position: 'absolute', bottom: 0, right: -20, width: 90, height: 90,
             borderRadius: 45, backgroundColor: 'rgba(245,158,11,0.12)',
           }} />
+
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <View style={{
-              width: 46, height: 46, borderRadius: 15,
-              backgroundColor: 'rgba(255,255,255,0.14)',
-              alignItems: 'center', justifyContent: 'center',
-              borderWidth: 1, borderColor: 'rgba(255,255,255,0.18)',
-            }}>
-              <Text style={{ fontSize: 24 }}>🚀</Text>
-            </View>
+            {/* Avatar */}
+            {profile.avatar ? (
+              <Image
+                source={{ uri: profile.avatar }}
+                style={{ width: 46, height: 46, borderRadius: 15, borderWidth: 2, borderColor: 'rgba(255,255,255,0.3)' }}
+              />
+            ) : (
+              <View style={{
+                width: 46, height: 46, borderRadius: 15,
+                backgroundColor: 'rgba(255,255,255,0.14)',
+                alignItems: 'center', justifyContent: 'center',
+                borderWidth: 1, borderColor: 'rgba(255,255,255,0.18)',
+              }}>
+                <Text style={{ fontSize: 24 }}>🚀</Text>
+              </View>
+            )}
+
+            {/* Greeting */}
             <View style={{ alignItems: 'flex-end' }}>
-              <Text style={{ color: 'rgba(199,210,254,0.75)', fontSize: 13 }}>أهلاً بك 👋</Text>
+              <Text style={{ color: 'rgba(199,210,254,0.75)', fontSize: 13 }}>
+                {profile.firstName ? `أهلاً، ${profile.firstName} 👋` : 'أهلاً بك 👋'}
+              </Text>
               <Text style={{ color: '#FFF', fontSize: 24, fontWeight: '900' }}>لوحة التحكم</Text>
             </View>
           </View>
@@ -119,7 +158,7 @@ export default function DashboardScreen() {
             ))}
           </View>
 
-          {/* ── Getting started card ── */}
+          {/* ── Getting started ── */}
           <View style={{
             backgroundColor: '#FFF', borderRadius: 22, padding: 20,
             shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 12, elevation: 2,
@@ -159,8 +198,7 @@ export default function DashboardScreen() {
             activeOpacity={0.9}
             style={{
               backgroundColor: '#1E1B4B', borderRadius: 22, padding: 20,
-              flexDirection: 'row', alignItems: 'center',
-              overflow: 'hidden',
+              flexDirection: 'row', alignItems: 'center', overflow: 'hidden',
               shadowColor: '#1E1B4B', shadowOpacity: 0.35, shadowRadius: 16, elevation: 8,
             }}
           >
@@ -170,12 +208,8 @@ export default function DashboardScreen() {
             }} />
             <Text style={{ fontSize: 36, marginLeft: 16 }}>💎</Text>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Text style={{ color: '#FFF', fontSize: 15, fontWeight: '800' }}>
-                اشترك بالخطة السنوية
-              </Text>
-              <Text style={{ color: '#A5B4FC', fontSize: 12, marginTop: 4 }}>
-                وفّر 50% — 6 أشهر مجاناً!
-              </Text>
+              <Text style={{ color: '#FFF', fontSize: 15, fontWeight: '800' }}>اشترك بالخطة السنوية</Text>
+              <Text style={{ color: '#A5B4FC', fontSize: 12, marginTop: 4 }}>وفّر 50% — 6 أشهر مجاناً!</Text>
             </View>
           </TouchableOpacity>
 
