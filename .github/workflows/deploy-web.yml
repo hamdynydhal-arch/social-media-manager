@@ -47,6 +47,11 @@ jobs:
       - name: Add CNAME for custom domain
         run: echo "smm.prtnh.com" > dist/CNAME
 
+      - name: Inject HTTPS redirect into HTML
+        run: |
+          REDIRECT='<script>if(location.protocol!=="https:"&&location.hostname!=="localhost"){location.replace("https://"+location.host+location.pathname+location.search);}</script>'
+          sed -i "s|</head>|${REDIRECT}</head>|" dist/index.html
+
       - name: Add 404.html for SPA routing
         run: cp dist/index.html dist/404.html
 
@@ -70,41 +75,27 @@ jobs:
           user_email: github-actions[bot]@users.noreply.github.com
           commit_message: "deploy: ${{ github.sha }}"
 
-      - name: Configure GitHub Pages with custom domain and HTTPS
+      - name: Configure GitHub Pages custom domain and enforce HTTPS
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Enable Pages (ignore 409 if already enabled)
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          # Set custom domain via gh CLI (handles auth correctly)
+          gh api \
+            --method PUT \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/hamdynydhal-arch/social-media-manager/pages \
-            -d '{"build_type":"legacy","source":{"branch":"gh-pages","path":"/"}}')
-          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
-          echo "Pages create: HTTP $HTTP_CODE"
+            /repos/hamdynydhal-arch/social-media-manager/pages \
+            -f cname="smm.prtnh.com" \
+            -F https_enforced=true \
+            --jq '"Domain: \(.cname) | HTTPS enforced: \(.https_enforced)"' \
+            || echo "Pages API update attempted"
 
-          # Set custom domain + enforce HTTPS
-          sleep 5
-          curl -s -X PUT \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/hamdynydhal-arch/social-media-manager/pages \
-            -d '{"cname":"smm.prtnh.com","https_enforced":true,"source":{"branch":"gh-pages","path":"/"}}' \
-            | python3 -c "import sys,json; d=json.load(sys.stdin); print('Domain:', d.get('cname'), '| HTTPS:', d.get('https_enforced'))" 2>/dev/null || echo "PUT completed"
-
-          # Poll until SSL certificate is provisioned (max 3 minutes)
-          echo "Waiting for SSL certificate..."
+          # Poll until SSL is approved (max 3 min)
           for i in $(seq 1 18); do
             sleep 10
-            STATUS=$(curl -s \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Accept: application/vnd.github+json" \
-              https://api.github.com/repos/hamdynydhal-arch/social-media-manager/pages \
-              | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('https_certificate',{}).get('state','unknown'))" 2>/dev/null)
+            STATUS=$(gh api /repos/hamdynydhal-arch/social-media-manager/pages \
+              --jq '.https_certificate.state' 2>/dev/null || echo "unknown")
             echo "SSL state ($i/18): $STATUS"
-            if [ "$STATUS" = "approved" ]; then
-              echo "SSL certificate active!"
-              break
-            fi
+            [ "$STATUS" = "approved" ] && { echo "SSL active!"; break; }
           done
         working-directory: .
