@@ -130,7 +130,6 @@ export default function SettingsScreen() {
                   paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8,
                 }}>
                   <Text style={{ fontSize: 10, color: '#06B6D4', fontWeight: '700' }}>Google Account</Text>
-                  <Text style={{ fontSize: 10 }}>G</Text>
                 </View>
               </View>
 
