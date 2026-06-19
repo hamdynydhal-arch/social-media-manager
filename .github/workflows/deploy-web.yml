@@ -50,8 +50,9 @@ jobs:
       - name: Inject HTTPS redirect and PWA meta tags into HTML
         run: |
           REDIRECT='<script>if(location.protocol!=="https:"&&location.hostname!=="localhost"){location.replace("https://"+location.host+location.pathname+location.search);}</script>'
+          PWA_CAPTURE='<script>window.__pwaPrompt=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__pwaPrompt=e;});</script>'
           PWA_META='<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="المحتوى"><meta name="theme-color" content="#06B6D4"><link rel="apple-touch-icon" href="/assets/icon.png"><link rel="manifest" href="/manifest.json">'
-          sed -i "s|</head>|${PWA_META}${REDIRECT}</head>|" dist/index.html
+          sed -i "s|</head>|${PWA_META}${PWA_CAPTURE}${REDIRECT}</head>|" dist/index.html
 
       - name: Generate manifest.json
         run: |

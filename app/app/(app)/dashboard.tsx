@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../src/lib/supabase';
 import { Colors, Shadows, Radii } from '../../src/constants/theme';
+import PWADashboardModal from '../../src/components/PWADashboardModal';
 
 const isWeb = Platform.OS === 'web';
 
@@ -50,7 +51,7 @@ export default function DashboardScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background, position: 'relative' }}>
       <ScrollView
         contentContainerStyle={{
           paddingBottom: 36,
@@ -223,6 +224,7 @@ export default function DashboardScreen() {
 
         </View>
       </ScrollView>
+      <PWADashboardModal />
     </SafeAreaView>
   );
 }

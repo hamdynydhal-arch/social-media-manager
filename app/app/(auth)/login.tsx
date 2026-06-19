@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import { supabase } from '../../src/lib/supabase';
 import { PREVIEW_MODE } from '../_layout';
+import PWALoginButton from '../../src/components/PWALoginButton';
 
 const { width } = Dimensions.get('window');
 const isWeb = Platform.OS === 'web';
@@ -179,6 +180,9 @@ export default function LoginScreen() {
                 </>
               )}
             </TouchableOpacity>
+
+            {/* PWA install button — web only, shows when installable */}
+            <PWALoginButton />
 
             {error && (
               <View style={{

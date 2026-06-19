@@ -6,7 +6,6 @@ import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { supabase } from '../src/lib/supabase';
-import PWAInstallPrompt from '../src/components/PWAInstallPrompt';
 
 export const PREVIEW_MODE = false;
 
@@ -87,7 +86,6 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <StatusBar style="auto" />
       <Stack screenOptions={{ headerShown: false }} />
-      <PWAInstallPrompt />
     </SafeAreaProvider>
   );
 }
