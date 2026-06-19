@@ -66,7 +66,7 @@ export default function SettingsScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F7FF' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F0F4FF' }}>
       <ScrollView
         contentContainerStyle={{
           paddingBottom: 40,
@@ -76,7 +76,7 @@ export default function SettingsScreen() {
       >
         {/* ── Header ── */}
         <View style={{
-          backgroundColor: '#4338CA',
+          backgroundColor: '#6D28D9',
           paddingHorizontal: 20, paddingTop: 22, paddingBottom: 36,
           borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
           marginBottom: -18, overflow: 'hidden',
@@ -95,8 +95,8 @@ export default function SettingsScreen() {
           <View style={{
             backgroundColor: '#FFF', borderRadius: 22, padding: 20,
             marginBottom: 24,
-            shadowColor: '#4338CA', shadowOpacity: 0.08, shadowRadius: 14, elevation: 4,
-            borderWidth: 1, borderColor: '#EEF2FF',
+            shadowColor: '#6D28D9', shadowOpacity: 0.08, shadowRadius: 14, elevation: 4,
+            borderWidth: 1, borderColor: '#F0F0FF',
           }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {/* Sign out button */}
@@ -122,10 +122,10 @@ export default function SettingsScreen() {
                 )}
                 <View style={{
                   flexDirection: 'row', alignItems: 'center', gap: 4,
-                  marginTop: 4, backgroundColor: '#EEF2FF',
+                  marginTop: 4, backgroundColor: '#F0F0FF',
                   paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8,
                 }}>
-                  <Text style={{ fontSize: 10, color: '#4F46E5', fontWeight: '700' }}>Google Account</Text>
+                  <Text style={{ fontSize: 10, color: '#8B5CF6', fontWeight: '700' }}>Google Account</Text>
                   <Text style={{ fontSize: 10 }}>G</Text>
                 </View>
               </View>
@@ -136,13 +136,13 @@ export default function SettingsScreen() {
                   source={{ uri: profile.avatar }}
                   style={{
                     width: 54, height: 54, borderRadius: 18,
-                    borderWidth: 2, borderColor: '#EEF2FF',
+                    borderWidth: 2, borderColor: '#F0F0FF',
                   }}
                 />
               ) : (
                 <View style={{
                   width: 54, height: 54, borderRadius: 18,
-                  backgroundColor: '#EEF2FF', alignItems: 'center', justifyContent: 'center',
+                  backgroundColor: '#F0F0FF', alignItems: 'center', justifyContent: 'center',
                 }}>
                   <Text style={{ fontSize: 28 }}>👤</Text>
                 </View>
@@ -184,7 +184,7 @@ export default function SettingsScreen() {
                     </View>
                     <View style={{
                       width: 38, height: 38, borderRadius: 12,
-                      backgroundColor: '#F5F7FF', alignItems: 'center', justifyContent: 'center', marginRight: 12,
+                      backgroundColor: '#F0F4FF', alignItems: 'center', justifyContent: 'center', marginRight: 12,
                     }}>
                       <Text style={{ fontSize: 18 }}>{item.icon}</Text>
                     </View>

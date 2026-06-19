@@ -7,7 +7,7 @@ function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
   return (
     <View style={{
       width: 40, height: 32, borderRadius: 12,
-      backgroundColor: focused ? 'rgba(165,180,252,0.2)' : 'transparent',
+      backgroundColor: focused ? 'rgba(103,232,249,0.2)' : 'transparent',
       alignItems: 'center', justifyContent: 'center',
       marginBottom: 2,
     }}>
@@ -22,7 +22,7 @@ export default function AppLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#1E1B4B',
+          backgroundColor: '#0D0A2E',
           borderTopWidth: 0,
           height: isWeb ? 58 : 70,
           paddingTop: 4,
@@ -32,7 +32,7 @@ export default function AppLayout() {
           shadowRadius: 16,
           elevation: 20,
         },
-        tabBarActiveTintColor: '#A5B4FC',
+        tabBarActiveTintColor: '#67E8F9',
         tabBarInactiveTintColor: '#4B5563',
         tabBarLabelStyle: { fontSize: 10, fontWeight: '700' },
         tabBarHideOnKeyboard: true,
@@ -52,9 +52,9 @@ export default function AppLayout() {
           tabBarIcon: ({ focused }) => (
             <View style={{
               width: 44, height: 40, borderRadius: 14,
-              backgroundColor: focused ? '#6366F1' : '#312E81',
+              backgroundColor: focused ? '#8B5CF6' : '#1E1040',
               alignItems: 'center', justifyContent: 'center', marginBottom: 4,
-              shadowColor: '#6366F1', shadowOpacity: focused ? 0.6 : 0, shadowRadius: 10, elevation: focused ? 8 : 0,
+              shadowColor: '#8B5CF6', shadowOpacity: focused ? 0.6 : 0, shadowRadius: 10, elevation: focused ? 8 : 0,
             }}>
               <Text style={{ fontSize: 20 }}>✏️</Text>
             </View>

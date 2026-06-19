@@ -29,22 +29,27 @@ export default function LoginScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#4338CA' }}>
+    <View style={{ flex: 1, backgroundColor: '#6D28D9' }}>
+      {/* Gradient simulation: top purple → bottom blue */}
+      <View style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: '50%',
+        backgroundColor: '#4F8EF7', opacity: 0.55,
+      }} />
       {/* Background decorative circles */}
       <View style={{
         position: 'absolute', top: -60, right: -60,
         width: 220, height: 220, borderRadius: 110,
-        backgroundColor: 'rgba(167,139,250,0.25)',
+        backgroundColor: 'rgba(236,72,153,0.25)',
       }} />
       <View style={{
         position: 'absolute', top: 80, left: -40,
         width: 140, height: 140, borderRadius: 70,
-        backgroundColor: 'rgba(99,102,241,0.3)',
+        backgroundColor: 'rgba(45,212,255,0.3)',
       }} />
       <View style={{
         position: 'absolute', top: 160, right: 30,
         width: 80, height: 80, borderRadius: 40,
-        backgroundColor: 'rgba(245,158,11,0.2)',
+        backgroundColor: 'rgba(236,72,153,0.2)',
       }} />
 
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
@@ -59,13 +64,14 @@ export default function LoginScreen() {
           }}>
             {/* Logo mark */}
             <View style={{
-              width: 80, height: 80, borderRadius: 24,
-              backgroundColor: 'rgba(255,255,255,0.15)',
+              width: 80, height: 80, borderRadius: 40,
+              backgroundColor: '#0D0A2E',
               alignItems: 'center', justifyContent: 'center',
               marginBottom: 20,
-              borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)',
+              borderWidth: 2.5, borderColor: '#2DD4FF',
+              shadowColor: '#2DD4FF', shadowOpacity: 0.45, shadowRadius: 16, elevation: 10,
             }}>
-              <Text style={{ fontSize: 38 }}>🚀</Text>
+              <Text style={{ fontSize: 44, color: '#F59E0B', lineHeight: 52 }}>✦</Text>
             </View>
 
             <Text style={{
@@ -123,7 +129,7 @@ export default function LoginScreen() {
               <TouchableOpacity
                 onPress={() => router.replace('/(app)/dashboard')}
                 style={{
-                  backgroundColor: '#4F46E5', borderRadius: 16,
+                  backgroundColor: '#8B5CF6', borderRadius: 16,
                   paddingVertical: 16, alignItems: 'center', marginBottom: 12,
                 }}
                 activeOpacity={0.85}
@@ -147,7 +153,7 @@ export default function LoginScreen() {
               }}
             >
               {loading ? (
-                <ActivityIndicator color="#4F46E5" />
+                <ActivityIndicator color="#8B5CF6" />
               ) : (
                 <>
                   <Text style={{ fontSize: 22, marginLeft: 10 }}>G</Text>

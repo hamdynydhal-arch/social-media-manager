@@ -42,7 +42,7 @@ export default function SubscriptionScreen() {
         {/* ── Annual Plan Card (Hero) ── */}
         <View
           className="rounded-3xl shadow-lg mb-4 overflow-hidden"
-          style={{ backgroundColor: '#4338ca' }}
+          style={{ backgroundColor: '#6D28D9' }}
         >
           {/* Gold badge */}
           <View
@@ -81,7 +81,7 @@ export default function SubscriptionScreen() {
               zIndex: 10,
             }}
           >
-            <Text style={{ color: '#1e1b4b', fontWeight: '800', fontSize: 11 }}>الأكثر طلباً</Text>
+            <Text style={{ color: '#0D0A2E', fontWeight: '800', fontSize: 11 }}>الأكثر طلباً</Text>
           </View>
 
           <View style={{ padding: 24, paddingTop: 60 }}>
@@ -130,7 +130,7 @@ export default function SubscriptionScreen() {
                 elevation: 6,
               }}
             >
-              <Text style={{ color: '#1e1b4b', fontWeight: '900', fontSize: 16 }}>
+              <Text style={{ color: '#0D0A2E', fontWeight: '900', fontSize: 16 }}>
                 ابدأ الآن — وفّر 50% 🎉
               </Text>
             </TouchableOpacity>
@@ -150,14 +150,14 @@ export default function SubscriptionScreen() {
           </View>
 
           <View style={{ flexDirection: 'row', alignItems: 'baseline', marginBottom: 16 }}>
-            <Text style={{ color: '#6366f1', fontSize: 36, fontWeight: '900' }}>$4.99</Text>
+            <Text style={{ color: '#8B5CF6', fontSize: 36, fontWeight: '900' }}>$4.99</Text>
             <Text style={{ color: '#9ca3af', fontSize: 14, marginRight: 4 }}>/شهر</Text>
           </View>
 
           <View style={{ marginBottom: 18 }}>
             {commonFeatures.map((f) => (
               <View key={f} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-                <Text style={{ color: '#818cf8', fontSize: 15, marginLeft: 8 }}>✓</Text>
+                <Text style={{ color: '#8B5CF6', fontSize: 15, marginLeft: 8 }}>✓</Text>
                 <Text style={{ color: '#4b5563', fontSize: 14 }}>{f}</Text>
               </View>
             ))}
@@ -168,13 +168,13 @@ export default function SubscriptionScreen() {
             activeOpacity={0.8}
             style={{
               borderWidth: 1.5,
-              borderColor: '#6366f1',
+              borderColor: '#8B5CF6',
               borderRadius: 12,
               paddingVertical: 12,
               alignItems: 'center',
             }}
           >
-            <Text style={{ color: '#6366f1', fontWeight: '700', fontSize: 15 }}>اشترك شهرياً</Text>
+            <Text style={{ color: '#8B5CF6', fontWeight: '700', fontSize: 15 }}>اشترك شهرياً</Text>
           </TouchableOpacity>
         </View>
 

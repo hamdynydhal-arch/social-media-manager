@@ -14,13 +14,13 @@ interface UserProfile {
 }
 
 const STATS = [
-  { label: 'منصات مرتبطة', value: '—', icon: '🔗', color: '#4F46E5', bg: '#EEF2FF' },
+  { label: 'منصات مرتبطة', value: '—', icon: '🔗', color: '#8B5CF6', bg: '#F0F0FF' },
   { label: 'منشورات الشهر', value: '—', icon: '📝', color: '#059669', bg: '#ECFDF5' },
   { label: 'تفاعلات', value: '—', icon: '💬', color: '#D97706', bg: '#FFFBEB' },
 ];
 
 const QUICK_ACTIONS = [
-  { label: 'إنشاء منشور جديد', sub: 'انشر على جميع منصاتك دفعة واحدة', icon: '✏️', color: '#4F46E5', route: '/(app)/new-post' },
+  { label: 'إنشاء منشور جديد', sub: 'انشر على جميع منصاتك دفعة واحدة', icon: '✏️', color: '#8B5CF6', route: '/(app)/new-post' },
   { label: 'ربط حساب جديد', sub: 'اربط X، LinkedIn، Facebook وغيرها', icon: '🔗', color: '#7C3AED', route: '/(app)/accounts' },
 ];
 
@@ -49,7 +49,7 @@ export default function DashboardScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F7FF' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F0F4FF' }}>
       <ScrollView
         contentContainerStyle={{
           paddingBottom: 36,
@@ -59,7 +59,7 @@ export default function DashboardScreen() {
       >
         {/* ── Header gradient ── */}
         <View style={{
-          backgroundColor: '#4338CA',
+          backgroundColor: '#6D28D9',
           paddingHorizontal: 20, paddingTop: 22, paddingBottom: 36,
           borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
           marginBottom: -18, overflow: 'hidden',
@@ -109,8 +109,8 @@ export default function DashboardScreen() {
               <View key={s.label} style={{
                 flex: 1, backgroundColor: '#FFF', borderRadius: 20,
                 paddingVertical: 16, paddingHorizontal: 10, alignItems: 'center',
-                shadowColor: '#4338CA', shadowOpacity: 0.08, shadowRadius: 12, elevation: 4,
-                borderWidth: 1, borderColor: '#EEF2FF',
+                shadowColor: '#6D28D9', shadowOpacity: 0.08, shadowRadius: 12, elevation: 4,
+                borderWidth: 1, borderColor: '#F0F0FF',
               }}>
                 <View style={{
                   width: 40, height: 40, borderRadius: 13,
@@ -127,7 +127,7 @@ export default function DashboardScreen() {
           </View>
 
           {/* ── Quick actions ── */}
-          <Text style={{ fontSize: 16, fontWeight: '800', color: '#1E1B4B', textAlign: 'right', marginBottom: 12 }}>
+          <Text style={{ fontSize: 16, fontWeight: '800', color: '#0D0A2E', textAlign: 'right', marginBottom: 12 }}>
             إجراءات سريعة
           </Text>
           <View style={{ gap: 12, marginBottom: 28 }}>
@@ -162,9 +162,9 @@ export default function DashboardScreen() {
           <View style={{
             backgroundColor: '#FFF', borderRadius: 22, padding: 20,
             shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 12, elevation: 2,
-            borderWidth: 1, borderColor: '#EEF2FF', marginBottom: 20,
+            borderWidth: 1, borderColor: '#F0F0FF', marginBottom: 20,
           }}>
-            <Text style={{ fontSize: 16, fontWeight: '800', color: '#1E1B4B', textAlign: 'right', marginBottom: 14 }}>
+            <Text style={{ fontSize: 16, fontWeight: '800', color: '#0D0A2E', textAlign: 'right', marginBottom: 14 }}>
               🎯 خطواتك الأولى
             </Text>
             {CHECKLIST.map((item, i) => (
@@ -197,9 +197,9 @@ export default function DashboardScreen() {
             onPress={() => router.push('/(app)/subscription')}
             activeOpacity={0.9}
             style={{
-              backgroundColor: '#1E1B4B', borderRadius: 22, padding: 20,
+              backgroundColor: '#0D0A2E', borderRadius: 22, padding: 20,
               flexDirection: 'row', alignItems: 'center', overflow: 'hidden',
-              shadowColor: '#1E1B4B', shadowOpacity: 0.35, shadowRadius: 16, elevation: 8,
+              shadowColor: '#0D0A2E', shadowOpacity: 0.35, shadowRadius: 16, elevation: 8,
             }}
           >
             <View style={{
