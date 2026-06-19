@@ -161,12 +161,20 @@ export default function LoginScreen() {
               }}
             >
               {loading ? (
-                <ActivityIndicator color="#8B5CF6" />
+                <ActivityIndicator color="#06B6D4" />
               ) : (
                 <>
-                  <Text style={{ fontSize: 22, marginLeft: 10 }}>G</Text>
-                  <Text style={{ fontSize: 16, fontWeight: '700', color: '#374151' }}>
-                    المتابعة بحساب Google
+                  {/* Google colored logo letters */}
+                  <View style={{ flexDirection: 'row', marginLeft: 10 }}>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: '#4285F4' }}>G</Text>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: '#EA4335' }}>o</Text>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: '#FBBC05' }}>o</Text>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: '#4285F4' }}>g</Text>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: '#34A853' }}>l</Text>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: '#EA4335' }}>e</Text>
+                  </View>
+                  <Text style={{ fontSize: 15, fontWeight: '700', color: '#374151', marginRight: 8 }}>
+                    المتابعة بحساب
                   </Text>
                 </>
               )}
