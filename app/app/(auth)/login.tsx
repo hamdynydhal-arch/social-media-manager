@@ -1,6 +1,6 @@
 import {
   View, Text, TouchableOpacity, ActivityIndicator,
-  Platform, Dimensions, ScrollView,
+  Platform, Dimensions, ScrollView, Image,
 } from 'react-native';
 import { useState } from 'react';
 import { router } from 'expo-router';
@@ -29,27 +29,22 @@ export default function LoginScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#6D28D9' }}>
-      {/* Gradient simulation: top purple → bottom blue */}
+    <View style={{ flex: 1, backgroundColor: '#0C0820' }}>
+      {/* Background glow orbs */}
       <View style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, height: '50%',
-        backgroundColor: '#4F8EF7', opacity: 0.55,
+        position: 'absolute', top: -80, left: -80,
+        width: 300, height: 300, borderRadius: 150,
+        backgroundColor: 'rgba(6,182,212,0.12)',
       }} />
-      {/* Background decorative circles */}
       <View style={{
-        position: 'absolute', top: -60, right: -60,
+        position: 'absolute', top: 100, right: -60,
         width: 220, height: 220, borderRadius: 110,
-        backgroundColor: 'rgba(236,72,153,0.25)',
+        backgroundColor: 'rgba(168,85,247,0.14)',
       }} />
       <View style={{
-        position: 'absolute', top: 80, left: -40,
-        width: 140, height: 140, borderRadius: 70,
-        backgroundColor: 'rgba(45,212,255,0.3)',
-      }} />
-      <View style={{
-        position: 'absolute', top: 160, right: 30,
-        width: 80, height: 80, borderRadius: 40,
-        backgroundColor: 'rgba(236,72,153,0.2)',
+        position: 'absolute', bottom: 180, left: -40,
+        width: 160, height: 160, borderRadius: 80,
+        backgroundColor: 'rgba(236,72,153,0.1)',
       }} />
 
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
@@ -62,16 +57,20 @@ export default function LoginScreen() {
             paddingHorizontal: 32,
             paddingBottom: 40,
           }}>
-            {/* Logo mark */}
+            {/* Logo image */}
             <View style={{
-              width: 80, height: 80, borderRadius: 40,
-              backgroundColor: '#0D0A2E',
+              width: 124, height: 124, borderRadius: 38,
+              backgroundColor: 'rgba(255,255,255,0.04)',
               alignItems: 'center', justifyContent: 'center',
-              marginBottom: 20,
-              borderWidth: 2.5, borderColor: '#2DD4FF',
-              shadowColor: '#2DD4FF', shadowOpacity: 0.45, shadowRadius: 16, elevation: 10,
+              marginBottom: 22,
+              borderWidth: 1.5, borderColor: 'rgba(6,182,212,0.45)',
+              shadowColor: '#06B6D4', shadowOpacity: 0.55, shadowRadius: 30, elevation: 14,
             }}>
-              <Text style={{ fontSize: 44, color: '#F59E0B', lineHeight: 52 }}>✦</Text>
+              <Image
+                source={require('../../assets/logo.jpg')}
+                style={{ width: 100, height: 100, borderRadius: 30 }}
+                resizeMode="contain"
+              />
             </View>
 
             <Text style={{
@@ -92,13 +91,17 @@ export default function LoginScreen() {
             <View style={{
               flexDirection: 'row', gap: 8, marginTop: 24, flexWrap: 'wrap', justifyContent: 'center',
             }}>
-              {['📅 جدولة', '🤖 ذكاء اصطناعي', '📊 إحصائيات'].map(f => (
-                <View key={f} style={{
-                  backgroundColor: 'rgba(255,255,255,0.12)',
-                  borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6,
-                  borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)',
+              {[
+                { label: '📅 جدولة', bg: 'rgba(6,182,212,0.18)', border: 'rgba(6,182,212,0.4)' },
+                { label: '🤖 ذكاء اصطناعي', bg: 'rgba(168,85,247,0.18)', border: 'rgba(168,85,247,0.4)' },
+                { label: '📊 إحصائيات', bg: 'rgba(251,191,36,0.14)', border: 'rgba(251,191,36,0.38)' },
+              ].map(f => (
+                <View key={f.label} style={{
+                  backgroundColor: f.bg,
+                  borderRadius: 20, paddingHorizontal: 14, paddingVertical: 7,
+                  borderWidth: 1, borderColor: f.border,
                 }}>
-                  <Text style={{ color: '#E0E7FF', fontSize: 12, fontWeight: '600' }}>{f}</Text>
+                  <Text style={{ color: '#E0F2FE', fontSize: 12, fontWeight: '700' }}>{f.label}</Text>
                 </View>
               ))}
             </View>
@@ -111,8 +114,13 @@ export default function LoginScreen() {
             paddingHorizontal: isWeb ? 40 : 28,
             paddingTop: 36, paddingBottom: isWeb ? 48 : 50,
             ...(isWeb ? { maxWidth: 520, alignSelf: 'center', width: '100%', borderRadius: 28, marginBottom: 40 } : {}),
-            shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 24, elevation: 16,
+            shadowColor: '#06B6D4', shadowOpacity: 0.15, shadowRadius: 32, elevation: 20,
           }}>
+            {/* Cyan accent bar at top */}
+            <View style={{
+              position: 'absolute', top: 0, left: '25%', right: '25%', height: 3,
+              backgroundColor: '#06B6D4', borderRadius: 2,
+            }} />
             <Text style={{
               fontSize: 22, fontWeight: '800', color: '#111827',
               textAlign: 'center', marginBottom: 6,

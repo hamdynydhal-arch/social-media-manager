@@ -42,7 +42,7 @@ export default function SubscriptionScreen() {
         {/* ── Annual Plan Card (Hero) ── */}
         <View
           className="rounded-3xl shadow-lg mb-4 overflow-hidden"
-          style={{ backgroundColor: '#6D28D9' }}
+          style={{ backgroundColor: '#0C1040' }}
         >
           {/* Gold badge */}
           <View

@@ -7,7 +7,7 @@ function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
   return (
     <View style={{
       width: 40, height: 32, borderRadius: 12,
-      backgroundColor: focused ? 'rgba(103,232,249,0.2)' : 'transparent',
+      backgroundColor: focused ? 'rgba(6,182,212,0.2)' : 'transparent',
       alignItems: 'center', justifyContent: 'center',
       marginBottom: 2,
     }}>
@@ -22,17 +22,18 @@ export default function AppLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#0D0A2E',
-          borderTopWidth: 0,
+          backgroundColor: '#07030F',
+          borderTopWidth: 1,
+          borderTopColor: 'rgba(6,182,212,0.12)',
           height: isWeb ? 58 : 70,
           paddingTop: 4,
           paddingBottom: isWeb ? 8 : 14,
-          shadowColor: '#000',
-          shadowOpacity: 0.3,
-          shadowRadius: 16,
+          shadowColor: '#06B6D4',
+          shadowOpacity: 0.25,
+          shadowRadius: 20,
           elevation: 20,
         },
-        tabBarActiveTintColor: '#67E8F9',
+        tabBarActiveTintColor: '#22D3EE',
         tabBarInactiveTintColor: '#4B5563',
         tabBarLabelStyle: { fontSize: 10, fontWeight: '700' },
         tabBarHideOnKeyboard: true,
@@ -52,9 +53,9 @@ export default function AppLayout() {
           tabBarIcon: ({ focused }) => (
             <View style={{
               width: 44, height: 40, borderRadius: 14,
-              backgroundColor: focused ? '#8B5CF6' : '#1E1040',
+              backgroundColor: focused ? '#0891B2' : '#0C0820',
               alignItems: 'center', justifyContent: 'center', marginBottom: 4,
-              shadowColor: '#8B5CF6', shadowOpacity: focused ? 0.6 : 0, shadowRadius: 10, elevation: focused ? 8 : 0,
+              shadowColor: '#06B6D4', shadowOpacity: focused ? 0.7 : 0, shadowRadius: 12, elevation: focused ? 10 : 0,
             }}>
               <Text style={{ fontSize: 20 }}>✏️</Text>
             </View>

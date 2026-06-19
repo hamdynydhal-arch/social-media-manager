@@ -66,7 +66,7 @@ export default function SettingsScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F0F4FF' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F8FF' }}>
       <ScrollView
         contentContainerStyle={{
           paddingBottom: 40,
@@ -76,16 +76,20 @@ export default function SettingsScreen() {
       >
         {/* ── Header ── */}
         <View style={{
-          backgroundColor: '#6D28D9',
+          backgroundColor: '#0C1040',
           paddingHorizontal: 20, paddingTop: 22, paddingBottom: 36,
           borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
           marginBottom: -18, overflow: 'hidden',
         }}>
           <View style={{
-            position: 'absolute', top: -20, right: -20, width: 100, height: 100,
-            borderRadius: 50, backgroundColor: 'rgba(129,140,248,0.2)',
+            position: 'absolute', top: -30, left: -30, width: 130, height: 130,
+            borderRadius: 65, backgroundColor: 'rgba(6,182,212,0.15)',
           }} />
-          <Text style={{ color: 'rgba(199,210,254,0.7)', fontSize: 13, textAlign: 'right' }}>تخصيص التجربة</Text>
+          <View style={{
+            position: 'absolute', bottom: -20, right: -20, width: 100, height: 100,
+            borderRadius: 50, backgroundColor: 'rgba(147,51,234,0.2)',
+          }} />
+          <Text style={{ color: 'rgba(103,232,249,0.75)', fontSize: 13, textAlign: 'right' }}>تخصيص التجربة</Text>
           <Text style={{ color: '#FFF', fontSize: 24, fontWeight: '900', textAlign: 'right' }}>الإعدادات</Text>
         </View>
 
@@ -95,8 +99,8 @@ export default function SettingsScreen() {
           <View style={{
             backgroundColor: '#FFF', borderRadius: 22, padding: 20,
             marginBottom: 24,
-            shadowColor: '#6D28D9', shadowOpacity: 0.08, shadowRadius: 14, elevation: 4,
-            borderWidth: 1, borderColor: '#F0F0FF',
+            shadowColor: '#0C1040', shadowOpacity: 0.08, shadowRadius: 14, elevation: 4,
+            borderWidth: 1, borderColor: '#EEF9FF',
           }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {/* Sign out button */}
@@ -122,10 +126,10 @@ export default function SettingsScreen() {
                 )}
                 <View style={{
                   flexDirection: 'row', alignItems: 'center', gap: 4,
-                  marginTop: 4, backgroundColor: '#F0F0FF',
+                  marginTop: 4, backgroundColor: '#EEF9FF',
                   paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8,
                 }}>
-                  <Text style={{ fontSize: 10, color: '#8B5CF6', fontWeight: '700' }}>Google Account</Text>
+                  <Text style={{ fontSize: 10, color: '#06B6D4', fontWeight: '700' }}>Google Account</Text>
                   <Text style={{ fontSize: 10 }}>G</Text>
                 </View>
               </View>
@@ -136,13 +140,13 @@ export default function SettingsScreen() {
                   source={{ uri: profile.avatar }}
                   style={{
                     width: 54, height: 54, borderRadius: 18,
-                    borderWidth: 2, borderColor: '#F0F0FF',
+                    borderWidth: 2, borderColor: '#EEF9FF',
                   }}
                 />
               ) : (
                 <View style={{
                   width: 54, height: 54, borderRadius: 18,
-                  backgroundColor: '#F0F0FF', alignItems: 'center', justifyContent: 'center',
+                  backgroundColor: '#EEF9FF', alignItems: 'center', justifyContent: 'center',
                 }}>
                   <Text style={{ fontSize: 28 }}>👤</Text>
                 </View>
@@ -163,7 +167,7 @@ export default function SettingsScreen() {
               <View style={{
                 backgroundColor: '#FFF', borderRadius: 20,
                 shadowColor: '#000', shadowOpacity: 0.04, shadowRadius: 10, elevation: 2,
-                borderWidth: 1, borderColor: '#F0F4FF', overflow: 'hidden',
+                borderWidth: 1, borderColor: '#F5F8FF', overflow: 'hidden',
               }}>
                 {group.items.map((item, i) => (
                   <TouchableOpacity
@@ -184,7 +188,7 @@ export default function SettingsScreen() {
                     </View>
                     <View style={{
                       width: 38, height: 38, borderRadius: 12,
-                      backgroundColor: '#F0F4FF', alignItems: 'center', justifyContent: 'center', marginRight: 12,
+                      backgroundColor: '#F5F8FF', alignItems: 'center', justifyContent: 'center', marginRight: 12,
                     }}>
                       <Text style={{ fontSize: 18 }}>{item.icon}</Text>
                     </View>

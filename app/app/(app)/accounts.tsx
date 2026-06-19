@@ -118,8 +118,8 @@ export default function AccountsScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#F0F4FF', alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size="large" color="#8B5CF6" />
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F8FF', alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color="#06B6D4" />
         <Text style={{ color: '#6B7280', marginTop: 12, fontSize: 14 }}>جارٍ التحميل...</Text>
       </SafeAreaView>
     );
@@ -130,43 +130,47 @@ export default function AccountsScreen() {
   const connectedMap = new Map(accounts.map(a => [a.platform, a]));
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F0F4FF' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F8FF' }}>
       <ScrollView
         contentContainerStyle={{
           paddingBottom: 40,
           ...(isWeb ? { maxWidth: 700, alignSelf: 'center' as const, width: '100%' } : {}),
         }}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#8B5CF6" />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#06B6D4" />}
         showsVerticalScrollIndicator={false}
       >
         {/* ── Header ── */}
         <View style={{
-          backgroundColor: '#6D28D9',
+          backgroundColor: '#0C1040',
           paddingHorizontal: 20, paddingTop: 22, paddingBottom: 42,
           borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
           marginBottom: -20, overflow: 'hidden',
         }}>
           <View style={{
-            position: 'absolute', bottom: -30, left: -30, width: 120, height: 120,
-            borderRadius: 60, backgroundColor: 'rgba(129,140,248,0.18)',
+            position: 'absolute', top: -30, left: -30, width: 140, height: 140,
+            borderRadius: 70, backgroundColor: 'rgba(6,182,212,0.15)',
           }} />
-          <Text style={{ color: 'rgba(199,210,254,0.7)', fontSize: 13, textAlign: 'right' }}>إدارة المنصات</Text>
+          <View style={{
+            position: 'absolute', bottom: -20, right: -20, width: 100, height: 100,
+            borderRadius: 50, backgroundColor: 'rgba(147,51,234,0.18)',
+          }} />
+          <Text style={{ color: 'rgba(103,232,249,0.75)', fontSize: 13, textAlign: 'right' }}>إدارة المنصات</Text>
           <Text style={{ color: '#FFF', fontSize: 24, fontWeight: '900', textAlign: 'right' }}>الحسابات المرتبطة</Text>
 
           {/* Progress */}
           <View style={{ marginTop: 16 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 7 }}>
-              <Text style={{ color: '#A5B4FC', fontSize: 12 }}>
+              <Text style={{ color: '#67E8F9', fontSize: 12 }}>
                 {Math.round((connectedCount / totalSupported) * 100)}% مكتمل
               </Text>
-              <Text style={{ color: '#A5B4FC', fontSize: 12 }}>
+              <Text style={{ color: '#67E8F9', fontSize: 12 }}>
                 {connectedCount} / {totalSupported} منصات مرتبطة
               </Text>
             </View>
             <View style={{ height: 7, backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 4 }}>
               <View style={{
                 height: 7, borderRadius: 4,
-                backgroundColor: connectedCount > 0 ? '#F59E0B' : 'transparent',
+                backgroundColor: connectedCount > 0 ? '#06B6D4' : 'transparent',
                 width: `${(connectedCount / totalSupported) * 100}%` as any,
               }} />
             </View>
@@ -185,11 +189,11 @@ export default function AccountsScreen() {
             return (
               <View key={platform} style={{
                 backgroundColor: '#FFF', borderRadius: 22,
-                shadowColor: isConnected ? brandColor : '#6D28D9',
+                shadowColor: isConnected ? brandColor : '#0C1040',
                 shadowOpacity: isConnected ? 0.18 : 0.05,
                 shadowRadius: 14, elevation: isConnected ? 6 : 2,
                 borderWidth: 1.5,
-                borderColor: isConnected ? `${brandColor}40` : '#F0F0FF',
+                borderColor: isConnected ? `${brandColor}40` : '#EEF9FF',
                 opacity: isComingSoon ? 0.6 : 1,
               }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 16 }}>
@@ -267,13 +271,13 @@ export default function AccountsScreen() {
 
           {/* Security note */}
           <View style={{
-            marginTop: 8, backgroundColor: '#F0F0FF', borderRadius: 20,
-            padding: 18, borderWidth: 1, borderColor: '#C7D2FE',
+            marginTop: 8, backgroundColor: '#EEF9FF', borderRadius: 20,
+            padding: 18, borderWidth: 1, borderColor: 'rgba(6,182,212,0.4)',
           }}>
-            <Text style={{ fontSize: 13, fontWeight: '800', color: '#3730A3', textAlign: 'right', marginBottom: 6 }}>
+            <Text style={{ fontSize: 13, fontWeight: '800', color: '#0891B2', textAlign: 'right', marginBottom: 6 }}>
               🔒 حماية بياناتك
             </Text>
-            <Text style={{ fontSize: 12, color: '#6D28D9', textAlign: 'right', lineHeight: 20 }}>
+            <Text style={{ fontSize: 12, color: '#0C1040', textAlign: 'right', lineHeight: 20 }}>
               رموز الوصول مشفّرة بـ AES-256 داخل Supabase Vault. لا يمكن لأحد — بما فيه فريق التطوير — الاطلاع عليها.
             </Text>
           </View>

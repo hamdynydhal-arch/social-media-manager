@@ -14,14 +14,14 @@ interface UserProfile {
 }
 
 const STATS = [
-  { label: 'منصات مرتبطة', value: '—', icon: '🔗', color: '#8B5CF6', bg: '#F0F0FF' },
-  { label: 'منشورات الشهر', value: '—', icon: '📝', color: '#059669', bg: '#ECFDF5' },
+  { label: 'منصات مرتبطة', value: '—', icon: '🔗', color: '#0891B2', bg: '#ECFEFF' },
+  { label: 'منشورات الشهر', value: '—', icon: '📝', color: '#9333EA', bg: '#F5F3FF' },
   { label: 'تفاعلات', value: '—', icon: '💬', color: '#D97706', bg: '#FFFBEB' },
 ];
 
 const QUICK_ACTIONS = [
-  { label: 'إنشاء منشور جديد', sub: 'انشر على جميع منصاتك دفعة واحدة', icon: '✏️', color: '#8B5CF6', route: '/(app)/new-post' },
-  { label: 'ربط حساب جديد', sub: 'اربط X، LinkedIn، Facebook وغيرها', icon: '🔗', color: '#7C3AED', route: '/(app)/accounts' },
+  { label: 'إنشاء منشور جديد', sub: 'انشر على جميع منصاتك دفعة واحدة', icon: '✏️', color: '#0891B2', route: '/(app)/new-post' },
+  { label: 'ربط حساب جديد', sub: 'اربط X، LinkedIn، Facebook وغيرها', icon: '🔗', color: '#9333EA', route: '/(app)/accounts' },
 ];
 
 const CHECKLIST = [
@@ -49,7 +49,7 @@ export default function DashboardScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F0F4FF' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F8FF' }}>
       <ScrollView
         contentContainerStyle={{
           paddingBottom: 36,
@@ -57,20 +57,27 @@ export default function DashboardScreen() {
         }}
         showsVerticalScrollIndicator={false}
       >
-        {/* ── Header gradient ── */}
+        {/* ── Header ── */}
         <View style={{
-          backgroundColor: '#6D28D9',
+          backgroundColor: '#0C1040',
           paddingHorizontal: 20, paddingTop: 22, paddingBottom: 36,
           borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
           marginBottom: -18, overflow: 'hidden',
         }}>
+          {/* Cyan glow top-left */}
           <View style={{
-            position: 'absolute', top: -30, left: -30, width: 130, height: 130,
-            borderRadius: 65, backgroundColor: 'rgba(129,140,248,0.18)',
+            position: 'absolute', top: -40, left: -40, width: 160, height: 160,
+            borderRadius: 80, backgroundColor: 'rgba(6,182,212,0.18)',
           }} />
+          {/* Purple glow right */}
           <View style={{
-            position: 'absolute', bottom: 0, right: -20, width: 90, height: 90,
-            borderRadius: 45, backgroundColor: 'rgba(245,158,11,0.12)',
+            position: 'absolute', bottom: -20, right: -20, width: 120, height: 120,
+            borderRadius: 60, backgroundColor: 'rgba(147,51,234,0.2)',
+          }} />
+          {/* Pink glow bottom center */}
+          <View style={{
+            position: 'absolute', bottom: 0, left: '40%', width: 80, height: 80,
+            borderRadius: 40, backgroundColor: 'rgba(236,72,153,0.12)',
           }} />
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -93,7 +100,7 @@ export default function DashboardScreen() {
 
             {/* Greeting */}
             <View style={{ alignItems: 'flex-end' }}>
-              <Text style={{ color: 'rgba(199,210,254,0.75)', fontSize: 13 }}>
+              <Text style={{ color: 'rgba(103,232,249,0.75)', fontSize: 13 }}>
                 {profile.firstName ? `أهلاً، ${profile.firstName} 👋` : 'أهلاً بك 👋'}
               </Text>
               <Text style={{ color: '#FFF', fontSize: 24, fontWeight: '900' }}>لوحة التحكم</Text>
@@ -109,8 +116,8 @@ export default function DashboardScreen() {
               <View key={s.label} style={{
                 flex: 1, backgroundColor: '#FFF', borderRadius: 20,
                 paddingVertical: 16, paddingHorizontal: 10, alignItems: 'center',
-                shadowColor: '#6D28D9', shadowOpacity: 0.08, shadowRadius: 12, elevation: 4,
-                borderWidth: 1, borderColor: '#F0F0FF',
+                shadowColor: '#06B6D4', shadowOpacity: 0.08, shadowRadius: 12, elevation: 4,
+                borderWidth: 1, borderColor: '#EEF9FF',
               }}>
                 <View style={{
                   width: 40, height: 40, borderRadius: 13,
@@ -197,19 +204,19 @@ export default function DashboardScreen() {
             onPress={() => router.push('/(app)/subscription')}
             activeOpacity={0.9}
             style={{
-              backgroundColor: '#0D0A2E', borderRadius: 22, padding: 20,
+              backgroundColor: '#07030F', borderRadius: 22, padding: 20,
               flexDirection: 'row', alignItems: 'center', overflow: 'hidden',
-              shadowColor: '#0D0A2E', shadowOpacity: 0.35, shadowRadius: 16, elevation: 8,
+              shadowColor: '#06B6D4', shadowOpacity: 0.25, shadowRadius: 20, elevation: 8,
             }}
           >
             <View style={{
               position: 'absolute', top: -25, left: -25, width: 90, height: 90,
-              borderRadius: 45, backgroundColor: 'rgba(139,92,246,0.25)',
+              borderRadius: 45, backgroundColor: 'rgba(6,182,212,0.2)',
             }} />
             <Text style={{ fontSize: 36, marginLeft: 16 }}>💎</Text>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
               <Text style={{ color: '#FFF', fontSize: 15, fontWeight: '800' }}>اشترك بالخطة السنوية</Text>
-              <Text style={{ color: '#A5B4FC', fontSize: 12, marginTop: 4 }}>وفّر 50% — 6 أشهر مجاناً!</Text>
+              <Text style={{ color: '#67E8F9', fontSize: 12, marginTop: 4 }}>وفّر 50% — 6 أشهر مجاناً!</Text>
             </View>
           </TouchableOpacity>
 
