@@ -239,7 +239,7 @@ export default function SettingsScreen() {
           >
             <Text style={{ fontSize: 18 }}>🔄</Text>
             <Text style={{ color: '#FFFFFF', fontWeight: '800', fontSize: 15 }}>
-              تحديث النظام والشعار
+              تحديث
             </Text>
           </TouchableOpacity>
 
