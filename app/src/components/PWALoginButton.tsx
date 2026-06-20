@@ -1,33 +1,19 @@
 import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import { usePWAContext } from '../contexts/PWAContext';
 
-function isIos(): boolean {
-  if (typeof navigator === 'undefined') return false;
-  return /iphone|ipad|ipod/i.test(navigator.userAgent);
-}
-
-// Web-only install button. On Android/Chrome: triggers native system prompt.
-// On iOS: hidden (Apple blocks programmatic install — user must use Safari share sheet).
+// Web-only. Shown on login screen only when Android/Chrome can install natively.
 export default function PWALoginButton() {
   if (Platform.OS !== 'web') return null;
-  if (isIos()) return null;
 
-  async function handlePress() {
-    const prompt: any =
-      (window as any).deferredPrompt || (window as any).__pwaPrompt;
-    if (!prompt) return;
-    prompt.prompt();
-    const { outcome } = await prompt.userChoice;
-    if (outcome === 'accepted') {
-      (window as any).deferredPrompt = null;
-      (window as any).__pwaPrompt = null;
-    }
-  }
+  const { isInstallable, triggerInstall } = usePWAContext();
+
+  if (!isInstallable) return null;
 
   return (
     <View style={{ marginTop: 12 }}>
       <TouchableOpacity
         activeOpacity={0.85}
-        onPress={handlePress}
+        onPress={triggerInstall}
         style={{
           flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
           backgroundColor: '#06B6D4', borderRadius: 16,
