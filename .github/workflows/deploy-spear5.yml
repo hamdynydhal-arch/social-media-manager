@@ -115,10 +115,20 @@ jobs:
           upsert_env "INITIAL_SUPER_ADMIN_EMAIL" "$INITIAL_SUPER_ADMIN_EMAIL"
           upsert_env "INTERNAL_BOT_TOKEN"        "$INTERNAL_BOT_TOKEN"
 
-      - name: Deploy to Vercel production
+      - name: Pull Vercel project environment
+        working-directory: web
+        run: vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
+
+      - name: Build Next.js app locally
+        working-directory: web
+        run: vercel build --prod --token "$VERCEL_TOKEN"
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://dummy:x@localhost/dummy' }}
+
+      - name: Deploy prebuilt output to Vercel
         working-directory: web
         run: |
-          DEPLOY_URL=$(vercel --prod --yes --token "$VERCEL_TOKEN" 2>&1 | tail -1)
+          DEPLOY_URL=$(vercel deploy --prebuilt --prod --token "$VERCEL_TOKEN")
           echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_ENV
           echo "Deployed: $DEPLOY_URL"
 
