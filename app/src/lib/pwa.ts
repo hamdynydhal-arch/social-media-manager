@@ -48,7 +48,8 @@ if (typeof window !== 'undefined') {
   window.addEventListener('beforeinstallprompt', (e: Event) => {
     e.preventDefault();
     _deferred = e;
-    (window as any).__pwaPrompt = e; // keep in sync
+    (window as any).__pwaPrompt = e;
+    (window as any).deferredPrompt = e;
     notify();
   });
 }
