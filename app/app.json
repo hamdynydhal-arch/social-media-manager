@@ -2,7 +2,7 @@
   "expo": {
     "name": "منصة إدارة وسائل التواصل",
     "slug": "social-media-manager",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "scheme": "social-media-manager",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

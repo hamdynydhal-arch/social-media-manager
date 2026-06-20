@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView, Platform, Alert, Image } from 'react-native';
+import Constants from 'expo-constants';
 import { Colors } from '../../src/constants/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '../../src/lib/supabase';
@@ -243,7 +244,7 @@ export default function SettingsScreen() {
           </TouchableOpacity>
 
           <Text style={{ textAlign: 'center', color: '#D1D5DB', fontSize: 12, marginTop: 8 }}>
-            منصة المحتوى — الإصدار 1.0.0
+            منصة المحتوى — الإصدار {Constants.expoConfig?.version || '1.0.0'}
           </Text>
         </View>
       </ScrollView>
