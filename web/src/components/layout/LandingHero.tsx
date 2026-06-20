@@ -57,27 +57,31 @@ const stats = [
 
 export function LandingHero() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white overflow-hidden">
-      {/* Background grid */}
+    <div className="min-h-screen bg-navy-950 text-foreground overflow-hidden">
+      {/* Hexagon background pattern */}
+      <div className="fixed inset-0 hex-bg opacity-100 pointer-events-none" />
+      {/* Radial gold glow center */}
       <div
-        className="fixed inset-0 opacity-[0.03]"
+        className="fixed inset-0 pointer-events-none"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
-          backgroundSize: "50px 50px",
+          background:
+            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,164,48,0.07) 0%, transparent 70%)",
         }}
       />
 
       {/* Nav */}
-      <nav className="relative z-10 flex items-center justify-between px-6 py-5 border-b border-white/5 max-w-7xl mx-auto">
-        <Logo className="w-40 h-auto" />
+      <nav className="relative z-10 flex items-center justify-between px-6 py-4 border-b border-gold-DEFAULT/15 max-w-7xl mx-auto">
+        <Logo height={56} />
         <div className="flex items-center gap-4">
-          <Link href="/legal/risk-disclosure" className="text-sm text-muted-foreground hover:text-white transition-colors">
+          <Link
+            href="/legal/risk-disclosure"
+            className="text-sm text-muted-foreground hover:text-gold-DEFAULT transition-colors"
+          >
             إفصاح المخاطر
           </Link>
           <button
             onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-            className="text-sm bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-lg transition-all"
+            className="text-sm bg-gold-DEFAULT/10 hover:bg-gold-DEFAULT/20 border border-gold-DEFAULT/30 text-gold-DEFAULT px-4 py-2 rounded-lg transition-all font-medium"
           >
             تسجيل الدخول
           </button>
@@ -91,15 +95,16 @@ export function LandingHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 text-sm px-4 py-2 rounded-full mb-8">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-            منصة تداول كريبتو آلي — متاحة الآن
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-gold-DEFAULT/10 border border-gold-DEFAULT/25 text-gold-DEFAULT text-sm px-4 py-2 rounded-full mb-8">
+            <span className="w-2 h-2 bg-gold-DEFAULT rounded-full animate-pulse" />
+            منصة إدارة ثروات رقمية — متاحة الآن
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            بوت التداول الذكي
+          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight text-white">
+            منصة التداول الذكي
             <br />
-            <span className="gradient-text">SPEAR5</span>
+            <span className="gradient-text-shine">SPEAR5</span>
           </h1>
 
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
@@ -108,9 +113,10 @@ export function LandingHero() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            {/* Primary CTA — Gold */}
             <button
               onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-              className="group flex items-center gap-3 bg-green-500 hover:bg-green-400 text-black font-bold px-8 py-4 rounded-xl text-lg transition-all shadow-[0_0_30px_rgba(34,197,94,0.3)] hover:shadow-[0_0_50px_rgba(34,197,94,0.5)]"
+              className="group flex items-center gap-3 bg-gold-DEFAULT hover:bg-gold-light text-navy-950 font-bold px-8 py-4 rounded-xl text-lg transition-all shadow-[0_0_30px_rgba(201,164,48,0.35)] hover:shadow-[0_0_50px_rgba(201,164,48,0.55)]"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -123,7 +129,7 @@ export function LandingHero() {
             </button>
             <Link
               href="/legal/risk-disclosure"
-              className="text-muted-foreground hover:text-white text-sm underline underline-offset-4 transition-colors"
+              className="text-muted-foreground hover:text-gold-DEFAULT text-sm underline underline-offset-4 transition-colors"
             >
               اقرأ إفصاح المخاطر أولاً
             </Link>
@@ -138,7 +144,10 @@ export function LandingHero() {
           className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20"
         >
           {stats.map((stat) => (
-            <div key={stat.label} className="bg-white/[0.03] border border-white/5 rounded-xl p-5">
+            <div
+              key={stat.label}
+              className="bg-navy-800/60 border border-gold-DEFAULT/15 rounded-xl p-5 hover:border-gold-DEFAULT/30 transition-colors"
+            >
               <div className="text-3xl font-black gradient-text mb-1 number-ltr">{stat.value}</div>
               <div className="text-sm text-muted-foreground">{stat.label}</div>
             </div>
@@ -154,9 +163,10 @@ export function LandingHero() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-bold text-center mb-12">
+          <h2 className="text-3xl font-bold text-center mb-2 text-white">
             كل ما تحتاجه في مكان واحد
           </h2>
+          <p className="text-center text-muted-foreground mb-12">أدوات ثروة متكاملة على منصة واحدة</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {features.map((f, i) => (
               <motion.div
@@ -165,12 +175,12 @@ export function LandingHero() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white/[0.03] hover:bg-white/[0.05] border border-white/5 rounded-xl p-6 transition-all group"
+                className="bg-navy-800/60 hover:bg-navy-700/60 border border-gold-DEFAULT/10 hover:border-gold-DEFAULT/30 rounded-xl p-6 transition-all group"
               >
-                <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-green-500/20 transition-colors">
-                  <f.icon className="w-6 h-6 text-green-400" />
+                <div className="w-12 h-12 bg-gold-DEFAULT/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-gold-DEFAULT/20 transition-colors">
+                  <f.icon className="w-6 h-6 text-gold-DEFAULT" />
                 </div>
-                <h3 className="font-bold text-lg mb-2">{f.title}</h3>
+                <h3 className="font-bold text-lg mb-2 text-white">{f.title}</h3>
                 <p className="text-muted-foreground text-sm">{f.desc}</p>
               </motion.div>
             ))}
@@ -193,13 +203,16 @@ export function LandingHero() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-white/5 py-8 text-center text-muted-foreground text-sm">
+      <footer className="relative z-10 border-t border-gold-DEFAULT/10 py-8 text-center text-muted-foreground text-sm">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <span>© 2024 Spear5. جميع الحقوق محفوظة.</span>
+          <div className="flex items-center gap-3">
+            <Logo height={32} />
+            <span>© 2024 Spear5. جميع الحقوق محفوظة.</span>
+          </div>
           <div className="flex items-center gap-6">
-            <Link href="/legal/terms" className="hover:text-white transition-colors">شروط الاستخدام</Link>
-            <Link href="/legal/privacy" className="hover:text-white transition-colors">سياسة الخصوصية</Link>
-            <Link href="/legal/risk-disclosure" className="hover:text-white transition-colors">إفصاح المخاطر</Link>
+            <Link href="/legal/terms" className="hover:text-gold-DEFAULT transition-colors">شروط الاستخدام</Link>
+            <Link href="/legal/privacy" className="hover:text-gold-DEFAULT transition-colors">سياسة الخصوصية</Link>
+            <Link href="/legal/risk-disclosure" className="hover:text-gold-DEFAULT transition-colors">إفصاح المخاطر</Link>
           </div>
         </div>
       </footer>

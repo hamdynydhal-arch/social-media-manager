@@ -56,6 +56,29 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Royal Navy palette — extracted from logo
+        navy: {
+          950: "#070D18",
+          900: "#0D1828",
+          800: "#132039",
+          700: "#1B2D50",
+          600: "#243563",
+          500: "#2E4280",
+        },
+        // Metallic Gold palette — extracted from logo
+        gold: {
+          DEFAULT: "#C9A430",
+          light: "#E8C87A",
+          dark: "#8B6914",
+          muted: "#C9A43015",
+          bright: "#F0D060",
+        },
+        // Silver circuit accent
+        silver: {
+          DEFAULT: "#6B8CAE",
+          light: "#9DB5CC",
+          dark: "#4A6480",
+        },
         profit: {
           DEFAULT: "#22c55e",
           muted: "#16a34a",
@@ -65,10 +88,6 @@ const config: Config = {
           DEFAULT: "#ef4444",
           muted: "#dc2626",
           bg: "rgba(239, 68, 68, 0.1)",
-        },
-        gold: {
-          DEFAULT: "#f59e0b",
-          muted: "#d97706",
         },
       },
       borderRadius: {
@@ -90,8 +109,12 @@ const config: Config = {
           "50%": { opacity: "0.4" },
         },
         glow: {
-          "0%, 100%": { boxShadow: "0 0 5px #22c55e, 0 0 10px #22c55e" },
-          "50%": { boxShadow: "0 0 20px #22c55e, 0 0 40px #22c55e" },
+          "0%, 100%": { boxShadow: "0 0 8px #C9A430, 0 0 16px #C9A430" },
+          "50%": { boxShadow: "0 0 24px #C9A430, 0 0 48px #C9A43066" },
+        },
+        shimmerGold: {
+          "0%": { backgroundPosition: "200% center" },
+          "100%": { backgroundPosition: "-200% center" },
         },
       },
       animation: {
@@ -99,6 +122,7 @@ const config: Config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-slow": "pulse 3s ease-in-out infinite",
         glow: "glow 2s ease-in-out infinite",
+        "shimmer-gold": "shimmerGold 3s linear infinite",
       },
     },
   },

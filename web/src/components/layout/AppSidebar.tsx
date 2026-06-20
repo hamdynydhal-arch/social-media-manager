@@ -45,10 +45,10 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed top-0 right-0 h-screen w-64 bg-[#0d0d0d] border-l border-border flex flex-col z-40 max-lg:hidden">
+    <aside className="fixed top-0 right-0 h-screen w-64 bg-navy-900 border-l border-gold-DEFAULT/15 flex flex-col z-40 max-lg:hidden">
       {/* Logo */}
-      <div className="p-5 border-b border-border">
-        <Logo className="w-36 h-auto" />
+      <div className="p-4 border-b border-gold-DEFAULT/15">
+        <Logo height={36} />
       </div>
 
       {/* Navigation */}
@@ -76,22 +76,22 @@ export function AppSidebar({ user }: AppSidebarProps) {
       </nav>
 
       {/* User info + logout */}
-      <div className="p-4 border-t border-border">
+      <div className="p-4 border-t border-gold-DEFAULT/15">
         <div className="flex items-center gap-3 mb-3">
           {user.image ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={user.image} alt="" className="w-8 h-8 rounded-full" />
+            <img src={user.image} alt="" className="w-8 h-8 rounded-full ring-1 ring-gold-DEFAULT/30" />
           ) : (
-            <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-sm font-bold">
+            <div className="w-8 h-8 bg-navy-700 rounded-full flex items-center justify-center text-sm font-bold text-gold-DEFAULT ring-1 ring-gold-DEFAULT/30">
               {user.name?.[0] ?? user.email[0]}
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium truncate">{user.name ?? "مستخدم"}</div>
+            <div className="text-sm font-medium truncate text-foreground">{user.name ?? "مستخدم"}</div>
             <div className="text-xs text-muted-foreground truncate">{user.email}</div>
           </div>
           {user.isSuperAdmin && (
-            <span className="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded shrink-0">
+            <span className="text-xs bg-gold-DEFAULT/10 text-gold-DEFAULT border border-gold-DEFAULT/20 px-1.5 py-0.5 rounded shrink-0">
               Admin
             </span>
           )}
@@ -123,16 +123,14 @@ function NavLink({
       className={cn(
         "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all group",
         active
-          ? isAdmin
-            ? "bg-amber-500/10 text-amber-400 font-medium"
-            : "bg-green-500/10 text-green-400 font-medium"
-          : "text-muted-foreground hover:text-foreground hover:bg-white/[0.04]"
+          ? "bg-gold-DEFAULT/10 text-gold-DEFAULT font-medium border border-gold-DEFAULT/20"
+          : "text-muted-foreground hover:text-foreground hover:bg-navy-700/60"
       )}
     >
       <item.icon
         className={cn(
           "w-4 h-4 shrink-0",
-          active ? (isAdmin ? "text-amber-400" : "text-green-400") : "group-hover:text-foreground"
+          active ? "text-gold-DEFAULT" : "group-hover:text-gold-DEFAULT transition-colors"
         )}
       />
       {item.label}

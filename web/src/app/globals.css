@@ -4,35 +4,48 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Spear5 Design Tokens
+  Primary brand colors extracted from official logo:
+  - Deep Navy Background : #0D1828  (HSL 220 51% 10%)
+  - Navy Card Surface    : #132039  (HSL 219 50% 15%)
+  - Metallic Gold Primary: #C9A430  (HSL 43  62% 49%)
+  - Gold Light Highlight : #E8C87A  (HSL 43  74% 70%)
+  - Silver Circuit Accent: #6B8CAE
+*/
+
 @layer base {
   :root {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
+    /* Backgrounds — Royal Navy */
+    --background: 220 51% 7%;
+    --foreground: 43 30% 92%;
 
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 98%;
+    --card: 219 50% 12%;
+    --card-foreground: 43 20% 95%;
 
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 219 50% 11%;
+    --popover-foreground: 43 20% 95%;
 
-    --primary: 142 76% 36%;
-    --primary-foreground: 0 0% 98%;
+    /* Primary — Metallic Gold */
+    --primary: 43 62% 49%;
+    --primary-foreground: 220 51% 7%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 98%;
+    /* Secondary — mid navy */
+    --secondary: 220 42% 18%;
+    --secondary-foreground: 43 20% 88%;
 
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 55%;
+    --muted: 220 40% 14%;
+    --muted-foreground: 220 20% 55%;
 
-    --accent: 0 0% 12%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 220 42% 20%;
+    --accent-foreground: 43 30% 92%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 12%;
-    --ring: 142 76% 36%;
+    --border: 220 30% 22%;
+    --input: 220 40% 14%;
+    --ring: 43 62% 49%;
 
     --radius: 0.75rem;
   }
@@ -62,11 +75,11 @@
     background: hsl(var(--background));
   }
   ::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
+    background: #C9A43050;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground));
+    background: #C9A430;
   }
 
   /* Focus visible */
@@ -76,24 +89,55 @@
 }
 
 @layer components {
+  /* Gold gradient text — the primary brand accent */
   .gradient-text {
-    @apply bg-gradient-to-r from-green-400 to-emerald-600 bg-clip-text text-transparent;
+    background: linear-gradient(135deg, #E8C87A 0%, #C9A430 50%, #8B6914 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Animated shimmer gold text */
+  .gradient-text-shine {
+    background: linear-gradient(
+      90deg,
+      #8B6914 0%,
+      #E8C87A 30%,
+      #F0D060 50%,
+      #E8C87A 70%,
+      #8B6914 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmerGold 3s linear infinite;
   }
 
   .glass-card {
     @apply bg-card/80 backdrop-blur-sm border border-border/50 rounded-xl;
   }
 
+  /* Gold-bordered glass card */
+  .gold-card {
+    @apply bg-navy-800/80 backdrop-blur-sm border border-gold-DEFAULT/20 rounded-xl;
+  }
+
   .stat-card {
-    @apply glass-card p-5 flex flex-col gap-3;
+    @apply gold-card p-5 flex flex-col gap-3;
   }
 
   .profit-text { @apply text-green-400; }
   .loss-text { @apply text-red-400; }
   .neutral-text { @apply text-muted-foreground; }
 
+  /* Gold glow ring for active states */
+  .gold-active-ring {
+    @apply ring-2 ring-gold-DEFAULT/30 shadow-[0_0_20px_rgba(201,164,48,0.25)];
+  }
+
   .bot-active-ring {
-    @apply ring-2 ring-green-500/30 shadow-[0_0_20px_rgba(34,197,94,0.2)];
+    @apply ring-2 ring-gold-DEFAULT/30 shadow-[0_0_20px_rgba(201,164,48,0.2)];
   }
 
   .bot-inactive-ring {
@@ -127,6 +171,21 @@
     direction: ltr;
     unicode-bidi: bidi-override;
   }
+
+  /* Primary CTA button — Metallic Gold */
+  .btn-gold {
+    @apply bg-gold-DEFAULT hover:bg-gold-light text-navy-950 font-bold transition-all;
+    box-shadow: 0 0 24px rgba(201, 164, 48, 0.3);
+  }
+  .btn-gold:hover {
+    box-shadow: 0 0 40px rgba(201, 164, 48, 0.5);
+  }
+
+  /* Hexagon background pattern matching the logo */
+  .hex-bg {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52' viewBox='0 0 60 52'%3E%3Cpath d='M30 0 L60 17.3 L60 34.7 L30 52 L0 34.7 L0 17.3 Z' fill='none' stroke='%23C9A430' stroke-width='0.4' opacity='0.12'/%3E%3C/svg%3E");
+    background-size: 60px 52px;
+  }
 }
 
 @layer utilities {
@@ -134,4 +193,9 @@
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
   .text-balance { text-wrap: balance; }
+
+  /* Gold divider line */
+  .gold-divider {
+    border-color: #C9A43030;
+  }
 }
