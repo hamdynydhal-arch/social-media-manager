@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView, Platform, Alert, Image } from 'react-native';
+import { Colors } from '../../src/constants/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '../../src/lib/supabase';
 import { router } from 'expo-router';
@@ -196,6 +197,50 @@ export default function SettingsScreen() {
               </View>
             </View>
           ))}
+
+          {/* ── Force update button ── */}
+          <TouchableOpacity
+            onPress={() => {
+              if (Platform.OS === 'web') {
+                if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.getRegistrations().then(regs => {
+                    regs.forEach(reg => reg.update());
+                  });
+                }
+                if ('caches' in window) {
+                  caches.keys().then(names => {
+                    names.forEach(name => caches.delete(name));
+                  });
+                }
+                alert('جاري تحديث ملفات النظام...\n\nملاحظة: لتغيير الشعار الخارجي على شاشة الهاتف فوراً، يرجى حذف التطبيق وتثبيته من جديد، أو سيقوم هاتفك بتحديثه تلقائياً خلال أيام.');
+                setTimeout(() => {
+                  window.location.reload(true);
+                }, 500);
+              } else {
+                Alert.alert('تحديث النظام', 'التطبيق محدث لأخر نسخة');
+              }
+            }}
+            activeOpacity={0.85}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: Colors.cyan.DEFAULT,
+              borderRadius: 16,
+              paddingVertical: 15,
+              marginBottom: 20,
+              gap: 8,
+              shadowColor: Colors.cyan.DEFAULT,
+              shadowOpacity: 0.35,
+              shadowRadius: 12,
+              elevation: 6,
+            }}
+          >
+            <Text style={{ fontSize: 18 }}>🔄</Text>
+            <Text style={{ color: '#FFFFFF', fontWeight: '800', fontSize: 15 }}>
+              تحديث النظام والشعار
+            </Text>
+          </TouchableOpacity>
 
           <Text style={{ textAlign: 'center', color: '#D1D5DB', fontSize: 12, marginTop: 8 }}>
             منصة المحتوى — الإصدار 1.0.0
