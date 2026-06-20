@@ -92,8 +92,9 @@ jobs:
           REDIRECT='<script>if(location.protocol!=="https:"&&location.hostname!=="localhost"){location.replace("https://"+location.host+location.pathname+location.search+location.hash);}</script>'
           SW_REG='<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").then(function(r){console.log("SW registered",r.scope);}).catch(function(e){console.error("SW error",e);});}</script>'
           PWA_CAPTURE='<script>window.deferredPrompt=null;window.__pwaPrompt=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.deferredPrompt=e;window.__pwaPrompt=e;console.log("[PWA] beforeinstallprompt captured");});</script>'
+          VIEWPORT='<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">'
           PWA_META='<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="المحتوى"><meta name="theme-color" content="#06B6D4"><link rel="apple-touch-icon" href="/assets/icon.png"><link rel="manifest" href="/manifest.json">'
-          sed -i "s|</head>|${PWA_META}${SW_REG}${PWA_CAPTURE}${REDIRECT}</head>|" dist/index.html
+          sed -i "s|</head>|${VIEWPORT}${PWA_META}${SW_REG}${PWA_CAPTURE}${REDIRECT}</head>|" dist/index.html
 
       - name: Generate manifest.json
         run: |

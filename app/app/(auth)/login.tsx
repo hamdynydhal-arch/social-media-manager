@@ -1,6 +1,6 @@
 import {
   View, Text, TouchableOpacity, ActivityIndicator,
-  Platform, Dimensions, ScrollView, Image,
+  Platform, ScrollView, Image,
 } from 'react-native';
 import { useState } from 'react';
 import { router } from 'expo-router';
@@ -8,7 +8,6 @@ import { supabase } from '../../src/lib/supabase';
 import { PREVIEW_MODE } from '../_layout';
 import PWALoginButton from '../../src/components/PWALoginButton';
 
-const { width } = Dimensions.get('window');
 const isWeb = Platform.OS === 'web';
 
 export default function LoginScreen() {
@@ -30,8 +29,15 @@ export default function LoginScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#0C0820' }}>
-      {/* Background glow orbs */}
+    /* Root: flex:1 + overflow:hidden clips all absolutely-positioned blobs */
+    <View style={{
+      flex: 1,
+      width: '100%',
+      maxWidth: '100%',
+      overflow: 'hidden',
+      backgroundColor: '#0C0820',
+    }}>
+      {/* Background glow blobs — clipped by parent overflow:hidden */}
       <View style={{
         position: 'absolute', top: -80, left: -80,
         width: 300, height: 300, borderRadius: 150,
@@ -48,8 +54,19 @@ export default function LoginScreen() {
         backgroundColor: 'rgba(236,72,153,0.1)',
       }} />
 
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
-        <View style={{ flex: 1, justifyContent: 'space-between', minHeight: isWeb ? 600 : undefined }}>
+      <ScrollView
+        style={{ flex: 1, width: '100%' }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{
+          flex: 1,
+          width: '100%',
+          justifyContent: 'space-between',
+          minHeight: isWeb ? 600 : undefined,
+        }}>
 
           {/* ── Hero top section ── */}
           <View style={{
@@ -57,8 +74,9 @@ export default function LoginScreen() {
             paddingTop: isWeb ? 80 : 100,
             paddingHorizontal: 32,
             paddingBottom: 40,
+            width: '100%',
           }}>
-            {/* Logo image */}
+            {/* Logo */}
             <View style={{
               width: 124, height: 124, borderRadius: 38,
               backgroundColor: 'rgba(255,255,255,0.04)',
@@ -90,7 +108,8 @@ export default function LoginScreen() {
 
             {/* Feature pills */}
             <View style={{
-              flexDirection: 'row', gap: 8, marginTop: 24, flexWrap: 'wrap', justifyContent: 'center',
+              flexDirection: 'row', gap: 8, marginTop: 24,
+              flexWrap: 'wrap', justifyContent: 'center',
             }}>
               {[
                 { label: '📅 جدولة', bg: 'rgba(6,182,212,0.18)', border: 'rgba(6,182,212,0.4)' },
@@ -108,20 +127,30 @@ export default function LoginScreen() {
             </View>
           </View>
 
-          {/* ── Bottom card ── */}
+          {/* ── Bottom card — width: '100%' prevents horizontal overflow ── */}
           <View style={{
+            width: '100%',
+            ...(isWeb ? {
+              maxWidth: 520,
+              alignSelf: 'center' as const,
+              borderRadius: 28,
+              marginBottom: 40,
+              marginHorizontal: 0,
+            } : {}),
             backgroundColor: '#FFFFFF',
-            borderTopLeftRadius: 36, borderTopRightRadius: 36,
+            borderTopLeftRadius: 36,
+            borderTopRightRadius: 36,
             paddingHorizontal: isWeb ? 40 : 28,
-            paddingTop: 36, paddingBottom: isWeb ? 48 : 50,
-            ...(isWeb ? { maxWidth: 520, alignSelf: 'center', width: '100%', borderRadius: 28, marginBottom: 40 } : {}),
+            paddingTop: 36,
+            paddingBottom: isWeb ? 48 : 50,
             shadowColor: '#06B6D4', shadowOpacity: 0.15, shadowRadius: 32, elevation: 20,
           }}>
-            {/* Cyan accent bar at top */}
+            {/* Cyan accent bar */}
             <View style={{
               position: 'absolute', top: 0, left: '25%', right: '25%', height: 3,
               backgroundColor: '#06B6D4', borderRadius: 2,
             }} />
+
             <Text style={{
               fontSize: 22, fontWeight: '800', color: '#111827',
               textAlign: 'center', marginBottom: 6,
@@ -165,7 +194,6 @@ export default function LoginScreen() {
                 <ActivityIndicator color="#06B6D4" />
               ) : (
                 <>
-                  {/* Google colored logo letters */}
                   <View style={{ flexDirection: 'row', marginLeft: 10 }}>
                     <Text style={{ fontSize: 18, fontWeight: '900', color: '#4285F4' }}>G</Text>
                     <Text style={{ fontSize: 18, fontWeight: '900', color: '#EA4335' }}>o</Text>
@@ -181,7 +209,7 @@ export default function LoginScreen() {
               )}
             </TouchableOpacity>
 
-            {/* PWA install button — web only, shows when installable */}
+            {/* PWA install button — web only */}
             <PWALoginButton />
 
             {error && (
