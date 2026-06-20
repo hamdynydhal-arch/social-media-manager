@@ -111,7 +111,6 @@ export function AppSidebar({ user }: AppSidebarProps) {
 function NavLink({
   item,
   active,
-  isAdmin,
 }: {
   item: { href: string; label: string; icon: React.ElementType };
   active: boolean;
