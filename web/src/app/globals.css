@@ -118,9 +118,11 @@
     @apply bg-card/80 backdrop-blur-sm border border-border/50 rounded-xl;
   }
 
-  /* Gold-bordered glass card */
+  /* Gold-bordered glass card — use raw CSS for hex+opacity combos */
   .gold-card {
-    @apply bg-navy-800/80 backdrop-blur-sm border border-gold-DEFAULT/20 rounded-xl;
+    @apply backdrop-blur-sm rounded-xl;
+    background-color: rgba(19, 32, 57, 0.8);
+    border: 1px solid rgba(201, 164, 48, 0.2);
   }
 
   .stat-card {
@@ -131,13 +133,14 @@
   .loss-text { @apply text-red-400; }
   .neutral-text { @apply text-muted-foreground; }
 
-  /* Gold glow ring for active states */
   .gold-active-ring {
-    @apply ring-2 ring-gold-DEFAULT/30 shadow-[0_0_20px_rgba(201,164,48,0.25)];
+    @apply ring-2 shadow-[0_0_20px_rgba(201,164,48,0.25)];
+    --tw-ring-color: rgba(201, 164, 48, 0.3);
   }
 
   .bot-active-ring {
-    @apply ring-2 ring-gold-DEFAULT/30 shadow-[0_0_20px_rgba(201,164,48,0.2)];
+    @apply ring-2 shadow-[0_0_20px_rgba(201,164,48,0.2)];
+    --tw-ring-color: rgba(201, 164, 48, 0.3);
   }
 
   .bot-inactive-ring {
