@@ -47,6 +47,11 @@ jobs:
       - name: Add CNAME for custom domain
         run: echo "smm.prtnh.com" > dist/CNAME
 
+      - name: Copy PWA icons (manifest references /assets/icon.png — must exist)
+        run: |
+          mkdir -p dist/assets
+          cp assets/icon.png dist/assets/icon.png
+
       - name: Generate service worker
         run: |
           cat > dist/sw.js << 'SWEOF'
@@ -85,7 +90,7 @@ jobs:
       - name: Inject HTTPS redirect, PWA meta tags, and SW registration into HTML
         run: |
           REDIRECT='<script>if(location.protocol!=="https:"&&location.hostname!=="localhost"){location.replace("https://"+location.host+location.pathname+location.search+location.hash);}</script>'
-          SW_REG='<script>if("serviceWorker"in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").then(function(r){console.log("SW registered",r.scope);}).catch(function(e){console.error("SW error",e);});});}</script>'
+          SW_REG='<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").then(function(r){console.log("SW registered",r.scope);}).catch(function(e){console.error("SW error",e);});}</script>'
           PWA_CAPTURE='<script>window.deferredPrompt=null;window.__pwaPrompt=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.deferredPrompt=e;window.__pwaPrompt=e;console.log("[PWA] beforeinstallprompt captured");});</script>'
           PWA_META='<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="المحتوى"><meta name="theme-color" content="#06B6D4"><link rel="apple-touch-icon" href="/assets/icon.png"><link rel="manifest" href="/manifest.json">'
           sed -i "s|</head>|${PWA_META}${SW_REG}${PWA_CAPTURE}${REDIRECT}</head>|" dist/index.html
