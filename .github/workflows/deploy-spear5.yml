@@ -54,7 +54,7 @@ jobs:
             -X POST "https://api.vercel.com/v9/projects" \
             -H "Authorization: Bearer $VERCEL_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{"name":"spear5","framework":"nextjs","rootDirectory":"web"}')
+            -d '{"name":"spear5","framework":"nextjs"}')
 
           PROJECT_ID=$(echo "$RESPONSE" | jq -r '.id // empty')
 
@@ -67,6 +67,13 @@ jobs:
 
           echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
           echo "Project ID: $PROJECT_ID"
+
+          # Ensure rootDirectory is not set (the CLI is already run from web/)
+          curl -s -X PATCH \
+            "https://api.vercel.com/v9/projects/$PROJECT_ID" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"rootDirectory":null}' > /dev/null
 
       - name: Write .vercel/project.json
         working-directory: web
