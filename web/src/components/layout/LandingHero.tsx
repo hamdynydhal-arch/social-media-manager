@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
+import { Logo } from "@/components/ui/Logo";
 import {
   TrendingUp,
   Shield,
@@ -69,12 +70,7 @@ export function LandingHero() {
 
       {/* Nav */}
       <nav className="relative z-10 flex items-center justify-between px-6 py-5 border-b border-white/5 max-w-7xl mx-auto">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-green-500 rounded-lg flex items-center justify-center font-bold text-black text-sm">
-            S5
-          </div>
-          <span className="text-xl font-bold tracking-wider">SPEAR5</span>
-        </div>
+        <Logo className="w-40 h-auto" />
         <div className="flex items-center gap-4">
           <Link href="/legal/risk-disclosure" className="text-sm text-muted-foreground hover:text-white transition-colors">
             إفصاح المخاطر

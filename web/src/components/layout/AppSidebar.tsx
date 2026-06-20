@@ -16,6 +16,7 @@ import {
   Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/ui/Logo";
 
 const userNavItems = [
   { href: "/dashboard", label: "لوحة التحكم", icon: LayoutDashboard },
@@ -47,15 +48,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
     <aside className="fixed top-0 right-0 h-screen w-64 bg-[#0d0d0d] border-l border-border flex flex-col z-40 max-lg:hidden">
       {/* Logo */}
       <div className="p-5 border-b border-border">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-green-500 rounded-lg flex items-center justify-center font-black text-black text-sm shrink-0 shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-            S5
-          </div>
-          <div>
-            <div className="font-bold text-sm">SPEAR5</div>
-            <div className="text-xs text-muted-foreground">منصة التداول الآلي</div>
-          </div>
-        </div>
+        <Logo className="w-36 h-auto" />
       </div>
 
       {/* Navigation */}
