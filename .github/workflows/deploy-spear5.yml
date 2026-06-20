@@ -9,9 +9,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
 
     steps:
       - uses: actions/checkout@v4
@@ -22,24 +19,69 @@ jobs:
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
 
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
       - name: Install dependencies
+        working-directory: web
         run: npm ci
 
       - name: Generate Prisma Client
+        working-directory: web
         run: npx prisma generate
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://dummy:dummy@localhost:5432/dummy' }}
+
+      - name: Link Vercel project
+        working-directory: web
+        run: vercel link --yes --project=spear5 --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Set environment variables on Vercel
+        working-directory: web
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set_env() {
+            local name=$1
+            local value=$2
+            if [ -n "$value" ]; then
+              # Remove existing, then add fresh
+              vercel env rm "$name" production --yes --token=$VERCEL_TOKEN 2>/dev/null || true
+              printf '%s' "$value" | vercel env add "$name" production --token=$VERCEL_TOKEN
+            fi
+          }
+          set_env "DATABASE_URL"               "${{ secrets.DATABASE_URL }}"
+          set_env "NEXTAUTH_SECRET"            "${{ secrets.NEXTAUTH_SECRET }}"
+          set_env "NEXTAUTH_URL"               "https://sp5.prtnh.com"
+          set_env "ENCRYPTION_KEY"             "${{ secrets.ENCRYPTION_KEY }}"
+          set_env "GOOGLE_CLIENT_ID"           "${{ secrets.GOOGLE_CLIENT_ID }}"
+          set_env "GOOGLE_CLIENT_SECRET"       "${{ secrets.GOOGLE_CLIENT_SECRET }}"
+          set_env "RESEND_API_KEY"             "${{ secrets.RESEND_API_KEY }}"
+          set_env "EMAIL_FROM"                 "${{ secrets.EMAIL_FROM }}"
+          set_env "INITIAL_SUPER_ADMIN_EMAIL"  "${{ secrets.INITIAL_SUPER_ADMIN_EMAIL }}"
+          set_env "INTERNAL_BOT_TOKEN"         "${{ secrets.INTERNAL_BOT_TOKEN }}"
+
+      - name: Deploy to Vercel production
+        working-directory: web
+        run: |
+          DEPLOY_URL=$(vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }})
+          echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_ENV
+          echo "Deployed to: $DEPLOY_URL"
+
+      - name: Add custom domain
+        working-directory: web
+        run: |
+          vercel domains add sp5.prtnh.com --token=${{ secrets.VERCEL_TOKEN }} 2>&1 || true
 
       - name: Run DB migrations
+        if: ${{ secrets.DATABASE_URL != '' }}
+        working-directory: web
         run: npx prisma db push --skip-generate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: web
-          vercel-args: '--prod'
+      - name: Deployment summary
+        run: |
+          echo "### Spear5 Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "- URL: ${{ env.DEPLOY_URL }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Custom domain: https://sp5.prtnh.com" >> $GITHUB_STEP_SUMMARY
