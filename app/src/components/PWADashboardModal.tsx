@@ -3,7 +3,13 @@ import { useState } from 'react';
 import { usePWA } from '../lib/usePWA';
 import { isDashboardPromptDismissed, dismissDashboardPrompt } from '../lib/pwa';
 
-// Always rendered on web (unless dismissed) — never hidden by PWA state
+function isIosSafari(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const ua = navigator.userAgent;
+  return /iphone|ipad|ipod/i.test(ua) && /safari/i.test(ua) && !/crios|fxios|chrome/i.test(ua);
+}
+
+// Always rendered on web unless dismissed
 export default function PWADashboardModal() {
   if (Platform.OS !== 'web') return null;
 
@@ -19,17 +25,27 @@ export default function PWADashboardModal() {
   }
 
   async function handleInstall() {
+    if (isIosSafari()) {
+      setShowInstructions(true);
+      return;
+    }
+
+    // Android / Chrome: try native prompt
     if (pwa.type === 'available') {
       try {
-        await pwa.prompt();
-        dismiss();
-        return;
+        const outcome = await pwa.prompt();
+        if (outcome === 'accepted') { dismiss(); return; }
+        // dismissed by user — show instructions as fallback
       } catch {
-        // fall through
+        // prompt threw — fall through
       }
     }
+
+    // Prompt not available yet or failed: show Android instructions
     setShowInstructions(true);
   }
+
+  const ios = isIosSafari();
 
   return (
     <View style={{
@@ -50,11 +66,10 @@ export default function PWADashboardModal() {
         <Text style={{ color: '#6B7280', fontSize: 18 }}>✕</Text>
       </TouchableOpacity>
 
-      {/* Glow orb */}
+      {/* Cyan glow orb */}
       <View style={{
         position: 'absolute', top: -20, right: -20, width: 80, height: 80,
         borderRadius: 40, backgroundColor: 'rgba(6,182,212,0.15)',
-        pointerEvents: 'none',
       } as any} />
 
       {!showInstructions ? (
@@ -110,40 +125,39 @@ export default function PWADashboardModal() {
             color: '#FFF', fontSize: 15, fontWeight: '800',
             textAlign: 'right', marginBottom: 14,
           }}>
-            📲 كيف تثبّت التطبيق؟
+            {ios ? '📲 تثبيت على iPhone' : '📲 تثبيت التطبيق'}
           </Text>
 
-          <Text style={{
-            color: 'rgba(6,182,212,0.9)', fontSize: 12, fontWeight: '700',
-            textAlign: 'right', marginBottom: 6,
-          }}>Android / Chrome:</Text>
-          {['افتح قائمة المتصفح (⋮)', 'اختر «إضافة إلى الشاشة الرئيسية»'].map((t, i) => (
-            <Text key={i} style={{ color: 'rgba(199,210,254,0.85)', fontSize: 13, textAlign: 'right', marginBottom: 5, lineHeight: 19 }}>
-              {`${i + 1}. ${t}`}
-            </Text>
-          ))}
-
-          <View style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginVertical: 10 }} />
-
-          <Text style={{
-            color: 'rgba(6,182,212,0.9)', fontSize: 12, fontWeight: '700',
-            textAlign: 'right', marginBottom: 6,
-          }}>iPhone / Safari:</Text>
-          {[
-            'افتح في Safari',
-            'اضغط زر المشاركة ﹕',
+          {(ios ? [
+            'افتح الصفحة في Safari',
+            'اضغط زر المشاركة ﹕ في الأسفل',
             'اختر «إضافة إلى الشاشة الرئيسية»',
             'اضغط «إضافة»',
-          ].map((t, i) => (
-            <Text key={i} style={{ color: 'rgba(199,210,254,0.85)', fontSize: 13, textAlign: 'right', marginBottom: 5, lineHeight: 19 }}>
-              {`${i + 1}. ${t}`}
-            </Text>
+          ] : [
+            'اضغط على قائمة المتصفح (⋮) في أعلى اليمين',
+            'اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية»',
+          ]).map((text, i) => (
+            <View key={i} style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 9, gap: 10 }}>
+              <View style={{
+                width: 24, height: 24, borderRadius: 12,
+                backgroundColor: 'rgba(6,182,212,0.2)',
+                borderWidth: 1, borderColor: 'rgba(6,182,212,0.5)',
+                alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+              }}>
+                <Text style={{ color: '#22D3EE', fontSize: 10, fontWeight: '800' }}>
+                  {['١','٢','٣','٤'][i]}
+                </Text>
+              </View>
+              <Text style={{ color: 'rgba(199,210,254,0.9)', fontSize: 13, flex: 1, textAlign: 'right', lineHeight: 19 }}>
+                {text}
+              </Text>
+            </View>
           ))}
 
           <TouchableOpacity
             onPress={dismiss}
             style={{
-              marginTop: 14, backgroundColor: 'rgba(6,182,212,0.15)',
+              marginTop: 12, backgroundColor: 'rgba(6,182,212,0.15)',
               borderRadius: 12, paddingVertical: 10, alignItems: 'center',
               borderWidth: 1, borderColor: 'rgba(6,182,212,0.35)',
             }}
