@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { Colors, Radii } from '../constants/theme';
 
 interface Props {
@@ -24,14 +24,23 @@ export function GradientHeader({ title, subtitle }: Props) {
         position: 'absolute', bottom: -20, right: -20, width: 100, height: 100,
         borderRadius: 50, backgroundColor: Colors.purple.glow,
       }} />
-      {subtitle && (
-        <Text style={{ color: Colors.text.onDarkSub, fontSize: 13, textAlign: 'right' }}>
-          {subtitle}
-        </Text>
-      )}
-      <Text style={{ color: Colors.text.onDark, fontSize: 24, fontWeight: '900', textAlign: 'right' }}>
-        {title}
-      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 10 }}>
+        <View style={{ flex: 1 }}>
+          {subtitle && (
+            <Text style={{ color: Colors.text.onDarkSub, fontSize: 13, textAlign: 'right' }}>
+              {subtitle}
+            </Text>
+          )}
+          <Text style={{ color: Colors.text.onDark, fontSize: 24, fontWeight: '900', textAlign: 'right' }}>
+            {title}
+          </Text>
+        </View>
+        <Image
+          source={require('../../assets/logo.jpg')}
+          style={{ width: 42, height: 42, borderRadius: 12 }}
+          resizeMode="contain"
+        />
+      </View>
     </View>
   );
 }

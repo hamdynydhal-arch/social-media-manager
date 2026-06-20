@@ -27,8 +27,10 @@
     "android": {
       "package": "com.socialmanager.app",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1e3a5f"
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png",
+        "backgroundColor": "#0C0820"
       },
       "permissions": [
         "READ_EXTERNAL_STORAGE",
