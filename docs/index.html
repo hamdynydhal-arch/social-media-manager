@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPEAR5 — بوت التداول الذكي</title>
+  <meta name="description" content="منصة احترافية لإدارة بوت تداول العملات الرقمية. تشفير AES-256-GCM، لوحة تحكم عربية، 3 مستويات مخاطرة." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #22c55e;
+      --green-dim: rgba(34,197,94,.12);
+      --green-glow: rgba(34,197,94,.35);
+      --bg: #0a0a0a;
+      --surface: rgba(255,255,255,.03);
+      --border: rgba(255,255,255,.06);
+      --muted: rgba(255,255,255,.45);
+      --red-dim: rgba(239,68,68,.15);
+      --red-border: rgba(239,68,68,.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glow blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob-1 { width: 600px; height: 600px; background: rgba(34,197,94,.06); top: -200px; right: -200px; }
+    .blob-2 { width: 500px; height: 500px; background: rgba(34,197,94,.04); bottom: -150px; left: -150px; }
+
+    /* Layout */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      background: rgba(10,10,10,.8);
+    }
+    nav .inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; }
+    .logo-badge {
+      width: 36px; height: 36px;
+      background: var(--green);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 13px; color: #000;
+    }
+    .logo-text { font-size: 20px; font-weight: 900; letter-spacing: 2px; }
+    .nav-links { display: flex; align-items: center; gap: 16px; }
+    .nav-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color .2s;
+    }
+    .nav-link:hover { color: #fff; }
+    .btn-login {
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background .2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-login:hover { background: rgba(255,255,255,.1); }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 100px 24px 60px;
+      position: relative;
+      z-index: 1;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-dim);
+      border: 1px solid rgba(34,197,94,.25);
+      color: var(--green);
+      font-size: 14px;
+      padding: 8px 18px;
+      border-radius: 99px;
+      margin-bottom: 32px;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(.8); }
+    }
+
+    h1 {
+      font-size: clamp(40px, 8vw, 80px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--green) 0%, #86efac 50%, var(--green) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 48px;
+      line-height: 1.8;
+    }
+
+    .cta-group { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--green);
+      color: #000;
+      font-family: 'Cairo', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 32px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+      box-shadow: 0 0 30px var(--green-glow);
+    }
+    .btn-primary:hover {
+      background: #4ade80;
+      box-shadow: 0 0 50px var(--green-glow);
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      color: var(--muted);
+      font-size: 14px;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      transition: color .2s;
+    }
+    .btn-ghost:hover { color: #fff; }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 80px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 36px;
+      font-weight: 900;
+      font-family: 'Cairo', sans-serif;
+      direction: ltr;
+    }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    /* Features */
+    section.features {
+      padding: 80px 0;
+      position: relative;
+      z-index: 1;
+    }
+    section h2 {
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: all .2s;
+    }
+    .feature-card:hover {
+      background: rgba(255,255,255,.05);
+      border-color: rgba(34,197,94,.2);
+    }
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: var(--green-dim);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+      transition: background .2s;
+    }
+    .feature-card:hover .feature-icon { background: rgba(34,197,94,.2); }
+    .feature-icon svg { width: 24px; height: 24px; stroke: var(--green); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .feature-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .feature-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    /* Dashboard preview */
+    section.preview {
+      padding: 0 0 80px;
+      position: relative;
+      z-index: 1;
+    }
+    .preview-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .preview-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+    }
+    .dot-r { width: 10px; height: 10px; border-radius: 50%; background: #ef4444; }
+    .dot-y { width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; }
+    .dot-g { width: 10px; height: 10px; border-radius: 50%; background: #22c55e; }
+    .preview-url {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: monospace;
+    }
+    .preview-body { padding: 24px; }
+    .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .dash-card {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .dash-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+    .dash-value { font-size: 22px; font-weight: 900; direction: ltr; font-family: 'Cairo', sans-serif; }
+    .dash-change { font-size: 12px; margin-top: 4px; }
+    .up { color: var(--green); }
+    .down { color: #ef4444; }
+    .chart-placeholder {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      height: 140px;
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      overflow: hidden;
+    }
+    .bar {
+      flex: 1;
+      background: linear-gradient(to top, var(--green), rgba(34,197,94,.3));
+      border-radius: 4px 4px 0 0;
+      min-width: 0;
+      opacity: .7;
+      transition: opacity .2s;
+    }
+    .bar:hover { opacity: 1; }
+    /* Simulated equity curve */
+    .equity-line {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    svg.chart-svg { width: 100%; height: 100%; }
+
+    /* Bot status badge */
+    .bot-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34,197,94,.12);
+      border: 1px solid rgba(34,197,94,.25);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 99px;
+    }
+    .ring {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 3px rgba(34,197,94,.3);
+      animation: ring-pulse 2s infinite;
+    }
+    @keyframes ring-pulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(34,197,94,.3); }
+      50% { box-shadow: 0 0 0 6px rgba(34,197,94,.1); }
+    }
+
+    /* Security section */
+    section.security {
+      padding: 0 0 80px;
+      position: relative;
+      z-index: 1;
+    }
+    .security-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+    @media (max-width: 768px) { .security-grid { grid-template-columns: 1fr; } }
+    .security-list { list-style: none; }
+    .security-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+      color: rgba(255,255,255,.8);
+    }
+    .security-list li:last-child { border-bottom: none; }
+    .security-list svg { width: 20px; height: 20px; stroke: var(--green); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .code-box {
+      background: #111;
+      border: 1px solid rgba(34,197,94,.15);
+      border-radius: 16px;
+      padding: 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      direction: ltr;
+      text-align: left;
+    }
+    .code-comment { color: #6a9955; }
+    .code-keyword { color: #569cd6; }
+    .code-string { color: #ce9178; }
+    .code-func { color: #dcdcaa; }
+    .code-var { color: #9cdcfe; }
+
+    /* Risk warning */
+    .risk-box {
+      background: var(--red-dim);
+      border: 1px solid var(--red-border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin: 0 0 80px;
+      position: relative;
+      z-index: 1;
+    }
+    .risk-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #f87171;
+      font-weight: 700;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+    .risk-title svg { width: 18px; height: 18px; stroke: #f87171; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .risk-text { font-size: 13px; color: rgba(248,113,113,.7); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      position: relative;
+      z-index: 1;
+    }
+    footer .inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    footer .copyright { color: var(--muted); font-size: 13px; }
+    footer .links { display: flex; align-items: center; gap: 24px; }
+    footer a { color: var(--muted); text-decoration: none; font-size: 13px; transition: color .2s; }
+    footer a:hover { color: #fff; }
+
+    /* Stack pills */
+    .stack-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+    .pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: rgba(255,255,255,.6);
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 36px; }
+      nav .inner { padding: 14px 16px; }
+      .hero { padding: 60px 16px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="inner">
+    <a href="#" class="logo">
+      <div class="logo-badge">S5</div>
+      <span class="logo-text">SPEAR5</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features" class="nav-link">المميزات</a>
+      <a href="#security" class="nav-link">الأمان</a>
+      <a href="#" class="btn-login">
+        <svg width="16" height="16" viewBox="0 0 24 24" style="fill:currentColor">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        تسجيل الدخول
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="container">
+  <section class="hero">
+    <div class="badge">
+      <span class="dot"></span>
+      منصة تداول كريبتو آلي — متاحة الآن
+    </div>
+
+    <h1>
+      بوت التداول الذكي<br>
+      <span class="gradient-text">SPEAR5</span>
+    </h1>
+
+    <p class="hero-desc">
+      منصة احترافية لإدارة بوت تداول العملات الرقمية.
+      سجّل دخولك، أدخل مفاتيح Binance، واختر مستوى المخاطرة —
+      البوت يتولى الباقي.
+    </p>
+
+    <div class="cta-group">
+      <a href="#" class="btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" style="fill:currentColor">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        ابدأ مع Google
+      </a>
+      <a href="#" class="btn-ghost">اقرأ إفصاح المخاطر أولاً</a>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value gradient-text">100+</div>
+        <div class="stat-label">عملة مدعومة</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value gradient-text">78%</div>
+        <div class="stat-label">نسبة دقة التنبؤ</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value gradient-text">99.9%</div>
+        <div class="stat-label">وقت التشغيل</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value gradient-text">500+</div>
+        <div class="stat-label">مستخدم نشط</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Preview -->
+  <section class="preview">
+    <h2>لوحة تحكم احترافية</h2>
+    <div class="preview-wrapper">
+      <div class="preview-header">
+        <span class="dot-r"></span>
+        <span class="dot-y"></span>
+        <span class="dot-g"></span>
+        <div class="preview-url">spear5.vercel.app/dashboard</div>
+      </div>
+      <div class="preview-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div style="font-size:15px;font-weight:700;">لوحة التحكم</div>
+          <div class="bot-status">
+            <span class="ring"></span>
+            البوت نشط
+          </div>
+        </div>
+        <div class="dash-grid">
+          <div class="dash-card">
+            <div class="dash-label">رأس المال الحالي</div>
+            <div class="dash-value gradient-text">$12,847</div>
+            <div class="dash-change up">▲ +14.2% هذا الشهر</div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-label">الخزنة (30%)</div>
+            <div class="dash-value" style="color:#e2e8f0;">$3,854</div>
+            <div class="dash-change" style="color:var(--muted);">محمية تلقائياً</div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-label">إجمالي الربح</div>
+            <div class="dash-value up">+$2,847</div>
+            <div class="dash-change up">▲ ROI 28.4%</div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-label">الصفقات المغلقة</div>
+            <div class="dash-value" style="color:#e2e8f0;">124</div>
+            <div class="dash-change" style="color:var(--muted);">76 ربح / 48 خسارة</div>
+          </div>
+        </div>
+        <!-- Equity curve mockup -->
+        <div class="chart-placeholder">
+          <svg class="chart-svg" viewBox="0 0 400 100" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#22c55e" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,90 C20,88 40,85 60,80 C80,75 90,78 110,70 C130,62 140,65 160,55 C180,45 190,50 210,40 C230,30 240,35 260,25 C280,15 290,20 310,15 C330,10 350,12 370,8 C385,5 395,4 400,3 L400,100 L0,100 Z" fill="url(#g)"/>
+            <path d="M0,90 C20,88 40,85 60,80 C80,75 90,78 110,70 C130,62 140,65 160,55 C180,45 190,50 210,40 C230,30 240,35 260,25 C280,15 290,20 310,15 C330,10 350,12 370,8 C385,5 395,4 400,3" fill="none" stroke="#22c55e" stroke-width="2"/>
+          </svg>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center;">منحنى الأرباح — آخر 90 يوم</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <h2>كل ما تحتاجه في مكان واحد</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <!-- Bot icon -->
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 2v4M8 2h8M6 14h.01M18 14h.01M9 18h6"/></svg>
+        </div>
+        <div class="feature-title">بوت ذكي متطور</div>
+        <div class="feature-desc">خوارزميات تداول احترافية مكتوبة بـ Python تعمل على مدار الساعة بدون تدخل بشري.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <!-- Shield icon -->
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <div class="feature-title">أمان عالي المستوى</div>
+        <div class="feature-desc">تشفير AES-256-GCM لمفاتيح Binance API. المفاتيح لا تُرسل للواجهة أبداً بعد الحفظ.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <!-- BarChart icon -->
+          <svg viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        </div>
+        <div class="feature-title">لوحة تحكم احترافية</div>
+        <div class="feature-desc">إحصائيات حية، Equity Curve، وتاريخ صفقات مفصّل مع P&L لكل صفقة.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <!-- TrendingUp icon -->
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="feature-title">3 مستويات مخاطرة</div>
+        <div class="feature-desc">🟢 محافظ (1% مخاطرة) · 🟡 متوازن (2%) · 🔴 جريء (3%) — اختر ما يناسب شخصيتك.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <!-- Zap icon -->
+          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="feature-title">تحكم فوري</div>
+        <div class="feature-desc">إطلاق وإيقاف البوت بنقرة واحدة. حالة تشغيل حية مع آخر نبضة قلب.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <!-- Activity icon -->
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="feature-title">Backtest متقدم</div>
+        <div class="feature-desc">اختبر الاستراتيجية على بيانات تاريخية قبل المخاطرة برأس مال حقيقي.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security -->
+  <section class="security" id="security">
+    <h2>الأمان في صميم البناء</h2>
+    <div class="security-grid">
+      <ul class="security-list">
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          AES-256-GCM لتشفير مفاتيح Binance
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          لا تُرسل المفاتيح كاملةً للواجهة أبداً (آخر 4 أحرف فقط)
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          لا localStorage — جلسة JWT آمنة على الخادم
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          سجل مراجعة Audit Log لكل الإجراءات الحساسة
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          إشعار بريد إلكتروني فوري عند تغيير API Keys
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Python workers منفصلة تماماً عن Next.js
+        </li>
+      </ul>
+      <div class="code-box">
+        <div><span class="code-comment">// lib/encryption.ts</span></div>
+        <div><span class="code-keyword">const</span> <span class="code-var">ALGORITHM</span> = <span class="code-string">"aes-256-gcm"</span>;</div>
+        <div><span class="code-keyword">const</span> <span class="code-var">IV_LENGTH</span> = <span class="code-string">12</span>;</div>
+        <br>
+        <div><span class="code-keyword">export function</span> <span class="code-func">encrypt</span>(<span class="code-var">plaintext</span>: <span class="code-keyword">string</span>) {</div>
+        <div>  <span class="code-keyword">const</span> <span class="code-var">iv</span> = randomBytes(<span class="code-var">IV_LENGTH</span>);</div>
+        <div>  <span class="code-keyword">const</span> <span class="code-var">cipher</span> = createCipheriv(</div>
+        <div>    <span class="code-var">ALGORITHM</span>, <span class="code-var">KEY</span>, <span class="code-var">iv</span></div>
+        <div>  );</div>
+        <div>  <span class="code-comment">// iv + authTag + ciphertext → base64</span></div>
+        <div>  <span class="code-keyword">return</span> <span class="code-func">toBase64</span>([<span class="code-var">iv</span>, <span class="code-var">tag</span>, <span class="code-var">enc</span>]);</div>
+        <div>}</div>
+        <div class="stack-pills">
+          <span class="pill">Next.js 14</span>
+          <span class="pill">TypeScript</span>
+          <span class="pill">Prisma ORM</span>
+          <span class="pill">PostgreSQL</span>
+          <span class="pill">NextAuth v5</span>
+          <span class="pill">Tailwind CSS</span>
+          <span class="pill">Recharts</span>
+          <span class="pill">Monaco Editor</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Risk Warning -->
+  <div class="risk-box">
+    <div class="risk-title">
+      <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      تحذير المخاطر المالية
+    </div>
+    <p class="risk-text">
+      تداول العملات الرقمية ينطوي على مخاطر عالية جداً وقد تخسر جزءاً أو كل رأس مالك.
+      Spear5 ليست مستشاراً مالياً ولا تضمن أي عوائد. تداول فقط بما تستطيع تحمّل خسارته.
+    </p>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="inner">
+    <div class="copyright">© 2024 Spear5. جميع الحقوق محفوظة.</div>
+    <div class="links">
+      <a href="#">شروط الاستخدام</a>
+      <a href="#">سياسة الخصوصية</a>
+      <a href="#">إفصاح المخاطر</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
