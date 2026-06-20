@@ -1,0 +1,249 @@
+// Spear5 Web Platform — Prisma Schema
+// PostgreSQL via @prisma/client
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── NextAuth Required Models ─────────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─── Core Models ──────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  image        String?
+  emailVerified DateTime?
+  isSuperAdmin Boolean  @default(false)
+  isActive     Boolean  @default(true)
+  hasCompletedOnboarding Boolean @default(false)
+  riskDisclosureAcceptedAt DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  accounts     Account[]
+  sessions     Session[]
+  botConfig    BotConfig?
+  trades       Trade[]
+  auditLogs    AuditLog[]
+  superAdminInvitesSent     SuperAdminInvite[] @relation("InvitedBy")
+  botCodeFiles BotCodeFile[]
+  botCodeBackups BotCodeBackup[]
+
+  @@map("users")
+}
+
+model BotConfig {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Encrypted API keys (AES-256-GCM)
+  binanceApiKeyEncrypted    String?  @db.Text
+  binanceSecretEncrypted    String?  @db.Text
+  telegramBotTokenEncrypted String?  @db.Text
+  telegramChatId            String?
+
+  // Capital tracking
+  initialCapital Float    @default(0)
+  currentCapital Float    @default(0)
+  vault          Float    @default(0)
+
+  // Bot settings
+  riskLevel  RiskLevel @default(BALANCED)
+  isLaunched Boolean   @default(false)
+  isLiveMode Boolean   @default(false)
+
+  // Worker process tracking
+  workerPid    Int?
+  workerStatus WorkerStatus @default(STOPPED)
+
+  // Status & errors
+  lastHeartbeat DateTime?
+  lastError     String?   @db.Text
+  stateJson     Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("bot_configs")
+}
+
+enum RiskLevel {
+  CONSERVATIVE
+  BALANCED
+  AGGRESSIVE
+}
+
+enum WorkerStatus {
+  STOPPED
+  STARTING
+  RUNNING
+  STOPPING
+  ERROR
+}
+
+model Trade {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  symbol          String
+  entryPrice      Float
+  exitPrice       Float?
+  sizeUnits       Float
+  positionValueUsd Float
+  pnlUsd          Float?
+  pnlPct          Float?
+  status          TradeStatus
+  side            TradeSide   @default(LONG)
+
+  entryTime  DateTime
+  exitTime   DateTime?
+  exitReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, status])
+  @@index([userId, entryTime])
+  @@map("trades")
+}
+
+enum TradeStatus {
+  ACTIVE
+  CLOSED
+}
+
+enum TradeSide {
+  LONG
+  SHORT
+}
+
+model SuperAdminInvite {
+  id          String    @id @default(cuid())
+  email       String
+  invitedById String
+  invitedBy   User      @relation("InvitedBy", fields: [invitedById], references: [id])
+  token       String    @unique @default(cuid())
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([email])
+  @@index([token])
+  @@map("super_admin_invites")
+}
+
+model BotCodeFile {
+  id           String  @id @default(cuid())
+  filename     String  @unique
+  content      String  @db.Text
+  uploadedById String
+  uploadedBy   User    @relation(fields: [uploadedById], references: [id])
+  version      Int     @default(1)
+  isActive     Boolean @default(true)
+  fileSize     Int     @default(0)
+  description  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("bot_code_files")
+}
+
+model BotCodeBackup {
+  id            String @id @default(cuid())
+  backupName    String
+  filesSnapshot Json
+  createdById   String
+  createdBy     User   @relation(fields: [createdById], references: [id])
+  fileCount     Int    @default(0)
+  totalSizeBytes Int   @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@map("bot_code_backups")
+}
+
+model AuditLog {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  action   AuditAction
+  resource String
+  details  Json?
+  ipAddress String?
+  userAgent String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+  @@map("audit_logs")
+}
+
+enum AuditAction {
+  LOGIN
+  LOGOUT
+  BOT_LAUNCH
+  BOT_STOP
+  API_KEY_UPDATE
+  SETTINGS_UPDATE
+  CODE_UPLOAD
+  CODE_DELETE
+  CODE_BACKUP
+  USER_DELETE
+  SUPER_ADMIN_INVITE
+  SUPER_ADMIN_ACCEPT
+  SUPER_ADMIN_REMOVE
+  BACKTEST_RUN
+}
