@@ -43,11 +43,11 @@ export function InviteAcceptClient({
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-navy-950 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-[#111] border border-white/10 rounded-2xl p-8 text-center"
+        className="w-full max-w-md bg-navy-800/80 border border-gold-DEFAULT/15 rounded-2xl p-8 text-center"
       >
         {status === "pending" && (
           <>
@@ -56,13 +56,13 @@ export function InviteAcceptClient({
             </div>
             <h1 className="text-2xl font-bold mb-3">دعوة Super Admin</h1>
             <p className="text-muted-foreground mb-6">
-              قام <strong className="text-foreground">{inviterName}</strong> بدعوتك للانضمام
-              كـ Super Admin على منصة SPEAR5.
+              قام <strong className="text-foreground">{inviterName}</strong> بمنحك صلاحيات
+              Super Admin على منصة SPEAR5.
             </p>
             <div className="bg-amber-950/30 border border-amber-800/30 rounded-xl p-4 mb-6 text-sm text-amber-200/70 text-right">
               <p className="font-bold text-amber-400 mb-2">بصفتك Super Admin ستمتلك:</p>
               <ul className="space-y-1">
-                <li>• إدارة جميع المستخدمين</li>
+                <li>• إدارة جميع المُصرَّحين</li>
                 <li>• تعديل كود البوت</li>
                 <li>• رؤية إحصائيات المنصة</li>
                 <li>• دعوة مديرين آخرين</li>

@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "إفصاح المخاطر المال
 
 export default function RiskDisclosurePage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] p-6">
+    <div className="min-h-screen bg-navy-950 p-6">
       <div className="max-w-3xl mx-auto">
         <Link href="/" className="text-muted-foreground hover:text-foreground text-sm mb-8 inline-block">
           → العودة للرئيسية
@@ -56,7 +56,7 @@ export default function RiskDisclosurePage() {
             </section>
 
             <section>
-              <h2 className="text-foreground font-bold text-xl mb-3">4. توصياتنا للمستخدمين</h2>
+              <h2 className="text-foreground font-bold text-xl mb-3">4. توصياتنا للمُصرَّحين</h2>
               <ul className="list-disc list-inside space-y-2">
                 <li>ابدأ بمبلغ صغير (Paper Mode أولاً)</li>
                 <li>لا تستثمر أكثر من 5-10% من مدخراتك</li>

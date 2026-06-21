@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "سياسة الخصوصية" };
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] p-6">
+    <div className="min-h-screen bg-navy-950 p-6">
       <div className="max-w-3xl mx-auto">
         <Link href="/" className="text-muted-foreground hover:text-foreground text-sm mb-8 inline-block">
           → العودة للرئيسية
