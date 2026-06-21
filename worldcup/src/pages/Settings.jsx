@@ -442,7 +442,7 @@ export default function Settings({
         <h3 className="font-bold text-white mb-3">📱 معلومات التطبيق</h3>
         <div className="space-y-2 text-sm">
           {[
-            { label: 'الإصدار', val: '6.3.6' },
+            { label: 'الإصدار', val: '6.3.7' },
             { label: 'البطولة', val: 'كأس العالم FIFA 2026' },
             { label: 'الدول المستضيفة', val: 'الولايات المتحدة • كندا • المكسيك' },
             { label: 'المنتخبات', val: `${data.teams.length} منتخب` },
