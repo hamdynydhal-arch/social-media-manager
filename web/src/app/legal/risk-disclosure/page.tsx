@@ -12,7 +12,7 @@ export default function RiskDisclosurePage() {
         </Link>
         <div className="prose prose-invert max-w-none">
           <h1 className="text-3xl font-bold mb-2">إفصاح المخاطر المالية الكامل</h1>
-          <p className="text-muted-foreground mb-8">آخر تحديث: يناير 2025</p>
+          <p className="text-muted-foreground mb-8">آخر تحديث: يونيو 2026</p>
 
           <div className="bg-red-950/30 border border-red-900/30 rounded-xl p-6 mb-8">
             <h2 className="text-red-400 font-bold text-xl mb-3">⚠️ تحذير مهم للغاية</h2>

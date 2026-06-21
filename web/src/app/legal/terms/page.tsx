@@ -11,7 +11,7 @@ export default function TermsPage() {
           → العودة للرئيسية
         </Link>
         <h1 className="text-3xl font-bold mb-2">شروط الاستخدام</h1>
-        <p className="text-muted-foreground mb-8">آخر تحديث: يناير 2025</p>
+        <p className="text-muted-foreground mb-8">آخر تحديث: يونيو 2026</p>
         <div className="space-y-6 text-muted-foreground leading-relaxed">
           <section>
             <h2 className="text-foreground font-bold text-xl mb-3">1. القبول والموافقة</h2>
