@@ -138,6 +138,96 @@ async function backgroundScoreCheck() {
   await swSet('bg-scores', next)
 }
 
+// ── Sofascore live goal check (real-time during matches) ──────────────────────
+// openfootball only publishes final scores; Sofascore updates every ~30 s live.
+// This runs on every periodicsync tick to catch goals as they happen.
+const _SW_SFS_MAP = {
+  'Mexico':'MEX','South Africa':'RSA','South Korea':'KOR','Korea Republic':'KOR',
+  'Czech Republic':'CZE','Czechia':'CZE','Canada':'CAN',
+  'Bosnia & Herzegovina':'BIH','Bosnia and Herzegovina':'BIH',
+  'Qatar':'QAT','Switzerland':'SUI','Brazil':'BRA','Morocco':'MAR',
+  'Haiti':'HAI','Scotland':'SCO','USA':'USA','United States':'USA',
+  'Paraguay':'PAR','Australia':'AUS','Turkey':'TUR','Türkiye':'TUR',
+  'Germany':'GER','Curaçao':'CUW','Curacao':'CUW',
+  "Côte d'Ivoire":'CIV',"Cote d'Ivoire":'CIV','Ivory Coast':'CIV',
+  'Ecuador':'ECU','Netherlands':'NED','Japan':'JPN','Sweden':'SWE',
+  'Tunisia':'TUN','Belgium':'BEL','Egypt':'EGY','Iran':'IRN',
+  'New Zealand':'NZL','Spain':'ESP','Cape Verde':'CPV',
+  'Saudi Arabia':'KSA','Uruguay':'URU','France':'FRA','Senegal':'SEN',
+  'Iraq':'IRQ','Norway':'NOR','Argentina':'ARG','Algeria':'ALG',
+  'Austria':'AUT','Jordan':'JOR','Portugal':'POR',
+  'DR Congo':'COD','Congo DR':'COD','Uzbekistan':'UZB',
+  'Colombia':'COL','England':'ENG','Croatia':'CRO','Ghana':'GHA','Panama':'PAN',
+}
+
+async function backgroundSofascoreCheck() {
+  const favs = (await swGet('favs')) ?? []
+  if (!favs.length) return
+
+  let events
+  try {
+    const res = await fetch('https://api.sofascore.com/api/v1/sport/football/live', {
+      cache: 'no-store', signal: AbortSignal.timeout(10000),
+    })
+    if (!res.ok) return
+    const json = await res.json()
+    events = json?.events ?? []
+  } catch { return }
+
+  const prev    = (await swGet('bg-sfs-scores')) ?? {}
+  const next    = { ...prev }
+  let   changed = false
+
+  for (const ev of events) {
+    const homeId = _SW_SFS_MAP[ev.homeTeam?.name] ?? _SW_SFS_MAP[ev.homeTeam?.shortName]
+    const awayId = _SW_SFS_MAP[ev.awayTeam?.name] ?? _SW_SFS_MAP[ev.awayTeam?.shortName]
+    if (!homeId || !awayId) continue
+    if (!favs.includes(homeId) && !favs.includes(awayId)) continue
+
+    const sh       = ev.homeScore?.current ?? 0
+    const sa       = ev.awayScore?.current ?? 0
+    const id       = `sfs_${homeId}_${awayId}`
+    const p        = prev[id] ?? { h: -1, a: -1 }   // -1 = first time seen this session
+    next[id]       = { h: sh, a: sa }
+    changed        = true
+
+    const homeName = ev.homeTeam?.name ?? homeId
+    const awayName = ev.awayTeam?.name ?? awayId
+
+    if (sh > p.h && p.h >= 0) {
+      try {
+        await self.registration.showNotification(
+          `\u{1F6A8}⚽ هدف! ${homeName} ${sh}–${sa} ${awayName}`,
+          {
+            body:               favs.includes(homeId) ? '⭐ منتخبك يسجل!' : 'هدف في مباراتك المفضلة',
+            icon: ICON, badge: BADGE_ICON, dir: 'rtl', lang: 'ar',
+            tag: `sfs-${id}-h${sh}`, renotify: true,
+            vibrate: WHISTLE_VIB, requireInteraction: true, silent: false,
+          }
+        )
+      } catch { /* notification permission denied */ }
+      notifyClients()
+    }
+
+    if (sa > p.a && p.a >= 0) {
+      try {
+        await self.registration.showNotification(
+          `\u{1F6A8}⚽ هدف! ${homeName} ${sh}–${sa} ${awayName}`,
+          {
+            body:               favs.includes(awayId) ? '⭐ منتخبك يسجل!' : 'هدف في مباراتك المفضلة',
+            icon: ICON, badge: BADGE_ICON, dir: 'rtl', lang: 'ar',
+            tag: `sfs-${id}-a${sa}`, renotify: true,
+            vibrate: WHISTLE_VIB, requireInteraction: true, silent: false,
+          }
+        )
+      } catch { /* notification permission denied */ }
+      notifyClients()
+    }
+  }
+
+  if (changed) await swSet('bg-sfs-scores', next)
+}
+
 const DATA_JSON = BASE + 'data.json'
 
 async function backgroundPreMatchCheck() {
@@ -283,7 +373,7 @@ async function backgroundNewsCheck() {
 self.addEventListener('periodicsync', event => {
   if (event.tag === 'wc-live-check') {
     event.waitUntil(
-      Promise.all([backgroundScoreCheck(), backgroundPreMatchCheck(), backgroundNewsCheck()])
+      Promise.all([backgroundScoreCheck(), backgroundSofascoreCheck(), backgroundPreMatchCheck(), backgroundNewsCheck()])
     )
   }
 })

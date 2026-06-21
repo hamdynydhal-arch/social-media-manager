@@ -247,13 +247,29 @@ function applyCrossValidation(matches, cvCache) {
   if (!Object.keys(cvCache).length) return matches
   const now = serverNow()
   return matches.map(m => {
-    if (m.status === 'live' || m.status === 'finished') return m
-    // Never override a match that hasn't started yet — cache might be stale
+    // A match already confirmed finished in current data never regresses
+    if (m.status === 'finished') return m
+    // Never override a future match — cache might be stale
     const scheduledUtc = new Date(`${m.date}T${m.time}:00Z`).getTime()
     if (scheduledUtc > now) return m
-    const key = `${m.team_home}_${m.team_away}`
+    const key    = `${m.team_home}_${m.team_away}`
     const cached = cvCache[key]
     if (!cached) return m
+    // FT TRANSITION FIX: if CV cache confirmed the match is finished,
+    // override even if the live API still shows it as "live" (API is lagging).
+    if (cached.status === 'finished') {
+      return {
+        ...m,
+        status:     'finished',
+        score_home: cached.score_home,
+        score_away: cached.score_away,
+        minute:     cached.minute,
+        goals:      cached.goals?.length > 0 ? cached.goals : (m.goals ?? []),
+      }
+    }
+    // Live API is authoritative for currently-live matches
+    if (m.status === 'live') return m
+    // scheduled → live/finished: apply CV cache
     return {
       ...m,
       status:     cached.status,
