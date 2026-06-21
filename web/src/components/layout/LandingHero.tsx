@@ -4,6 +4,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
+import { LiveClock } from "@/components/ui/LiveClock";
 import {
   TrendingUp,
   Shield,
@@ -205,9 +206,11 @@ export function LandingHero() {
       {/* Footer */}
       <footer className="relative z-10 border-t border-gold-DEFAULT/10 py-8 text-center text-muted-foreground text-sm">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center gap-2 flex-wrap text-sm text-slate-400">
             <Logo size={32} />
-            <span>© 2024 Spear5. جميع الحقوق محفوظة.</span>
+            <span>© Spear5. جميع الحقوق محفوظة.</span>
+            <span className="hidden md:inline">|</span>
+            <LiveClock />
           </div>
           <div className="flex items-center gap-6">
             <Link href="/legal/terms" className="hover:text-gold-DEFAULT transition-colors">شروط الاستخدام</Link>
