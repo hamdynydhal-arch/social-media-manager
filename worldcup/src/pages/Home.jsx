@@ -79,7 +79,7 @@ function getTeam(teams, id) { return teams.find(t => t.id === id) }
 function getStadium(stadiums, id) { return stadiums.find(s => s.id === id) }
 
 export default function Home({ favoriteTeams = [], installState = {} }) {
-  const { data, apiMode } = useWorldCupData()
+  const { data, apiMode, forceRefreshMatch, refreshingMatchId } = useWorldCupData()
   const { teams, matches, stadiums } = data
   const { isInstalled, isIOS, triggerInstall } = installState
 
@@ -317,7 +317,13 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
                   homeTeam={getTeam(teams, m.team_home)}
                   awayTeam={getTeam(teams, m.team_away)}
                   stadium={getStadium(stadiums, m.stadium_id)}
-                  onClick={() => setSelectedMatch(m)}
+                  isRefreshing={refreshingMatchId === m.id}
+                  onClick={() => {
+                    setSelectedMatch(m)
+                    if (m.score_home == null || m.score_away == null) {
+                      forceRefreshMatch(m.id)
+                    }
+                  }}
                   isFav={isFav(m)}
                 />
               ))}

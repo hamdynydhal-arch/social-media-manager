@@ -19,7 +19,7 @@ function TeamDisplay({ team, score, side }) {
   )
 }
 
-export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick, isFav = false }) {
+export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick, isFav = false, isRefreshing = false }) {
   const isLive = match.status === 'live'
   const isFinished = match.status === 'finished'
   const isScheduled = match.status === 'scheduled'
@@ -100,11 +100,20 @@ export default function MatchCard({ match, homeTeam, awayTeam, stadium, onClick,
               <div dir="ltr" className="text-sm font-bold text-white mt-1">{localTime}</div>
               <div className="text-xs text-slate-500 mt-0.5">{utcTime} <span className="text-slate-600">UTC</span></div>
             </div>
+          ) : isRefreshing && (match.score_home == null || match.score_away == null) ? (
+            <div className="flex flex-col items-center gap-1">
+              <div className="w-5 h-5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+              <span className="text-xs text-slate-500">جاري</span>
+            </div>
           ) : (
             <div className="flex items-center gap-2 text-3xl font-black text-white">
-              <span>{match.score_home ?? '?'}</span>
+              <span className={match.score_home == null && isFinished ? 'text-slate-500 animate-pulse' : ''}>
+                {match.score_home ?? '?'}
+              </span>
               <span className="text-slate-500">-</span>
-              <span>{match.score_away ?? '?'}</span>
+              <span className={match.score_away == null && isFinished ? 'text-slate-500 animate-pulse' : ''}>
+                {match.score_away ?? '?'}
+              </span>
             </div>
           )}
           {isLive && (

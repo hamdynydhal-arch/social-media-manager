@@ -82,6 +82,8 @@ function saveCvCache(matches) {
   const states = {}
   for (const m of matches) {
     if (m.status === 'live' || m.status === 'finished') {
+      // Never persist a finished match without scores — would permanently mask real API data
+      if (m.status === 'finished' && (m.score_home == null || m.score_away == null)) continue
       states[`${m.team_home}_${m.team_away}`] = {
         status:     m.status,
         score_home: m.score_home,
@@ -258,6 +260,9 @@ function applyCrossValidation(matches, cvCache) {
     // FT TRANSITION FIX: if CV cache confirmed the match is finished,
     // override even if the live API still shows it as "live" (API is lagging).
     if (cached.status === 'finished') {
+      // Null-score cache entries (from wall-clock backstop) must not block real API data.
+      // saveCvCache now prevents writing these, but existing localStorage may have them.
+      if (cached.score_home == null && cached.score_away == null) return m
       return {
         ...m,
         status:     'finished',
@@ -377,6 +382,8 @@ export function WorldCupProvider({ children }) {
   const prevStandingsRef = useRef(null)
   const prevNewsRef      = useRef(null)
 
+  const [refreshingMatchId, setRefreshingMatchId] = useState(null)
+
   // computeData: derive all display data from current state
   const computeData = useCallback((espnMatches, curEspnStandings, rssItems, curMd, curEspnMin) => {
     const md = curMd ?? {}
@@ -492,6 +499,36 @@ export function WorldCupProvider({ children }) {
     setLastUpdated(new Date())
   }, [computeData])
 
+  // ── Targeted force-refresh for a single match ────────────────────────────
+  // Used by UI when a finished match shows ? - ?. Fetches OFB (results) +
+  // Sofascore via the existing fetchEspnMatches() aggregator and merges
+  // only that match into state without touching the rest of the data.
+  const forceRefreshMatch = useCallback(async (matchId) => {
+    const staticMatch = staticData.matches.find(m => m.id === matchId)
+    if (!staticMatch) return
+    setRefreshingMatchId(matchId)
+    try {
+      const allMatches = await fetchEspnMatches()
+      if (!allMatches) return
+      const fresh = allMatches.find(m =>
+        m.team_home === staticMatch.team_home && m.team_away === staticMatch.team_away
+      )
+      if (!fresh || (fresh.score_home == null && fresh.score_away == null)) return
+
+      const base = prevMatchesRef.current ?? []
+      const idx  = base.findIndex(m => m.team_home === fresh.team_home && m.team_away === fresh.team_away)
+      const next = [...base]
+      if (idx >= 0) next[idx] = { ...next[idx], ...fresh }
+      else next.push(fresh)
+
+      prevMatchesRef.current = next
+      setEspnOverrides(next)
+      setData(computeData(next, prevStandingsRef.current, prevNewsRef.current, mdCacheRef.current, espnMinCache.current))
+    } finally {
+      setRefreshingMatchId(null)
+    }
+  }, [computeData])
+
   // ── 30-second tick: recompute live minutes (no API call) ──────────────────
   useEffect(() => {
     const tick = () => setData(computeData(espnOverrides, espnStandings, rssNews, mdCacheRef.current, espnMinCache.current))
@@ -519,7 +556,7 @@ export function WorldCupProvider({ children }) {
   }, [refresh])
 
   return (
-    <WorldCupCtx.Provider value={{ data, matchDetails, apiMode, lastUpdated, sources, refresh }}>
+    <WorldCupCtx.Provider value={{ data, matchDetails, apiMode, lastUpdated, sources, refresh, forceRefreshMatch, refreshingMatchId }}>
       {children}
     </WorldCupCtx.Provider>
   )
