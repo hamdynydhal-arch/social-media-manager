@@ -14,8 +14,14 @@ export function LiveClock() {
   if (!mounted) return <span className="opacity-0">...</span>;
 
   return (
-    <span className="text-[#D4AF37] font-mono mx-1">
-      {time.toLocaleDateString('ar-QA-u-nu-arab', { year: 'numeric', month: 'long', day: 'numeric' })} - {time.toLocaleTimeString('ar-QA-u-nu-arab', { hour12: false })}
+    <span className="text-[#D4AF37] font-mono mx-1" dir="ltr">
+      {time.toLocaleDateString('ar-QA-u-nu-latn', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })} - {time.toLocaleTimeString('ar-QA-u-nu-latn', {
+        hour12: false,
+      })}
     </span>
   );
 }
