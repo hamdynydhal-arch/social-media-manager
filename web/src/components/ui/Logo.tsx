@@ -1,20 +1,25 @@
 import Image from "next/image";
 
 interface LogoProps {
-  /** Height in px — width is set to 2× to match the banner's 2:1 aspect ratio */
-  height?: number;
+  /** Diameter of the circular logo in px */
+  size?: number;
   className?: string;
 }
 
-export function Logo({ height = 48, className = "" }: LogoProps) {
+export function Logo({ size = 48, className = "" }: LogoProps) {
   return (
-    <Image
-      src="/logo.png"
-      alt="Spear5"
-      height={height}
-      width={height * 2}
-      className={`shrink-0 object-contain ${className}`}
-      priority
-    />
+    <div
+      style={{ width: size, height: size }}
+      className={`shrink-0 rounded-full overflow-hidden aspect-square flex items-center justify-center ring-1 ring-[#D4AF37]/30 shadow-[0_0_20px_rgba(212,175,55,0.15)] ${className}`}
+    >
+      <Image
+        src="/logo.png"
+        alt="Spear5"
+        height={size}
+        width={size * 2}
+        className="object-cover scale-110"
+        priority
+      />
+    </div>
   );
 }
