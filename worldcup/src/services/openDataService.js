@@ -176,7 +176,7 @@ const ESPN_STATUS_MAP = {
 // ── Fetch helpers ─────────────────────────────────────────────────────────────
 async function safeFetch(url, ms = 10000) {
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(ms) })
+    const res = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(ms) })
     if (!res.ok) return null
     return res.json()
   } catch {
@@ -186,7 +186,7 @@ async function safeFetch(url, ms = 10000) {
 
 async function safeText(url, ms = 10000) {
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(ms) })
+    const res = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(ms) })
     if (!res.ok) return null
     return res.text()
   } catch {

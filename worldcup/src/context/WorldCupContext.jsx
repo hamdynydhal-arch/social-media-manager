@@ -356,6 +356,11 @@ export function WorldCupProvider({ children }) {
   const espnMinCache  = useRef({})
   const [matchDetails, setMatchDetails] = useState(() => loadMdCache())
 
+  // Last-known-good refs — survive a failed refresh cycle without wiping state
+  const prevMatchesRef   = useRef(null)
+  const prevStandingsRef = useRef(null)
+  const prevNewsRef      = useRef(null)
+
   // computeData: derive all display data from current state
   const computeData = useCallback((espnMatches, curEspnStandings, rssItems, curMd, curEspnMin) => {
     const md = curMd ?? {}
@@ -409,7 +414,7 @@ export function WorldCupProvider({ children }) {
 
   const [data, setData] = useState(() => computeData(null, null, null, loadMdCache(), {}))
 
-  // ── Global API refresh (120 s) ────────────────────────────────────────────
+  // ── Global API refresh (60 s) ─────────────────────────────────────────────
   const refresh = useCallback(async () => {
     const currentMd   = mdCacheRef.current
     const needsDetail = new Set(
@@ -448,18 +453,26 @@ export function WorldCupProvider({ children }) {
       setMatchDetails(merged)
     }
 
+    // STATE PRESERVATION: never wipe valid state with a null from a failed fetch.
+    // Only commit new data when the API actually returned something.
+    // prevRef holds the last known-good value so computeData always gets real data.
+    const effectiveMatches   = espnMatches      ?? prevMatchesRef.current
+    const effectiveStandings = newEspnStandings ?? prevStandingsRef.current
+    const effectiveNews      = fetchedNews      ?? prevNewsRef.current
+
+    if (espnMatches      !== null) { prevMatchesRef.current   = espnMatches;      setEspnOverrides(espnMatches) }
+    if (newEspnStandings !== null) { prevStandingsRef.current = newEspnStandings; setEspnStandings(newEspnStandings) }
+    if (fetchedNews      !== null) { prevNewsRef.current      = fetchedNews;      setRssNews(fetchedNews) }
+
     const active = {
-      scores:    true,                                               // static data always present; live via OFB+proxies
-      standings: true,                                               // always computed locally
-      news:      !!(fetchedNews?.length || staticData.news?.length), // live or static — always real
+      scores:    true,
+      standings: true,
+      news:      !!(effectiveNews?.length || staticData.news?.length),
     }
     setSources(active)
     setApiMode(active.scores || active.standings || active.news ? 'live' : 'local')
 
-    setEspnOverrides(espnMatches)
-    setEspnStandings(newEspnStandings)
-    setRssNews(fetchedNews)
-    setData(computeData(espnMatches, newEspnStandings, fetchedNews, mdCacheRef.current, espnMinCache.current))
+    setData(computeData(effectiveMatches, effectiveStandings, effectiveNews, mdCacheRef.current, espnMinCache.current))
     setLastUpdated(new Date())
   }, [computeData])
 
