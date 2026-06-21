@@ -48,7 +48,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
     <aside className="fixed top-0 right-0 h-screen w-64 bg-navy-900 border-l border-gold-DEFAULT/15 flex flex-col z-40 max-lg:hidden">
       {/* Logo */}
       <div className="p-4 border-b border-gold-DEFAULT/15">
-        <Logo size={36} />
+        <Logo className="h-9 w-9" />
       </div>
 
       {/* Navigation */}

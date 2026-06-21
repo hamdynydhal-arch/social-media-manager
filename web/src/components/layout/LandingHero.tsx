@@ -91,7 +91,7 @@ export function LandingHero() {
 
       {/* Nav */}
       <nav className="relative z-10 flex items-center justify-between px-6 py-4 border-b border-gold-DEFAULT/15 max-w-7xl mx-auto">
-        <Logo size={56} />
+        <Logo className="h-14 w-14" />
         <div className="flex items-center gap-4">
           <Link
             href="/legal/risk-disclosure"
@@ -228,7 +228,7 @@ export function LandingHero() {
       <footer className="relative z-10 border-t border-gold-DEFAULT/10 py-8 text-center text-muted-foreground text-sm">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center justify-center gap-2 flex-wrap text-sm text-slate-400">
-            <Logo size={32} />
+            <Logo className="h-8 w-8" />
             <span>© Spear5. جميع الحقوق محفوظة.</span>
             <span className="hidden md:inline">|</span>
             <LiveClock />
