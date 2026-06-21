@@ -19,14 +19,14 @@ export function PlatformStatsClient({ stats }: { stats: PlatformStats }) {
     <div className="space-y-6">
       <div className="page-header">
         <h1 className="page-title">إحصائيات المنصة</h1>
-        <p className="page-subtitle">نظرة عامة على أداء المنصة ومستخدميها</p>
+        <p className="page-subtitle">نظرة عامة على أداء المنصة وقاعدة المُصرَّحين</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {[
           {
             icon: Users,
-            label: "إجمالي المستخدمين",
+            label: "إجمالي المُصرَّحين",
             value: stats.totalUsers.toString(),
             color: "blue" as const,
           },
@@ -56,7 +56,7 @@ export function PlatformStatsClient({ stats }: { stats: PlatformStats }) {
           },
           {
             icon: UserPlus,
-            label: "مستخدمون جدد هذا الشهر",
+            label: "مُصرَّحون جدد هذا الشهر",
             value: stats.newUsersThisMonth.toString(),
             color: "blue" as const,
           },

@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { UsersAdminClient } from "@/components/admin/UsersAdminClient";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "إدارة المستخدمين" };
+export const metadata: Metadata = { title: "إدارة المُصرَّحين" };
 
 export default async function AdminUsersPage() {
   const session = await auth();

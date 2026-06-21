@@ -88,9 +88,9 @@ export function UsersAdminClient({
   return (
     <div className="space-y-6">
       <div className="page-header">
-        <h1 className="page-title">إدارة المستخدمين</h1>
+        <h1 className="page-title">إدارة المُصرَّحين</h1>
         <p className="page-subtitle">
-          {users.length} مستخدم مسجّل — {activeBotsCount} بوت نشط
+          {users.length} مُصرَّح نشط — {activeBotsCount} بوت نشط
         </p>
       </div>
 
@@ -112,7 +112,7 @@ export function UsersAdminClient({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-muted-foreground text-xs uppercase tracking-wider">
-                <th className="text-right px-5 py-3 font-medium">المستخدم</th>
+                <th className="text-right px-5 py-3 font-medium">المُصرَّح</th>
                 <th className="text-right px-5 py-3 font-medium">تاريخ التسجيل</th>
                 <th className="text-right px-5 py-3 font-medium">رأس المال</th>
                 <th className="text-right px-5 py-3 font-medium">حالة البوت</th>

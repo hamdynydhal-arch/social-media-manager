@@ -27,7 +27,7 @@ const userNavItems = [
 
 const adminNavItems = [
   { href: "/admin/stats", label: "إحصائيات المنصة", icon: PieChart },
-  { href: "/admin/users", label: "إدارة المستخدمين", icon: Users },
+  { href: "/admin/users", label: "إدارة المُصرَّحين", icon: Users },
   { href: "/admin/bot-code", label: "كود البوت", icon: Code2 },
   { href: "/admin/super-admins", label: "Super Admins", icon: UserCog },
 ];
