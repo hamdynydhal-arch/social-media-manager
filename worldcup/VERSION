@@ -1,6 +1,6 @@
-v6.3.5 — STABLE
-commit: b61df11
-date: 2026-06-17
+v6.3.6 — STABLE
+commit: pending
+date: 2026-06-21
 
 ════════════════════════════════════════════════════════
   قواعد صارمة — لا تُعدَّل هذه العناصر دون طلب صريح
@@ -34,10 +34,22 @@ date: 2026-06-17
  19. sw.js backgroundPreMatchCheck — يبقى مرتبطاً بـ periodicsync (لا يُحذف أو يُعطّل)
  20. sw.js pre-match-v1      — مفتاح dedup يبقى كما هو (لا يتغير الاسم)
 
+  ── إشعارات الأهداف الخلفية ──
+ 21. sw.js backgroundSofascoreCheck — يبقى في periodicsync (كشف أهداف مباشرة)
+ 22. sw.js bg-sfs-scores     — مفتاح swGet/swSet لا يتغير
+ 23. sw.js _SW_SFS_MAP       — خريطة الفرق لا تُحذف ولا تُختزل
+
+  ── جودة البيانات ──
+ 24. openDataService.js      — safeFetch + safeText: cache:'no-store' على كل طلب
+ 25. WorldCupContext.jsx     — prevMatchesRef/prevStandingsRef/prevNewsRef: لا يُحذف أي ref
+ 26. WorldCupContext.jsx     — refresh(): setters محمية من null (لا يُمسح state عند فشل fetch)
+ 27. WorldCupContext.jsx     — applyCrossValidation: cached.finished يفوز على m.live دائماً
+ 28. WorldCupContext.jsx     — visibilitychange listener يبقى (refresh فوري عند عودة التطبيق)
+
   ── صفحة الإعدادات ──
- 21. Settings.jsx            — ترتيب الإشعارات: إعدادات → هدف → عاجل → أصوات → محاكي
- 22. Settings.jsx            — الأقسام الأربعة للإشعارات لا تُحذف (كل منها يختبر نوعاً مختلفاً)
- 23. Settings.jsx + NotificationSystem.jsx — يُظهران جميع المستويات الأربعة (ساعة/نصف ساعة/10 دقائق/انطلاق)
+ 29. Settings.jsx            — ترتيب الإشعارات: إعدادات → هدف → عاجل → أصوات → محاكي
+ 30. Settings.jsx            — الأقسام الأربعة للإشعارات لا تُحذف (كل منها يختبر نوعاً مختلفاً)
+ 31. Settings.jsx + NotificationSystem.jsx — يُظهران جميع المستويات الأربعة (ساعة/نصف ساعة/10 دقائق/انطلاق)
 
 ════════════════════════════════════════════════════════
   بنية فلتر الأخبار — يُمنع تبسيطها أو حذف أي طبقة
@@ -76,7 +88,26 @@ date: 2026-06-17
 
   منع التكرار: swGet/swSet('pre-match-v1', fired)
     • المفتاح لكل إشعار: {matchId}_{60|30|10|kick}
-    • يُخزَّن الوقت عند الإرسال لمنع إعادة الإرسال
+
+════════════════════════════════════════════════════════
+  بنية إشعارات الأهداف الخلفية
+════════════════════════════════════════════════════════
+
+  backgroundScoreCheck()   → openfootball (نتائج نهائية بعد المباراة)
+  backgroundSofascoreCheck() → Sofascore live (أهداف مباشرة كل ~30 ث)
+    • المفتاح: bg-sfs-scores في wc-sw-state-v1
+    • الحارس -1: يمنع إشعاراً كاذباً في أول ظهور للمباراة
+    • كلا الدالتين تشتغلان معاً في periodicsync handler
+
+════════════════════════════════════════════════════════
+  منطق applyCrossValidation — لا يُعاد تبسيطه
+════════════════════════════════════════════════════════
+
+  الأولوية (بالترتيب):
+    1. m.finished       → لا تراجع (لا تنزيل من finished)
+    2. cached.finished  → يفوز على m.live (إصلاح انتقال FT)
+    3. m.live + لا cached.finished → API الحية مرجع
+    4. m.scheduled + cached → يطبّق الـ cache
 
 ════════════════════════════════════════════════════════
   ترتيب صفحة الإعدادات — لا يتغيّر
@@ -118,7 +149,6 @@ v6.2.0 — أيقونة الإشعار + Heads-Up
 v6.3.0 — جودة البيانات والأخبار
   - فلتر isSportsRelated + مصادر عربية أولاً
   - "النتيجة النهائية" + مدرب تونس → هيرفي رونار
-  - الإصدار 6.3.0 في الإعدادات وpackage.json
 
 v6.3.1 — التحديث التلقائي
   - setInterval 120 ث → 60 ث + زر التحديث اليدوي
@@ -140,4 +170,10 @@ v6.3.5 — تأمين إشعارات ما قبل المباراة
   - التحقق من اكتمال منظومة backgroundPreMatchCheck() في sw.js
   - App.jsx يسجّل periodicSync('wc-live-check') بشكل صحيح
   - إصلاح نص UI: إضافة المستوى المفقود (30 دقيقة / نصف ساعة)
-  - Settings.jsx + NotificationSystem.jsx يعكسان الـ 4 مستويات الحقيقية
+
+v6.3.6 — إصلاحات جودة البيانات والإشعارات الخلفية
+  - safeFetch + safeText: cache:'no-store' (منع HTTP cache للمتصفح)
+  - prevMatchesRef/prevStandingsRef/prevNewsRef: حماية الـ state عند فشل fetch
+  - applyCrossValidation: cached.finished يفوز على m.live (إصلاح انتقال FT)
+  - backgroundSofascoreCheck(): كشف الأهداف المباشرة من Sofascore في periodicsync
+  - visibilitychange: refresh فوري عند عودة التطبيق للمقدمة
