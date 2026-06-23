@@ -564,9 +564,10 @@ export function WorldCupProvider({ children }) {
   }, [computeData])
 
   // ── Targeted match result verification (multi-source, routing-aware) ────────
-  // For finished/historical matches (110+ min elapsed) includes openfootball as
-  // an explicit historical source in the Promise.allSettled array.
-  // Updates ONLY the specific match without touching the rest of the dashboard.
+  // Dual-path state update:
+  //   Path A — CV cache: ensures the next 60s refresh also shows the correct score
+  //   Path B — prevMatchesRef deep-clone map: immediately paints the correct score
+  // Both paths feed into computeData so the UI re-renders correctly.
   const forceVerifyMatch = useCallback(async (matchId) => {
     const staticMatch = staticData.matches.find(m => m.id === matchId)
     if (!staticMatch) return
@@ -574,10 +575,9 @@ export function WorldCupProvider({ children }) {
     try {
       const result = await fetchMatchResultMultiSource(staticMatch)
       if (!result) return
-      const base = prevMatchesRef.current ?? []
-      const idx  = base.findIndex(m => m.team_home === staticMatch.team_home && m.team_away === staticMatch.team_away)
-      const next  = [...base]
-      const patch = {
+
+      const cvKey = `${staticMatch.team_home}_${staticMatch.team_away}`
+      const patch  = {
         status:        result.status,
         score_home:    result.score_home,
         score_away:    result.score_away,
@@ -585,11 +585,46 @@ export function WorldCupProvider({ children }) {
         score_ht_away: result.score_ht_away ?? null,
         ...(result.goals?.length > 0 ? { goals: result.goals } : {}),
       }
-      if (idx >= 0) next[idx] = { ...next[idx], ...patch }
-      else          next.push({ ...staticMatch, ...patch })
+
+      // Path A: write to CV cache so future refresh() calls also show correct score
+      const cvNext = {
+        ...cvCacheRef.current,
+        [cvKey]: {
+          status:     result.status,
+          score_home: result.score_home,
+          score_away: result.score_away,
+          minute:     null,
+          goals:      result.goals ?? [],
+        },
+      }
+      try { localStorage.setItem(CV_KEY, JSON.stringify(cvNext)) } catch {}
+      cvCacheRef.current = cvNext
+
+      // Path B: deep-clone map over espnOverrides — do NOT mutate existing array
+      const base = prevMatchesRef.current ?? []
+      const alreadyInBase = base.some(m => m.team_home === staticMatch.team_home && m.team_away === staticMatch.team_away)
+      const next = alreadyInBase
+        ? base.map(m =>
+            m.team_home === staticMatch.team_home && m.team_away === staticMatch.team_away
+              ? { ...m, ...patch }
+              : m
+          )
+        : [...base, { ...staticMatch, ...patch }]
       prevMatchesRef.current = next
       setEspnOverrides(next)
-      setData(computeData(next, prevStandingsRef.current, prevNewsRef.current, mdCacheRef.current, espnMinCache.current, verifiedTeamStatsRef.current))
+
+      // Force React to commit the new state — both CV cache and patched overrides
+      // feed through computeData, guaranteeing the correct score reaches the DOM
+      setData(computeData(
+        next,
+        prevStandingsRef.current,
+        prevNewsRef.current,
+        mdCacheRef.current,
+        espnMinCache.current,
+        verifiedTeamStatsRef.current,
+      ))
+    } catch (err) {
+      console.error('[forceVerifyMatch] error verifying match', matchId, err)
     } finally {
       setVerifyingMatchId(null)
     }
