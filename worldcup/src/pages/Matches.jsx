@@ -11,7 +11,7 @@ const FILTERS = [
 ]
 
 export default function Matches({ favoriteTeams = [] }) {
-  const { data, forceRefreshMatch, refreshingMatchId } = useWorldCupData()
+  const { data, forceRefreshMatch, refreshingMatchId, forceVerifyMatch, verifyingMatchId } = useWorldCupData()
   const { teams, matches, stadiums } = data
 
   const [filter, setFilter] = useState('all')
@@ -56,12 +56,10 @@ export default function Matches({ favoriteTeams = [] }) {
             homeTeam={getTeam(m.team_home)}
             awayTeam={getTeam(m.team_away)}
             stadium={getStadium(m.stadium_id)}
-            isRefreshing={refreshingMatchId === m.id}
+            isRefreshing={refreshingMatchId === m.id || verifyingMatchId === m.id}
             onClick={() => {
               setSelectedMatch(m)
-              if (m.status === 'finished' && (m.score_home == null || m.score_away == null)) {
-                forceRefreshMatch(m.id)
-              }
+              if (m.status === 'finished') forceVerifyMatch(m.id)
             }}
           />
         ))}

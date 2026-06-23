@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
 import staticData from '../data/data.json'
-import { fetchEspnMatches, fetchEspnStandings, fetchRssNews, fetchMatchDetails, fetchTeamStatsMultiSource } from '../services/openDataService'
+import { fetchEspnMatches, fetchEspnStandings, fetchRssNews, fetchMatchDetails, fetchTeamStatsMultiSource, fetchMatchResultMultiSource } from '../services/openDataService'
 import { syncClock, serverNow } from '../utils/clockSync'
 
 const WorldCupCtx = createContext(null)
@@ -383,6 +383,7 @@ export function WorldCupProvider({ children }) {
   const prevNewsRef      = useRef(null)
 
   const [refreshingMatchId, setRefreshingMatchId] = useState(null)
+  const [verifyingMatchId,  setVerifyingMatchId]  = useState(null)
 
   // Verified team stats cache — populated by forceVerifyTeamStats (session-only)
   const verifiedTeamStatsRef = useRef({})
@@ -562,6 +563,38 @@ export function WorldCupProvider({ children }) {
     }
   }, [computeData])
 
+  // ── Targeted match result verification (multi-source, routing-aware) ────────
+  // For finished/historical matches (110+ min elapsed) includes openfootball as
+  // an explicit historical source in the Promise.allSettled array.
+  // Updates ONLY the specific match without touching the rest of the dashboard.
+  const forceVerifyMatch = useCallback(async (matchId) => {
+    const staticMatch = staticData.matches.find(m => m.id === matchId)
+    if (!staticMatch) return
+    setVerifyingMatchId(matchId)
+    try {
+      const result = await fetchMatchResultMultiSource(staticMatch)
+      if (!result) return
+      const base = prevMatchesRef.current ?? []
+      const idx  = base.findIndex(m => m.team_home === staticMatch.team_home && m.team_away === staticMatch.team_away)
+      const next  = [...base]
+      const patch = {
+        status:        result.status,
+        score_home:    result.score_home,
+        score_away:    result.score_away,
+        score_ht_home: result.score_ht_home ?? null,
+        score_ht_away: result.score_ht_away ?? null,
+        ...(result.goals?.length > 0 ? { goals: result.goals } : {}),
+      }
+      if (idx >= 0) next[idx] = { ...next[idx], ...patch }
+      else          next.push({ ...staticMatch, ...patch })
+      prevMatchesRef.current = next
+      setEspnOverrides(next)
+      setData(computeData(next, prevStandingsRef.current, prevNewsRef.current, mdCacheRef.current, espnMinCache.current, verifiedTeamStatsRef.current))
+    } finally {
+      setVerifyingMatchId(null)
+    }
+  }, [computeData])
+
   // ── 30-second tick: recompute live minutes (no API call) ──────────────────
   useEffect(() => {
     const tick = () => setData(computeData(espnOverrides, espnStandings, rssNews, mdCacheRef.current, espnMinCache.current, verifiedTeamStatsRef.current))
@@ -589,7 +622,7 @@ export function WorldCupProvider({ children }) {
   }, [refresh])
 
   return (
-    <WorldCupCtx.Provider value={{ data, matchDetails, apiMode, lastUpdated, sources, refresh, forceRefreshMatch, refreshingMatchId, forceVerifyTeamStats, verifyingTeamId }}>
+    <WorldCupCtx.Provider value={{ data, matchDetails, apiMode, lastUpdated, sources, refresh, forceRefreshMatch, refreshingMatchId, forceVerifyTeamStats, verifyingTeamId, forceVerifyMatch, verifyingMatchId }}>
       {children}
     </WorldCupCtx.Provider>
   )

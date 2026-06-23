@@ -696,6 +696,103 @@ export async function fetchRssNews() {
   return null
 }
 
+// ── Multi-source concurrent fetch for a single match result ──────────────────
+// ROUTING LOGIC: matches 110+ minutes past kickoff always hit the OFB historical
+// endpoint (the only reliable past-results source).  Sofascore date + live and
+// ESPN run concurrently regardless.  Promise.allSettled ensures one slow/failing
+// source never blocks the others.
+export async function fetchMatchResultMultiSource(staticMatch) {
+  const cb = Date.now()
+  const { team_home, team_away, date, time } = staticMatch
+  const kickoffMs  = new Date(`${date}T${time}:00Z`).getTime()
+  const elapsedMin = (cb - kickoffMs) / 60_000
+  const isHistorical = elapsedMin >= 110
+  const yyyymmdd   = date.replace(/-/g, '')
+
+  const [ofbResult, sfsDateResult, sfsLiveResult, espnResult] = await Promise.allSettled([
+    isHistorical
+      ? safeFetch(`${OFB_MATCHES}?cb=${cb}`, 18000)
+      : Promise.resolve(null),
+    safeFetch(`${SFS_DATE(date)}?cb=${cb}`, 10000),
+    elapsedMin < 145
+      ? safeFetch(`${SFS_LIVE}?cb=${cb}`, 10000)
+      : Promise.resolve(null),
+    fetchWithProxy(`${ESPN_SCOREBOARD}?dates=${yyyymmdd}&limit=20&cb=${cb}`),
+  ])
+
+  const ofbJson   = ofbResult.status    === 'fulfilled' ? ofbResult.value    : null
+  const sfsDateJs = sfsDateResult.status === 'fulfilled' ? sfsDateResult.value : null
+  const sfsLiveJs = sfsLiveResult.status === 'fulfilled' ? sfsLiveResult.value : null
+  const espnJson  = espnResult.status   === 'fulfilled' ? espnResult.value   : null
+
+  const candidates = []
+
+  if (ofbJson) {
+    const allMatches = ofbJson.matches?.length
+      ? ofbJson.matches
+      : (ofbJson.rounds ?? []).flatMap(r => r.matches ?? [])
+    const found = allMatches.find(m =>
+      OFB_TEAM_MAP[m.team1] === team_home && OFB_TEAM_MAP[m.team2] === team_away
+    )
+    if (found?.score?.ft) {
+      const goals = [
+        ...(found.goals1 ?? []).map(g => ({ team: team_home, player: g.name, minute: parseInt(g.minute) || 0, type: g.owngoal ? 'هدف ذاتي' : 'عادي' })),
+        ...(found.goals2 ?? []).map(g => ({ team: team_away, player: g.name, minute: parseInt(g.minute) || 0, type: g.owngoal ? 'هدف ذاتي' : 'عادي' })),
+      ].sort((a, b) => a.minute - b.minute)
+      candidates.push({ status: 'finished', score_home: found.score.ft[0], score_away: found.score.ft[1], score_ht_home: found.score.ht?.[0] ?? null, score_ht_away: found.score.ht?.[1] ?? null, goals, _p: 3 })
+    }
+  }
+
+  const sfsMap = new Map()
+  for (const ev of (sfsDateJs?.events ?? [])) sfsMap.set(ev.id, ev)
+  for (const ev of (sfsLiveJs?.events ?? [])) sfsMap.set(ev.id, ev)
+  for (const ev of sfsMap.values()) {
+    const homeId = SFS_TEAM_MAP[ev.homeTeam?.name] ?? SFS_TEAM_MAP[ev.homeTeam?.shortName]
+    const awayId = SFS_TEAM_MAP[ev.awayTeam?.name] ?? SFS_TEAM_MAP[ev.awayTeam?.shortName]
+    if (homeId !== team_home || awayId !== team_away) continue
+    const status = SFS_STATUS[ev.status?.code ?? 0] ?? 'scheduled'
+    const sh = ev.homeScore?.current ?? null
+    const sa = ev.awayScore?.current ?? null
+    if (sh == null || sa == null) continue
+    candidates.push({ status, score_home: sh, score_away: sa, score_ht_home: ev.homeScore?.period1 ?? null, score_ht_away: ev.awayScore?.period1 ?? null, goals: [], _p: status === 'finished' ? 2 : 1 })
+    break
+  }
+
+  for (const ev of (espnJson?.events ?? [])) {
+    const comp     = ev.competitions?.[0]
+    if (!comp) continue
+    const homeComp = comp.competitors?.find(c => c.homeAway === 'home')
+    const awayComp = comp.competitors?.find(c => c.homeAway === 'away')
+    if (!homeComp || !awayComp) continue
+    const homeId = ESPN_ABBR_MAP[homeComp.team?.abbreviation]
+    const awayId = ESPN_ABBR_MAP[awayComp.team?.abbreviation]
+    if (homeId !== team_home || awayId !== team_away) continue
+    const status = ESPN_STATUS_MAP[comp.status?.type?.name ?? ''] ?? 'scheduled'
+    const sh = parseInt(homeComp.score ?? '', 10)
+    const sa = parseInt(awayComp.score ?? '', 10)
+    if (isNaN(sh) || isNaN(sa)) continue
+    candidates.push({ status, score_home: sh, score_away: sa, score_ht_home: null, score_ht_away: null, goals: [], _p: status === 'finished' ? 2 : 1 })
+    break
+  }
+
+  const valid = candidates.filter(c => c.score_home != null && c.score_away != null)
+  if (!valid.length) return null
+  valid.sort((a, b) => {
+    if (b._p !== a._p) return b._p - a._p
+    const af = a.status === 'finished' ? 1 : 0
+    const bf = b.status === 'finished' ? 1 : 0
+    if (bf !== af) return bf - af
+    return (b.goals?.length ?? 0) - (a.goals?.length ?? 0)
+  })
+  const best = valid[0]
+  return {
+    status: best.status,
+    score_home: best.score_home, score_away: best.score_away,
+    score_ht_home: best.score_ht_home, score_ht_away: best.score_ht_away,
+    goals: best.goals?.length > 0 ? best.goals : undefined,
+  }
+}
+
 // ── Multi-source concurrent fetch for a single team's stats ──────────────────
 // Fetches openfootball, Sofascore live, and ESPN scoreboard concurrently via
 // Promise.allSettled, then picks the "Latest Verified Truth" — the source with
