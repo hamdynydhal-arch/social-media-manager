@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
 import staticData from '../data/data.json'
-import { fetchEspnMatches, fetchEspnStandings, fetchRssNews, fetchMatchDetails } from '../services/openDataService'
+import { fetchEspnMatches, fetchEspnStandings, fetchRssNews, fetchMatchDetails, fetchTeamStatsMultiSource } from '../services/openDataService'
 import { syncClock, serverNow } from '../utils/clockSync'
 
 const WorldCupCtx = createContext(null)
@@ -384,8 +384,12 @@ export function WorldCupProvider({ children }) {
 
   const [refreshingMatchId, setRefreshingMatchId] = useState(null)
 
+  // Verified team stats cache — populated by forceVerifyTeamStats (session-only)
+  const verifiedTeamStatsRef = useRef({})
+  const [verifyingTeamId, setVerifyingTeamId] = useState(null)
+
   // computeData: derive all display data from current state
-  const computeData = useCallback((espnMatches, curEspnStandings, rssItems, curMd, curEspnMin) => {
+  const computeData = useCallback((espnMatches, curEspnStandings, rssItems, curMd, curEspnMin, curVerifiedStats = {}) => {
     const md = curMd ?? {}
 
     const baseMatches = espnMatches
@@ -430,12 +434,19 @@ export function WorldCupProvider({ children }) {
 
     let teams = calculateGroupStandings(matches, staticData.teams)
     if (curEspnStandings) teams = mergeEspnStandings(teams, curEspnStandings)
+    if (curVerifiedStats && Object.keys(curVerifiedStats).length > 0) {
+      teams = teams.map(t => {
+        const v = curVerifiedStats[t.id]
+        if (!v) return t
+        return { ...t, stats: { ...t.stats, ...v } }
+      })
+    }
 
     const news = buildNews(matches, teams, rssItems)
     return { matches, teams, news, stadiums: staticData.stadiums }
   }, [])
 
-  const [data, setData] = useState(() => computeData(null, null, null, loadMdCache(), {}))
+  const [data, setData] = useState(() => computeData(null, null, null, loadMdCache(), {}, {}))
 
   // ── Global API refresh (60 s) ─────────────────────────────────────────────
   const refresh = useCallback(async () => {
@@ -495,7 +506,7 @@ export function WorldCupProvider({ children }) {
     setSources(active)
     setApiMode(active.scores || active.standings || active.news ? 'live' : 'local')
 
-    setData(computeData(effectiveMatches, effectiveStandings, effectiveNews, mdCacheRef.current, espnMinCache.current))
+    setData(computeData(effectiveMatches, effectiveStandings, effectiveNews, mdCacheRef.current, espnMinCache.current, verifiedTeamStatsRef.current))
     setLastUpdated(new Date())
   }, [computeData])
 
@@ -523,15 +534,37 @@ export function WorldCupProvider({ children }) {
 
       prevMatchesRef.current = next
       setEspnOverrides(next)
-      setData(computeData(next, prevStandingsRef.current, prevNewsRef.current, mdCacheRef.current, espnMinCache.current))
+      setData(computeData(next, prevStandingsRef.current, prevNewsRef.current, mdCacheRef.current, espnMinCache.current, verifiedTeamStatsRef.current))
     } finally {
       setRefreshingMatchId(null)
     }
   }, [computeData])
 
+  // ── Targeted team stats verification (multi-source concurrent) ──────────
+  // Fetches OFB + Sofascore + ESPN concurrently via Promise.allSettled and
+  // merges only the verified team's stats into state without touching the rest.
+  const forceVerifyTeamStats = useCallback(async (teamId) => {
+    setVerifyingTeamId(teamId)
+    try {
+      const verified = await fetchTeamStatsMultiSource(teamId)
+      if (!verified) return
+      verifiedTeamStatsRef.current = { ...verifiedTeamStatsRef.current, [teamId]: verified }
+      setData(computeData(
+        prevMatchesRef.current,
+        prevStandingsRef.current,
+        prevNewsRef.current,
+        mdCacheRef.current,
+        espnMinCache.current,
+        verifiedTeamStatsRef.current,
+      ))
+    } finally {
+      setVerifyingTeamId(null)
+    }
+  }, [computeData])
+
   // ── 30-second tick: recompute live minutes (no API call) ──────────────────
   useEffect(() => {
-    const tick = () => setData(computeData(espnOverrides, espnStandings, rssNews, mdCacheRef.current, espnMinCache.current))
+    const tick = () => setData(computeData(espnOverrides, espnStandings, rssNews, mdCacheRef.current, espnMinCache.current, verifiedTeamStatsRef.current))
     const id = setInterval(tick, 30_000)
     return () => clearInterval(id)
   }, [computeData, espnOverrides, espnStandings, rssNews])
@@ -556,7 +589,7 @@ export function WorldCupProvider({ children }) {
   }, [refresh])
 
   return (
-    <WorldCupCtx.Provider value={{ data, matchDetails, apiMode, lastUpdated, sources, refresh, forceRefreshMatch, refreshingMatchId }}>
+    <WorldCupCtx.Provider value={{ data, matchDetails, apiMode, lastUpdated, sources, refresh, forceRefreshMatch, refreshingMatchId, forceVerifyTeamStats, verifyingTeamId }}>
       {children}
     </WorldCupCtx.Provider>
   )

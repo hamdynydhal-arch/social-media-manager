@@ -696,6 +696,88 @@ export async function fetchRssNews() {
   return null
 }
 
+// ── Multi-source concurrent fetch for a single team's stats ──────────────────
+// Fetches openfootball, Sofascore live, and ESPN scoreboard concurrently via
+// Promise.allSettled, then picks the "Latest Verified Truth" — the source with
+// the most advanced progression for that team.
+export async function fetchTeamStatsMultiSource(teamId) {
+  const cb   = Date.now()
+  const today = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+
+  const [ofbResult, sfsResult, espnResult] = await Promise.allSettled([
+    safeFetch(`${OFB_MATCHES}?cb=${cb}`, 18000),
+    safeFetch(`${SFS_LIVE}?cb=${cb}`, 10000),
+    fetchWithProxy(`${ESPN_SCOREBOARD}?dates=${today}&limit=20&cb=${cb}`),
+  ])
+
+  const ofbJson  = ofbResult.status  === 'fulfilled' ? ofbResult.value  : null
+  const sfsJson  = sfsResult.status  === 'fulfilled' ? sfsResult.value  : null
+  const espnJson = espnResult.status === 'fulfilled' ? espnResult.value : null
+
+  // Compute W/D/L/GF/GA/Pts for teamId from a normalised matches array
+  const statsFor = (matches) => {
+    if (!matches?.length) return null
+    let played = 0, wins = 0, draws = 0, losses = 0, goals_for = 0, goals_against = 0, points = 0
+    for (const m of matches) {
+      if (m.status !== 'finished') continue
+      if (m.score_home == null || m.score_away == null) continue
+      const isHome = m.team_home === teamId
+      const isAway = m.team_away === teamId
+      if (!isHome && !isAway) continue
+      const myScore  = isHome ? Number(m.score_home)  : Number(m.score_away)
+      const oppScore = isHome ? Number(m.score_away) : Number(m.score_home)
+      played++
+      goals_for     += myScore
+      goals_against += oppScore
+      if      (myScore > oppScore) { wins++;  points += 3 }
+      else if (myScore < oppScore) { losses++ }
+      else                         { draws++; points++ }
+    }
+    return played > 0 ? { played, wins, draws, losses, goals_for, goals_against, points } : null
+  }
+
+  // Normalise openfootball payload
+  const ofbRaw  = ofbJson
+    ? (ofbJson.matches?.length ? ofbJson.matches : (ofbJson.rounds ?? []).flatMap(r => r.matches ?? []))
+    : []
+  const ofbNorm = ofbRaw.map(m => {
+    const homeId = OFB_TEAM_MAP[m.team1]
+    const awayId = OFB_TEAM_MAP[m.team2]
+    if (!homeId || !awayId || !m.score?.ft) return null
+    return { team_home: homeId, team_away: awayId, status: 'finished', score_home: m.score.ft[0], score_away: m.score.ft[1] }
+  }).filter(Boolean)
+
+  // Normalise Sofascore live payload
+  const sfsNorm = (sfsJson?.events ?? []).map(ev => {
+    const homeId = SFS_TEAM_MAP[ev.homeTeam?.name] ?? SFS_TEAM_MAP[ev.homeTeam?.shortName]
+    const awayId = SFS_TEAM_MAP[ev.awayTeam?.name] ?? SFS_TEAM_MAP[ev.awayTeam?.shortName]
+    if (!homeId || !awayId) return null
+    const status = SFS_STATUS[ev.status?.code ?? 0] ?? 'scheduled'
+    return { team_home: homeId, team_away: awayId, status, score_home: ev.homeScore?.current ?? null, score_away: ev.awayScore?.current ?? null }
+  }).filter(Boolean)
+
+  // Normalise ESPN scoreboard payload
+  const espnNorm = (espnJson?.events ?? []).map(ev => {
+    const comp     = ev.competitions?.[0]
+    if (!comp) return null
+    const homeComp = comp.competitors?.find(c => c.homeAway === 'home')
+    const awayComp = comp.competitors?.find(c => c.homeAway === 'away')
+    if (!homeComp || !awayComp) return null
+    const homeId   = ESPN_ABBR_MAP[homeComp.team?.abbreviation]
+    const awayId   = ESPN_ABBR_MAP[awayComp.team?.abbreviation]
+    if (!homeId || !awayId) return null
+    const status   = ESPN_STATUS_MAP[comp.status?.type?.name ?? ''] ?? 'scheduled'
+    return { team_home: homeId, team_away: awayId, status, score_home: parseInt(homeComp.score ?? 0, 10), score_away: parseInt(awayComp.score ?? 0, 10) }
+  }).filter(Boolean)
+
+  const candidates = [statsFor(ofbNorm), statsFor(sfsNorm), statsFor(espnNorm)].filter(Boolean)
+  if (!candidates.length) return null
+
+  // "Latest Verified Truth": most matches played wins; on tie, higher goals = fresher data
+  candidates.sort((a, b) => b.played - a.played || b.goals_for - a.goals_for)
+  return candidates[0]
+}
+
 function formatItems(items, applyFilter = false) {
   const cutoff = Date.now() - 24 * 3600_000
   const parsed = items.slice(0, 20).map(item => {

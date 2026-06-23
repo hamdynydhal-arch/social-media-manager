@@ -79,7 +79,7 @@ function getTeam(teams, id) { return teams.find(t => t.id === id) }
 function getStadium(stadiums, id) { return stadiums.find(s => s.id === id) }
 
 export default function Home({ favoriteTeams = [], installState = {} }) {
-  const { data, apiMode, forceRefreshMatch, refreshingMatchId } = useWorldCupData()
+  const { data, apiMode, forceRefreshMatch, refreshingMatchId, forceVerifyTeamStats, verifyingTeamId } = useWorldCupData()
   const { teams, matches, stadiums } = data
   const { isInstalled, isIOS, triggerInstall } = installState
 
@@ -198,35 +198,48 @@ export default function Home({ favoriteTeams = [], installState = {} }) {
         {/* ── Favorite teams cards ── */}
         {favTeamsData.length > 0 && (
           <div className="space-y-3">
-            {favTeamsData.map(favTeamData => (
-              <div key={favTeamData.id} className="card p-4 border-emerald-500/30 bg-gradient-to-r from-emerald-900/30 to-transparent">
-                <div className="flex items-center gap-3">
-                  <span className="text-4xl">{favTeamData.flag}</span>
-                  <div>
-                    <p className="text-xs text-emerald-400 font-bold">منتخبك المفضل</p>
-                    <p className="text-xl font-black text-white">{favTeamData.name}</p>
-                    <p className="text-xs text-slate-400">المدرب: {favTeamData.coach}</p>
-                  </div>
-                  <div className="mr-auto text-center">
-                    <div className="text-2xl font-black text-amber-400">{favTeamData.stats.points}</div>
-                    <div className="text-xs text-slate-400">نقاط</div>
-                  </div>
-                </div>
-                <div className="flex gap-3 mt-3 text-xs text-center">
-                  {[
-                    { label: 'انتصارات', val: favTeamData.stats.wins, color: 'text-emerald-400' },
-                    { label: 'تعادل', val: favTeamData.stats.draws, color: 'text-slate-300' },
-                    { label: 'خسائر', val: favTeamData.stats.losses, color: 'text-red-400' },
-                    { label: 'أهداف', val: favTeamData.stats.goals_for, color: 'text-amber-400' },
-                  ].map(({ label, val, color }) => (
-                    <div key={label} className="flex-1 bg-slate-700/50 rounded-xl p-2">
-                      <div className={`text-lg font-black ${color}`}>{val}</div>
-                      <div className="text-slate-500">{label}</div>
+            {favTeamsData.map(favTeamData => {
+              const isVerifying = verifyingTeamId === favTeamData.id
+              return (
+                <div
+                  key={favTeamData.id}
+                  onClick={() => forceVerifyTeamStats(favTeamData.id)}
+                  className={`card p-4 border-emerald-500/30 bg-gradient-to-r from-emerald-900/30 to-transparent cursor-pointer team-card-hover active:scale-98 select-none transition-opacity ${isVerifying ? 'opacity-70' : ''}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-4xl">{favTeamData.flag}</span>
+                    <div>
+                      <p className="text-xs text-emerald-400 font-bold">منتخبك المفضل</p>
+                      <p className="text-xl font-black text-white">{favTeamData.name}</p>
+                      <p className="text-xs text-slate-400">المدرب: {favTeamData.coach}</p>
                     </div>
-                  ))}
+                    <div className="mr-auto text-center min-w-[48px]">
+                      {isVerifying ? (
+                        <div className="w-6 h-6 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto" />
+                      ) : (
+                        <>
+                          <div className="text-2xl font-black text-amber-400">{favTeamData.stats.points}</div>
+                          <div className="text-xs text-slate-400">نقاط</div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-3 mt-3 text-xs text-center">
+                    {[
+                      { label: 'انتصارات', val: favTeamData.stats.wins, color: 'text-emerald-400' },
+                      { label: 'تعادل', val: favTeamData.stats.draws, color: 'text-slate-300' },
+                      { label: 'خسائر', val: favTeamData.stats.losses, color: 'text-red-400' },
+                      { label: 'أهداف', val: favTeamData.stats.goals_for, color: 'text-amber-400' },
+                    ].map(({ label, val, color }) => (
+                      <div key={label} className={`flex-1 bg-slate-700/50 rounded-xl p-2 ${isVerifying ? 'animate-pulse' : ''}`}>
+                        <div className={`text-lg font-black ${color}`}>{val}</div>
+                        <div className="text-slate-500">{label}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
 
