@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
 import { LiveClock } from "@/components/ui/LiveClock";
@@ -79,12 +78,12 @@ export function LandingHero() {
           >
             إفصاح المخاطر
           </Link>
-          <button
-            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          <Link
+            href="/dashboard"
             className="text-sm bg-[#D4AF37]/15 hover:bg-[#D4AF37] border border-[#D4AF37]/40 text-[#D4AF37] hover:text-[#030C1B] px-4 py-2 rounded-lg transition-all duration-300 font-medium"
           >
             دخول المصرّح
-          </button>
+          </Link>
         </div>
       </nav>
 

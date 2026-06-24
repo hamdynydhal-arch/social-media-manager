@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Settings,
@@ -47,6 +47,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ user }: AppSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <aside className="fixed top-0 right-0 h-screen w-64 bg-navy-900 border-l border-gold-DEFAULT/15 flex flex-col z-40 max-lg:hidden">
@@ -98,8 +99,9 @@ export function AppSidebar({ user }: AppSidebarProps) {
             </span>
           )}
         </div>
+        {/* TODO: Re-enable signOut after auth phase — currently routes to landing */}
         <button
-          onClick={() => signOut({ callbackUrl: "/" })}
+          onClick={() => router.push("/")}
           className="w-full flex items-center gap-3 text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/5 px-3 py-2.5 rounded-lg transition-all"
         >
           <LogOut className="w-4 h-4" />
