@@ -9,6 +9,10 @@ UI/UX RULE: ABSOLUTELY NO HALLUCINATIONS OR FAKE MARKETING DATA. Do not use plac
 ## The Spear5 Philosophy & Architectural Directives
 
 1. **Nature of the Platform:** Spear5 is a highly restricted, private Quantitative Trading Hub (Hedge Fund style). It is NOT a public SaaS.
-2. **Terminology & Tone:** Always use institutional, highly secure, and authoritative vocabulary. Use "Authorize", "Authenticate", "Command Center", "Vault", and "Ledger". NEVER use "Sign up", "Join", "Users", or casual web terminology.
-3. **Absolute Truth (Zero Hallucination):** The UI must strictly and only reflect the actual backend configurations (Python 3.12, 5 elite coins: SOL, BTC, TAO, RENDER, FET, AES-256-GCM encryption). No fake metrics, no placeholder marketing stats.
-4. **Visual Identity:** Deep Midnight Blue & Premium Metallic Gold. The UI must invoke absolute financial security, cold logic, and private wealth management.
+2. **Asset Classes:** Spear5 operates across two primary verticals:
+   - Digital Assets (Crypto-Bot on 5 Elite Coins: SOL, BTC, TAO, RENDER, FET).
+   - Sharia-Compliant Equities (Halal Stocks). The Equities module includes both Active Algorithmic Trading and Strategic Hedging operations.
+3. **Terminology & Tone:** Always use institutional, highly secure, and authoritative vocabulary. Use "Authorize", "Authenticate", "Command Center", "Vault", and "Ledger". NEVER use "Sign up", "Join", "Users", or casual web terminology.
+4. **Absolute Truth (Zero Hallucination):** The UI must strictly and only reflect the actual backend configurations (Python 3.12, 5 elite coins: SOL, BTC, TAO, RENDER, FET, AES-256-GCM encryption). No fake metrics, no placeholder marketing stats.
+5. **Visual Identity:** Deep Midnight Blue & Premium Metallic Gold. The UI must invoke absolute financial security, cold logic, and private wealth management.
+6. **Security Architecture:** The Next.js frontend acts as a secure Backend-For-Frontend (BFF). It must fail-fast if security environment variables are missing. Required env vars: `ALLOWED_EMAILS`, `PYTHON_BACKEND_URL`, `INTERNAL_API_SECRET`.
