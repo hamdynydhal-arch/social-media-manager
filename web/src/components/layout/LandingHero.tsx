@@ -135,12 +135,13 @@ export function LandingHero() {
                 اقرأ إفصاح المخاطر الإلزامي
               </Link>
             </div>
-            {/* Dev bypass — visible only during UI development phase */}
+            {/* Dev bypass — UI development phase only */}
             <Link
               href="/dashboard"
-              className="text-sm text-slate-500 hover:text-[#D4AF37] transition-colors duration-200 underline tracking-wider"
+              className="inline-flex items-center gap-2 border border-slate-600 hover:border-[#D4AF37]/60 text-slate-400 hover:text-[#D4AF37] text-sm px-5 py-2 rounded-lg transition-all duration-200"
             >
-              التالي (تجريبي - مسار المطورين)
+              <span className="font-mono text-xs opacity-60">[DEV]</span>
+              التالي — مسار المطورين (تجريبي)
             </Link>
           </div>
         </motion.div>
