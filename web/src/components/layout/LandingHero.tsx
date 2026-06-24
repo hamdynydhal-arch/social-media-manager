@@ -6,15 +6,14 @@ import { motion } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
 import { LiveClock } from "@/components/ui/LiveClock";
 import {
-  TrendingUp,
-  Shield,
-  Zap,
-  BarChart3,
   Lock,
   Bot,
   ChevronLeft,
-  Activity,
   Cpu,
+  Landmark,
+  Shield,
+  TrendingUp,
+  Zap,
 } from "lucide-react";
 
 // Fact-based technical specs — derived directly from Spear5 config.py and architecture
@@ -41,38 +40,19 @@ const specs = [
   },
 ];
 
-// Fact-based feature descriptions — no exaggeration
-const features = [
-  {
-    icon: Bot,
-    title: "تداول كمي مغلق",
-    desc: "خوارزمية خاصة تعمل على 5 عملات ذات ارتباط منخفض مُختارة بعناية",
-  },
-  {
-    icon: Shield,
-    title: "تشفير عسكري AES-256-GCM",
-    desc: "مفاتيح Binance API مشفّرة محلياً — لا تُرسل أو تُخزّن على أي خادم خارجي",
-  },
-  {
-    icon: BarChart3,
-    title: "غرفة تحكم مركزية",
-    desc: "إحصائيات المحفظة الحية، سجل الصفقات المفصّل، ومراقبة وضع البوت",
-  },
-  {
-    icon: TrendingUp,
-    title: "إدارة مخاطر صارمة",
-    desc: "وقف خسارة كارثي ثابت + وقف متحرك ديناميكي مبني على ATR لكل مستوى مخاطرة",
-  },
-  {
-    icon: Zap,
-    title: "تحكم فوري",
-    desc: "إطلاق وإيقاف البوت في الوقت الفعلي مع تأثير فوري على المراكز المفتوحة",
-  },
-  {
-    icon: Activity,
-    title: "Backtest على بيانات تاريخية",
-    desc: "اختبر الاستراتيجية على بيانات OHLCV الحقيقية قبل النشر الفعلي",
-  },
+// Investment verticals — two strategic arms of the platform
+const cryptoPoints = [
+  { icon: Bot,         text: "تداول كمي نشط على 5 عملات نخبوية محددة" },
+  { icon: Zap,         text: "تنفيذ خوارزمي معزول لكل حساب مُصرَّح" },
+  { icon: TrendingUp,  text: "3 مستويات مخاطرة · وقف متحرك مبني على ATR" },
+  { icon: Shield,      text: "تشفير AES-256-GCM محلي — لا مشاركة للمفاتيح" },
+];
+
+const equitiesPoints = [
+  { icon: Landmark,    text: "تصفية شرعية صارمة — خالٍ من الربا والغرر" },
+  { icon: TrendingUp,  text: "تداول خوارزمي نشط في الأسواق المرخّصة" },
+  { icon: Shield,      text: "محفظة تحوط استراتيجي متوازنة" },
+  { icon: Cpu,         text: "تخصيص أصول كمي وفق معايير الامتثال الشرعي" },
 ];
 
 export function LandingHero() {
@@ -80,7 +60,7 @@ export function LandingHero() {
     <div className="min-h-screen bg-navy-950 text-foreground overflow-hidden">
       {/* Hexagon background pattern */}
       <div className="fixed inset-0 hex-bg opacity-100 pointer-events-none" />
-      {/* Radial gold glow center */}
+      {/* Radial gold glow */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
@@ -118,18 +98,19 @@ export function LandingHero() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-gold-DEFAULT/10 border border-gold-DEFAULT/25 text-gold-DEFAULT text-sm px-4 py-2 rounded-full mb-8">
             <Cpu className="w-3.5 h-3.5" />
-            أداة تداول كمية خاصة — للاستخدام المؤسسي المغلق
+            منصة كمية مغلقة — إدارة ثروات متعددة الأصول
           </div>
 
           <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight text-white">
-            محطة تحكم التداول
+            محطة تحكم الثروات
             <br />
             <span className="gradient-text-shine">SPEAR5</span>
           </h1>
 
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
-            نظام تداول كمي خاص يعمل على 5 عملات مختارة. أدخل مفاتيح Binance المشفّرة،
-            حدّد مستوى المخاطرة، وراقب الأداء من غرفة التحكم المركزية.
+            منظومة خوارزمية خاصة لإدارة الثروات متعددة الأصول — تجمع بين التداول الكمي في
+            الأصول الرقمية النخبوية والتخصيص الاستراتيجي في الأسهم الشرعية.
+            وصول حصري للمُصرَّحين فقط.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -175,7 +156,7 @@ export function LandingHero() {
         </motion.div>
       </section>
 
-      {/* Features */}
+      {/* Investment Verticals */}
       <section className="relative z-10 max-w-7xl mx-auto px-6 py-20">
         <motion.div
           initial={{ opacity: 0 }}
@@ -184,28 +165,103 @@ export function LandingHero() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl font-bold text-center mb-2 text-white">
-            غرفة تحكم مركزية للإدارة الخاصة
+            ذراعا المنصة الاستثماريان
           </h2>
           <p className="text-center text-muted-foreground mb-12">
-            مواصفات مشتقة مباشرة من البنية التقنية لـ Spear5
+            تخصيص استراتيجي وتداول خوارزمي عبر فئتين رئيسيتين من الأصول
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {features.map((f, i) => (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-navy-800/60 hover:bg-navy-700/60 border border-gold-DEFAULT/10 hover:border-gold-DEFAULT/30 rounded-xl p-6 transition-all group"
-              >
-                <div className="w-12 h-12 bg-gold-DEFAULT/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-gold-DEFAULT/20 transition-colors">
-                  <f.icon className="w-6 h-6 text-gold-DEFAULT" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            {/* Vertical 1 — Crypto Operations */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="relative bg-navy-800/70 border border-gold-DEFAULT/20 rounded-2xl p-8 hover:border-gold-DEFAULT/40 transition-all"
+            >
+              {/* Subtle inner glow */}
+              <div
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                style={{ background: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,164,48,0.06) 0%, transparent 70%)" }}
+              />
+
+              <div className="relative">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gold-DEFAULT/10 border border-gold-DEFAULT/20 rounded-xl flex items-center justify-center">
+                      <Bot className="w-6 h-6 text-gold-DEFAULT" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-gold-DEFAULT/70 font-medium uppercase tracking-widest mb-0.5">الذراع الأول</div>
+                      <h3 className="text-xl font-black text-white">غرفة العمليات الرقمية</h3>
+                    </div>
+                  </div>
+                  <span className="text-xs bg-gold-DEFAULT/10 border border-gold-DEFAULT/20 text-gold-DEFAULT px-2.5 py-1 rounded-full font-mono">
+                    ACTIVE
+                  </span>
                 </div>
-                <h3 className="font-bold text-lg mb-2 text-white">{f.title}</h3>
-                <p className="text-muted-foreground text-sm">{f.desc}</p>
-              </motion.div>
-            ))}
+
+                <div className="text-xs text-muted-foreground font-mono mb-6 tracking-wider">
+                  Crypto Operations · Digital Assets
+                </div>
+
+                <ul className="space-y-3">
+                  {cryptoPoints.map(({ icon: Icon, text }) => (
+                    <li key={text} className="flex items-start gap-3 text-sm text-muted-foreground">
+                      <Icon className="w-4 h-4 text-gold-DEFAULT shrink-0 mt-0.5" />
+                      <span>{text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+
+            {/* Vertical 2 — Halal Equities */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="relative bg-navy-800/70 border border-gold-DEFAULT/10 rounded-2xl p-8 hover:border-gold-DEFAULT/25 transition-all"
+            >
+              <div
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                style={{ background: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(34,197,94,0.03) 0%, transparent 70%)" }}
+              />
+
+              <div className="relative">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center">
+                      <Landmark className="w-6 h-6 text-emerald-400" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-emerald-400/70 font-medium uppercase tracking-widest mb-0.5">الذراع الثاني</div>
+                      <h3 className="text-xl font-black text-white">سجل الأسهم النقية</h3>
+                    </div>
+                  </div>
+                  <span className="text-xs bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-full font-mono">
+                    Phase 2
+                  </span>
+                </div>
+
+                <div className="text-xs text-muted-foreground font-mono mb-6 tracking-wider">
+                  Halal Equities · Sharia-Compliant · قيد التفعيل
+                </div>
+
+                <ul className="space-y-3">
+                  {equitiesPoints.map(({ icon: Icon, text }) => (
+                    <li key={text} className="flex items-start gap-3 text-sm text-muted-foreground">
+                      <Icon className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <span>{text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+
           </div>
         </motion.div>
       </section>
@@ -218,7 +274,7 @@ export function LandingHero() {
             تحذير المخاطر المالية — إلزامي
           </div>
           <p className="text-sm text-red-300/70 max-w-2xl mx-auto">
-            تداول العملات الرقمية ينطوي على مخاطر عالية. قد تخسر جزءاً أو كل رأس مالك.
+            تداول الأصول المالية ينطوي على مخاطر عالية. قد تخسر جزءاً أو كل رأس مالك.
             Spear5 ليست مستشاراً مالياً ولا تضمن أي عوائد. تداول فقط بما تستطيع تحمّل خسارته.
           </p>
         </div>
