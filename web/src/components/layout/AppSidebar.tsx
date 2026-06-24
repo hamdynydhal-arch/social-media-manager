@@ -6,30 +6,34 @@ import { signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   Settings,
-  History,
-  BarChart2,
   Users,
   Code2,
   UserCog,
   PieChart,
   LogOut,
   Shield,
+  Bot,
+  Landmark,
+  Cpu,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/ui/Logo";
 
 const userNavItems = [
-  { href: "/dashboard", label: "لوحة التحكم", icon: LayoutDashboard },
-  { href: "/settings", label: "الإعدادات", icon: Settings },
-  { href: "/trades", label: "سجل الصفقات", icon: History },
-  { href: "/backtest", label: "Backtest", icon: BarChart2 },
+  { href: "/dashboard",   label: "نظرة عامة",       icon: LayoutDashboard },
+  { href: "/crypto-algo", label: "الذراع الرقمي",    icon: Bot },
+  { href: "/equities",    label: "الأسهم النقية",    icon: Landmark },
+  { href: "/signals",     label: "الرؤى الكمية",     icon: Cpu },
+  { href: "/trades",      label: "سجل العمليات",     icon: FileText },
+  { href: "/settings",    label: "الإعدادات",        icon: Settings },
 ];
 
 const adminNavItems = [
-  { href: "/admin/stats", label: "إحصائيات المنصة", icon: PieChart },
-  { href: "/admin/users", label: "إدارة المُصرَّحين", icon: Users },
-  { href: "/admin/bot-code", label: "كود البوت", icon: Code2 },
-  { href: "/admin/super-admins", label: "Super Admins", icon: UserCog },
+  { href: "/admin/stats",        label: "إحصائيات المنصة",  icon: PieChart },
+  { href: "/admin/users",        label: "إدارة المُصرَّحين", icon: Users },
+  { href: "/admin/bot-code",     label: "كود البوت",         icon: Code2 },
+  { href: "/admin/super-admins", label: "Super Admins",       icon: UserCog },
 ];
 
 interface AppSidebarProps {
@@ -53,15 +57,13 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 p-4 overflow-y-auto space-y-1">
-        {/* User section */}
         <div className="text-xs text-muted-foreground font-medium px-3 py-2 uppercase tracking-wider">
-          الرئيسية
+          غرفة التحكم
         </div>
         {userNavItems.map((item) => (
           <NavLink key={item.href} item={item} active={pathname === item.href} />
         ))}
 
-        {/* Admin section */}
         {user.isSuperAdmin && (
           <>
             <div className="text-xs text-muted-foreground font-medium px-3 py-2 mt-4 uppercase tracking-wider flex items-center gap-2">
@@ -87,7 +89,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium truncate text-foreground">{user.name ?? "مستخدم"}</div>
+            <div className="text-sm font-medium truncate text-foreground">{user.name ?? "مدير الثروة"}</div>
             <div className="text-xs text-muted-foreground truncate">{user.email}</div>
           </div>
           {user.isSuperAdmin && (

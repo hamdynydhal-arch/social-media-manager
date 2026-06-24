@@ -5,6 +5,15 @@ import type { NextRequest } from "next/server";
 const PUBLIC_PATHS = [
   "/",
   "/login",
+  // TODO: Re-enable strict authentication after UI development phase
+  "/dashboard",
+  "/crypto-algo",
+  "/equities",
+  "/signals",
+  "/trades",
+  "/backtest",
+  "/settings",
+  // end TODO
   "/legal/terms",
   "/legal/privacy",
   "/legal/risk-disclosure",

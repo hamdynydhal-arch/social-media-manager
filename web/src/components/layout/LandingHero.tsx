@@ -113,9 +113,10 @@ export function LandingHero() {
             وصول حصري للمُصرَّحين فقط.
           </p>
 
+          {/* TODO: Re-enable strict authentication after UI development phase */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            <Link
+              href="/dashboard"
               className="group flex items-center gap-3 bg-[#D4AF37] hover:bg-[#F4CE14] text-[#030C1B] font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 shadow-[0_0_30px_rgba(212,175,55,0.35)] hover:shadow-[0_0_50px_rgba(212,175,55,0.55)]"
             >
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -124,9 +125,9 @@ export function LandingHero() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              مصادقة وصول المصرّحين (Google)
+              دخول غرفة التحكم
               <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
-            </button>
+            </Link>
             <Link
               href="/legal/risk-disclosure"
               className="text-muted-foreground hover:text-gold-DEFAULT text-sm underline underline-offset-4 transition-colors"
