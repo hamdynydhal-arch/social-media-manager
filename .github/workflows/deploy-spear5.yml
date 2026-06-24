@@ -1,0 +1,156 @@
+name: Deploy Spear5 to Vercel
+
+on:
+  push:
+    branches: [claude/spear5-trading-platform-9dwpx1, main]
+    paths: ['web/**']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+      INITIAL_SUPER_ADMIN_EMAIL: ${{ secrets.INITIAL_SUPER_ADMIN_EMAIL }}
+      INTERNAL_BOT_TOKEN: ${{ secrets.INTERNAL_BOT_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install Vercel CLI and dependencies
+        run: |
+          npm install -g vercel@latest
+          cd web && npm ci
+
+      - name: Generate Prisma Client
+        working-directory: web
+        run: |
+          DB="${DATABASE_URL:-postgresql://dummy:x@localhost/dummy}"
+          DATABASE_URL="$DB" npx prisma generate
+
+      - name: Create or get Vercel project via API
+        run: |
+          # Get user/org ID
+          ORG_ID=$(curl -sf \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "https://api.vercel.com/v2/user" | jq -r '.user.id')
+          echo "ORG_ID=$ORG_ID" >> $GITHUB_ENV
+
+          # Try to create project (returns existing project if name already taken)
+          RESPONSE=$(curl -s \
+            -X POST "https://api.vercel.com/v9/projects" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"spear5","framework":"nextjs"}')
+
+          PROJECT_ID=$(echo "$RESPONSE" | jq -r '.id // empty')
+
+          # If creation failed (project exists), fetch by name
+          if [ -z "$PROJECT_ID" ]; then
+            PROJECT_ID=$(curl -sf \
+              -H "Authorization: Bearer $VERCEL_TOKEN" \
+              "https://api.vercel.com/v9/projects/spear5" | jq -r '.id')
+          fi
+
+          echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
+          echo "Project ID: $PROJECT_ID"
+
+          # Ensure rootDirectory is not set (the CLI is already run from web/)
+          curl -s -X PATCH \
+            "https://api.vercel.com/v9/projects/$PROJECT_ID" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"rootDirectory":null}' > /dev/null
+
+      - name: Write .vercel/project.json
+        working-directory: web
+        run: |
+          mkdir -p .vercel
+          cat > .vercel/project.json <<JSON
+          {"orgId":"$ORG_ID","projectId":"$PROJECT_ID"}
+          JSON
+          echo "Linked to org=$ORG_ID project=$PROJECT_ID"
+
+      - name: Upsert environment variables on Vercel
+        run: |
+          upsert_env() {
+            local key="$1"
+            local val="$2"
+            [ -z "$val" ] && return 0
+
+            # Delete existing then create fresh
+            curl -s -X DELETE \
+              "https://api.vercel.com/v9/projects/$PROJECT_ID/env/$key?target=production" \
+              -H "Authorization: Bearer $VERCEL_TOKEN" > /dev/null 2>&1 || true
+
+            curl -s -X POST \
+              "https://api.vercel.com/v9/projects/$PROJECT_ID/env" \
+              -H "Authorization: Bearer $VERCEL_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"key\":\"$key\",\"value\":$(echo -n "$val" | jq -Rs .),\"type\":\"encrypted\",\"target\":[\"production\"]}" \
+              | jq -r '"  \(.key): \(.created // "already-exists")"' 2>/dev/null || true
+          }
+
+          upsert_env "DATABASE_URL"              "$DATABASE_URL"
+          upsert_env "NEXTAUTH_SECRET"           "$NEXTAUTH_SECRET"
+          upsert_env "NEXTAUTH_URL"              "https://sp5.prtnh.com"
+          upsert_env "ENCRYPTION_KEY"            "$ENCRYPTION_KEY"
+          upsert_env "GOOGLE_CLIENT_ID"          "$GOOGLE_CLIENT_ID"
+          upsert_env "GOOGLE_CLIENT_SECRET"      "$GOOGLE_CLIENT_SECRET"
+          upsert_env "RESEND_API_KEY"            "$RESEND_API_KEY"
+          upsert_env "EMAIL_FROM"                "$EMAIL_FROM"
+          upsert_env "INITIAL_SUPER_ADMIN_EMAIL" "$INITIAL_SUPER_ADMIN_EMAIL"
+          upsert_env "INTERNAL_BOT_TOKEN"        "$INTERNAL_BOT_TOKEN"
+
+      - name: Pull Vercel project environment
+        working-directory: web
+        run: vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
+
+      - name: Build Next.js app locally
+        working-directory: web
+        run: vercel build --prod --token "$VERCEL_TOKEN"
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://dummy:x@localhost/dummy' }}
+
+      - name: Deploy prebuilt output to Vercel
+        working-directory: web
+        run: |
+          DEPLOY_URL=$(vercel deploy --prebuilt --prod --token "$VERCEL_TOKEN")
+          echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_ENV
+          echo "Deployed: $DEPLOY_URL"
+
+      - name: Add custom domain sp5.prtnh.com
+        run: |
+          curl -s -X POST \
+            "https://api.vercel.com/v9/projects/$PROJECT_ID/domains" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"sp5.prtnh.com"}' | jq -r '.name // .error.message'
+
+      - name: Run DB migrations
+        working-directory: web
+        run: |
+          if [ -n "$DATABASE_URL" ]; then
+            npx prisma db push --skip-generate
+          else
+            echo "DATABASE_URL not set, skipping migrations"
+          fi
+
+      - name: Summary
+        run: |
+          echo "### Spear5 Deployed to Vercel" >> $GITHUB_STEP_SUMMARY
+          echo "- Vercel URL: $DEPLOY_URL" >> $GITHUB_STEP_SUMMARY
+          echo "- Custom domain: https://sp5.prtnh.com" >> $GITHUB_STEP_SUMMARY
