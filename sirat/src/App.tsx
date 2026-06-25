@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import Sidebar from './components/Sidebar'
 import Dashboard from './pages/Dashboard'
@@ -16,7 +16,7 @@ export default function App() {
   }, [darkMode])
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="flex min-h-screen">
         <Sidebar darkMode={darkMode} onToggleDark={() => setDarkMode(d => !d)} />
         <main className="flex-1 overflow-y-auto">
@@ -29,6 +29,6 @@ export default function App() {
           </Routes>
         </main>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
