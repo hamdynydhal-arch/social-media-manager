@@ -138,10 +138,9 @@ export function LandingHero() {
             {/* Dev bypass — UI development phase only */}
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 border border-slate-600 hover:border-[#D4AF37]/60 text-slate-400 hover:text-[#D4AF37] text-sm px-5 py-2 rounded-lg transition-all duration-200"
+              className="inline-flex items-center gap-2 border border-white/20 hover:border-[#D4AF37]/60 text-white/70 hover:text-[#D4AF37] px-6 py-3 rounded-xl transition-all duration-200 text-base font-medium"
             >
-              <span className="font-mono text-xs opacity-60">[DEV]</span>
-              التالي — مسار المطورين (تجريبي)
+              دخول (تجريبي)
             </Link>
           </div>
         </motion.div>
