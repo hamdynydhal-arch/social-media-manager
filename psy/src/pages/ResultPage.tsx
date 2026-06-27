@@ -11,9 +11,11 @@ interface ResultPageProps {
 }
 
 const LEVEL_LABELS: Record<Level, string> = {
+  very_high: 'مرتفع جداً',
   high: 'مرتفع',
   medium: 'متوسط',
   low: 'منخفض',
+  very_low: 'منخفض جداً',
 };
 
 const FACTOR_ORDER: FactorKey[] = ['O', 'C', 'E', 'A', 'N'];
@@ -123,7 +125,7 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
                 <span className="text-2xl">{fc.icon}</span>
                 <div>
                   <h3 className="font-bold text-gray-800">{fc.name}</h3>
-                  <span className="text-xs text-gray-500">{score}% — {LEVEL_LABELS[level]}</span>
+                  <span className="text-xs text-gray-500">{Math.round(score)}% — {LEVEL_LABELS[level]}</span>
                 </div>
               </div>
 

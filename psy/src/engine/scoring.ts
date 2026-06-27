@@ -1,59 +1,81 @@
 import type { Question, FactorKey, Level, TestResult, ScoringConfig, TestContent, ProfileTitle } from './types';
 
 /**
- * Calculate Big Five factor scores from user answers.
+ * Weighted Big Five scoring with Z-score → logistic transform.
  *
- * Scoring rules:
- *  - Direct item:  score = answer (1–5)
- *  - Reverse item: score = (likertMax + 1) − answer   e.g. 6 − answer for a 1-5 scale
+ * Per item:
+ *   adjusted = answer  (direct)  |  (likertMax+1) − answer  (reverse)
+ *   contribution = adjusted × weight
  *
- * Each factor has 10 items → raw sum range: 10–50
- * Percentage = ((sum − 10) / 40) × 100
+ * Per factor:
+ *   μ  = totalWeight × midpoint              (midpoint = (likertMin+likertMax)/2)
+ *   σ  = totalWeight × (likertMax−likertMin) / 6   (six-sigma approximation)
+ *   z  = (weightedSum − μ) / σ               → [-3, +3] for extreme responses
+ *   pct = 100 / (1 + exp(−z))               (standard logistic, no extra steepness)
  *
- * Thresholds (configurable per factor):
- *   low    : percentage < lowThreshold  (default 33)
- *   medium : percentage < highThreshold (default 67)
- *   high   : percentage ≥ highThreshold
+ * Scores remain floating-point throughout; rounding only happens in the UI.
+ *
+ * Five-level thresholds (configurable, defaults in %):
+ *   very_low  : [  0, 15)
+ *   low       : [ 15, 40)
+ *   medium    : [ 40, 60)
+ *   high      : [ 60, 85)
+ *   very_high : [ 85,100]
  */
+
 export function calculateScores(
   answers: Record<string, number>,
   questions: Question[],
   config: ScoringConfig
 ): Partial<Record<FactorKey, number>> {
-  const factorData: Partial<Record<FactorKey, { sum: number; count: number }>> = {};
+  const factorData: Partial<Record<FactorKey, { weightedSum: number; totalWeight: number }>> = {};
 
   for (const q of questions) {
     if (!q.factor || answers[q.id] === undefined) continue;
 
-    let score = answers[q.id];
+    const weight = q.weight ?? 1.0;
+    let adjusted = answers[q.id];
 
     if (q.direction === 'reverse') {
-      score = (config.likertMax + 1) - score;
+      adjusted = (config.likertMax + 1) - adjusted;
     }
 
     if (!factorData[q.factor]) {
-      factorData[q.factor] = { sum: 0, count: 0 };
+      factorData[q.factor] = { weightedSum: 0, totalWeight: 0 };
     }
-    factorData[q.factor]!.sum += score;
-    factorData[q.factor]!.count += 1;
+    factorData[q.factor]!.weightedSum += adjusted * weight;
+    factorData[q.factor]!.totalWeight += weight;
   }
 
+  const midpoint = (config.likertMin + config.likertMax) / 2;
+  const range = config.likertMax - config.likertMin;
+
   const scores: Partial<Record<FactorKey, number>> = {};
-  for (const [factor, data] of Object.entries(factorData) as [FactorKey, { sum: number; count: number }][]) {
-    if (data) {
-      const min = data.count * config.likertMin;
-      const max = data.count * config.likertMax;
-      scores[factor] = Math.round(((data.sum - min) / (max - min)) * 100);
+  for (const [factor, data] of Object.entries(factorData) as [FactorKey, { weightedSum: number; totalWeight: number }][]) {
+    if (data && data.totalWeight > 0) {
+      const mu = data.totalWeight * midpoint;
+      const sigma = data.totalWeight * range / 6;
+      const z = (data.weightedSum - mu) / sigma;
+      // Standard logistic → (0, 100), full floating-point precision
+      scores[factor] = 100 / (1 + Math.exp(-z));
     }
   }
 
   return scores;
 }
 
-export function getLevel(percentage: number, lowThreshold = 33, highThreshold = 67): Level {
-  if (percentage >= highThreshold) return 'high';
-  if (percentage >= lowThreshold) return 'medium';
-  return 'low';
+export function getLevel(
+  percentage: number,
+  veryLow = 15,
+  low = 40,
+  high = 60,
+  veryHigh = 85
+): Level {
+  if (percentage >= veryHigh) return 'very_high';
+  if (percentage >= high) return 'high';
+  if (percentage >= low) return 'medium';
+  if (percentage >= veryLow) return 'low';
+  return 'very_low';
 }
 
 export function getLevels(
@@ -62,10 +84,12 @@ export function getLevels(
 ): Partial<Record<FactorKey, Level>> {
   const levels: Partial<Record<FactorKey, Level>> = {};
   for (const [factor, score] of Object.entries(scores) as [FactorKey, number][]) {
-    const factorConfig = config.factors[factor];
-    const low = factorConfig?.lowThreshold ?? 33;
-    const high = factorConfig?.highThreshold ?? 67;
-    levels[factor] = getLevel(score, low, high);
+    const fc = config.factors[factor];
+    const vl = fc?.veryLowThreshold ?? 15;
+    const l  = fc?.lowThreshold    ?? 40;
+    const h  = fc?.highThreshold   ?? 60;
+    const vh = fc?.veryHighThreshold ?? 85;
+    levels[factor] = getLevel(score, vl, l, h, vh);
   }
   return levels;
 }

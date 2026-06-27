@@ -1,7 +1,7 @@
 export type QuestionType = 'likert' | 'boolean' | 'single_choice' | 'multiple_choice';
 export type Direction = 'direct' | 'reverse';
 export type FactorKey = 'E' | 'A' | 'C' | 'N' | 'O';
-export type Level = 'high' | 'medium' | 'low';
+export type Level = 'very_high' | 'high' | 'medium' | 'low' | 'very_low';
 
 export interface LikertOption {
   value: number;
@@ -14,14 +14,17 @@ export interface Question {
   type: QuestionType;
   factor?: FactorKey;
   direction?: Direction;
+  weight?: number;
   options?: { value: number | boolean; label: string }[];
 }
 
 export interface FactorScoringConfig {
   name: string;
-  // Percentages: 0–lowThreshold = low, lowThreshold–highThreshold = medium, highThreshold–100 = high
+  // Five buckets: [0,veryLow) very_low | [veryLow,low) low | [low,high) medium | [high,veryHigh) high | [veryHigh,100] very_high
+  veryLowThreshold: number;
   lowThreshold: number;
   highThreshold: number;
+  veryHighThreshold: number;
 }
 
 export interface ScoringConfig {
