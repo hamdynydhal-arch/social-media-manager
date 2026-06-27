@@ -1,0 +1,86 @@
+name: Deploy psy to Vercel
+
+on:
+  push:
+    branches: [psy-deploy]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: psy-deploy
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: psy/package-lock.json
+
+      - name: Install dependencies
+        run: cd psy && npm ci
+
+      - name: Build
+        run: cd psy && npm run build
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Create or get Vercel project
+        run: |
+          ORG_ID=$(curl -sf \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "https://api.vercel.com/v2/user" | jq -r '.user.id')
+          echo "ORG_ID=$ORG_ID" >> $GITHUB_ENV
+
+          RESPONSE=$(curl -s \
+            -X POST "https://api.vercel.com/v9/projects" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"psy","framework":"vite"}')
+
+          PROJECT_ID=$(echo "$RESPONSE" | jq -r '.id // empty')
+
+          if [ -z "$PROJECT_ID" ]; then
+            PROJECT_ID=$(curl -sf \
+              -H "Authorization: Bearer $VERCEL_TOKEN" \
+              "https://api.vercel.com/v9/projects/psy" | jq -r '.id')
+          fi
+
+          echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
+          echo "Project ID: $PROJECT_ID"
+
+          curl -s -X PATCH \
+            "https://api.vercel.com/v9/projects/$PROJECT_ID" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"rootDirectory":"psy","outputDirectory":"dist","buildCommand":"npm run build"}' > /dev/null
+
+      - name: Write .vercel/project.json
+        run: |
+          mkdir -p psy/.vercel
+          cat > psy/.vercel/project.json <<JSON
+          {"orgId":"$ORG_ID","projectId":"$PROJECT_ID"}
+          JSON
+
+      - name: Pull Vercel environment
+        run: cd psy && vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
+
+      - name: Build for Vercel
+        run: cd psy && vercel build --prod --token "$VERCEL_TOKEN"
+
+      - name: Deploy to Vercel
+        run: |
+          DEPLOY_URL=$(cd psy && vercel deploy --prebuilt --prod --token "$VERCEL_TOKEN")
+          echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_ENV
+          echo "Deployed: $DEPLOY_URL"
+
+      - name: Summary
+        run: |
+          echo "### psy deployed to Vercel ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- URL: $DEPLOY_URL" >> $GITHUB_STEP_SUMMARY
