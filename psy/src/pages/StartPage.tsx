@@ -81,6 +81,14 @@ export default function StartPage({ testName, description, estimatedMinutes, que
           </ul>
         </div>
 
+        {/* Scientific intro — verbatim */}
+        <div className="card mb-4 bg-indigo-50 border border-indigo-100">
+          <p className="text-sm text-indigo-900 leading-relaxed">
+            <strong>💡 عن الاختبار:</strong>{' '}
+            يستند هذا التقييم إلى نموذج الخمسة الكبار (Big Five)، وهو المعيار الذهبي المعتمد في الأبحاث النفسية الأكاديمية العالمية. يعتمد تقييمنا على قاعدة بيانات عناصر الشخصية الدولية (IPIP) التي طورها العالم (Goldberg, 1999). على عكس الاختبارات الشعبية التي تضعك في قوالب جامدة، يقيس هذا النموذج سماتك على طيف متصل، مما يقدم صورة دقيقة وقابلة للتطور عن شخصيتك.
+          </p>
+        </div>
+
         {/* Disclaimer */}
         <p className="text-xs text-gray-400 text-center leading-relaxed px-2">
           ⚠️ {disclaimer}
