@@ -39,6 +39,7 @@ export default function App() {
           testName={bigfiveData.name}
           description={bigfiveData.description}
           estimatedMinutes={bigfiveData.estimatedMinutes}
+          questionCount={bigfiveData.questions.length}
           onStart={handleStart}
           disclaimer={bigfiveContent.disclaimer}
         />

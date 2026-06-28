@@ -2,11 +2,12 @@ interface StartPageProps {
   testName: string;
   description: string;
   estimatedMinutes: number;
+  questionCount: number;
   onStart: () => void;
   disclaimer: string;
 }
 
-export default function StartPage({ testName, description, estimatedMinutes, onStart, disclaimer }: StartPageProps) {
+export default function StartPage({ testName, description, estimatedMinutes, questionCount, onStart, disclaimer }: StartPageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -25,7 +26,7 @@ export default function StartPage({ testName, description, estimatedMinutes, onS
 
           <div className="grid grid-cols-3 gap-3 mb-6">
             <div className="bg-indigo-50 rounded-2xl p-3 text-center">
-              <div className="text-2xl font-bold text-indigo-600">50</div>
+              <div className="text-2xl font-bold text-indigo-600">{questionCount}</div>
               <div className="text-xs text-gray-500 mt-1">سؤالاً</div>
             </div>
             <div className="bg-purple-50 rounded-2xl p-3 text-center">
