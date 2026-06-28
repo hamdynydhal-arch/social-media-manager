@@ -1,4 +1,4 @@
-import type { Question, FactorKey, Level, TestResult, ScoringConfig, TestContent, ProfileTitle } from './types';
+import type { Question, FactorKey, FacetKey, Level, TestResult, ScoringConfig, ProfileTitle } from './types';
 
 /**
  * Weighted Big Five scoring with Z-score → logistic transform.
@@ -117,18 +117,189 @@ export function selectProfileTitle(
   return bestMatch;
 }
 
+// NEO PI-R facet-to-factor mapping (Costa & McCrae, 1992)
+const FACET_TO_FACTOR: Record<FacetKey, FactorKey> = {
+  N1: 'N', N2: 'N', N3: 'N', N4: 'N', N5: 'N', N6: 'N',
+  E1: 'E', E2: 'E', E3: 'E', E4: 'E', E5: 'E', E6: 'E',
+  O1: 'O', O2: 'O', O3: 'O', O4: 'O', O5: 'O', O6: 'O',
+  A1: 'A', A2: 'A', A3: 'A', A4: 'A', A5: 'A', A6: 'A',
+  C1: 'C', C2: 'C', C3: 'C', C4: 'C', C5: 'C', C6: 'C',
+};
+
+// Facet cluster pairs for sub-type determination (AB5C approach)
+// Hofstee, de Raad, & Goldberg (1992) — circumplex facet structure
+const FACTOR_CLUSTERS: Record<FactorKey, [FacetKey, FacetKey][]> = {
+  N: [['N1', 'N3'], ['N2', 'N5'], ['N4', 'N6']],
+  E: [['E1', 'E2'], ['E3', 'E4'], ['E5', 'E6']],
+  O: [['O1', 'O2'], ['O3', 'O5'], ['O4', 'O6']],
+  A: [['A1', 'A3'], ['A2', 'A4'], ['A5', 'A6']],
+  C: [['C1', 'C4'], ['C2', 'C3'], ['C5', 'C6']],
+};
+
+/**
+ * Calculate per-facet scores using the same Z-score logistic transform as factor scores.
+ * Each facet is scored independently from its 4 items.
+ */
+export function calculateFacetScores(
+  answers: Record<string, number>,
+  questions: Question[],
+  config: ScoringConfig
+): Partial<Record<FacetKey, number>> {
+  const facetData: Partial<Record<FacetKey, { weightedSum: number; totalWeight: number }>> = {};
+
+  for (const q of questions) {
+    if (!q.facet || answers[q.id] === undefined) continue;
+
+    const weight = q.weight ?? 1.0;
+    let adjusted = answers[q.id];
+
+    if (q.direction === 'reverse') {
+      adjusted = (config.likertMax + 1) - adjusted;
+    }
+
+    if (!facetData[q.facet]) {
+      facetData[q.facet] = { weightedSum: 0, totalWeight: 0 };
+    }
+    facetData[q.facet]!.weightedSum += adjusted * weight;
+    facetData[q.facet]!.totalWeight += weight;
+  }
+
+  const midpoint = (config.likertMin + config.likertMax) / 2;
+  const range = config.likertMax - config.likertMin;
+
+  const facetScores: Partial<Record<FacetKey, number>> = {};
+  for (const [facet, data] of Object.entries(facetData) as [FacetKey, { weightedSum: number; totalWeight: number }][]) {
+    if (data && data.totalWeight > 0) {
+      const mu = data.totalWeight * midpoint;
+      const sigma = data.totalWeight * range / 6;
+      const z = (data.weightedSum - mu) / sigma;
+      facetScores[facet] = 100 / (1 + Math.exp(-z));
+    }
+  }
+
+  return facetScores;
+}
+
+/**
+ * Aggregate factor scores from facet scores.
+ * Each factor score = average of its 6 facet scores.
+ * Ref: Costa & McCrae (1992) — NEO PI-R manual
+ */
+export function aggregateFactorScoresFromFacets(
+  facetScores: Partial<Record<FacetKey, number>>
+): Partial<Record<FactorKey, number>> {
+  const factorSums: Partial<Record<FactorKey, { sum: number; count: number }>> = {};
+
+  for (const [facet, score] of Object.entries(facetScores) as [FacetKey, number][]) {
+    const factor = FACET_TO_FACTOR[facet];
+    if (!factorSums[factor]) {
+      factorSums[factor] = { sum: 0, count: 0 };
+    }
+    factorSums[factor]!.sum += score;
+    factorSums[factor]!.count += 1;
+  }
+
+  const factorScores: Partial<Record<FactorKey, number>> = {};
+  for (const [factor, data] of Object.entries(factorSums) as [FactorKey, { sum: number; count: number }][]) {
+    if (data && data.count > 0) {
+      factorScores[factor] = data.sum / data.count;
+    }
+  }
+
+  return factorScores;
+}
+
+/**
+ * Determine the base profile code from factor scores.
+ * Priority order based on: Judge et al. (2002), Barrick & Mount (1991),
+ * Asendorpf et al. (2001), McCrae (1996)
+ */
+export function determineProfileCode(
+  factorScores: Partial<Record<FactorKey, number>>
+): string {
+  const N = factorScores['N'] ?? 50;
+  const E = factorScores['E'] ?? 50;
+  const O = factorScores['O'] ?? 50;
+  const A = factorScores['A'] ?? 50;
+  const C = factorScores['C'] ?? 50;
+
+  // Priority order
+  if (N > 60 && O > 60) return 'N+O';
+  if (A > 60 && E > 60) return 'A+E';
+  if (E > 60 && C > 60) return 'E+C';
+  if (O > 60 && C > 60) return 'O+C';
+  if (O > 60 && E < 50) return 'O-lowE';
+  if (C > 60 && N < 40) return 'C-lowN';
+  if (C > 60 && A < 50) return 'C-lowA';
+  return 'balanced';
+}
+
+/**
+ * Determine sub-type suffix (a/b/c) based on which facet cluster pair scores highest.
+ * Uses the AB5C circumplex approach (Hofstee et al., 1992).
+ */
+export function determineSubTypeSuffix(
+  facetScores: Partial<Record<FacetKey, number>>,
+  profileCode: string
+): 'a' | 'b' | 'c' {
+  // Map profile code to the primary factor whose clusters we use
+  let primaryFactor: FactorKey;
+
+  if (profileCode === 'N+O') {
+    primaryFactor = 'N';
+  } else if (profileCode === 'A+E') {
+    primaryFactor = 'A';
+  } else if (profileCode === 'E+C') {
+    primaryFactor = 'E';
+  } else if (profileCode === 'O+C' || profileCode === 'O-lowE') {
+    primaryFactor = 'O';
+  } else {
+    // C-lowN, C-lowA, balanced all use E clusters (balanced) or C clusters (others)
+    primaryFactor = profileCode === 'balanced' ? 'E' : 'C';
+  }
+
+  const clusters = FACTOR_CLUSTERS[primaryFactor];
+  const suffixes: ('a' | 'b' | 'c')[] = ['a', 'b', 'c'];
+
+  let bestSuffix: 'a' | 'b' | 'c' = 'a';
+  let bestAvg = -1;
+
+  for (let i = 0; i < clusters.length; i++) {
+    const [f1, f2] = clusters[i];
+    const s1 = facetScores[f1] ?? 50;
+    const s2 = facetScores[f2] ?? 50;
+    const avg = (s1 + s2) / 2;
+    if (avg > bestAvg) {
+      bestAvg = avg;
+      bestSuffix = suffixes[i];
+    }
+  }
+
+  return bestSuffix;
+}
+
+/**
+ * Build the full test result including facet scores and sub-type code.
+ */
 export function buildTestResult(
   answers: Record<string, number>,
   questions: Question[],
   config: ScoringConfig
 ): Omit<TestResult, 'testId'> {
-  const scores = calculateScores(answers, questions, config);
+  const facetScores = calculateFacetScores(answers, questions, config);
+  const scores = aggregateFactorScoresFromFacets(facetScores);
   const levels = getLevels(scores, config);
+  const profileCode = determineProfileCode(scores);
+  const suffix = determineSubTypeSuffix(facetScores, profileCode);
+  const subTypeCode = `${profileCode}-${suffix}`;
+
   return {
     timestamp: Date.now(),
     answers,
     scores,
     levels,
+    facetScores,
+    subTypeCode,
   };
 }
 

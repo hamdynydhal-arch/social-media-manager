@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import type { TestResult, FactorKey, Level, TestContent } from '../engine/types';
+import type { TestResult, FactorKey, Level, TestContent, SubTypeContent } from '../engine/types';
 import { selectProfileTitle } from '../engine/scoring';
 import RadarChart from '../components/RadarChart';
 import FactorBar from '../components/FactorBar';
@@ -39,6 +39,9 @@ const DOMAIN_NAMES: Record<string, string> = {
 export default function ResultPage({ result, content, onRetake }: ResultPageProps) {
   const reportRef = useRef<HTMLDivElement>(null);
   const profile = selectProfileTitle(result.levels, content.profileTitles);
+  const subType: SubTypeContent | undefined = result.subTypeCode
+    ? content.subTypes?.find((s) => s.code === result.subTypeCode)
+    : undefined;
 
   const radarLabels: Partial<Record<FactorKey, string>> = {};
   const radarColors: Partial<Record<FactorKey, string>> = {};
@@ -71,15 +74,60 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
           <h1 className="text-2xl font-extrabold text-indigo-700 mt-1">psy — نتيجة اختبارك</h1>
         </div>
 
-        {/* Profile Title */}
+        {/* Sub-type / Profile Title */}
         <div className="card mb-4 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
           <div className="text-center">
             <div className="text-5xl mb-3">✨</div>
-            <h2 className="text-2xl font-extrabold mb-1">{profile.title}</h2>
-            <p className="text-indigo-200 text-sm font-medium mb-4">{profile.subtitle}</p>
-            <p className="text-white/90 leading-relaxed text-sm">{profile.intro}</p>
+            <h2 className="text-2xl font-extrabold mb-1">{subType?.title ?? profile.title}</h2>
+            <p className="text-indigo-200 text-sm font-medium mb-4">{subType?.subtitle ?? profile.subtitle}</p>
+            <p className="text-white/90 leading-relaxed text-sm">{subType?.intro ?? profile.intro}</p>
           </div>
         </div>
+
+        {/* Sub-type strengths & challenges */}
+        {subType && (
+          <div className="card mb-4">
+            <h3 className="font-bold text-gray-700 mb-3 text-center">نمطك التفصيلي</h3>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="bg-emerald-50 rounded-2xl p-3">
+                <h4 className="text-xs font-bold text-emerald-700 mb-2">✅ نقاط قوتك</h4>
+                <ul className="space-y-1">
+                  {subType.strengths.map((s, i) => (
+                    <li key={i} className="text-xs text-emerald-800 flex gap-1">
+                      <span className="text-emerald-500 flex-shrink-0">•</span>
+                      <span>{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="bg-amber-50 rounded-2xl p-3">
+                <h4 className="text-xs font-bold text-amber-700 mb-2">⚡ تحديات محتملة</h4>
+                <ul className="space-y-1">
+                  {subType.challenges.map((c, i) => (
+                    <li key={i} className="text-xs text-amber-800 flex gap-1">
+                      <span className="text-amber-500 flex-shrink-0">•</span>
+                      <span>{c}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <h4 className="text-sm font-bold text-gray-700 mb-2">توصيات مخصّصة لنمطك</h4>
+            <div className="space-y-2">
+              {(Object.keys(DOMAIN_ICONS) as (keyof typeof subType.recommendations)[]).map((domain) => (
+                <div key={domain} className="bg-gray-50 rounded-2xl p-3 flex gap-2 items-start">
+                  <span className="text-lg flex-shrink-0">{DOMAIN_ICONS[domain]}</span>
+                  <div>
+                    <span className="text-xs font-bold text-gray-700">{DOMAIN_NAMES[domain]}</span>
+                    <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">
+                      {subType.recommendations[domain]}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Radar Chart */}
         <div className="card mb-4">
@@ -189,6 +237,18 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
             ⚠️ <strong>تنبيه مهم:</strong> {content.disclaimer}
           </p>
         </div>
+
+        {/* Scientific References */}
+        {content.references && content.references.length > 0 && (
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 mb-4">
+            <h4 className="text-xs font-bold text-gray-600 mb-2">📚 المراجع العلمية</h4>
+            <ul className="space-y-1">
+              {content.references.map((ref, i) => (
+                <li key={i} className="text-xs text-gray-500 leading-relaxed">{ref}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Action buttons */}
         <div className="flex gap-3 pb-8">
