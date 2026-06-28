@@ -175,6 +175,27 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
           <p className="text-sm leading-relaxed text-center">{content.closingMessage}</p>
         </div>
 
+        {/* Scientific Summary — Attachment — verbatim */}
+        <div className="card border border-rose-100 bg-rose-50/40">
+          <h4 className="text-sm font-extrabold text-rose-700 mb-3">🔍 خلاصة النماذج العلمية المعتمدة</h4>
+          <div className="space-y-3 text-sm text-gray-700 leading-relaxed">
+            <div>
+              <strong className="text-gray-800">بُعدي القلق والتجنب: </strong>
+              يقيس مقياس ECR-R (Fraley et al., 2000) التعلق ليس كأنماط ثابتة، بل بناءً على تقاطع بُعدين: مستوى &quot;قلق التعلق&quot; (الخوف من الرفض أو الهجر)، ومستوى &quot;تجنب التعلق&quot; (النفور من الحميمية والاعتمادية).
+            </div>
+            <div>
+              <strong className="text-gray-800">مبدأ التعلق المكتسب (Earned Security): </strong>
+              تؤكد الأبحاث السريرية، وخاصة العلاج المرتكز على العواطف (EFT) للدكتورة سو جونسون (Sue Johnson)، أن أسلوب التعلق غير الآمن ليس قدراً محتوماً. يمكن للأفراد تطوير &quot;تعلق آمن مكتسب&quot; عبر بناء وعي ذاتي، وتجربة علاقات صحية، أو من خلال التدخل العلاجي، مما يعيد تشكيل الروابط العصبية الخاصة بالأمان العاطفي.
+            </div>
+            <div className="border-t border-rose-100 pt-2">
+              <p className="text-xs font-bold text-rose-600 mb-1">المراجع الأساسية:</p>
+              <p className="text-xs text-gray-500 leading-relaxed" dir="ltr">Fraley, R. C., Waller, N. G., &amp; Brennan, K. A. (2000). An item response theory analysis of self-report measures of adult attachment.</p>
+              <p className="text-xs text-gray-500 leading-relaxed mt-1" dir="ltr">Johnson, S. M. (2004). The Practice of Emotionally Focused Couple Therapy.</p>
+              <p className="text-xs text-gray-500 leading-relaxed mt-1" dir="ltr">Bowlby, J. (1988). A Secure Base.</p>
+            </div>
+          </div>
+        </div>
+
         {/* Disclaimer — always inside ref for PDF */}
         <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4">
           <p className="text-xs text-yellow-800 leading-relaxed">

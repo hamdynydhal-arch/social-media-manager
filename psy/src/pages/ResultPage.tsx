@@ -229,6 +229,26 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
           </div>
         </div>
 
+        {/* Scientific Summary — OCEAN — verbatim */}
+        <div className="card mb-4 border border-indigo-100 bg-indigo-50/40">
+          <h4 className="text-sm font-extrabold text-indigo-700 mb-3">🔍 خلاصة النماذج العلمية المعتمدة</h4>
+          <div className="space-y-3 text-sm text-gray-700 leading-relaxed">
+            <div>
+              <strong className="text-gray-800">الطيف وليس القالب: </strong>
+              يؤكد العالمان (Costa &amp; McCrae, 1992) في مقياس NEO PI-R أن الشخصية الإنسانية لا تُصنف في صناديق مغلقة، بل تتوزع على خمسة أبعاد رئيسية (الانفتاح، الضمير، الانبساط، التوافق، العصابية).
+            </div>
+            <div>
+              <strong className="text-gray-800">المرونة العصبية والشخصية: </strong>
+              تشير الدراسات الطولية الحديثة في علم نفس الشخصية إلى أن السمات ليست ثابتة بيولوجياً بشكل مطلق (Not hard-wired). يتفاعل الاستعداد الجيني مع البيئة والتجارب، مما يعني أن الإنسان قادر على تعديل سلوكياته وتطوير سماته عبر الوعي والتدريب المستمر (Neuroplasticity).
+            </div>
+            <div className="border-t border-indigo-100 pt-2">
+              <p className="text-xs font-bold text-indigo-600 mb-1">المراجع الأساسية:</p>
+              <p className="text-xs text-gray-500 leading-relaxed" dir="ltr">Goldberg, L. R. (1999). A broad-bandwidth, public domain, personality inventory measuring the lower-level facets of several five-factor models.</p>
+              <p className="text-xs text-gray-500 leading-relaxed mt-1" dir="ltr">Costa, P. T., &amp; McCrae, R. R. (1992). Revised NEO Personality Inventory (NEO PI-R).</p>
+            </div>
+          </div>
+        </div>
+
         {/* Disclaimer */}
         <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 mb-6">
           <p className="text-xs text-yellow-800 leading-relaxed">

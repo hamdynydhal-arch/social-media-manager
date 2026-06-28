@@ -11,11 +11,13 @@ import HomePage from './pages/HomePage';
 import StartPage from './pages/StartPage';
 import TestPage from './pages/TestPage';
 import ResultPage from './pages/ResultPage';
+import AttachmentStartPage from './pages/AttachmentStartPage';
 import AttachmentTestPage from './pages/AttachmentTestPage';
 import AttachmentResultPage from './pages/AttachmentResultPage';
 
 type AppView = 'home' | 'ocean' | 'attachment';
 type OceanPage = 'start' | 'test' | 'result';
+type AttachmentPhase = 'start' | 'test';
 
 export default function App() {
   const [appView, setAppView] = useState<AppView>('home');
@@ -25,6 +27,7 @@ export default function App() {
   const [oceanResult, setOceanResult] = useState<TestResult | null>(null);
 
   // Attachment sub-state
+  const [attachmentPhase, setAttachmentPhase] = useState<AttachmentPhase>('start');
   const [attachmentResult, setAttachmentResult] = useState<AttachmentResult | null>(null);
 
   // ── Home ──────────────────────────────────────────────
@@ -36,6 +39,7 @@ export default function App() {
 
   function handleSelectAttachment() {
     setAttachmentResult(null);
+    setAttachmentPhase('start');
     setAppView('attachment');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -86,10 +90,13 @@ export default function App() {
 
   function handleAttachmentReset() {
     setAttachmentResult(null);
+    setAttachmentPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function handleAttachmentRetake() {
     setAttachmentResult(null);
+    setAttachmentPhase('start');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -142,6 +149,17 @@ export default function App() {
           result={attachmentResult}
           content={attachmentContent}
           onRetake={handleAttachmentRetake}
+          onHome={goHome}
+        />
+      );
+    }
+    if (attachmentPhase === 'start') {
+      return (
+        <AttachmentStartPage
+          questionCount={attachmentData.questions.length}
+          estimatedMinutes={attachmentData.estimatedMinutes}
+          disclaimer={attachmentContent.disclaimer}
+          onStart={() => { setAttachmentPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
           onHome={goHome}
         />
       );
