@@ -1,6 +1,7 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import type { TestResult, FactorKey, Level, TestContent, SubTypeContent } from '../engine/types';
 import { selectProfileTitle } from '../engine/scoring';
+import { exportToPdf } from '../utils/exportPdf';
 import RadarChart from '../components/RadarChart';
 import FactorBar from '../components/FactorBar';
 
@@ -38,6 +39,7 @@ const DOMAIN_NAMES: Record<string, string> = {
 
 export default function ResultPage({ result, content, onRetake }: ResultPageProps) {
   const reportRef = useRef<HTMLDivElement>(null);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const profile = selectProfileTitle(result.levels, content.profileTitles);
   const subType: SubTypeContent | undefined = result.subTypeCode
     ? content.subTypes?.find((s) => s.code === result.subTypeCode)
@@ -50,18 +52,14 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
     radarColors[key] = content.factors[key]?.color ?? '#6366f1';
   }
 
-  async function handleDownload() {
-    const { default: html2canvas } = await import('html2canvas');
-    if (!reportRef.current) return;
-    const canvas = await html2canvas(reportRef.current, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#f8fafc',
-    });
-    const link = document.createElement('a');
-    link.download = 'psy-نتيجة-الاختبار.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+  async function handleDownloadPdf() {
+    if (!reportRef.current || pdfLoading) return;
+    setPdfLoading(true);
+    try {
+      await exportToPdf(reportRef.current, 'psy-نتيجة-الشخصية.pdf');
+    } finally {
+      setPdfLoading(false);
+    }
   }
 
   return (
@@ -255,8 +253,23 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
           <button onClick={onRetake} className="btn-secondary flex-1 text-center">
             🔄 إعادة الاختبار
           </button>
-          <button onClick={handleDownload} className="btn-primary flex-1 text-center">
-            ⬇️ تنزيل النتيجة
+          <button
+            onClick={handleDownloadPdf}
+            disabled={pdfLoading}
+            className={`
+              flex-1 flex items-center justify-center gap-2 font-bold py-3 px-4 rounded-2xl
+              transition-all duration-200 active:scale-95
+              ${pdfLoading
+                ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                : 'bg-slate-700 hover:bg-slate-800 text-white shadow-lg shadow-slate-200'
+              }
+            `}
+          >
+            {pdfLoading ? (
+              <><span className="animate-spin">⏳</span> جارٍ التوليد...</>
+            ) : (
+              <><span>📄</span> تحميل PDF</>
+            )}
           </button>
         </div>
 
