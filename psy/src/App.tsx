@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useInstallPrompt } from './hooks/useInstallPrompt';
+import InstallPromptBanner from './components/InstallPromptBanner';
 import type { TestResult } from './engine/types';
 import type { AttachmentResult } from './engine/attachmentTypes';
 import { buildTestResult, saveResult } from './engine/scoring';
@@ -20,6 +22,7 @@ type OceanPage = 'start' | 'test' | 'result';
 type AttachmentPhase = 'start' | 'test';
 
 export default function App() {
+  const { showBanner, handleInstall, handleDismiss } = useInstallPrompt();
   const [appView, setAppView] = useState<AppView>('home');
 
   // OCEAN sub-state — unchanged from before
@@ -101,78 +104,89 @@ export default function App() {
   }
 
   // ── Render ─────────────────────────────────────────────
-  if (appView === 'home') {
-    return (
-      <HomePage
-        onSelectOcean={handleSelectOcean}
-        onSelectAttachment={handleSelectAttachment}
-      />
-    );
-  }
+  function renderPage() {
+    if (appView === 'home') {
+      return (
+        <HomePage
+          onSelectOcean={handleSelectOcean}
+          onSelectAttachment={handleSelectAttachment}
+        />
+      );
+    }
 
-  if (appView === 'ocean') {
-    return (
-      <>
-        {oceanPage === 'start' && (
-          <StartPage
-            testName={bigfiveData.name}
-            description={bigfiveData.description}
-            estimatedMinutes={bigfiveData.estimatedMinutes}
-            questionCount={bigfiveData.questions.length}
-            onStart={handleOceanStart}
+    if (appView === 'ocean') {
+      return (
+        <>
+          {oceanPage === 'start' && (
+            <StartPage
+              testName={bigfiveData.name}
+              description={bigfiveData.description}
+              estimatedMinutes={bigfiveData.estimatedMinutes}
+              questionCount={bigfiveData.questions.length}
+              onStart={handleOceanStart}
+              onHome={goHome}
+              disclaimer={bigfiveContent.disclaimer}
+            />
+          )}
+          {oceanPage === 'test' && (
+            <TestPage
+              questions={bigfiveData.questions as never}
+              onComplete={handleOceanComplete}
+              onReset={handleOceanReset}
+            />
+          )}
+          {oceanPage === 'result' && oceanResult && (
+            <ResultPage
+              result={oceanResult}
+              content={bigfiveContent}
+              onRetake={handleOceanRetake}
+            />
+          )}
+        </>
+      );
+    }
+
+    if (appView === 'attachment') {
+      if (attachmentResult) {
+        return (
+          <AttachmentResultPage
+            result={attachmentResult}
+            content={attachmentContent}
+            onRetake={handleAttachmentRetake}
             onHome={goHome}
-            disclaimer={bigfiveContent.disclaimer}
           />
-        )}
-        {oceanPage === 'test' && (
-          <TestPage
-            questions={bigfiveData.questions as never}
-            onComplete={handleOceanComplete}
-            onReset={handleOceanReset}
+        );
+      }
+      if (attachmentPhase === 'start') {
+        return (
+          <AttachmentStartPage
+            questionCount={attachmentData.questions.length}
+            estimatedMinutes={attachmentData.estimatedMinutes}
+            disclaimer={attachmentContent.disclaimer}
+            onStart={() => { setAttachmentPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            onHome={goHome}
           />
-        )}
-        {oceanPage === 'result' && oceanResult && (
-          <ResultPage
-            result={oceanResult}
-            content={bigfiveContent}
-            onRetake={handleOceanRetake}
-          />
-        )}
-      </>
-    );
-  }
-
-  if (appView === 'attachment') {
-    if (attachmentResult) {
+        );
+      }
       return (
-        <AttachmentResultPage
-          result={attachmentResult}
-          content={attachmentContent}
-          onRetake={handleAttachmentRetake}
+        <AttachmentTestPage
+          questions={attachmentData.questions as never}
+          onComplete={handleAttachmentComplete}
+          onReset={handleAttachmentReset}
           onHome={goHome}
         />
       );
     }
-    if (attachmentPhase === 'start') {
-      return (
-        <AttachmentStartPage
-          questionCount={attachmentData.questions.length}
-          estimatedMinutes={attachmentData.estimatedMinutes}
-          disclaimer={attachmentContent.disclaimer}
-          onStart={() => { setAttachmentPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          onHome={goHome}
-        />
-      );
-    }
-    return (
-      <AttachmentTestPage
-        questions={attachmentData.questions as never}
-        onComplete={handleAttachmentComplete}
-        onReset={handleAttachmentReset}
-        onHome={goHome}
-      />
-    );
+
+    return null;
   }
 
-  return null;
+  return (
+    <>
+      {renderPage()}
+      {showBanner && (
+        <InstallPromptBanner onInstall={handleInstall} onDismiss={handleDismiss} />
+      )}
+    </>
+  );
 }
