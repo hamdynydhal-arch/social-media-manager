@@ -4,16 +4,25 @@ interface StartPageProps {
   estimatedMinutes: number;
   questionCount: number;
   onStart: () => void;
+  onHome?: () => void;
   disclaimer: string;
 }
 
-export default function StartPage({ testName, description, estimatedMinutes, questionCount, onStart, disclaimer }: StartPageProps) {
+export default function StartPage({ testName, description, estimatedMinutes, questionCount, onStart, onHome, disclaimer }: StartPageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
 
         {/* Header */}
         <div className="text-center mb-8">
+          {onHome && (
+            <button
+              onClick={onHome}
+              className="text-xs text-gray-400 hover:text-gray-600 transition-colors mb-4 block mx-auto"
+            >
+              → العودة للرئيسية
+            </button>
+          )}
           <div className="text-7xl mb-4">🧠</div>
           <h1 className="text-4xl font-extrabold text-indigo-700 tracking-tight mb-1">psy</h1>
           <p className="text-gray-500 text-sm font-medium">مختبر الشخصية النفسية</p>

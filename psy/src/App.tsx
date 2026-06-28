@@ -1,72 +1,160 @@
 import { useState } from 'react';
 import type { TestResult } from './engine/types';
+import type { AttachmentResult } from './engine/attachmentTypes';
 import { buildTestResult, saveResult } from './engine/scoring';
+import { calculateAttachmentScores, saveAttachmentResult } from './engine/attachmentScoring';
 import bigfiveData from './data/bigfive.json';
 import bigfiveContent from './data/bigfiveContent';
+import attachmentData from './data/attachment.json';
+import attachmentContent from './data/attachmentContent';
+import HomePage from './pages/HomePage';
 import StartPage from './pages/StartPage';
 import TestPage from './pages/TestPage';
 import ResultPage from './pages/ResultPage';
+import AttachmentTestPage from './pages/AttachmentTestPage';
+import AttachmentResultPage from './pages/AttachmentResultPage';
 
-type Page = 'start' | 'test' | 'result';
+type AppView = 'home' | 'ocean' | 'attachment';
+type OceanPage = 'start' | 'test' | 'result';
 
 export default function App() {
-  const [page, setPage] = useState<Page>('start');
-  const [result, setResult] = useState<TestResult | null>(null);
+  const [appView, setAppView] = useState<AppView>('home');
 
-  function handleStart() {
-    setPage('test');
+  // OCEAN sub-state — unchanged from before
+  const [oceanPage, setOceanPage] = useState<OceanPage>('start');
+  const [oceanResult, setOceanResult] = useState<TestResult | null>(null);
+
+  // Attachment sub-state
+  const [attachmentResult, setAttachmentResult] = useState<AttachmentResult | null>(null);
+
+  // ── Home ──────────────────────────────────────────────
+  function handleSelectOcean() {
+    setOceanPage('start');
+    setAppView('ocean');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function handleComplete(answers: Record<string, number>) {
-    // localStorage already cleared by TestPage before calling this
+  function handleSelectAttachment() {
+    setAttachmentResult(null);
+    setAppView('attachment');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goHome() {
+    setAppView('home');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── OCEAN flow ────────────────────────────────────────
+  function handleOceanStart() {
+    setOceanPage('test');
+  }
+
+  function handleOceanComplete(answers: Record<string, number>) {
     const base = buildTestResult(answers, bigfiveData.questions as never, bigfiveData.scoring as never);
     const testResult: TestResult = { testId: bigfiveData.id, ...base };
     saveResult(testResult);
-    setResult(testResult);
-    setPage('result');
+    setOceanResult(testResult);
+    setOceanPage('result');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function handleReset() {
-    // Called from TestPage "إعادة من الصفر" — localStorage cleared by TestPage
-    setResult(null);
-    setPage('start');
+  function handleOceanReset() {
+    setOceanResult(null);
+    setOceanPage('start');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function handleRetake() {
-    // Called from ResultPage — test is done so no progress to clear
-    setResult(null);
-    setPage('start');
+  function handleOceanRetake() {
+    setOceanResult(null);
+    setOceanPage('start');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  return (
-    <>
-      {page === 'start' && (
-        <StartPage
-          testName={bigfiveData.name}
-          description={bigfiveData.description}
-          estimatedMinutes={bigfiveData.estimatedMinutes}
-          questionCount={bigfiveData.questions.length}
-          onStart={handleStart}
-          disclaimer={bigfiveContent.disclaimer}
+  // ── Attachment flow ───────────────────────────────────
+  function handleAttachmentComplete(answers: Record<string, number>) {
+    const result = calculateAttachmentScores(
+      answers,
+      attachmentData.questions as never,
+      attachmentData.likertMin,
+      attachmentData.likertMax
+    );
+    saveAttachmentResult(result);
+    setAttachmentResult(result);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleAttachmentReset() {
+    setAttachmentResult(null);
+  }
+
+  function handleAttachmentRetake() {
+    setAttachmentResult(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Render ─────────────────────────────────────────────
+  if (appView === 'home') {
+    return (
+      <HomePage
+        onSelectOcean={handleSelectOcean}
+        onSelectAttachment={handleSelectAttachment}
+      />
+    );
+  }
+
+  if (appView === 'ocean') {
+    return (
+      <>
+        {oceanPage === 'start' && (
+          <StartPage
+            testName={bigfiveData.name}
+            description={bigfiveData.description}
+            estimatedMinutes={bigfiveData.estimatedMinutes}
+            questionCount={bigfiveData.questions.length}
+            onStart={handleOceanStart}
+            onHome={goHome}
+            disclaimer={bigfiveContent.disclaimer}
+          />
+        )}
+        {oceanPage === 'test' && (
+          <TestPage
+            questions={bigfiveData.questions as never}
+            onComplete={handleOceanComplete}
+            onReset={handleOceanReset}
+          />
+        )}
+        {oceanPage === 'result' && oceanResult && (
+          <ResultPage
+            result={oceanResult}
+            content={bigfiveContent}
+            onRetake={handleOceanRetake}
+          />
+        )}
+      </>
+    );
+  }
+
+  if (appView === 'attachment') {
+    if (attachmentResult) {
+      return (
+        <AttachmentResultPage
+          result={attachmentResult}
+          content={attachmentContent}
+          onRetake={handleAttachmentRetake}
+          onHome={goHome}
         />
-      )}
-      {page === 'test' && (
-        <TestPage
-          questions={bigfiveData.questions as never}
-          onComplete={handleComplete}
-          onReset={handleReset}
-        />
-      )}
-      {page === 'result' && result && (
-        <ResultPage
-          result={result}
-          content={bigfiveContent}
-          onRetake={handleRetake}
-        />
-      )}
-    </>
-  );
+      );
+    }
+    return (
+      <AttachmentTestPage
+        questions={attachmentData.questions as never}
+        onComplete={handleAttachmentComplete}
+        onReset={handleAttachmentReset}
+        onHome={goHome}
+      />
+    );
+  }
+
+  return null;
 }
