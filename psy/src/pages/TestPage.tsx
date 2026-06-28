@@ -31,6 +31,7 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
   const [currentIndex, setCurrentIndex] = useState(saved?.currentIndex ?? 0);
   const [answers, setAnswers] = useState<Record<string, number>>(saved?.answers ?? {});
   const [toast, setToast] = useState<string | null>(null);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   // Auto-save on every change
   useEffect(() => {
@@ -73,10 +74,11 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
     setToast('تم حفظ تقدمك بنجاح. يمكنك إغلاق الصفحة والعودة لاحقاً');
   }
 
-  function handleReset() {
+  function confirmReset() {
     localStorage.removeItem(STORAGE_KEY);
     setCurrentIndex(0);
     setAnswers({});
+    setShowResetModal(false);
     onReset();
   }
 
@@ -154,7 +156,7 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
               ⏸ انتظرني سأعود
             </button>
             <button
-              onClick={handleReset}
+              onClick={() => setShowResetModal(true)}
               className="flex-1 text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 active:scale-95 py-2.5 px-4 rounded-2xl transition-all"
             >
               🔄 إعادة من الصفر
@@ -164,10 +166,55 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
         </div>
       </div>
 
+      {/* Reset Confirmation Modal */}
+      {showResetModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+          style={{ animation: 'fadeIn 0.2s ease' }}
+          onClick={() => setShowResetModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6 text-right"
+            style={{ animation: 'scaleIn 0.2s ease' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-4xl text-center mb-3">⚠️</div>
+            <h2 className="text-lg font-extrabold text-gray-800 text-center mb-2">تحذير!</h2>
+            <p className="text-sm text-gray-600 leading-relaxed text-center mb-6">
+              هل أنت متأكد أنك تريد إفراغ إجاباتك والبدء من الصفر؟
+              <br />
+              <span className="font-semibold text-gray-700">سيتم محو كل تقدمك الحالي ولن تتمكن من استعادته.</span>
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowResetModal(false)}
+                className="flex-1 py-3 rounded-2xl border-2 border-gray-200 text-gray-700 font-bold text-sm hover:bg-gray-50 active:scale-95 transition-all"
+              >
+                تراجع
+              </button>
+              <button
+                onClick={confirmReset}
+                className="flex-1 py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm active:scale-95 transition-all"
+              >
+                نعم، احذف إجاباتي
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
         @keyframes fadeInDown {
           from { opacity: 0; transform: translateY(-12px); }
           to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.92); }
+          to   { opacity: 1; transform: scale(1); }
         }
       `}</style>
     </div>
