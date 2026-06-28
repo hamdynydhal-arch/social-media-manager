@@ -18,6 +18,7 @@ export default function App() {
   }
 
   function handleComplete(answers: Record<string, number>) {
+    // localStorage already cleared by TestPage before calling this
     const base = buildTestResult(answers, bigfiveData.questions as never, bigfiveData.scoring as never);
     const testResult: TestResult = { testId: bigfiveData.id, ...base };
     saveResult(testResult);
@@ -26,7 +27,15 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function handleReset() {
+    // Called from TestPage "إعادة من الصفر" — localStorage cleared by TestPage
+    setResult(null);
+    setPage('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   function handleRetake() {
+    // Called from ResultPage — test is done so no progress to clear
     setResult(null);
     setPage('start');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -48,6 +57,7 @@ export default function App() {
         <TestPage
           questions={bigfiveData.questions as never}
           onComplete={handleComplete}
+          onReset={handleReset}
         />
       )}
       {page === 'result' && result && (
