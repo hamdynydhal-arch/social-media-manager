@@ -1,9 +1,10 @@
 interface HomePageProps {
   onSelectOcean: () => void;
   onSelectAttachment: () => void;
+  onSelectSchema: () => void;
 }
 
-export default function HomePage({ onSelectOcean, onSelectAttachment }: HomePageProps) {
+export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSchema }: HomePageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex flex-col items-center p-4 pt-12">
 
@@ -54,6 +55,28 @@ export default function HomePage({ onSelectOcean, onSelectAttachment }: HomePage
                 <span className="bg-rose-50 text-rose-600 text-xs px-2.5 py-1 rounded-full font-semibold">36 سؤالاً</span>
                 <span className="bg-rose-50 text-rose-600 text-xs px-2.5 py-1 rounded-full font-semibold">~10 دقائق</span>
                 <span className="bg-rose-50 text-rose-600 text-xs px-2.5 py-1 rounded-full font-semibold">4 أنماط</span>
+              </div>
+            </div>
+            <span className="text-gray-300 text-2xl flex-shrink-0">←</span>
+          </div>
+        </button>
+
+        {/* Schema / Childhood */}
+        <button
+          onClick={onSelectSchema}
+          className="card w-full text-right hover:shadow-lg transition-all duration-200 active:scale-[0.98] block"
+        >
+          <div className="flex items-start gap-4">
+            <div className="text-4xl flex-shrink-0">🧒</div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-gray-800 mb-1">اختبار المخططات المعرفية وتجارب الطفولة</h3>
+              <p className="text-sm text-gray-500 mb-3 leading-relaxed">
+                اكتشف المخططات التي شكّلتها طفولتك وكيف تؤثر على علاقاتك اليوم — مبني على علاج المخططات (Schema Therapy).
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-amber-50 text-amber-600 text-xs px-2.5 py-1 rounded-full font-semibold">49 سؤالاً</span>
+                <span className="bg-amber-50 text-amber-600 text-xs px-2.5 py-1 rounded-full font-semibold">~12 دقيقة</span>
+                <span className="bg-amber-50 text-amber-600 text-xs px-2.5 py-1 rounded-full font-semibold">7 مخططات</span>
               </div>
             </div>
             <span className="text-gray-300 text-2xl flex-shrink-0">←</span>
