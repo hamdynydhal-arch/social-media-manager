@@ -2,369 +2,168 @@
   "id": "bigfive",
   "name": "اختبار الشخصية — العوامل الخمسة الكبرى",
   "description": "اكتشف ملف شخصيتك الحقيقي عبر النموذج الأكثر دقةً في علم النفس الحديث",
-  "estimatedMinutes": 10,
-  "version": "1.0",
+  "estimatedMinutes": 20,
+  "version": "3.0",
   "scoring": {
     "likertMin": 1,
     "likertMax": 5,
     "factors": {
-      "E": { "name": "الانبساط", "lowThreshold": 33, "highThreshold": 67 },
-      "A": { "name": "الوُد والمقبولية", "lowThreshold": 33, "highThreshold": 67 },
-      "C": { "name": "يقظة الضمير", "lowThreshold": 33, "highThreshold": 67 },
-      "N": { "name": "الاستقرار الانفعالي", "lowThreshold": 33, "highThreshold": 67 },
-      "O": { "name": "الانفتاح على الخبرة", "lowThreshold": 33, "highThreshold": 67 }
+      "E": { "name": "الانبساط",             "veryLowThreshold": 15, "lowThreshold": 40, "highThreshold": 60, "veryHighThreshold": 85 },
+      "A": { "name": "الوُد والمقبولية",      "veryLowThreshold": 15, "lowThreshold": 40, "highThreshold": 60, "veryHighThreshold": 85 },
+      "C": { "name": "يقظة الضمير",          "veryLowThreshold": 15, "lowThreshold": 40, "highThreshold": 60, "veryHighThreshold": 85 },
+      "N": { "name": "الاستقرار الانفعالي",   "veryLowThreshold": 15, "lowThreshold": 40, "highThreshold": 60, "veryHighThreshold": 85 },
+      "O": { "name": "الانفتاح على الخبرة",  "veryLowThreshold": 15, "lowThreshold": 40, "highThreshold": 60, "veryHighThreshold": 85 }
     }
   },
   "questions": [
-    {
-      "id": "E1",
-      "text": "أنا روح المجموعة في التجمعات والحفلات.",
-      "type": "likert",
-      "factor": "E",
-      "direction": "direct"
-    },
-    {
-      "id": "E2",
-      "text": "لا أتحدث كثيراً في المواقف الاجتماعية.",
-      "type": "likert",
-      "factor": "E",
-      "direction": "reverse"
-    },
-    {
-      "id": "E3",
-      "text": "أشعر بالراحة والارتياح في الأماكن التي يتجمع فيها الناس.",
-      "type": "likert",
-      "factor": "E",
-      "direction": "direct"
-    },
-    {
-      "id": "E4",
-      "text": "أفضّل البقاء في الخلفية ولا أُحب الأضواء.",
-      "type": "likert",
-      "factor": "E",
-      "direction": "reverse"
-    },
-    {
-      "id": "E5",
-      "text": "أنا من يبادر ببدء الأحاديث مع الآخرين.",
-      "type": "likert",
-      "factor": "E",
-      "direction": "direct"
-    },
-    {
-      "id": "E6",
-      "text": "لا أجد الكثير لأقوله في معظم المحادثات.",
-      "type": "likert",
-      "factor": "E",
-      "direction": "reverse"
-    },
-    {
-      "id": "E7",
-      "text": "أتحدث مع كثير من الأشخاص المختلفين في الحفلات والتجمعات.",
-      "type": "likert",
-      "factor": "E",
-      "direction": "direct"
-    },
-    {
-      "id": "E8",
-      "text": "لا أُحب أن أكون محور الأنظار واهتمام الآخرين.",
-      "type": "likert",
-      "factor": "E",
-      "direction": "reverse"
-    },
-    {
-      "id": "E9",
-      "text": "لا يزعجني أن أكون مركز الاهتمام في أي موقف.",
-      "type": "likert",
-      "factor": "E",
-      "direction": "direct"
-    },
-    {
-      "id": "E10",
-      "text": "أكون هادئاً ومُحجِماً عن الكلام حين أكون بين غرباء.",
-      "type": "likert",
-      "factor": "E",
-      "direction": "reverse"
-    },
-    {
-      "id": "A1",
-      "text": "أهتم بالناس وأحرص على معرفة أحوالهم.",
-      "type": "likert",
-      "factor": "A",
-      "direction": "direct"
-    },
-    {
-      "id": "A2",
-      "text": "أشعر بقليل من الاهتمام بما يمر به الآخرون.",
-      "type": "likert",
-      "factor": "A",
-      "direction": "reverse"
-    },
-    {
-      "id": "A3",
-      "text": "أتعاطف مع مشاعر الآخرين وأتأثر بها.",
-      "type": "likert",
-      "factor": "A",
-      "direction": "direct"
-    },
-    {
-      "id": "A4",
-      "text": "أحياناً أُوجّه انتقادات جارحة للآخرين دون قصد.",
-      "type": "likert",
-      "factor": "A",
-      "direction": "reverse"
-    },
-    {
-      "id": "A5",
-      "text": "قلبي رقيق ويتأثر بسهولة بما يؤلم الآخرين.",
-      "type": "likert",
-      "factor": "A",
-      "direction": "direct"
-    },
-    {
-      "id": "A6",
-      "text": "لا يستأثر اهتمامي كثيراً بمشكلات الآخرين.",
-      "type": "likert",
-      "factor": "A",
-      "direction": "reverse"
-    },
-    {
-      "id": "A7",
-      "text": "أُخصّص وقتاً وجهداً للآخرين عندما يحتاجونني.",
-      "type": "likert",
-      "factor": "A",
-      "direction": "direct"
-    },
-    {
-      "id": "A8",
-      "text": "لست مهتماً كثيراً بأحوال الآخرين في العادة.",
-      "type": "likert",
-      "factor": "A",
-      "direction": "reverse"
-    },
-    {
-      "id": "A9",
-      "text": "أستشعر مشاعر الآخرين وأتفاعل معها بعمق.",
-      "type": "likert",
-      "factor": "A",
-      "direction": "direct"
-    },
-    {
-      "id": "A10",
-      "text": "أُشعر من حولي بالراحة والانتماء.",
-      "type": "likert",
-      "factor": "A",
-      "direction": "direct"
-    },
-    {
-      "id": "C1",
-      "text": "دائماً أكون مستعداً ومُجهَّزاً مسبقاً لما هو قادم.",
-      "type": "likert",
-      "factor": "C",
-      "direction": "direct"
-    },
-    {
-      "id": "C2",
-      "text": "أترك أغراضي منثورة هنا وهناك دون ترتيب.",
-      "type": "likert",
-      "factor": "C",
-      "direction": "reverse"
-    },
-    {
-      "id": "C3",
-      "text": "أُولي اهتماماً كبيراً للتفاصيل في ما أنجزه.",
-      "type": "likert",
-      "factor": "C",
-      "direction": "direct"
-    },
-    {
-      "id": "C4",
-      "text": "أُفسد الأمور أو أتركها غير مكتملة أحياناً.",
-      "type": "likert",
-      "factor": "C",
-      "direction": "reverse"
-    },
-    {
-      "id": "C5",
-      "text": "أُنجز المهام والأعمال فور الحاجة إليها دون تأجيل.",
-      "type": "likert",
-      "factor": "C",
-      "direction": "direct"
-    },
-    {
-      "id": "C6",
-      "text": "كثيراً ما أنسى إعادة الأشياء إلى أماكنها الصحيحة.",
-      "type": "likert",
-      "factor": "C",
-      "direction": "reverse"
-    },
-    {
-      "id": "C7",
-      "text": "أُحب النظام والترتيب في حياتي اليومية.",
-      "type": "likert",
-      "factor": "C",
-      "direction": "direct"
-    },
-    {
-      "id": "C8",
-      "text": "أتهرّب من مسؤولياتي أو أُؤجّلها إلى وقت آخر.",
-      "type": "likert",
-      "factor": "C",
-      "direction": "reverse"
-    },
-    {
-      "id": "C9",
-      "text": "أُنظّم حياتي وفق جدول زمني واضح.",
-      "type": "likert",
-      "factor": "C",
-      "direction": "direct"
-    },
-    {
-      "id": "C10",
-      "text": "أتقن عملي وأُراعي الدقة والجودة فيه.",
-      "type": "likert",
-      "factor": "C",
-      "direction": "direct"
-    },
-    {
-      "id": "N1",
-      "text": "أشعر بالضغط والتوتر بسرعة كبيرة.",
-      "type": "likert",
-      "factor": "N",
-      "direction": "direct"
-    },
-    {
-      "id": "N2",
-      "text": "أكون هادئاً ومسترخياً في معظم الأوقات.",
-      "type": "likert",
-      "factor": "N",
-      "direction": "reverse"
-    },
-    {
-      "id": "N3",
-      "text": "أقضي وقتاً طويلاً في القلق على أمور كثيرة.",
-      "type": "likert",
-      "factor": "N",
-      "direction": "direct"
-    },
-    {
-      "id": "N4",
-      "text": "نادراً ما أشعر بالكآبة أو الحزن الشديد.",
-      "type": "likert",
-      "factor": "N",
-      "direction": "reverse"
-    },
-    {
-      "id": "N5",
-      "text": "تستفزّني الأحداث الصغيرة وتُزعزع راحتي بسهولة.",
-      "type": "likert",
-      "factor": "N",
-      "direction": "direct"
-    },
-    {
-      "id": "N6",
-      "text": "يسهل إثارة ضيقي أو استفزازي عاطفياً.",
-      "type": "likert",
-      "factor": "N",
-      "direction": "direct"
-    },
-    {
-      "id": "N7",
-      "text": "تتقلّب مشاعري وحالتي النفسية بشكل متكرر.",
-      "type": "likert",
-      "factor": "N",
-      "direction": "direct"
-    },
-    {
-      "id": "N8",
-      "text": "أمرّ بتقلبات مزاجية متكررة خلال اليوم الواحد.",
-      "type": "likert",
-      "factor": "N",
-      "direction": "direct"
-    },
-    {
-      "id": "N9",
-      "text": "أفقد أعصابي بسهولة وسرعة في مواقف الضغط.",
-      "type": "likert",
-      "factor": "N",
-      "direction": "direct"
-    },
-    {
-      "id": "N10",
-      "text": "أشعر بحزن أو اكتئاب في أحيان كثيرة دون سبب واضح.",
-      "type": "likert",
-      "factor": "N",
-      "direction": "direct"
-    },
-    {
-      "id": "O1",
-      "text": "أمتلك ثروة لغوية واسعة وأعبّر عن أفكاري بدقة.",
-      "type": "likert",
-      "factor": "O",
-      "direction": "direct"
-    },
-    {
-      "id": "O2",
-      "text": "أجد صعوبة في فهم الأفكار المجردة والمعقدة.",
-      "type": "likert",
-      "factor": "O",
-      "direction": "reverse"
-    },
-    {
-      "id": "O3",
-      "text": "خيالي حيّ وأفكاري الإبداعية تتدفق بغزارة.",
-      "type": "likert",
-      "factor": "O",
-      "direction": "direct"
-    },
-    {
-      "id": "O4",
-      "text": "لا أميل كثيراً إلى التفكير في المسائل المجردة والفلسفية.",
-      "type": "likert",
-      "factor": "O",
-      "direction": "reverse"
-    },
-    {
-      "id": "O5",
-      "text": "لديّ أفكار مبتكرة وغير مألوفة أُسهم بها.",
-      "type": "likert",
-      "factor": "O",
-      "direction": "direct"
-    },
-    {
-      "id": "O6",
-      "text": "لا أعتقد أنني أمتلك خيالاً إبداعياً واسعاً.",
-      "type": "likert",
-      "factor": "O",
-      "direction": "reverse"
-    },
-    {
-      "id": "O7",
-      "text": "أفهم الأمور الجديدة وأستوعبها بسرعة ويُسر.",
-      "type": "likert",
-      "factor": "O",
-      "direction": "direct"
-    },
-    {
-      "id": "O8",
-      "text": "أستخدم مفردات متنوعة وغنية في تعبيري.",
-      "type": "likert",
-      "factor": "O",
-      "direction": "direct"
-    },
-    {
-      "id": "O9",
-      "text": "أميل إلى التأمل والتفكير العميق في مسائل الحياة.",
-      "type": "likert",
-      "factor": "O",
-      "direction": "direct"
-    },
-    {
-      "id": "O10",
-      "text": "رأسي يفيض دائماً بأفكار وتساؤلات جديدة.",
-      "type": "likert",
-      "factor": "O",
-      "direction": "direct"
-    }
+    { "id": "q001", "text": "أشعر بالقلق والتوتر في كثير من المواقف اليومية.", "type": "likert", "factor": "N", "facet": "N1", "direction": "direct", "weight": 1.3 },
+    { "id": "q002", "text": "يراودني القلق على المستقبل بشكل متكرر.", "type": "likert", "factor": "N", "facet": "N1", "direction": "direct", "weight": 1.2 },
+    { "id": "q003", "text": "نادراً ما أشعر بالتوتر أو القلق دون سبب واضح.", "type": "likert", "factor": "N", "facet": "N1", "direction": "reverse", "weight": 1.0 },
+    { "id": "q004", "text": "أجد نفسي أفكر باستمرار في الأشياء التي قد تسوء.", "type": "likert", "factor": "N", "facet": "N1", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q005", "text": "أشعر بالغضب بسرعة حين يتصرف الآخرون بطريقة تضايقني.", "type": "likert", "factor": "N", "facet": "N2", "direction": "direct", "weight": 1.3 },
+    { "id": "q006", "text": "أفقد أعصابي بسهولة حين تسير الأمور بخلاف ما توقعت.", "type": "likert", "factor": "N", "facet": "N2", "direction": "direct", "weight": 1.2 },
+    { "id": "q007", "text": "أستطيع التحكم في ردود فعلي الغاضبة حتى في المواقف المستفزة.", "type": "likert", "factor": "N", "facet": "N2", "direction": "reverse", "weight": 1.0 },
+    { "id": "q008", "text": "أشعر بالمرارة والاستياء حين يسيء الآخرون معاملتي.", "type": "likert", "factor": "N", "facet": "N2", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q009", "text": "أمر بفترات من الحزن الشديد دون سبب واضح.", "type": "likert", "factor": "N", "facet": "N3", "direction": "direct", "weight": 1.3 },
+    { "id": "q010", "text": "أشعر أحياناً باليأس وانعدام الأمل في المستقبل.", "type": "likert", "factor": "N", "facet": "N3", "direction": "direct", "weight": 1.2 },
+    { "id": "q011", "text": "نادراً ما أشعر بالكآبة أو الإحباط الشديد.", "type": "likert", "factor": "N", "facet": "N3", "direction": "reverse", "weight": 1.0 },
+    { "id": "q012", "text": "أجد أن مزاجي يتدهور بسرعة في الأوقات الصعبة.", "type": "likert", "factor": "N", "facet": "N3", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q013", "text": "أشعر بالإحراج والخجل بسهولة في المواقف الاجتماعية.", "type": "likert", "factor": "N", "facet": "N4", "direction": "direct", "weight": 1.2 },
+    { "id": "q014", "text": "أقلق من انطباع الآخرين عني في التجمعات.", "type": "likert", "factor": "N", "facet": "N4", "direction": "direct", "weight": 1.3 },
+    { "id": "q015", "text": "لا يزعجني التحدث أمام الآخرين حتى حين أكون مركز الاهتمام.", "type": "likert", "factor": "N", "facet": "N4", "direction": "reverse", "weight": 1.0 },
+    { "id": "q016", "text": "أشعر بعدم الارتياح حين يراقبني الآخرون أثناء عملي.", "type": "likert", "factor": "N", "facet": "N4", "direction": "direct", "weight": 0.9 },
+
+    { "id": "q017", "text": "أجد صعوبة في مقاومة الإغراءات والرغبات الآنية.", "type": "likert", "factor": "N", "facet": "N5", "direction": "direct", "weight": 1.2 },
+    { "id": "q018", "text": "أتصرف باندفاع قبل أن أفكر في العواقب.", "type": "likert", "factor": "N", "facet": "N5", "direction": "direct", "weight": 1.3 },
+    { "id": "q019", "text": "أستطيع تأجيل إشباع رغباتي حين يقتضي الموقف ذلك.", "type": "likert", "factor": "N", "facet": "N5", "direction": "reverse", "weight": 1.0 },
+    { "id": "q020", "text": "أندم أحياناً على قرارات اتخذتها باندفاع دون تفكير.", "type": "likert", "factor": "N", "facet": "N5", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q021", "text": "أنهار بسرعة حين تتراكم الضغوط والمتطلبات.", "type": "likert", "factor": "N", "facet": "N6", "direction": "direct", "weight": 1.2 },
+    { "id": "q022", "text": "أشعر أنني غير قادر على التعامل مع المواقف الصعبة.", "type": "likert", "factor": "N", "facet": "N6", "direction": "direct", "weight": 1.3 },
+    { "id": "q023", "text": "أبقى هادئاً ومتماسكاً حتى في أشد الأوقات ضغطاً.", "type": "likert", "factor": "N", "facet": "N6", "direction": "reverse", "weight": 1.1 },
+    { "id": "q024", "text": "أشعر بالذعر والارتباك حين تواجهني مواقف طارئة.", "type": "likert", "factor": "N", "facet": "N6", "direction": "direct", "weight": 1.0 },
+
+    { "id": "q025", "text": "أُشعر الآخرين بالدفء والترحيب حين أكون معهم.", "type": "likert", "factor": "E", "facet": "E1", "direction": "direct", "weight": 1.2 },
+    { "id": "q026", "text": "أستمتع بالقرب من الناس وتكوين علاقات حميمة.", "type": "likert", "factor": "E", "facet": "E1", "direction": "direct", "weight": 1.3 },
+    { "id": "q027", "text": "أجد صعوبة في الاقتراب عاطفياً من الآخرين.", "type": "likert", "factor": "E", "facet": "E1", "direction": "reverse", "weight": 1.0 },
+    { "id": "q028", "text": "أهتم بأحوال الناس وأُبدي اهتماماً حقيقياً بحياتهم.", "type": "likert", "factor": "E", "facet": "E1", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q029", "text": "أستمتع بالتجمعات الكبيرة والأماكن المزدحمة بالناس.", "type": "likert", "factor": "E", "facet": "E2", "direction": "direct", "weight": 1.2 },
+    { "id": "q030", "text": "أفضّل البقاء في المنزل على حضور حفلات اجتماعية كبيرة.", "type": "likert", "factor": "E", "facet": "E2", "direction": "reverse", "weight": 1.0 },
+    { "id": "q031", "text": "أتحدث مع كثير من الأشخاص المختلفين في أي تجمع.", "type": "likert", "factor": "E", "facet": "E2", "direction": "direct", "weight": 1.1 },
+    { "id": "q032", "text": "أجد أن كثرة الناس من حولي تمنحني طاقة وحيوية.", "type": "likert", "factor": "E", "facet": "E2", "direction": "direct", "weight": 1.3 },
+
+    { "id": "q033", "text": "أتولى القيادة بشكل طبيعي حين تكون المجموعة بحاجة لتوجيه.", "type": "likert", "factor": "E", "facet": "E3", "direction": "direct", "weight": 1.3 },
+    { "id": "q034", "text": "أُعبّر عن رأيي بوضوح وثقة حتى في المجموعات الكبيرة.", "type": "likert", "factor": "E", "facet": "E3", "direction": "direct", "weight": 1.2 },
+    { "id": "q035", "text": "أُفضّل أن يتولى الآخرون القرارات وأنا أتبع.", "type": "likert", "factor": "E", "facet": "E3", "direction": "reverse", "weight": 1.0 },
+    { "id": "q036", "text": "أنجح في إقناع الآخرين باتباع وجهة نظري.", "type": "likert", "factor": "E", "facet": "E3", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q037", "text": "أعيش بوتيرة سريعة وأفضّل الانشغال الدائم.", "type": "likert", "factor": "E", "facet": "E4", "direction": "direct", "weight": 1.1 },
+    { "id": "q038", "text": "أشعر بالملل حين لا يكون أمامي ما يشغلني.", "type": "likert", "factor": "E", "facet": "E4", "direction": "direct", "weight": 1.0 },
+    { "id": "q039", "text": "أُفضّل العيش بإيقاع هادئ دون ضغط أو مهام متراكمة.", "type": "likert", "factor": "E", "facet": "E4", "direction": "reverse", "weight": 0.9 },
+    { "id": "q040", "text": "طاقتي مرتفعة وأنشط في معظم أوقات اليوم.", "type": "likert", "factor": "E", "facet": "E4", "direction": "direct", "weight": 1.2 },
+
+    { "id": "q041", "text": "أبحث عن المغامرات والأنشطة المثيرة التي تضخ الأدرينالين.", "type": "likert", "factor": "E", "facet": "E5", "direction": "direct", "weight": 1.2 },
+    { "id": "q042", "text": "أُفضّل المخاطرة المحسوبة على الروتين الآمن والمملّ.", "type": "likert", "factor": "E", "facet": "E5", "direction": "direct", "weight": 1.3 },
+    { "id": "q043", "text": "أُفضّل الأمان والاستقرار على الإثارة والتغيير المستمر.", "type": "likert", "factor": "E", "facet": "E5", "direction": "reverse", "weight": 1.0 },
+    { "id": "q044", "text": "أشعر بإثارة حقيقية حين أجرّب أشياء لم أفعلها من قبل.", "type": "likert", "factor": "E", "facet": "E5", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q045", "text": "أشعر بالبهجة والسعادة في معظم أوقات يومي.", "type": "likert", "factor": "E", "facet": "E6", "direction": "direct", "weight": 1.2 },
+    { "id": "q046", "text": "الضحك والمرح يصفان أسلوبي في الحياة بشكل عام.", "type": "likert", "factor": "E", "facet": "E6", "direction": "direct", "weight": 1.1 },
+    { "id": "q047", "text": "نادراً ما أشعر بالحماس أو الانتشاء في أنشطتي اليومية.", "type": "likert", "factor": "E", "facet": "E6", "direction": "reverse", "weight": 1.0 },
+    { "id": "q048", "text": "أنظر إلى المستقبل بتفاؤل وتوقع للأشياء الجميلة.", "type": "likert", "factor": "E", "facet": "E6", "direction": "direct", "weight": 1.3 },
+
+    { "id": "q049", "text": "أستمتع باللجوء إلى الخيال والأحلام اليقظة.", "type": "likert", "factor": "O", "facet": "O1", "direction": "direct", "weight": 1.2 },
+    { "id": "q050", "text": "يزدهر خيالي ويمنحني أفكاراً وصوراً ذهنية غنية.", "type": "likert", "factor": "O", "facet": "O1", "direction": "direct", "weight": 1.3 },
+    { "id": "q051", "text": "لا أميل كثيراً لأحلام اليقظة أو الأفكار التخيلية.", "type": "likert", "factor": "O", "facet": "O1", "direction": "reverse", "weight": 1.0 },
+    { "id": "q052", "text": "أبتكر قصصاً وسيناريوهات خيالية في ذهني بسهولة.", "type": "likert", "factor": "O", "facet": "O1", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q053", "text": "أتأثر بعمق بالجمال في الفن والموسيقى والطبيعة.", "type": "likert", "factor": "O", "facet": "O2", "direction": "direct", "weight": 1.3 },
+    { "id": "q054", "text": "الفن والأعمال الإبداعية تُحرّك مشاعر حقيقية لديّ.", "type": "likert", "factor": "O", "facet": "O2", "direction": "direct", "weight": 1.2 },
+    { "id": "q055", "text": "لا أهتم كثيراً بالفنون أو التذوق الجمالي عموماً.", "type": "likert", "factor": "O", "facet": "O2", "direction": "reverse", "weight": 1.0 },
+    { "id": "q056", "text": "أُقدّر الجماليات والتصميم في كل ما يحيط بي.", "type": "likert", "factor": "O", "facet": "O2", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q057", "text": "أنتبه لمشاعري الداخلية وأُحاول فهمها بعمق.", "type": "likert", "factor": "O", "facet": "O3", "direction": "direct", "weight": 1.2 },
+    { "id": "q058", "text": "مشاعري غنية ومتنوعة وأُدركها بوضوح.", "type": "likert", "factor": "O", "facet": "O3", "direction": "direct", "weight": 1.3 },
+    { "id": "q059", "text": "لا أُولي اهتماماً كبيراً لحالتي العاطفية الداخلية.", "type": "likert", "factor": "O", "facet": "O3", "direction": "reverse", "weight": 1.0 },
+    { "id": "q060", "text": "أختبر مشاعر متعددة ومعقدة في آنٍ واحد أحياناً.", "type": "likert", "factor": "O", "facet": "O3", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q061", "text": "أُحب تجربة أنشطة وأساليب حياة جديدة ومختلفة.", "type": "likert", "factor": "O", "facet": "O4", "direction": "direct", "weight": 1.1 },
+    { "id": "q062", "text": "أبحث عن التنوع في روتيني اليومي وأكره الرتابة.", "type": "likert", "factor": "O", "facet": "O4", "direction": "direct", "weight": 1.2 },
+    { "id": "q063", "text": "أُفضّل الطرق المجرّبة والمألوفة في كل جوانب حياتي.", "type": "likert", "factor": "O", "facet": "O4", "direction": "reverse", "weight": 1.0 },
+    { "id": "q064", "text": "أُغيّر بيئتي ونشاطاتي بانتظام لأُبقي حياتي مثيرة.", "type": "likert", "factor": "O", "facet": "O4", "direction": "direct", "weight": 0.9 },
+
+    { "id": "q065", "text": "أستمتع بالتفكير في المسائل الفلسفية والأفكار المجردة.", "type": "likert", "factor": "O", "facet": "O5", "direction": "direct", "weight": 1.3 },
+    { "id": "q066", "text": "أُحب المناقشات الفكرية والجدل حول الأفكار المعقدة.", "type": "likert", "factor": "O", "facet": "O5", "direction": "direct", "weight": 1.2 },
+    { "id": "q067", "text": "لا أجد متعة في النظريات المجردة أو الأسئلة الفلسفية.", "type": "likert", "factor": "O", "facet": "O5", "direction": "reverse", "weight": 1.0 },
+    { "id": "q068", "text": "الفضول الفكري يدفعني للتعمق في مواضيع متنوعة.", "type": "likert", "factor": "O", "facet": "O5", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q069", "text": "أُعيد النظر في قيمي ومعتقداتي بانفتاح دون تمسك جامد.", "type": "likert", "factor": "O", "facet": "O6", "direction": "direct", "weight": 1.1 },
+    { "id": "q070", "text": "أؤمن أن القيم الاجتماعية والأخلاقية يجب أن تتطور.", "type": "likert", "factor": "O", "facet": "O6", "direction": "direct", "weight": 1.2 },
+    { "id": "q071", "text": "أتمسك بقيمي التقليدية وأرفض التشكيك فيها.", "type": "likert", "factor": "O", "facet": "O6", "direction": "reverse", "weight": 1.0 },
+    { "id": "q072", "text": "أُفكّر بجدية في وجهات نظر أخلاقية مختلفة عن قناعاتي.", "type": "likert", "factor": "O", "facet": "O6", "direction": "direct", "weight": 0.9 },
+
+    { "id": "q073", "text": "أُحسن الظن بالناس وأفترض طيبة نواياهم.", "type": "likert", "factor": "A", "facet": "A1", "direction": "direct", "weight": 1.2 },
+    { "id": "q074", "text": "أثق بالآخرين وأُصدّق ما يقولونه في الغالب.", "type": "likert", "factor": "A", "facet": "A1", "direction": "direct", "weight": 1.1 },
+    { "id": "q075", "text": "أشك في نوايا الآخرين وأتحقق من دوافعهم.", "type": "likert", "factor": "A", "facet": "A1", "direction": "reverse", "weight": 1.0 },
+    { "id": "q076", "text": "أعتقد أن معظم الناس صادقون وأمينون في تعاملاتهم.", "type": "likert", "factor": "A", "facet": "A1", "direction": "direct", "weight": 1.3 },
+
+    { "id": "q077", "text": "أُفضّل الصدق والمباشرة على المجاملة والتلاعب.", "type": "likert", "factor": "A", "facet": "A2", "direction": "direct", "weight": 1.2 },
+    { "id": "q078", "text": "لا أُخفي مشاعري الحقيقية خلف قناع المجاملة.", "type": "likert", "factor": "A", "facet": "A2", "direction": "direct", "weight": 1.1 },
+    { "id": "q079", "text": "أُوافق على أشياء في الظاهر بينما رأيي الحقيقي مختلف.", "type": "likert", "factor": "A", "facet": "A2", "direction": "reverse", "weight": 1.0 },
+    { "id": "q080", "text": "أكره التحايل والمراوغة وأُفضّل الوضوح دائماً.", "type": "likert", "factor": "A", "facet": "A2", "direction": "direct", "weight": 1.3 },
+
+    { "id": "q081", "text": "أُسعدني مساعدة الآخرين حتى على حساب وقتي وراحتي.", "type": "likert", "factor": "A", "facet": "A3", "direction": "direct", "weight": 1.3 },
+    { "id": "q082", "text": "أُبادر بتقديم المساعدة دون أن يُطلب مني ذلك.", "type": "likert", "factor": "A", "facet": "A3", "direction": "direct", "weight": 1.2 },
+    { "id": "q083", "text": "أُفضّل الاعتناء بمصالحي أولاً قبل مصالح الآخرين.", "type": "likert", "factor": "A", "facet": "A3", "direction": "reverse", "weight": 1.0 },
+    { "id": "q084", "text": "أجد معنى عميقاً في العطاء والإسهام في حياة الآخرين.", "type": "likert", "factor": "A", "facet": "A3", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q085", "text": "أُفضّل التنازل على الدخول في صراعات مع الآخرين.", "type": "likert", "factor": "A", "facet": "A4", "direction": "direct", "weight": 1.1 },
+    { "id": "q086", "text": "أتجنب المواجهة وأبحث عن حلول وسط لإنهاء النزاعات.", "type": "likert", "factor": "A", "facet": "A4", "direction": "direct", "weight": 1.2 },
+    { "id": "q087", "text": "لا أتردد في الدفاع عن موقفي حتى لو أدى لمواجهة مباشرة.", "type": "likert", "factor": "A", "facet": "A4", "direction": "reverse", "weight": 1.0 },
+    { "id": "q088", "text": "أُؤثر السلم والانسجام على الإصرار على رأيي دائماً.", "type": "likert", "factor": "A", "facet": "A4", "direction": "direct", "weight": 1.3 },
+
+    { "id": "q089", "text": "لا أُحب التباهي بإنجازاتي أو قدراتي أمام الآخرين.", "type": "likert", "factor": "A", "facet": "A5", "direction": "direct", "weight": 1.2 },
+    { "id": "q090", "text": "أُؤمن أن الآخرين يمتلكون مهارات وقدرات تفوقني في كثير من المجالات.", "type": "likert", "factor": "A", "facet": "A5", "direction": "direct", "weight": 1.1 },
+    { "id": "q091", "text": "أعتقد أنني أفضل من كثيرين في مجالات متعددة وأُعبّر عن ذلك.", "type": "likert", "factor": "A", "facet": "A5", "direction": "reverse", "weight": 1.0 },
+    { "id": "q092", "text": "أشعر بالراحة حين أعترف بحدودي ونقاط ضعفي.", "type": "likert", "factor": "A", "facet": "A5", "direction": "direct", "weight": 1.3 },
+
+    { "id": "q093", "text": "أتأثر بمعاناة الضعفاء والمحتاجين وأشعر بالتعاطف العميق.", "type": "likert", "factor": "A", "facet": "A6", "direction": "direct", "weight": 1.3 },
+    { "id": "q094", "text": "أُولي اهتماماً حقيقياً بالعدالة الاجتماعية وحقوق الإنسان.", "type": "likert", "factor": "A", "facet": "A6", "direction": "direct", "weight": 1.2 },
+    { "id": "q095", "text": "أرى أن كل شخص مسؤول عن نفسه وليس من واجبي التدخل.", "type": "likert", "factor": "A", "facet": "A6", "direction": "reverse", "weight": 1.0 },
+    { "id": "q096", "text": "يؤلمني رؤية الحيوانات والبشر يعانون ويدفعني ذلك للمساعدة.", "type": "likert", "factor": "A", "facet": "A6", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q097", "text": "أُنجز مهامي بكفاءة وأشعر أنني فعّال فيما أقوم به.", "type": "likert", "factor": "C", "facet": "C1", "direction": "direct", "weight": 1.2 },
+    { "id": "q098", "text": "أثق بقدراتي وأُدرك ما يمكنني تحقيقه بجهد.", "type": "likert", "factor": "C", "facet": "C1", "direction": "direct", "weight": 1.3 },
+    { "id": "q099", "text": "أشعر أحياناً أنني لا أملك الكفاءة الكافية لإنجاز ما أريد.", "type": "likert", "factor": "C", "facet": "C1", "direction": "reverse", "weight": 1.0 },
+    { "id": "q100", "text": "أنجح في حل المشكلات التي تواجهني بشكل مستقل.", "type": "likert", "factor": "C", "facet": "C1", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q101", "text": "أُحافظ على تنظيم منزلي ومكتبي بشكل مستمر.", "type": "likert", "factor": "C", "facet": "C2", "direction": "direct", "weight": 1.1 },
+    { "id": "q102", "text": "أُنظّم أغراضي وملفاتي حتى أتمكن من إيجادها بسهولة.", "type": "likert", "factor": "C", "facet": "C2", "direction": "direct", "weight": 1.2 },
+    { "id": "q103", "text": "أتركت أشيائي منثورة وفوضى مكاني في الغالب.", "type": "likert", "factor": "C", "facet": "C2", "direction": "reverse", "weight": 1.0 },
+    { "id": "q104", "text": "أُحب وضع كل شيء في مكانه المحدد واتباع نظام ثابت.", "type": "likert", "factor": "C", "facet": "C2", "direction": "direct", "weight": 1.3 },
+
+    { "id": "q105", "text": "أُؤدّي التزاماتي الأخلاقية والمهنية حتى حين يكون ذلك مُكلفاً.", "type": "likert", "factor": "C", "facet": "C3", "direction": "direct", "weight": 1.3 },
+    { "id": "q106", "text": "أتمسك بمبادئي ومعاييري الأخلاقية في جميع المواقف.", "type": "likert", "factor": "C", "facet": "C3", "direction": "direct", "weight": 1.2 },
+    { "id": "q107", "text": "أتنازل أحياناً عن مبادئي حين يكون الضغط شديداً.", "type": "likert", "factor": "C", "facet": "C3", "direction": "reverse", "weight": 1.0 },
+    { "id": "q108", "text": "أُؤمن أن الإنسان يُحكم عليه بمدى وفائه بكلمته والتزاماته.", "type": "likert", "factor": "C", "facet": "C3", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q109", "text": "أسعى بجد لتحقيق أهدافي وأبذل كل ما بوسعي للنجاح.", "type": "likert", "factor": "C", "facet": "C4", "direction": "direct", "weight": 1.3 },
+    { "id": "q110", "text": "أُحدّد أهدافاً طموحة وأعمل بلا كلل لبلوغها.", "type": "likert", "factor": "C", "facet": "C4", "direction": "direct", "weight": 1.2 },
+    { "id": "q111", "text": "أنا راضٍ بما أُنجزه ولا أسعى لتحديات إضافية.", "type": "likert", "factor": "C", "facet": "C4", "direction": "reverse", "weight": 1.0 },
+    { "id": "q112", "text": "النجاح المهني والشخصي يمثّلان دوافع أساسية في حياتي.", "type": "likert", "factor": "C", "facet": "C4", "direction": "direct", "weight": 1.1 },
+
+    { "id": "q113", "text": "أبدأ مهامي فور الحاجة إليها دون الانتظار لآخر لحظة.", "type": "likert", "factor": "C", "facet": "C5", "direction": "direct", "weight": 1.2 },
+    { "id": "q114", "text": "أُواصل العمل حتى أُنهي ما بدأته مهما واجهت من عقبات.", "type": "likert", "factor": "C", "facet": "C5", "direction": "direct", "weight": 1.3 },
+    { "id": "q115", "text": "أُؤجّل كثيراً من مهامي وأجد صعوبة في البدء فيها.", "type": "likert", "factor": "C", "facet": "C5", "direction": "reverse", "weight": 1.1 },
+    { "id": "q116", "text": "أُلتزم بخطط عملي حتى حين أفقد الدافعية مؤقتاً.", "type": "likert", "factor": "C", "facet": "C5", "direction": "direct", "weight": 1.0 },
+
+    { "id": "q117", "text": "أُفكّر مليّاً في العواقب قبل اتخاذ أي قرار مهم.", "type": "likert", "factor": "C", "facet": "C6", "direction": "direct", "weight": 1.2 },
+    { "id": "q118", "text": "أتريّث وأستشير قبل أن أتخذ خطوات كبيرة في حياتي.", "type": "likert", "factor": "C", "facet": "C6", "direction": "direct", "weight": 1.3 },
+    { "id": "q119", "text": "أتصرف بتلقائية دون حاجة لتخطيط مسبق مطوّل.", "type": "likert", "factor": "C", "facet": "C6", "direction": "reverse", "weight": 1.0 },
+    { "id": "q120", "text": "أتجنب الأفعال المتسرعة التي قد تُسبب مشكلات لاحقاً.", "type": "likert", "factor": "C", "facet": "C6", "direction": "direct", "weight": 1.1 }
   ]
 }

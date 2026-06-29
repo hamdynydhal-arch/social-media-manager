@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import type { Question } from '../engine/types';
+import type { AttachmentQuestion } from '../engine/attachmentTypes';
+import LikertScale7 from '../components/LikertScale7';
 import ProgressBar from '../components/ProgressBar';
-import QuestionCard from '../components/QuestionCard';
 
-const STORAGE_KEY = 'ocean_test_progress';
+const STORAGE_KEY = 'attachment_test_progress';
 
 interface SavedProgress {
   currentIndex: number;
@@ -20,27 +20,26 @@ function loadProgress(): SavedProgress | null {
   }
 }
 
-interface TestPageProps {
-  questions: Question[];
+interface AttachmentTestPageProps {
+  questions: AttachmentQuestion[];
   onComplete: (answers: Record<string, number>) => void;
   onReset: () => void;
+  onHome: () => void;
 }
 
-export default function TestPage({ questions, onComplete, onReset }: TestPageProps) {
+export default function AttachmentTestPage({ questions, onComplete, onReset, onHome }: AttachmentTestPageProps) {
   const saved = loadProgress();
   const [currentIndex, setCurrentIndex] = useState(saved?.currentIndex ?? 0);
   const [answers, setAnswers] = useState<Record<string, number>>(saved?.answers ?? {});
   const [toast, setToast] = useState<string | null>(null);
   const [showResetModal, setShowResetModal] = useState(false);
 
-  // Auto-save on every change
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ currentIndex, answers }));
     } catch {}
   }, [currentIndex, answers]);
 
-  // Auto-dismiss toast after 3 seconds
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(null), 3000);
@@ -70,7 +69,6 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
   }
 
   function handlePause() {
-    // Auto-save already ran via useEffect; just confirm to user
     setToast('تم حفظ تقدمك بنجاح. يمكنك إغلاق الصفحة والعودة لاحقاً');
   }
 
@@ -87,7 +85,6 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
   return (
     <div className="min-h-screen bg-nafees-cream flex flex-col">
 
-      {/* Toast notification */}
       {toast && (
         <div
           className="fixed top-4 left-4 right-4 z-50 bg-emerald-600 text-white text-sm font-medium px-4 py-3 rounded-2xl shadow-xl text-center"
@@ -100,6 +97,15 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
       {/* Top bar */}
       <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-sm border-b border-gray-100 px-4 py-4">
         <div className="max-w-md mx-auto">
+          <div className="flex items-center justify-between mb-3">
+            <button
+              onClick={onHome}
+              className="text-xs text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1"
+            >
+              → الرئيسية
+            </button>
+            <span className="text-xs font-semibold text-nafees-copper">💞 أسلوب التعلق</span>
+          </div>
           <ProgressBar current={currentIndex + 1} total={questions.length} />
         </div>
       </div>
@@ -109,21 +115,26 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
         <div className="w-full max-w-md">
 
           <div className="text-center mb-4">
-            <span className="inline-block bg-nafees-sky/20 text-nafees-blue text-sm font-bold px-3 py-1 rounded-full">
+            <span className="inline-block bg-nafees-copper/15 text-nafees-copper text-sm font-bold px-3 py-1 rounded-full">
               سؤال {currentIndex + 1} من {questions.length}
             </span>
           </div>
 
-          <QuestionCard
-            question={current}
-            answer={currentAnswer}
-            onAnswer={handleAnswer}
-          />
+          {/* Question card */}
+          <div className="card w-full">
+            <p className="text-xl font-semibold text-gray-800 leading-relaxed mb-8 text-center min-h-[4rem] flex items-center justify-center">
+              {current.text}
+            </p>
+            <LikertScale7 value={currentAnswer} onChange={handleAnswer} />
+          </div>
 
           {/* Navigation */}
           <div className="flex gap-3 mt-6">
             {currentIndex > 0 && (
-              <button onClick={goPrev} className="btn-secondary flex-shrink-0">
+              <button
+                onClick={goPrev}
+                className="btn-secondary flex-shrink-0"
+              >
                 ← السابق
               </button>
             )}
@@ -133,8 +144,9 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
               className={`
                 flex-1 font-bold py-3 px-6 rounded-2xl transition-all duration-200
                 ${currentAnswer !== undefined
-                  ? 'btn-primary'
-                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'}
+                  ? 'bg-nafees-copper hover:bg-nafees-warm-dark text-white shadow-lg active:scale-95'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                }
               `}
             >
               {isLast ? 'عرض النتيجة 🎉' : 'التالي →'}
@@ -151,7 +163,7 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
           <div className="flex gap-3 mt-4">
             <button
               onClick={handlePause}
-              className="flex-1 text-sm font-medium text-nafees-blue bg-nafees-sky/15 hover:bg-nafees-sky/25 active:scale-95 py-2.5 px-4 rounded-2xl transition-all"
+              className="flex-1 text-sm font-medium text-nafees-copper bg-nafees-copper/10 hover:bg-nafees-copper/20 active:scale-95 py-2.5 px-4 rounded-2xl transition-all"
             >
               ⏸ انتظرني سأعود
             </button>

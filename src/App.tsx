@@ -1,60 +1,269 @@
 import { useState } from 'react';
+import { useInstallPrompt } from './hooks/useInstallPrompt';
+import InstallPromptBanner from './components/InstallPromptBanner';
 import type { TestResult } from './engine/types';
+import type { AttachmentResult } from './engine/attachmentTypes';
+import type { SchemaResult } from './engine/schemaTypes';
 import { buildTestResult, saveResult } from './engine/scoring';
+import { calculateAttachmentScores, saveAttachmentResult } from './engine/attachmentScoring';
+import { calculateSchemaScores, saveSchemaResult } from './engine/schemaScoring';
 import bigfiveData from './data/bigfive.json';
 import bigfiveContent from './data/bigfiveContent';
+import attachmentData from './data/attachment.json';
+import attachmentContent from './data/attachmentContent';
+import schemaData from './data/schema.json';
+import schemaContent from './data/schemaContent';
+import type { SchemaQuestion } from './engine/schemaTypes';
+import HomePage from './pages/HomePage';
 import StartPage from './pages/StartPage';
 import TestPage from './pages/TestPage';
 import ResultPage from './pages/ResultPage';
+import AttachmentStartPage from './pages/AttachmentStartPage';
+import AttachmentTestPage from './pages/AttachmentTestPage';
+import AttachmentResultPage from './pages/AttachmentResultPage';
+import SchemaStartPage from './pages/SchemaStartPage';
+import SchemaTestPage from './pages/SchemaTestPage';
+import SchemaResultPage from './pages/SchemaResultPage';
 
-type Page = 'start' | 'test' | 'result';
+type AppView = 'home' | 'ocean' | 'attachment' | 'schema';
+type OceanPage = 'start' | 'test' | 'result';
+type AttachmentPhase = 'start' | 'test';
+type SchemaPhase = 'start' | 'test';
 
 export default function App() {
-  const [page, setPage] = useState<Page>('start');
-  const [result, setResult] = useState<TestResult | null>(null);
+  const { showBanner, handleInstall, handleDismiss } = useInstallPrompt();
+  const [appView, setAppView] = useState<AppView>('home');
 
-  function handleStart() {
-    setPage('test');
+  // OCEAN sub-state — unchanged from before
+  const [oceanPage, setOceanPage] = useState<OceanPage>('start');
+  const [oceanResult, setOceanResult] = useState<TestResult | null>(null);
+
+  // Attachment sub-state
+  const [attachmentPhase, setAttachmentPhase] = useState<AttachmentPhase>('start');
+  const [attachmentResult, setAttachmentResult] = useState<AttachmentResult | null>(null);
+
+  // Schema sub-state
+  const [schemaPhase, setSchemaPhase] = useState<SchemaPhase>('start');
+  const [schemaResult, setSchemaResult] = useState<SchemaResult | null>(null);
+
+  // ── Home ──────────────────────────────────────────────
+  function handleSelectOcean() {
+    setOceanPage('start');
+    setAppView('ocean');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function handleComplete(answers: Record<string, number>) {
+  function handleSelectAttachment() {
+    setAttachmentResult(null);
+    setAttachmentPhase('start');
+    setAppView('attachment');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSelectSchema() {
+    setSchemaResult(null);
+    setSchemaPhase('start');
+    setAppView('schema');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goHome() {
+    setAppView('home');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── OCEAN flow ────────────────────────────────────────
+  function handleOceanStart() {
+    setOceanPage('test');
+  }
+
+  function handleOceanComplete(answers: Record<string, number>) {
     const base = buildTestResult(answers, bigfiveData.questions as never, bigfiveData.scoring as never);
     const testResult: TestResult = { testId: bigfiveData.id, ...base };
     saveResult(testResult);
-    setResult(testResult);
-    setPage('result');
+    setOceanResult(testResult);
+    setOceanPage('result');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function handleRetake() {
-    setResult(null);
-    setPage('start');
+  function handleOceanReset() {
+    setOceanResult(null);
+    setOceanPage('start');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleOceanRetake() {
+    setOceanResult(null);
+    setOceanPage('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Attachment flow ───────────────────────────────────
+  function handleAttachmentComplete(answers: Record<string, number>) {
+    const result = calculateAttachmentScores(
+      answers,
+      attachmentData.questions as never,
+      attachmentData.likertMin,
+      attachmentData.likertMax
+    );
+    saveAttachmentResult(result);
+    setAttachmentResult(result);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleAttachmentReset() {
+    setAttachmentResult(null);
+    setAttachmentPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleAttachmentRetake() {
+    setAttachmentResult(null);
+    setAttachmentPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Schema flow ───────────────────────────────────────
+  function handleSchemaComplete(answers: Record<string, number>) {
+    const result = calculateSchemaScores(
+      answers,
+      schemaData.questions as SchemaQuestion[],
+      schemaData.likertMin,
+      schemaData.likertMax,
+    );
+    saveSchemaResult(result);
+    setSchemaResult(result);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSchemaReset() {
+    setSchemaResult(null);
+    setSchemaPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSchemaRetake() {
+    setSchemaResult(null);
+    setSchemaPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Render ─────────────────────────────────────────────
+  function renderPage() {
+    if (appView === 'home') {
+      return (
+        <HomePage
+          onSelectOcean={handleSelectOcean}
+          onSelectAttachment={handleSelectAttachment}
+          onSelectSchema={handleSelectSchema}
+        />
+      );
+    }
+
+    if (appView === 'ocean') {
+      return (
+        <>
+          {oceanPage === 'start' && (
+            <StartPage
+              testName={bigfiveData.name}
+              description={bigfiveData.description}
+              estimatedMinutes={bigfiveData.estimatedMinutes}
+              questionCount={bigfiveData.questions.length}
+              onStart={handleOceanStart}
+              onHome={goHome}
+              disclaimer={bigfiveContent.disclaimer}
+            />
+          )}
+          {oceanPage === 'test' && (
+            <TestPage
+              questions={bigfiveData.questions as never}
+              onComplete={handleOceanComplete}
+              onReset={handleOceanReset}
+            />
+          )}
+          {oceanPage === 'result' && oceanResult && (
+            <ResultPage
+              result={oceanResult}
+              content={bigfiveContent}
+              onRetake={handleOceanRetake}
+            />
+          )}
+        </>
+      );
+    }
+
+    if (appView === 'attachment') {
+      if (attachmentResult) {
+        return (
+          <AttachmentResultPage
+            result={attachmentResult}
+            content={attachmentContent}
+            onRetake={handleAttachmentRetake}
+            onHome={goHome}
+          />
+        );
+      }
+      if (attachmentPhase === 'start') {
+        return (
+          <AttachmentStartPage
+            questionCount={attachmentData.questions.length}
+            estimatedMinutes={attachmentData.estimatedMinutes}
+            disclaimer={attachmentContent.disclaimer}
+            onStart={() => { setAttachmentPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            onHome={goHome}
+          />
+        );
+      }
+      return (
+        <AttachmentTestPage
+          questions={attachmentData.questions as never}
+          onComplete={handleAttachmentComplete}
+          onReset={handleAttachmentReset}
+          onHome={goHome}
+        />
+      );
+    }
+
+    if (appView === 'schema') {
+      if (schemaResult) {
+        return (
+          <SchemaResultPage
+            result={schemaResult}
+            content={schemaContent}
+            onRetake={handleSchemaRetake}
+            onHome={goHome}
+          />
+        );
+      }
+      if (schemaPhase === 'start') {
+        return (
+          <SchemaStartPage
+            questionCount={schemaData.questions.length}
+            estimatedMinutes={schemaData.estimatedMinutes}
+            disclaimer={schemaContent.disclaimer}
+            onStart={() => { setSchemaPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            onHome={goHome}
+          />
+        );
+      }
+      return (
+        <SchemaTestPage
+          questions={schemaData.questions as SchemaQuestion[]}
+          onComplete={handleSchemaComplete}
+          onReset={handleSchemaReset}
+          onHome={goHome}
+        />
+      );
+    }
+
+    return null;
   }
 
   return (
     <>
-      {page === 'start' && (
-        <StartPage
-          testName={bigfiveData.name}
-          description={bigfiveData.description}
-          estimatedMinutes={bigfiveData.estimatedMinutes}
-          onStart={handleStart}
-          disclaimer={bigfiveContent.disclaimer}
-        />
-      )}
-      {page === 'test' && (
-        <TestPage
-          questions={bigfiveData.questions as never}
-          onComplete={handleComplete}
-        />
-      )}
-      {page === 'result' && result && (
-        <ResultPage
-          result={result}
-          content={bigfiveContent}
-          onRetake={handleRetake}
-        />
+      {renderPage()}
+      {showBanner && (
+        <InstallPromptBanner onInstall={handleInstall} onDismiss={handleDismiss} />
       )}
     </>
   );
