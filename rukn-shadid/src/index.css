@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  font-family: 'Cairo', 'Noto Sans Arabic', sans-serif;
+  touch-action: none;
+}
+
+/* Subtle pulse for idle circle */
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.04); }
+}
+
+.pulse-idle {
+  animation: gentle-pulse 3s ease-in-out infinite;
+}
