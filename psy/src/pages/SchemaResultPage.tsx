@@ -72,7 +72,7 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
     const isExpanded = expandedSchema === schemaKey;
 
     return (
-      <div className="card border border-amber-100">
+      <div className="card border border-nafees-sage/20">
         <button
           className="w-full text-right"
           onClick={() => setExpandedSchema(isExpanded ? null : schemaKey)}
@@ -133,12 +133,12 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
                   ))}
                 </ul>
               </div>
-              <div className="bg-red-50 rounded-2xl p-3">
-                <h4 className="text-xs font-bold text-red-700 mb-2">✦ التحديات</h4>
+              <div className="bg-nafees-copper/5 rounded-2xl p-3">
+                <h4 className="text-xs font-bold text-nafees-copper mb-2">✦ التحديات</h4>
                 <ul className="space-y-1">
                   {sc.challenges.map((c, i) => (
-                    <li key={i} className="text-xs text-red-800 flex gap-1">
-                      <span className="flex-shrink-0 text-red-400">•</span>
+                    <li key={i} className="text-xs text-nafees-warm-dark flex gap-1">
+                      <span className="flex-shrink-0 text-nafees-copper/60">•</span>
                       <span>{c}</span>
                     </li>
                   ))}
@@ -147,19 +147,19 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
             </div>
 
             {/* Somatic */}
-            <div className="bg-blue-50 rounded-2xl p-4">
-              <h4 className="text-xs font-bold text-blue-700 mb-2 flex items-center gap-1">
+            <div className="bg-nafees-sky/10 rounded-2xl p-4">
+              <h4 className="text-xs font-bold text-nafees-blue mb-2 flex items-center gap-1">
                 <span>🫁</span> التنظيم الجسدي (Somatic Regulation)
               </h4>
-              <p className="text-sm text-blue-800 leading-relaxed">{sc.somatic}</p>
+              <p className="text-sm text-nafees-navy leading-relaxed">{sc.somatic}</p>
             </div>
 
             {/* Mindfulness */}
-            <div className="bg-purple-50 rounded-2xl p-4">
-              <h4 className="text-xs font-bold text-purple-700 mb-2 flex items-center gap-1">
+            <div className="bg-nafees-navy/5 rounded-2xl p-4">
+              <h4 className="text-xs font-bold text-nafees-navy mb-2 flex items-center gap-1">
                 <span>🧘</span> تمرين اليقظة الذهنية (Mindfulness)
               </h4>
-              <p className="text-sm text-purple-800 leading-relaxed">{sc.mindfulness}</p>
+              <p className="text-sm text-nafees-navy leading-relaxed">{sc.mindfulness}</p>
             </div>
 
             {/* Therapy note */}

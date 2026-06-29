@@ -1,4 +1,4 @@
-const CACHE_NAME = 'psy-v1';
+const CACHE_NAME = 'nafees-v3';
 const STATIC_ASSETS = ['/', '/index.html', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', (event) => {

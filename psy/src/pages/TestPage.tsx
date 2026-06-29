@@ -90,7 +90,7 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
       {/* Toast notification */}
       {toast && (
         <div
-          className="fixed top-4 left-4 right-4 z-50 bg-emerald-600 text-white text-sm font-medium px-4 py-3 rounded-2xl shadow-xl text-center"
+          className="fixed top-4 left-4 right-4 z-50 bg-nafees-navy text-white text-sm font-medium px-4 py-3 rounded-2xl shadow-xl text-center"
           style={{ animation: 'fadeInDown 0.25s ease' }}
         >
           ✅ {toast}
