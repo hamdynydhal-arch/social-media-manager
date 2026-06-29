@@ -73,7 +73,24 @@ jobs:
           echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_ENV
           echo "Deployed: $DEPLOY_URL"
 
+      - name: Verify live title
+        run: |
+          sleep 5
+          BUST=$(date +%s)
+          HTML=$(curl -sL --max-time 30 "https://psy.prtnh.com/?bust=${BUST}")
+          echo "=== TITLE LINE ==="
+          echo "$HTML" | grep -i "<title>" || echo "(no title tag)"
+          echo "=== THEME COLOR ==="
+          echo "$HTML" | grep -i "theme-color" || echo "(no theme-color)"
+          if echo "$HTML" | grep -q "نفيس"; then
+            echo "✅ VERIFIED: Live site title contains 'نفيس'"
+          else
+            echo "❌ FAIL: Live site still shows old branding"
+            exit 1
+          fi
+
       - name: Summary
         run: |
           echo "### psy deployed ✅" >> $GITHUB_STEP_SUMMARY
           echo "- URL: $DEPLOY_URL" >> $GITHUB_STEP_SUMMARY
+          echo "- Title verified: نفيس ✅" >> $GITHUB_STEP_SUMMARY
