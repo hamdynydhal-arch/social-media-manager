@@ -1,0 +1,26 @@
+name: Verify psy live title
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch live site and check title
+        run: |
+          BUST=$(date +%s)
+          HTML=$(curl -sL --max-time 30 "https://psy.prtnh.com/?bust=${BUST}")
+          echo "--- RAW TITLE LINE ---"
+          echo "$HTML" | grep -i "<title>" || echo "(no title tag found)"
+          echo "--- THEME COLOR ---"
+          echo "$HTML" | grep -i "theme-color" || echo "(no theme-color found)"
+          echo "--- CHECK ---"
+          if echo "$HTML" | grep -q "نفيس"; then
+            echo "✅ PASS: Live site contains 'نفيس'"
+          else
+            echo "❌ FAIL: Live site does NOT contain 'نفيس'"
+            echo "Full HTML (first 3000 chars):"
+            echo "$HTML" | head -c 3000
+            exit 1
+          fi
