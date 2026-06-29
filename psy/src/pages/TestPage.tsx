@@ -85,7 +85,7 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
   if (!current) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex flex-col">
+    <div className="min-h-screen bg-nafees-cream flex flex-col">
 
       {/* Toast notification */}
       {toast && (
@@ -109,7 +109,7 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
         <div className="w-full max-w-md">
 
           <div className="text-center mb-4">
-            <span className="inline-block bg-indigo-100 text-indigo-600 text-sm font-bold px-3 py-1 rounded-full">
+            <span className="inline-block bg-nafees-sky/20 text-nafees-blue text-sm font-bold px-3 py-1 rounded-full">
               سؤال {currentIndex + 1} من {questions.length}
             </span>
           </div>
@@ -151,7 +151,7 @@ export default function TestPage({ questions, onComplete, onReset }: TestPagePro
           <div className="flex gap-3 mt-4">
             <button
               onClick={handlePause}
-              className="flex-1 text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 active:scale-95 py-2.5 px-4 rounded-2xl transition-all"
+              className="flex-1 text-sm font-medium text-nafees-blue bg-nafees-sky/15 hover:bg-nafees-sky/25 active:scale-95 py-2.5 px-4 rounded-2xl transition-all"
             >
               ⏸ انتظرني سأعود
             </button>

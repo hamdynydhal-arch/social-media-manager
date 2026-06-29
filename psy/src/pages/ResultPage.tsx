@@ -63,21 +63,21 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-8 px-4">
+    <div className="min-h-screen bg-nafees-cream py-8 px-4">
       <div className="max-w-lg mx-auto" ref={reportRef}>
 
         {/* Header */}
         <div className="text-center mb-2">
           <span className="text-4xl">🧠</span>
-          <h1 className="text-2xl font-extrabold text-indigo-700 mt-1">psy — نتيجة اختبارك</h1>
+          <h1 className="text-2xl font-extrabold text-nafees-navy mt-1">نفيس — نتيجة اختبارك</h1>
         </div>
 
         {/* Sub-type / Profile Title */}
-        <div className="card mb-4 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
+        <div className="card mb-4 bg-gradient-to-br from-nafees-navy to-nafees-blue text-white">
           <div className="text-center">
             <div className="text-5xl mb-3">✨</div>
             <h2 className="text-2xl font-extrabold mb-1">{subType?.title ?? profile.title}</h2>
-            <p className="text-indigo-200 text-sm font-medium mb-4">{subType?.subtitle ?? profile.subtitle}</p>
+            <p className="text-nafees-sky text-sm font-medium mb-4">{subType?.subtitle ?? profile.subtitle}</p>
             <p className="text-white/90 leading-relaxed text-sm">{subType?.intro ?? profile.intro}</p>
           </div>
         </div>
@@ -222,7 +222,7 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
         })}
 
         {/* Closing Message */}
-        <div className="card mb-4 bg-gradient-to-br from-purple-50 to-indigo-50 border border-indigo-100">
+        <div className="card mb-4 bg-gradient-to-br from-nafees-cream to-nafees-sky/15 border border-nafees-sky/30">
           <div className="text-center">
             <div className="text-3xl mb-2">🌱</div>
             <p className="text-gray-700 leading-relaxed text-sm">{content.closingMessage}</p>
@@ -230,8 +230,8 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
         </div>
 
         {/* Scientific Summary — OCEAN — verbatim */}
-        <div className="card mb-4 border border-indigo-100 bg-indigo-50/40">
-          <h4 className="text-sm font-extrabold text-indigo-700 mb-3">🔍 خلاصة النماذج العلمية المعتمدة</h4>
+        <div className="card mb-4 border border-nafees-sky/30 bg-nafees-navy/5">
+          <h4 className="text-sm font-extrabold text-nafees-navy mb-3">🔍 خلاصة النماذج العلمية المعتمدة</h4>
           <div className="space-y-3 text-sm text-gray-700 leading-relaxed">
             <div>
               <strong className="text-gray-800">الطيف وليس القالب: </strong>
@@ -241,8 +241,8 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
               <strong className="text-gray-800">المرونة العصبية والشخصية: </strong>
               تشير الدراسات الطولية الحديثة في علم نفس الشخصية إلى أن السمات ليست ثابتة بيولوجياً بشكل مطلق (Not hard-wired). يتفاعل الاستعداد الجيني مع البيئة والتجارب، مما يعني أن الإنسان قادر على تعديل سلوكياته وتطوير سماته عبر الوعي والتدريب المستمر (Neuroplasticity).
             </div>
-            <div className="border-t border-indigo-100 pt-2">
-              <p className="text-xs font-bold text-indigo-600 mb-1">المراجع الأساسية:</p>
+            <div className="border-t border-nafees-sky/30 pt-2">
+              <p className="text-xs font-bold text-nafees-blue mb-1">المراجع الأساسية:</p>
               <p className="text-xs text-gray-500 leading-relaxed" dir="ltr">Goldberg, L. R. (1999). A broad-bandwidth, public domain, personality inventory measuring the lower-level facets of several five-factor models.</p>
               <p className="text-xs text-gray-500 leading-relaxed mt-1" dir="ltr">Costa, P. T., &amp; McCrae, R. R. (1992). Revised NEO Personality Inventory (NEO PI-R).</p>
             </div>
