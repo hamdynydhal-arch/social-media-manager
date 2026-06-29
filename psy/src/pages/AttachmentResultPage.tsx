@@ -80,11 +80,11 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
             <div>
               <div className="flex justify-between items-center mb-1.5">
                 <span className="text-sm font-semibold text-gray-700">تجنب التعلق</span>
-                <span className="text-sm font-bold text-blue-600">{Math.round(result.avoidancePct)}٪</span>
+                <span className="text-sm font-bold text-nafees-blue">{Math.round(result.avoidancePct)}٪</span>
               </div>
               <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-blue-400 rounded-full transition-all duration-700"
+                  className="h-full bg-nafees-blue rounded-full transition-all duration-700"
                   style={{ width: `${result.avoidancePct}%` }}
                 />
               </div>
@@ -137,12 +137,12 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
         {/* Strategies */}
         <div className="card">
           <h2 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
-            <span className="text-indigo-500">✦</span> استراتيجيات النمو
+            <span className="text-nafees-navy">✦</span> استراتيجيات النمو
           </h2>
           <ul className="space-y-2">
             {pattern.strategies.map((s, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-gray-700 leading-relaxed">
-                <span className="text-indigo-400 mt-0.5 flex-shrink-0 font-bold">{i + 1}.</span>
+                <span className="text-nafees-blue-mid mt-0.5 flex-shrink-0 font-bold">{i + 1}.</span>
                 <span>{s}</span>
               </li>
             ))}
@@ -152,7 +152,7 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
         {/* Recommendations */}
         <div className="card space-y-4">
           <h2 className="text-base font-bold text-gray-800 flex items-center gap-2">
-            <span className="text-rose-500">✦</span> توصيات شخصية
+            <span className="text-nafees-copper">✦</span> توصيات شخصية
           </h2>
           {[
             { label: 'الوعي الذاتي', icon: '🪞', text: pattern.recommendations.selfAwareness },

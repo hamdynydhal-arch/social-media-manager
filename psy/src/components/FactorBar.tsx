@@ -18,11 +18,11 @@ const LEVEL_LABELS: Record<Level, string> = {
 };
 
 const LEVEL_BG: Record<Level, string> = {
-  very_high: 'bg-emerald-100 text-emerald-800',
-  high: 'bg-emerald-50 text-emerald-700',
-  medium: 'bg-amber-50 text-amber-700',
-  low: 'bg-blue-50 text-blue-700',
-  very_low: 'bg-slate-100 text-slate-600',
+  very_high: 'bg-nafees-navy/15 text-nafees-navy',
+  high:      'bg-nafees-blue/15 text-nafees-blue',
+  medium:    'bg-nafees-cream-dark text-nafees-warm-dark',
+  low:       'bg-nafees-copper/15 text-nafees-warm-dark',
+  very_low:  'bg-nafees-warm/15 text-nafees-warm-dark',
 };
 
 export default function FactorBar({ name, icon, color, score, level }: FactorBarProps) {
