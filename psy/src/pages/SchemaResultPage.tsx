@@ -44,18 +44,18 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
     const isPrimary = result.primarySchema === schemaKey;
 
     return (
-      <div className={`rounded-2xl p-3 ${isActive ? 'bg-amber-50 border border-amber-200' : 'bg-gray-50'}`}>
+      <div className={`rounded-2xl p-3 ${isActive ? 'bg-nafees-sage/10 border border-nafees-sage/30' : 'bg-gray-50'}`}>
         <div className="flex items-center justify-between mb-1.5">
           <div className="flex items-center gap-1.5">
             <span className="text-base">{sc.icon}</span>
-            <span className={`text-xs font-bold ${isActive ? 'text-amber-800' : 'text-gray-500'}`}>
+            <span className={`text-xs font-bold ${isActive ? 'text-nafees-warm-dark' : 'text-gray-500'}`}>
               {sc.shortName}
             </span>
             {isPrimary && (
-              <span className="bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">الأقوى</span>
+              <span className="bg-nafees-sage text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">الأقوى</span>
             )}
           </div>
-          <span className={`text-xs font-bold ${isActive ? 'text-amber-700' : 'text-gray-400'}`}>{pct}٪</span>
+          <span className={`text-xs font-bold ${isActive ? 'text-nafees-sage' : 'text-gray-400'}`}>{pct}٪</span>
         </div>
         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
@@ -82,7 +82,7 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
             <div className="flex items-center gap-2">
               <div>
                 <h3 className="text-sm font-extrabold text-gray-800">{sc.name}</h3>
-                <p className="text-xs text-amber-600">{Math.round(result.percentages[schemaKey])}٪ · الحاجة الأساسية: {sc.coreNeed}</p>
+                <p className="text-xs text-nafees-sage">{Math.round(result.percentages[schemaKey])}٪ · الحاجة الأساسية: {sc.coreNeed}</p>
               </div>
               <span className="text-2xl">{sc.icon}</span>
             </div>
@@ -90,11 +90,11 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
         </button>
 
         {isExpanded && (
-          <div className="mt-4 space-y-4 border-t border-amber-50 pt-4">
+          <div className="mt-4 space-y-4 border-t border-nafees-sage/20 pt-4">
 
             {/* Description */}
-            <div className="bg-amber-50 rounded-2xl p-4">
-              <p className="text-sm text-amber-900 leading-relaxed">{sc.description}</p>
+            <div className="bg-nafees-sage/10 rounded-2xl p-4">
+              <p className="text-sm text-nafees-warm-dark leading-relaxed">{sc.description}</p>
             </div>
 
             {/* Childhood origin */}
@@ -113,7 +113,7 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
               <ul className="space-y-1">
                 {sc.adultTriggers.map((t, i) => (
                   <li key={i} className="text-sm text-gray-700 flex gap-2">
-                    <span className="text-amber-400 flex-shrink-0">•</span>
+                    <span className="text-nafees-sage flex-shrink-0">•</span>
                     <span>{t}</span>
                   </li>
                 ))}
@@ -178,7 +178,7 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
               <ul className="space-y-2">
                 {sc.growth.map((g, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-gray-700 leading-relaxed">
-                    <span className="text-amber-500 font-bold flex-shrink-0">{i + 1}.</span>
+                    <span className="text-nafees-copper font-bold flex-shrink-0">{i + 1}.</span>
                     <span>{g}</span>
                   </li>
                 ))}
@@ -191,7 +191,7 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-50 pb-12">
+    <div className="min-h-screen bg-nafees-cream pb-12">
 
       {/* Screen-only header */}
       <div className={`bg-gradient-to-l ${primarySchema.gradientFrom} ${primarySchema.gradientTo} text-white px-4 pt-10 pb-8 relative`}>
@@ -218,7 +218,7 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
         {/* PDF header */}
         <div className={`bg-gradient-to-l ${primarySchema.gradientFrom} ${primarySchema.gradientTo} rounded-3xl p-5 text-white text-center`}>
           <div className="text-4xl mb-2">{mode.icon}</div>
-          <p className="text-xs text-white/70 mb-1">psy · اختبار المخططات المعرفية وتجارب الطفولة</p>
+          <p className="text-xs text-white/70 mb-1">نفيس · اختبار المخططات المعرفية وتجارب الطفولة</p>
           <h2 className="text-xl font-extrabold mb-0.5">{mode.name}</h2>
           <p className="text-white/80 text-sm">
             {result.activeSchemas.length > 0
@@ -228,10 +228,10 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
         </div>
 
         {/* Mode description */}
-        <div className="bg-amber-50 rounded-2xl p-4">
+        <div className="bg-nafees-sage/10 rounded-2xl p-4">
           <div className="flex items-start gap-3">
             <span className="text-xl">{mode.icon}</span>
-            <p className="text-sm text-amber-900 leading-relaxed">{mode.description}</p>
+            <p className="text-sm text-nafees-warm-dark leading-relaxed">{mode.description}</p>
           </div>
         </div>
 
@@ -244,7 +244,7 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
             ))}
           </div>
           {result.activeSchemas.length > 0 && (
-            <p className="text-xs text-amber-600 mt-3 text-center font-medium">
+            <p className="text-xs text-nafees-sage mt-3 text-center font-medium">
               المخططات النشطة (≥ 58٪) تحمل ألواناً مميزة وتستحق المراجعة الأعمق
             </p>
           )}
@@ -278,8 +278,8 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
         </div>
 
         {/* Scientific summary */}
-        <div className="card border border-amber-100 bg-amber-50/40">
-          <h4 className="text-sm font-extrabold text-amber-700 mb-3">🔍 خلاصة النماذج العلمية المعتمدة</h4>
+        <div className="card border border-nafees-sage/30 bg-nafees-sage/5">
+          <h4 className="text-sm font-extrabold text-nafees-warm-dark mb-3">🔍 خلاصة النماذج العلمية المعتمدة</h4>
           <div className="space-y-3 text-sm text-gray-700 leading-relaxed">
             <div>
               <strong className="text-gray-800">المخططات المعرفية المبكرة: </strong>
@@ -297,8 +297,8 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
               <strong className="text-gray-800">بيئة الأقران: </strong>
               خلصت الدراسة الميتا-تحليلية لـ Reijntjes et al. (2010) إلى أن الإقصاء من الأقران والتنمر في مرحلة الطفولة يتنبأ بمشكلات نفسية داخلية مستقبلية توازي في تأثيرها مشكلات بيئة الأسرة، مع تأثير خاص في مخطط العزلة الاجتماعية.
             </div>
-            <div className="border-t border-amber-100 pt-2">
-              <p className="text-xs font-bold text-amber-600 mb-1">المراجع الأساسية:</p>
+            <div className="border-t border-nafees-sage/30 pt-2">
+              <p className="text-xs font-bold text-nafees-sage mb-1">المراجع الأساسية:</p>
               <p className="text-xs text-gray-500 leading-relaxed" dir="ltr">Young, J. E., Klosko, J. S., & Weishaar, M. E. (2003). Schema Therapy: A Practitioner's Guide. Guilford Press.</p>
               <p className="text-xs text-gray-500 leading-relaxed mt-1" dir="ltr">Felitti, V. J., et al. (1998). Relationship of Childhood Abuse and Household Dysfunction to Many of the Leading Causes of Death in Adults. American Journal of Preventive Medicine, 14(4), 245–258.</p>
               <p className="text-xs text-gray-500 leading-relaxed mt-1" dir="ltr">Van der Kolk, B. A. (2014). The Body Keeps the Score. Viking.</p>
@@ -332,7 +332,7 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
         <div className="grid grid-cols-3 gap-2">
           <button
             onClick={onRetake}
-            className="py-3 rounded-2xl border-2 border-amber-200 text-amber-600 font-bold text-sm hover:bg-amber-50 active:scale-95 transition-all"
+            className="py-3 rounded-2xl border-2 border-nafees-sage/40 text-nafees-sage font-bold text-sm hover:bg-nafees-sage/10 active:scale-95 transition-all"
           >
             🔄 إعادة
           </button>
@@ -352,7 +352,7 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
           </button>
           <button
             onClick={onHome}
-            className="py-3 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm active:scale-95 transition-all"
+            className="py-3 rounded-2xl bg-nafees-sage hover:bg-nafees-warm-dark text-white font-bold text-sm active:scale-95 transition-all"
           >
             🏠 رئيسية
           </button>

@@ -25,29 +25,29 @@ export default function InstallPromptBanner({ onInstall, onDismiss }: InstallPro
         <div className="flex items-center gap-4 mb-5">
           <img src="/icon-192.png" alt="psy icon" className="w-14 h-14 rounded-2xl shadow-md" />
           <div>
-            <h2 className="text-base font-extrabold text-gray-800">أضف psy إلى شاشتك الرئيسية</h2>
+            <h2 className="text-base font-extrabold text-nafees-navy">أضف نفيس إلى شاشتك الرئيسية</h2>
             <p className="text-sm text-gray-500 mt-0.5">وصول سريع في أي وقت، بدون متصفح</p>
           </div>
         </div>
 
         <ul className="space-y-2 mb-6 text-sm text-gray-600">
           <li className="flex items-center gap-2">
-            <span className="text-indigo-500 text-base">⚡</span>
+            <span className="text-nafees-copper text-base">⚡</span>
             <span>تشغيل فوري بدون انتظار تحميل</span>
           </li>
           <li className="flex items-center gap-2">
-            <span className="text-indigo-500 text-base">📶</span>
+            <span className="text-nafees-copper text-base">📶</span>
             <span>يعمل بشكل جزئي بدون إنترنت</span>
           </li>
           <li className="flex items-center gap-2">
-            <span className="text-indigo-500 text-base">🔒</span>
+            <span className="text-nafees-copper text-base">🔒</span>
             <span>نتائجك محفوظة محلياً على جهازك</span>
           </li>
         </ul>
 
         <button
           onClick={onInstall}
-          className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-base shadow-lg shadow-indigo-200 active:scale-95 transition-all mb-3"
+          className="w-full py-3.5 rounded-2xl bg-nafees-blue hover:bg-nafees-navy text-white font-bold text-base shadow-lg shadow-nafees-blue/20 active:scale-95 transition-all mb-3"
         >
           تثبيت التطبيق
         </button>

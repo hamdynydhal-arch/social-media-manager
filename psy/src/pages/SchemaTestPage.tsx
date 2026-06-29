@@ -84,13 +84,13 @@ export default function SchemaTestPage({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-50 flex flex-col">
+    <div className="min-h-screen bg-nafees-cream flex flex-col">
 
       {/* Header */}
-      <div className="bg-white border-b border-amber-100 px-4 py-3 flex items-center justify-between sticky top-0 z-10">
+      <div className="bg-white border-b border-nafees-cream-dark/40 px-4 py-3 flex items-center justify-between sticky top-0 z-10">
         <button
           onClick={() => setShowPause(true)}
-          className="text-amber-600 font-bold text-sm"
+          className="text-nafees-sage font-bold text-sm"
         >
           ⏸ إيقاف
         </button>
@@ -104,9 +104,9 @@ export default function SchemaTestPage({
       </div>
 
       {/* Progress */}
-      <div className="h-1.5 bg-amber-100">
+      <div className="h-1.5 bg-nafees-cream-dark">
         <div
-          className="h-full bg-amber-500 transition-all duration-500"
+          className="h-full bg-nafees-sage transition-all duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -116,7 +116,7 @@ export default function SchemaTestPage({
 
         {/* Domain badge */}
         <div className="mb-4">
-          <span className="bg-amber-100 text-amber-700 text-xs font-semibold px-3 py-1 rounded-full">
+          <span className="bg-nafees-sage/15 text-nafees-sage text-xs font-semibold px-3 py-1 rounded-full">
             {DOMAIN_LABELS[q.domain] ?? q.domain}
           </span>
         </div>
@@ -134,7 +134,7 @@ export default function SchemaTestPage({
           <button
             onClick={handlePrev}
             disabled={current === 0}
-            className="px-4 py-2.5 rounded-2xl border-2 border-amber-200 text-amber-600 font-bold text-sm disabled:opacity-30 hover:bg-amber-50 transition-all active:scale-95"
+            className="px-4 py-2.5 rounded-2xl border-2 border-nafees-sage/40 text-nafees-sage font-bold text-sm disabled:opacity-30 hover:bg-nafees-sage/10 transition-all active:scale-95"
           >
             ← السابق
           </button>
@@ -145,7 +145,7 @@ export default function SchemaTestPage({
               disabled={!allAnswered}
               className={`flex-1 py-3 rounded-2xl font-bold text-base transition-all active:scale-95
                 ${allAnswered
-                  ? 'bg-amber-600 hover:bg-amber-700 text-white shadow-lg shadow-amber-200'
+                  ? 'bg-nafees-sage hover:bg-nafees-warm-dark text-white shadow-lg shadow-nafees-sage/20'
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
             >
@@ -157,7 +157,7 @@ export default function SchemaTestPage({
               disabled={!answered}
               className={`flex-1 py-3 rounded-2xl font-bold text-base transition-all active:scale-95
                 ${answered
-                  ? 'bg-amber-600 hover:bg-amber-700 text-white shadow-lg shadow-amber-200'
+                  ? 'bg-nafees-sage hover:bg-nafees-warm-dark text-white shadow-lg shadow-nafees-sage/20'
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }`}
             >
@@ -184,13 +184,13 @@ export default function SchemaTestPage({
             <div className="space-y-3">
               <button
                 onClick={onHome}
-                className="w-full py-3 rounded-2xl bg-amber-600 text-white font-bold"
+                className="w-full py-3 rounded-2xl bg-nafees-sage text-white font-bold"
               >
                 🏠 الرئيسية (مع حفظ التقدم)
               </button>
               <button
                 onClick={() => setShowPause(false)}
-                className="w-full py-3 rounded-2xl border-2 border-amber-200 text-amber-700 font-bold"
+                className="w-full py-3 rounded-2xl border-2 border-nafees-sage/40 text-nafees-sage font-bold"
               >
                 متابعة الاختبار
               </button>

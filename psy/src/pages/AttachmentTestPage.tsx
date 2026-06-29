@@ -83,7 +83,7 @@ export default function AttachmentTestPage({ questions, onComplete, onReset, onH
   if (!current) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 flex flex-col">
+    <div className="min-h-screen bg-nafees-cream flex flex-col">
 
       {toast && (
         <div
@@ -104,7 +104,7 @@ export default function AttachmentTestPage({ questions, onComplete, onReset, onH
             >
               → الرئيسية
             </button>
-            <span className="text-xs font-semibold text-rose-500">💞 أسلوب التعلق</span>
+            <span className="text-xs font-semibold text-nafees-copper">💞 أسلوب التعلق</span>
           </div>
           <ProgressBar current={currentIndex + 1} total={questions.length} />
         </div>
@@ -115,7 +115,7 @@ export default function AttachmentTestPage({ questions, onComplete, onReset, onH
         <div className="w-full max-w-md">
 
           <div className="text-center mb-4">
-            <span className="inline-block bg-rose-100 text-rose-600 text-sm font-bold px-3 py-1 rounded-full">
+            <span className="inline-block bg-nafees-copper/15 text-nafees-copper text-sm font-bold px-3 py-1 rounded-full">
               سؤال {currentIndex + 1} من {questions.length}
             </span>
           </div>
@@ -144,7 +144,7 @@ export default function AttachmentTestPage({ questions, onComplete, onReset, onH
               className={`
                 flex-1 font-bold py-3 px-6 rounded-2xl transition-all duration-200
                 ${currentAnswer !== undefined
-                  ? 'bg-rose-600 hover:bg-rose-700 text-white shadow-lg shadow-rose-100 active:scale-95'
+                  ? 'bg-nafees-copper hover:bg-nafees-warm-dark text-white shadow-lg active:scale-95'
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }
               `}
@@ -163,7 +163,7 @@ export default function AttachmentTestPage({ questions, onComplete, onReset, onH
           <div className="flex gap-3 mt-4">
             <button
               onClick={handlePause}
-              className="flex-1 text-sm font-medium text-rose-600 bg-rose-50 hover:bg-rose-100 active:scale-95 py-2.5 px-4 rounded-2xl transition-all"
+              className="flex-1 text-sm font-medium text-nafees-copper bg-nafees-copper/10 hover:bg-nafees-copper/20 active:scale-95 py-2.5 px-4 rounded-2xl transition-all"
             >
               ⏸ انتظرني سأعود
             </button>

@@ -29,7 +29,7 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 pb-12">
+    <div className="min-h-screen bg-nafees-cream pb-12">
 
       {/* Screen-only gradient header with home button */}
       <div className={`bg-gradient-to-l ${pattern.gradientFrom} ${pattern.gradientTo} text-white px-4 pt-10 pb-8 relative`}>
@@ -52,7 +52,7 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
         {/* PDF header card (compact version of gradient header, visible in exported PDF) */}
         <div className={`bg-gradient-to-l ${pattern.gradientFrom} ${pattern.gradientTo} rounded-3xl p-5 text-white text-center`}>
           <div className="text-4xl mb-2">{pattern.icon}</div>
-          <p className="text-xs text-white/70 mb-1">psy · اختبار أسلوب التعلق العاطفي ECR-R</p>
+          <p className="text-xs text-white/70 mb-1">نفيس · اختبار أسلوب التعلق العاطفي ECR-R</p>
           <h2 className="text-xl font-extrabold mb-0.5">{pattern.name}</h2>
           <p className="text-white/80 text-sm">{pattern.subtitle}</p>
         </div>
@@ -176,8 +176,8 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
         </div>
 
         {/* Scientific Summary — Attachment — verbatim */}
-        <div className="card border border-rose-100 bg-rose-50/40">
-          <h4 className="text-sm font-extrabold text-rose-700 mb-3">🔍 خلاصة النماذج العلمية المعتمدة</h4>
+        <div className="card border border-nafees-copper/20 bg-nafees-copper/5">
+          <h4 className="text-sm font-extrabold text-nafees-warm-dark mb-3">🔍 خلاصة النماذج العلمية المعتمدة</h4>
           <div className="space-y-3 text-sm text-gray-700 leading-relaxed">
             <div>
               <strong className="text-gray-800">بُعدي القلق والتجنب: </strong>
@@ -187,8 +187,8 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
               <strong className="text-gray-800">مبدأ التعلق المكتسب (Earned Security): </strong>
               تؤكد الأبحاث السريرية، وخاصة العلاج المرتكز على العواطف (EFT) للدكتورة سو جونسون (Sue Johnson)، أن أسلوب التعلق غير الآمن ليس قدراً محتوماً. يمكن للأفراد تطوير &quot;تعلق آمن مكتسب&quot; عبر بناء وعي ذاتي، وتجربة علاقات صحية، أو من خلال التدخل العلاجي، مما يعيد تشكيل الروابط العصبية الخاصة بالأمان العاطفي.
             </div>
-            <div className="border-t border-rose-100 pt-2">
-              <p className="text-xs font-bold text-rose-600 mb-1">المراجع الأساسية:</p>
+            <div className="border-t border-nafees-copper/20 pt-2">
+              <p className="text-xs font-bold text-nafees-copper mb-1">المراجع الأساسية:</p>
               <p className="text-xs text-gray-500 leading-relaxed" dir="ltr">Fraley, R. C., Waller, N. G., &amp; Brennan, K. A. (2000). An item response theory analysis of self-report measures of adult attachment.</p>
               <p className="text-xs text-gray-500 leading-relaxed mt-1" dir="ltr">Johnson, S. M. (2004). The Practice of Emotionally Focused Couple Therapy.</p>
               <p className="text-xs text-gray-500 leading-relaxed mt-1" dir="ltr">Bowlby, J. (1988). A Secure Base.</p>
@@ -223,7 +223,7 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
         <div className="grid grid-cols-3 gap-2">
           <button
             onClick={onRetake}
-            className="py-3 rounded-2xl border-2 border-rose-200 text-rose-600 font-bold text-sm hover:bg-rose-50 active:scale-95 transition-all"
+            className="py-3 rounded-2xl border-2 border-nafees-copper/30 text-nafees-copper font-bold text-sm hover:bg-nafees-copper/10 active:scale-95 transition-all"
           >
             🔄 إعادة
           </button>
@@ -246,7 +246,7 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
           </button>
           <button
             onClick={onHome}
-            className="py-3 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm active:scale-95 transition-all"
+            className="py-3 rounded-2xl bg-nafees-copper hover:bg-nafees-warm-dark text-white font-bold text-sm active:scale-95 transition-all"
           >
             🏠 رئيسية
           </button>
