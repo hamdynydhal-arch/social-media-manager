@@ -10,21 +10,14 @@ interface StartPageProps {
   disclaimer: string;
 }
 
-export default function StartPage({ testName, description, estimatedMinutes, questionCount, onStart, onHome, disclaimer }: StartPageProps) {
+export default function StartPage({ testName, description, estimatedMinutes, questionCount, onStart, disclaimer }: StartPageProps) {
   return (
     <div className="min-h-screen bg-nafees-cream flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
 
         {/* Header */}
-        <div className="text-center mb-8">
-          {onHome && (
-            <button
-              onClick={onHome}
-              className="text-xs text-nafees-warm hover:text-nafees-blue transition-colors mb-4 block mx-auto"
-            >
-              → العودة للرئيسية
-            </button>
-          )}
+        <div className="mb-8">
+          <div className="text-center">
           <div className="flex justify-center mb-3">
             <div className="w-20 h-20 rounded-full bg-nafees-navy flex items-center justify-center shadow-lg">
               <NafeesLogo size={52} />
@@ -34,6 +27,7 @@ export default function StartPage({ testName, description, estimatedMinutes, que
             نَفيس
           </h1>
           <p className="text-nafees-warm text-sm font-medium">مختبر الشخصية النفسية</p>
+          </div>
         </div>
 
         {/* Card */}

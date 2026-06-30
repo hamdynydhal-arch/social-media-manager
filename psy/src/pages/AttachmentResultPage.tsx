@@ -31,15 +31,9 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
   return (
     <div className="min-h-screen bg-nafees-cream pb-12">
 
-      {/* Screen-only gradient header with home button */}
-      <div className={`bg-gradient-to-l ${pattern.gradientFrom} ${pattern.gradientTo} text-white px-4 pt-10 pb-8 relative`}>
+      {/* Screen-only gradient header */}
+      <div className={`bg-gradient-to-l ${pattern.gradientFrom} ${pattern.gradientTo} text-white px-4 pt-8 pb-8`}>
         <div className="max-w-md mx-auto text-center">
-          <button
-            onClick={onHome}
-            className="absolute top-4 right-4 text-white/70 hover:text-white text-sm transition-colors"
-          >
-            → الرئيسية
-          </button>
           <div className="text-6xl mb-3">{pattern.icon}</div>
           <h1 className="text-2xl font-extrabold mb-1">{pattern.name}</h1>
           <p className="text-white/80 text-sm">{pattern.subtitle}</p>

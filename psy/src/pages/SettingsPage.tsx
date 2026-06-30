@@ -50,14 +50,8 @@ export default function SettingsPage({ onHome, onSelectIntake }: SettingsPagePro
     <div className="min-h-screen bg-nafees-cream" dir="rtl">
 
       {/* Header */}
-      <div className="bg-nafees-navy px-4 pt-10 pb-8 rounded-b-[2.5rem]">
+      <div className="bg-nafees-navy px-4 pt-5 pb-8 rounded-b-[2.5rem]">
         <div className="max-w-md mx-auto">
-          <button
-            onClick={onHome}
-            className="text-nafees-cream-dark/60 text-sm mb-4 flex items-center gap-1 active:scale-95 transition-transform duration-150"
-          >
-            ← رجوع
-          </button>
           <h1 className="text-2xl font-bold text-nafees-cream mb-1">الإعدادات</h1>
           <p className="text-nafees-sky/80 text-sm">تخصيص التطبيق وإدارة البيانات</p>
         </div>
