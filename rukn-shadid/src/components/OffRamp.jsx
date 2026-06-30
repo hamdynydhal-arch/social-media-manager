@@ -3,11 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion'
 import content from '../content.json'
 import { recordSession } from '../utils/silentTracker'
 
+function randomFarewell() {
+  const msgs = content.farewell_messages
+  return msgs[Math.floor(Math.random() * msgs.length)]
+}
+
 // phase: 'ready' → 'input' → 'dissolving' → 'farewell'
 export default function OffRamp({ fearId, onComplete }) {
   const [step, setStep] = useState('ready')
   const [fearText, setFearText] = useState('')
   const [dissolveText, setDissolveText] = useState('')
+  const [farewellMsg] = useState(randomFarewell)
   const inputRef = useRef(null)
 
   const handleReady = () => {
@@ -24,13 +30,11 @@ export default function OffRamp({ fearId, onComplete }) {
   const handleSkipInput = () => {
     recordSession(fearId)
     setStep('farewell')
-    setTimeout(onComplete, 3500)
   }
 
   const handleDissolveComplete = () => {
     recordSession(fearId)
     setStep('farewell')
-    setTimeout(onComplete, 3500)
   }
 
   return (
@@ -174,8 +178,18 @@ export default function OffRamp({ fearId, onComplete }) {
               className="text-center text-base text-gray-300 leading-loose whitespace-pre-line"
               style={{ lineHeight: '2.1rem' }}
             >
-              {content.farewell}
+              {farewellMsg}
             </motion.p>
+            <motion.button
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0, transition: { delay: 1.2, duration: 0.7 } }}
+              whileTap={{ scale: 0.97 }}
+              onClick={onComplete}
+              className="mt-2 px-10 py-3 rounded-full text-sm text-teal-100"
+              style={{ background: 'rgba(15,50,47,0.45)', border: '1px solid rgba(45,212,191,0.25)' }}
+            >
+              {content.restart_button}
+            </motion.button>
           </motion.div>
         )}
 

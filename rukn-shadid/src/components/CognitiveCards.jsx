@@ -40,12 +40,16 @@ function DeepLayer({ deep }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function CognitiveCards({ onReady }) {
   const [selected, setSelected] = useState(null)
+  const [selectedResponse, setSelectedResponse] = useState(null)
   const [showDeep, setShowDeep] = useState(false)
 
   const card = selected !== null ? content.cognitive_cards[selected] : null
 
   const handleSelect = (i) => {
+    const c = content.cognitive_cards[i]
+    const r = c.responses[Math.floor(Math.random() * c.responses.length)]
     setSelected(i)
+    setSelectedResponse(r)
     setShowDeep(false)
   }
 
@@ -110,7 +114,7 @@ export default function CognitiveCards({ onReady }) {
                 className="text-3xl text-center text-teal-200 font-light"
                 style={{ lineHeight: '2.2rem' }}
               >
-                {card.verse}
+                {selectedResponse?.verse}
               </motion.p>
 
               <motion.div
@@ -126,7 +130,7 @@ export default function CognitiveCards({ onReady }) {
                 animate={{ opacity: 0.62, transition: { delay: 0.75, duration: 0.7 } }}
                 className="text-center text-sm text-gray-300 leading-loose whitespace-pre-line"
               >
-                {card.note}
+                {selectedResponse?.note}
               </motion.p>
 
               {/* Progressive disclosure toggle */}
@@ -164,7 +168,7 @@ export default function CognitiveCards({ onReady }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.3, transition: { delay: 1.3 } }}
                 whileHover={{ opacity: 0.6 }}
-                onClick={() => { setSelected(null); setShowDeep(false) }}
+                onClick={() => { setSelected(null); setSelectedResponse(null); setShowDeep(false) }}
                 className="text-gray-500 text-xs"
               >
                 {content.back_button}
