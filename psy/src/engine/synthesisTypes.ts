@@ -63,4 +63,10 @@ export interface SynthesisResult {
   dimensions: PersonaDimension[];
   primaryNarrative: string;
   keyInsights: string[];
+  /** 0–100 overall data-quality score (tests + demographics) */
+  dataCompleteness?: number;
+  /** Whether demographic adjustments were applied this run */
+  demographicAdjustmentsApplied?: boolean;
+  /** Per-dimension adjustment amounts (for transparency) */
+  demographicAdjustments?: Partial<Record<PersonaDimensionId, number>>;
 }

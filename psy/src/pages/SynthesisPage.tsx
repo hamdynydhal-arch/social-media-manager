@@ -1,5 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { runSynthesis, saveSynthesisResult } from '../engine/synthesisEngine';
+import { exportToPdf } from '../utils/exportPdf';
 import type {
   PersonaDimension,
   SynthesisPattern,
@@ -720,8 +721,21 @@ export default function SynthesisPage({ onHome }: SynthesisPageProps) {
   const confidence = CONFIDENCE_META[result.confidence];
   const noTests = result.completedTests.length === 0;
 
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
+
+  async function handlePdfExport() {
+    if (!reportRef.current || pdfLoading) return;
+    setPdfLoading(true);
+    try {
+      await exportToPdf(reportRef.current, 'nafees-synthesis-report.pdf');
+    } finally {
+      setPdfLoading(false);
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-nafees-cream" dir="rtl">
+    <div className="min-h-screen bg-nafees-cream" dir="rtl" ref={reportRef}>
 
       {/* ── Hero / Header ── */}
       <div
@@ -806,6 +820,43 @@ export default function SynthesisPage({ onHome }: SynthesisPageProps) {
 
             {/* Confidence detail */}
             <p className="text-[10px] text-nafees-cream-dark/50">{confidence.detail}</p>
+
+            {/* Data completeness bar */}
+            {result.dataCompleteness !== undefined && (
+              <div className="mt-3 bg-white/10 rounded-xl px-3 py-2.5">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[10px] text-nafees-cream-dark/60">اكتمال البيانات</span>
+                  <span
+                    className={`text-[11px] font-bold ${
+                      result.dataCompleteness >= 80
+                        ? 'text-nafees-sage'
+                        : result.dataCompleteness >= 50
+                          ? 'text-nafees-copper'
+                          : 'text-nafees-cream-dark/70'
+                    }`}
+                  >
+                    {result.dataCompleteness}%
+                  </span>
+                </div>
+                <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-1000 ${
+                      result.dataCompleteness >= 80 ? 'bg-nafees-sage' : 'bg-nafees-copper'
+                    }`}
+                    style={{ width: `${result.dataCompleteness}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Demographic adjustment badge */}
+            {result.demographicAdjustmentsApplied && (
+              <div className="mt-2">
+                <span className="text-[9px] bg-nafees-copper/25 text-nafees-copper px-2.5 py-0.5 rounded-full inline-block">
+                  ✦ مُعدَّل وفق الملف الديموغرافي
+                </span>
+              </div>
+            )}
 
             {/* Matched patterns */}
             {allPatterns.length > 0 && (
@@ -902,6 +953,33 @@ export default function SynthesisPage({ onHome }: SynthesisPageProps) {
             </section>
           )}
 
+          {/* ── Invite to complete ── */}
+          {(result.dataCompleteness ?? 100) < 80 && (
+            <section
+              className={`max-w-md mx-auto px-4 pt-2 pb-2 transition-all duration-700 delay-[350ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+            >
+              <div className="bg-nafees-blue/5 rounded-2xl p-4 border border-nafees-blue/15 flex items-start gap-3">
+                <span className="text-xl flex-shrink-0">📊</span>
+                <div className="flex-1">
+                  <p className="text-xs font-bold text-nafees-navy mb-1">لرفع دقة التحليل</p>
+                  <p className="text-[10px] text-nafees-warm leading-relaxed mb-2">
+                    {result.completedTests.length < 3 && 'أكمل الاختبارات الثلاثة '}
+                    {!result.demographicAdjustmentsApplied && 'وأضف ملفك السياقي (العمر، الحالة الاجتماعية...) '}
+                    لرفع دقة التوليف النفسي إلى الحد الأقصى.
+                  </p>
+                  {result.completedTests.length < 3 && (
+                    <button
+                      onClick={onHome}
+                      className="text-[10px] bg-nafees-navy text-nafees-cream px-3 py-1.5 rounded-full font-semibold active:scale-95 transition-transform duration-150"
+                    >
+                      استكمال الاختبارات
+                    </button>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
+
           {/* ── Scientific Integrity Guard ── */}
           <section
             className={`max-w-md mx-auto px-4 pt-4 pb-8 transition-all duration-700 delay-[400ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
@@ -944,8 +1022,31 @@ export default function SynthesisPage({ onHome }: SynthesisPageProps) {
         </>
       )}
 
-      {/* Back button */}
-      <div className="max-w-md mx-auto px-4 pb-10">
+      {/* PDF Export + Back buttons */}
+      <div className="max-w-md mx-auto px-4 pb-10 space-y-3">
+        {!noTests && (
+          <button
+            onClick={handlePdfExport}
+            disabled={pdfLoading}
+            className={`w-full py-3.5 rounded-2xl text-sm font-bold transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 ${
+              pdfLoading
+                ? 'bg-nafees-cream-dark text-nafees-warm cursor-not-allowed'
+                : 'bg-nafees-copper text-white'
+            }`}
+          >
+            {pdfLoading ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                جارٍ إنشاء التقرير...
+              </>
+            ) : (
+              <>
+                <span>⬇</span>
+                تحميل التقرير السريري الشامل
+              </>
+            )}
+          </button>
+        )}
         <button
           onClick={onHome}
           className="w-full py-3 rounded-2xl border-2 border-nafees-cream-dark text-nafees-navy font-semibold text-sm active:scale-95 transition-transform duration-150"

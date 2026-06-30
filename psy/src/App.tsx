@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useInstallPrompt } from './hooks/useInstallPrompt';
 import InstallPromptBanner from './components/InstallPromptBanner';
 import type { TestResult } from './engine/types';
@@ -25,8 +25,10 @@ import SchemaStartPage from './pages/SchemaStartPage';
 import SchemaTestPage from './pages/SchemaTestPage';
 import SchemaResultPage from './pages/SchemaResultPage';
 import SynthesisPage from './pages/SynthesisPage';
+import IntakePage from './pages/IntakePage';
+import SettingsPage from './pages/SettingsPage';
 
-type AppView = 'home' | 'ocean' | 'attachment' | 'schema' | 'synthesis';
+type AppView = 'home' | 'ocean' | 'attachment' | 'schema' | 'synthesis' | 'intake' | 'settings';
 type OceanPage = 'start' | 'test' | 'result';
 type AttachmentPhase = 'start' | 'test';
 type SchemaPhase = 'start' | 'test';
@@ -34,6 +36,14 @@ type SchemaPhase = 'start' | 'test';
 export default function App() {
   const { showBanner, handleInstall, handleDismiss } = useInstallPrompt();
   const [appView, setAppView] = useState<AppView>('home');
+
+  // Restore font size preference on boot
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('nafees_font_size');
+      if (saved) document.documentElement.style.fontSize = saved;
+    } catch {}
+  }, []);
 
   // OCEAN sub-state — unchanged from before
   const [oceanPage, setOceanPage] = useState<OceanPage>('start');
@@ -69,6 +79,21 @@ export default function App() {
   }
 
   function handleSelectSynthesis() {
+    setAppView('synthesis');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSelectIntake() {
+    setAppView('intake');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSelectSettings() {
+    setAppView('settings');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleIntakeComplete() {
     setAppView('synthesis');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -163,6 +188,8 @@ export default function App() {
           onSelectAttachment={handleSelectAttachment}
           onSelectSchema={handleSelectSchema}
           onSelectSynthesis={handleSelectSynthesis}
+          onSelectSettings={handleSelectSettings}
+          onSelectIntake={handleSelectIntake}
         />
       );
     }
@@ -265,6 +292,14 @@ export default function App() {
 
     if (appView === 'synthesis') {
       return <SynthesisPage onHome={goHome} />;
+    }
+
+    if (appView === 'intake') {
+      return <IntakePage onHome={goHome} onComplete={handleIntakeComplete} />;
+    }
+
+    if (appView === 'settings') {
+      return <SettingsPage onHome={goHome} />;
     }
 
     return null;

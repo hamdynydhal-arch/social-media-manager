@@ -24,6 +24,8 @@ import { loadAttachmentHistory } from './attachmentScoring';
 import { loadSchemaHistory } from './schemaScoring';
 import { getLevel } from './scoring';
 import { DIMENSION_RULES, SYNTHESIS_PATTERNS } from './synthesisMatrix';
+import { loadDemographicProfile, profileCompleteness } from './demographicTypes';
+import { computeDemographicAdjustments, applyDemographicAdjustments } from './demographicModulators';
 import type { FactorKey } from './types';
 import type { SchemaKey } from './schemaTypes';
 import type {
@@ -33,6 +35,7 @@ import type {
   SynthesisPattern,
   DimensionRule,
   ConfidenceLevel,
+  PersonaDimensionId,
 } from './synthesisTypes';
 
 const STORAGE_KEY = 'nafees_synthesis_result';
@@ -235,14 +238,46 @@ function buildKeyInsights(dims: PersonaDimension[], patterns: SynthesisPattern[]
   return insights.slice(0, 5);
 }
 
+// ── Data completeness ────────────────────────────────────────────────────────
+
+function computeDataCompleteness(
+  completedTests: Set<string>,
+  demoCompleteness: number,
+): number {
+  // Tests contribute 80% of the completeness score (20% each, max 3 tests)
+  const testPct = (completedTests.size / 3) * 80;
+  // Demographic fields contribute up to 20% (8 fields, 2.5% each)
+  const demoPct = (demoCompleteness / 8) * 20;
+  return Math.round(testPct + demoPct);
+}
+
 // ── Main synthesis entry point ───────────────────────────────────────────────
 
 export function runSynthesis(): SynthesisResult {
   const vector = buildTraitVector();
   const completedTestsArray = Array.from(vector.completedTests) as ('ocean' | 'attachment' | 'schema')[];
 
+  // Raw dimension scores from trait vector
+  const rawScores: Record<PersonaDimensionId, number> = {} as Record<PersonaDimensionId, number>;
+  for (const rule of DIMENSION_RULES) {
+    rawScores[rule.dimensionId] = computeDimensionScore(rule, vector);
+  }
+
+  // Demographic adjustments (zero imputation forbidden — only filled fields contribute)
+  const demoProfile = loadDemographicProfile();
+  let adjustedScores = { ...rawScores };
+  let adjMap: Partial<Record<PersonaDimensionId, number>> | undefined;
+  let demoApplied = false;
+
+  if (demoProfile) {
+    const adjustments = computeDemographicAdjustments(demoProfile);
+    adjustedScores = applyDemographicAdjustments(rawScores, adjustments);
+    adjMap = adjustments as Partial<Record<PersonaDimensionId, number>>;
+    demoApplied = true;
+  }
+
   const dimensions: PersonaDimension[] = DIMENSION_RULES.map((rule) => {
-    const score = computeDimensionScore(rule, vector);
+    const score = adjustedScores[rule.dimensionId];
     return {
       id: rule.dimensionId,
       title: rule.title,
@@ -260,6 +295,8 @@ export function runSynthesis(): SynthesisResult {
     if (dim) dim.patterns.push(pattern);
   }
 
+  const demoCompleteness = demoProfile ? profileCompleteness(demoProfile) : 0;
+
   return {
     timestamp: Date.now(),
     completedTests: completedTestsArray,
@@ -267,6 +304,9 @@ export function runSynthesis(): SynthesisResult {
     dimensions,
     primaryNarrative: buildNarrative(dimensions, matchedPatterns, vector.completedTests),
     keyInsights: buildKeyInsights(dimensions, matchedPatterns),
+    dataCompleteness: computeDataCompleteness(vector.completedTests, demoCompleteness),
+    demographicAdjustmentsApplied: demoApplied,
+    demographicAdjustments: adjMap,
   };
 }
 
