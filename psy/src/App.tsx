@@ -206,6 +206,7 @@ export default function App() {
               onStart={handleOceanStart}
               onHome={goHome}
               disclaimer={bigfiveContent.disclaimer}
+              onSelectSettings={handleSelectSettings}
             />
           )}
           {oceanPage === 'test' && (
@@ -245,6 +246,7 @@ export default function App() {
             disclaimer={attachmentContent.disclaimer}
             onStart={() => { setAttachmentPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             onHome={goHome}
+            onSelectSettings={handleSelectSettings}
           />
         );
       }
@@ -277,6 +279,7 @@ export default function App() {
             disclaimer={schemaContent.disclaimer}
             onStart={() => { setSchemaPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             onHome={goHome}
+            onSelectSettings={handleSelectSettings}
           />
         );
       }
@@ -291,11 +294,11 @@ export default function App() {
     }
 
     if (appView === 'synthesis') {
-      return <SynthesisPage onHome={goHome} />;
+      return <SynthesisPage onHome={goHome} onSelectSettings={handleSelectSettings} />;
     }
 
     if (appView === 'intake') {
-      return <IntakePage onHome={goHome} onComplete={handleIntakeComplete} />;
+      return <IntakePage onHome={goHome} onComplete={handleIntakeComplete} onSelectSettings={handleSelectSettings} />;
     }
 
     if (appView === 'settings') {
@@ -311,30 +314,6 @@ export default function App() {
       {showBanner && (
         <InstallPromptBanner onInstall={handleInstall} onDismiss={handleDismiss} />
       )}
-      {/* Fixed global nav — hidden on home (HomePage has its own buttons) */}
-      <div
-        className={`fixed top-3 right-3 z-50 flex items-center gap-2 ${appView === 'home' ? 'hidden' : ''}`}
-        dir="rtl"
-      >
-        <button
-          onClick={handleSelectSettings}
-          className="flex items-center gap-1.5 bg-nafees-navy text-nafees-cream border border-white/40 px-3 py-2 rounded-full text-xs font-bold shadow-xl active:scale-95 transition-transform duration-150"
-          aria-label="الإعدادات"
-        >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
-          الإعدادات
-        </button>
-        <button
-          onClick={handleSelectIntake}
-          className="flex items-center gap-1.5 bg-nafees-navy text-nafees-cream border border-white/40 px-3 py-2 rounded-full text-xs font-bold shadow-xl active:scale-95 transition-transform duration-150"
-          aria-label="ملفي السياقي"
-        >
-          👤
-        </button>
-      </div>
     </>
   );
 }
