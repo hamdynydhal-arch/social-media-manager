@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { loadDemographicProfile, profileCompleteness } from '../engine/demographicTypes';
 
 interface SettingsPageProps {
   onHome: () => void;
+  onSelectIntake: () => void;
 }
 
 const FONT_LEVELS = [
@@ -20,7 +22,10 @@ const RESET_KEYS = [
   'nafees_font_size',
 ];
 
-export default function SettingsPage({ onHome }: SettingsPageProps) {
+export default function SettingsPage({ onHome, onSelectIntake }: SettingsPageProps) {
+  const demoProfile = loadDemographicProfile();
+  const demoFilled = demoProfile ? profileCompleteness(demoProfile) : 0;
+
   const [fontSize, setFontSize] = useState<string>(
     () => (typeof document !== 'undefined' && document.documentElement.style.fontSize) || '16px',
   );
@@ -59,6 +64,32 @@ export default function SettingsPage({ onHome }: SettingsPageProps) {
       </div>
 
       <div className="max-w-md mx-auto px-4 pt-6 pb-24 space-y-5">
+
+        {/* Contextual Profile */}
+        <button
+          onClick={onSelectIntake}
+          className="w-full bg-nafees-navy rounded-2xl p-5 border border-nafees-navy shadow-sm text-right active:scale-[0.98] transition-all duration-200"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0 text-xl">
+              👤
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-sm font-bold text-nafees-cream mb-0.5">ملفك السياقي الديموغرافي</h2>
+              <p className="text-[10px] text-nafees-sky/80 leading-relaxed">
+                {demoFilled > 0
+                  ? `مكتمل ${demoFilled} من 8 حقول — انقر لتعديله`
+                  : 'لم تُضَف أي بيانات بعد — انقر للبدء'}
+              </p>
+            </div>
+            <div className="flex-shrink-0 flex flex-col items-end gap-1">
+              <span className="text-nafees-cream text-lg">←</span>
+              {demoFilled > 0 && (
+                <span className="text-[9px] text-nafees-sage font-bold">{Math.round((demoFilled / 8) * 100)}%</span>
+              )}
+            </div>
+          </div>
+        </button>
 
         {/* Font Size */}
         <div className="bg-white rounded-2xl p-5 border border-nafees-cream-dark/30 shadow-sm">

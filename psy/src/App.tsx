@@ -299,7 +299,7 @@ export default function App() {
     }
 
     if (appView === 'settings') {
-      return <SettingsPage onHome={goHome} />;
+      return <SettingsPage onHome={goHome} onSelectIntake={handleSelectIntake} />;
     }
 
     return null;
