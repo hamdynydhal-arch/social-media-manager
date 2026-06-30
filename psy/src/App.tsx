@@ -311,9 +311,9 @@ export default function App() {
       {showBanner && (
         <InstallPromptBanner onInstall={handleInstall} onDismiss={handleDismiss} />
       )}
-      {/* Fixed global nav — always visible on every screen, z-50 ensures it's on top */}
+      {/* Fixed global nav — hidden on home (HomePage has its own buttons) */}
       <div
-        className="fixed top-3 right-3 z-50 flex items-center gap-2"
+        className={`fixed top-3 right-3 z-50 flex items-center gap-2 ${appView === 'home' ? 'hidden' : ''}`}
         dir="rtl"
       >
         <button
