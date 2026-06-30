@@ -4,9 +4,10 @@ interface HomePageProps {
   onSelectOcean: () => void;
   onSelectAttachment: () => void;
   onSelectSchema: () => void;
+  onSelectSynthesis: () => void;
 }
 
-export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSchema }: HomePageProps) {
+export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSchema, onSelectSynthesis }: HomePageProps) {
   return (
     <div className="min-h-screen bg-nafees-cream flex flex-col items-center">
 
@@ -93,6 +94,30 @@ export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSc
               </div>
             </div>
             <span className="text-nafees-cream-dark text-2xl flex-shrink-0">←</span>
+          </div>
+        </button>
+
+        {/* Synthesis Engine */}
+        <button
+          onClick={onSelectSynthesis}
+          className="w-full text-right hover:shadow-lg transition-all duration-200 active:scale-[0.98] bg-nafees-navy rounded-3xl border border-nafees-navy p-6 block shadow-sm"
+        >
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0 text-2xl">
+              🧬
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-nafees-cream mb-1">محرك التوليف النفسي</h3>
+              <p className="text-sm text-nafees-sky/80 mb-3 leading-relaxed">
+                تحليل تقاطعي يدمج نتائج الاختبارات الثلاثة في صورة نفسية موحدة — مبني على معادلات الارتباط الموثقة في الأدبيات العلمية.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">5 أبعاد مركبة</span>
+                <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">مصادر موثقة</span>
+                <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">تقاطع 3 اختبارات</span>
+              </div>
+            </div>
+            <span className="text-nafees-sky/60 text-2xl flex-shrink-0">←</span>
           </div>
         </button>
 

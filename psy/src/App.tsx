@@ -24,8 +24,9 @@ import AttachmentResultPage from './pages/AttachmentResultPage';
 import SchemaStartPage from './pages/SchemaStartPage';
 import SchemaTestPage from './pages/SchemaTestPage';
 import SchemaResultPage from './pages/SchemaResultPage';
+import SynthesisPage from './pages/SynthesisPage';
 
-type AppView = 'home' | 'ocean' | 'attachment' | 'schema';
+type AppView = 'home' | 'ocean' | 'attachment' | 'schema' | 'synthesis';
 type OceanPage = 'start' | 'test' | 'result';
 type AttachmentPhase = 'start' | 'test';
 type SchemaPhase = 'start' | 'test';
@@ -64,6 +65,11 @@ export default function App() {
     setSchemaResult(null);
     setSchemaPhase('start');
     setAppView('schema');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSelectSynthesis() {
+    setAppView('synthesis');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -156,6 +162,7 @@ export default function App() {
           onSelectOcean={handleSelectOcean}
           onSelectAttachment={handleSelectAttachment}
           onSelectSchema={handleSelectSchema}
+          onSelectSynthesis={handleSelectSynthesis}
         />
       );
     }
@@ -254,6 +261,10 @@ export default function App() {
           onHome={goHome}
         />
       );
+    }
+
+    if (appView === 'synthesis') {
+      return <SynthesisPage onHome={goHome} />;
     }
 
     return null;
