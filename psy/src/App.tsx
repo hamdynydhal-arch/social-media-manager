@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useInstallPrompt } from './hooks/useInstallPrompt';
 import InstallPromptBanner from './components/InstallPromptBanner';
 import type { TestResult } from './engine/types';
@@ -25,8 +25,10 @@ import SchemaStartPage from './pages/SchemaStartPage';
 import SchemaTestPage from './pages/SchemaTestPage';
 import SchemaResultPage from './pages/SchemaResultPage';
 import SynthesisPage from './pages/SynthesisPage';
+import IntakePage from './pages/IntakePage';
+import SettingsPage from './pages/SettingsPage';
 
-type AppView = 'home' | 'ocean' | 'attachment' | 'schema' | 'synthesis';
+type AppView = 'home' | 'ocean' | 'attachment' | 'schema' | 'synthesis' | 'intake' | 'settings';
 type OceanPage = 'start' | 'test' | 'result';
 type AttachmentPhase = 'start' | 'test';
 type SchemaPhase = 'start' | 'test';
@@ -34,6 +36,14 @@ type SchemaPhase = 'start' | 'test';
 export default function App() {
   const { showBanner, handleInstall, handleDismiss } = useInstallPrompt();
   const [appView, setAppView] = useState<AppView>('home');
+
+  // Restore font size preference on boot
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('nafees_font_size');
+      if (saved) document.documentElement.style.fontSize = saved;
+    } catch {}
+  }, []);
 
   // OCEAN sub-state — unchanged from before
   const [oceanPage, setOceanPage] = useState<OceanPage>('start');
@@ -69,6 +79,21 @@ export default function App() {
   }
 
   function handleSelectSynthesis() {
+    setAppView('synthesis');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSelectIntake() {
+    setAppView('intake');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSelectSettings() {
+    setAppView('settings');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleIntakeComplete() {
     setAppView('synthesis');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -163,6 +188,8 @@ export default function App() {
           onSelectAttachment={handleSelectAttachment}
           onSelectSchema={handleSelectSchema}
           onSelectSynthesis={handleSelectSynthesis}
+          onSelectSettings={handleSelectSettings}
+          onSelectIntake={handleSelectIntake}
         />
       );
     }
@@ -267,6 +294,14 @@ export default function App() {
       return <SynthesisPage onHome={goHome} />;
     }
 
+    if (appView === 'intake') {
+      return <IntakePage onHome={goHome} onComplete={handleIntakeComplete} />;
+    }
+
+    if (appView === 'settings') {
+      return <SettingsPage onHome={goHome} onSelectIntake={handleSelectIntake} />;
+    }
+
     return null;
   }
 
@@ -276,6 +311,30 @@ export default function App() {
       {showBanner && (
         <InstallPromptBanner onInstall={handleInstall} onDismiss={handleDismiss} />
       )}
+      {/* Fixed global nav — always visible on every screen, z-50 ensures it's on top */}
+      <div
+        className="fixed top-3 right-3 z-50 flex items-center gap-2"
+        dir="rtl"
+      >
+        <button
+          onClick={handleSelectSettings}
+          className="flex items-center gap-1.5 bg-nafees-navy text-nafees-cream border border-white/40 px-3 py-2 rounded-full text-xs font-bold shadow-xl active:scale-95 transition-transform duration-150"
+          aria-label="الإعدادات"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          الإعدادات
+        </button>
+        <button
+          onClick={handleSelectIntake}
+          className="flex items-center gap-1.5 bg-nafees-navy text-nafees-cream border border-white/40 px-3 py-2 rounded-full text-xs font-bold shadow-xl active:scale-95 transition-transform duration-150"
+          aria-label="ملفي السياقي"
+        >
+          👤
+        </button>
+      </div>
     </>
   );
 }
