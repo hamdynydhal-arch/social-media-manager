@@ -1,19 +1,11 @@
 import NafeesLogo from '../components/NafeesLogo';
 
-const GearIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="3"/>
-    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-  </svg>
-);
-
 interface AttachmentStartPageProps {
   questionCount: number;
   estimatedMinutes: number;
   disclaimer: string;
   onStart: () => void;
-  onHome: () => void;
-  onSelectSettings?: () => void;
+  onHome?: () => void;
 }
 
 export default function AttachmentStartPage({
@@ -21,8 +13,6 @@ export default function AttachmentStartPage({
   estimatedMinutes,
   disclaimer,
   onStart,
-  onHome,
-  onSelectSettings,
 }: AttachmentStartPageProps) {
   return (
     <div className="min-h-screen bg-nafees-cream flex flex-col items-center justify-center p-4">
@@ -30,19 +20,6 @@ export default function AttachmentStartPage({
 
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-6" dir="rtl">
-            <button
-              onClick={onHome}
-              className="text-xs text-nafees-warm hover:text-nafees-blue transition-colors flex items-center gap-1"
-            >
-              ← رجوع
-            </button>
-            {onSelectSettings && (
-              <button onClick={onSelectSettings} className="text-nafees-warm/50 hover:text-nafees-navy active:scale-95 transition-all p-1" aria-label="الإعدادات">
-                <GearIcon />
-              </button>
-            )}
-          </div>
           <div className="text-center">
           <div className="flex justify-center mb-3">
             <div className="w-20 h-20 rounded-full bg-nafees-copper flex items-center justify-center shadow-lg">

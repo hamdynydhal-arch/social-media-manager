@@ -194,14 +194,8 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
     <div className="min-h-screen bg-nafees-cream pb-12">
 
       {/* Screen-only header */}
-      <div className={`bg-gradient-to-l ${primarySchema.gradientFrom} ${primarySchema.gradientTo} text-white px-4 pt-10 pb-8 relative`}>
+      <div className={`bg-gradient-to-l ${primarySchema.gradientFrom} ${primarySchema.gradientTo} text-white px-4 pt-8 pb-8`}>
         <div className="max-w-md mx-auto text-center">
-          <button
-            onClick={onHome}
-            className="absolute top-4 right-4 text-white/70 hover:text-white text-sm transition-colors"
-          >
-            → الرئيسية
-          </button>
           <div className="text-6xl mb-3">{mode.icon}</div>
           <h1 className="text-2xl font-extrabold mb-1">{mode.name}</h1>
           <p className="text-white/80 text-sm">

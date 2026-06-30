@@ -14,6 +14,7 @@ import attachmentContent from './data/attachmentContent';
 import schemaData from './data/schema.json';
 import schemaContent from './data/schemaContent';
 import type { SchemaQuestion } from './engine/schemaTypes';
+import AppNavbar from './components/AppNavbar';
 import HomePage from './pages/HomePage';
 import StartPage from './pages/StartPage';
 import TestPage from './pages/TestPage';
@@ -180,6 +181,19 @@ export default function App() {
   }
 
   // ── Render ─────────────────────────────────────────────
+
+  // Determine if we're in an active test — test pages render their own progress bars
+  const isTestPhase =
+    (appView === 'ocean' && oceanPage === 'test') ||
+    (appView === 'attachment' && !attachmentResult && attachmentPhase === 'test') ||
+    (appView === 'schema' && !schemaResult && schemaPhase === 'test');
+
+  function getNavbarProps() {
+    if (appView === 'home') return { isHome: true, onSettings: handleSelectSettings, onIntake: handleSelectIntake };
+    if (appView === 'settings') return { onBack: goHome };
+    return { onBack: goHome, onSettings: handleSelectSettings };
+  }
+
   function renderPage() {
     if (appView === 'home') {
       return (
@@ -206,7 +220,6 @@ export default function App() {
               onStart={handleOceanStart}
               onHome={goHome}
               disclaimer={bigfiveContent.disclaimer}
-              onSelectSettings={handleSelectSettings}
             />
           )}
           {oceanPage === 'test' && (
@@ -246,7 +259,6 @@ export default function App() {
             disclaimer={attachmentContent.disclaimer}
             onStart={() => { setAttachmentPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             onHome={goHome}
-            onSelectSettings={handleSelectSettings}
           />
         );
       }
@@ -279,7 +291,6 @@ export default function App() {
             disclaimer={schemaContent.disclaimer}
             onStart={() => { setSchemaPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             onHome={goHome}
-            onSelectSettings={handleSelectSettings}
           />
         );
       }
@@ -294,11 +305,11 @@ export default function App() {
     }
 
     if (appView === 'synthesis') {
-      return <SynthesisPage onHome={goHome} onSelectSettings={handleSelectSettings} />;
+      return <SynthesisPage onHome={goHome} />;
     }
 
     if (appView === 'intake') {
-      return <IntakePage onHome={goHome} onComplete={handleIntakeComplete} onSelectSettings={handleSelectSettings} />;
+      return <IntakePage onHome={goHome} onComplete={handleIntakeComplete} />;
     }
 
     if (appView === 'settings') {
@@ -310,6 +321,7 @@ export default function App() {
 
   return (
     <>
+      {!isTestPhase && <AppNavbar {...getNavbarProps()} />}
       {renderPage()}
       {showBanner && (
         <InstallPromptBanner onInstall={handleInstall} onDismiss={handleDismiss} />
