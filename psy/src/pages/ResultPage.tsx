@@ -9,6 +9,7 @@ interface ResultPageProps {
   result: TestResult;
   content: TestContent;
   onRetake: () => void;
+  onUpgrade?: () => void;
 }
 
 const LEVEL_LABELS: Record<Level, string> = {
@@ -37,7 +38,7 @@ const DOMAIN_NAMES: Record<string, string> = {
   habits: 'عادات يومية مقترحة',
 };
 
-export default function ResultPage({ result, content, onRetake }: ResultPageProps) {
+export default function ResultPage({ result, content, onRetake, onUpgrade }: ResultPageProps) {
   const reportRef = useRef<HTMLDivElement>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
   const profile = selectProfileTitle(result.levels, content.profileTitles);
@@ -71,6 +72,19 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
           <span className="text-4xl">🧠</span>
           <h1 className="text-2xl font-extrabold text-nafees-navy mt-1">نفيس — نتيجة اختبارك</h1>
         </div>
+
+        {/* Tier badge */}
+        {result.tier && (
+          <div className="flex justify-center mb-4">
+            <span className={`text-xs px-3 py-1.5 rounded-full font-semibold ${
+              result.tier === 'core'
+                ? 'bg-nafees-sky/20 text-nafees-blue border border-nafees-sky/40'
+                : 'bg-nafees-navy/10 text-nafees-navy border border-nafees-navy/20'
+            }`}>
+              {result.tier === 'core' ? '⚡ التقييم الأساسي — 50 سؤالاً' : '🔬 التقييم الشامل — 120 سؤالاً'}
+            </span>
+          </div>
+        )}
 
         {/* Sub-type / Profile Title */}
         <div className="card mb-4 bg-gradient-to-br from-nafees-navy to-nafees-blue text-white">
@@ -228,6 +242,25 @@ export default function ResultPage({ result, content, onRetake }: ResultPageProp
             <p className="text-gray-700 leading-relaxed text-sm">{content.closingMessage}</p>
           </div>
         </div>
+
+        {/* Upgrade CTA for core tier */}
+        {result.tier === 'core' && onUpgrade && (
+          <div className="card mb-4 border border-nafees-copper/30 bg-nafees-copper/5">
+            <div className="text-center">
+              <div className="text-3xl mb-2">🔬</div>
+              <h3 className="font-bold text-nafees-navy mb-2">للتحليل الأعمق</h3>
+              <p className="text-sm text-nafees-warm leading-relaxed mb-4">
+                للحصول على تحليل أعمق لطبقات شخصيتك الدقيقة — بما في ذلك 30 وجهاً فرعياً ونمط شخصية مفصّل — ننصحك بترقية التقييم إلى النسخة الشاملة (120 سؤالاً).
+              </p>
+              <button
+                onClick={onUpgrade}
+                className="bg-nafees-navy text-nafees-cream text-sm font-bold px-6 py-3 rounded-2xl active:scale-95 transition-all duration-200 hover:bg-nafees-blue"
+              >
+                🔬 الترقية إلى التقييم الشامل
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Scientific Summary — OCEAN — verbatim */}
         <div className="card mb-4 border border-nafees-sky/30 bg-nafees-navy/5">

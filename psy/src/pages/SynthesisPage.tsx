@@ -847,6 +847,15 @@ export default function SynthesisPage({ onHome }: SynthesisPageProps) {
               </div>
             )}
 
+            {/* Core tier transparency note */}
+            {result.oceanTier === 'core' && (
+              <div className="mt-3 bg-nafees-sky/15 border border-nafees-sky/25 rounded-xl px-3 py-2.5 text-right">
+                <p className="text-[10px] text-nafees-sky leading-relaxed">
+                  ⚡ تحليل الشخصية مبني على التقييم الأساسي (50 سؤالاً) — الأبعاد الخمسة دقيقة، لكن الوجوه الفرعية تتطلب التقييم الشامل.
+                </p>
+              </div>
+            )}
+
             {/* Matched patterns */}
             {allPatterns.length > 0 && (
               <div className="mt-4 pt-4 border-t border-white/15">

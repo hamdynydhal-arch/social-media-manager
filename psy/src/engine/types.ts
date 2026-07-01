@@ -2,6 +2,7 @@ export type QuestionType = 'likert' | 'boolean' | 'single_choice' | 'multiple_ch
 export type Direction = 'direct' | 'reverse';
 export type FactorKey = 'E' | 'A' | 'C' | 'N' | 'O';
 export type Level = 'very_high' | 'high' | 'medium' | 'low' | 'very_low';
+export type OceanTier = 'core' | 'deep';
 
 // NEO PI-R 30 facets (Costa & McCrae, 1992) — 6 per factor
 export type FacetKey =
@@ -24,6 +25,7 @@ export interface Question {
   facet?: FacetKey;
   direction?: Direction;
   weight?: number;
+  tier?: OceanTier;
   options?: { value: number | boolean; label: string }[];
 }
 
@@ -124,4 +126,5 @@ export interface TestResult {
   levels: Partial<Record<FactorKey, Level>>;
   facetScores: Partial<Record<FacetKey, number>>;
   subTypeCode: string;
+  tier?: OceanTier;
 }

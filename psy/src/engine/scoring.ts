@@ -1,4 +1,4 @@
-import type { Question, FactorKey, FacetKey, Level, TestResult, ScoringConfig, ProfileTitle } from './types';
+import type { Question, FactorKey, FacetKey, Level, TestResult, ScoringConfig, ProfileTitle, OceanTier } from './types';
 
 /**
  * Weighted Big Five scoring with Z-score → logistic transform.
@@ -280,18 +280,37 @@ export function determineSubTypeSuffix(
 
 /**
  * Build the full test result including facet scores and sub-type code.
+ *
+ * For core tier (50 items): factor scores are computed directly from item responses
+ * (more statistically appropriate with ~10 items/factor than aggregating unreliable
+ * 1-2-item facet scores). Sub-type classification is suppressed — it requires all
+ * 6 facets with 4 items each to be reliable (anti-hallucination guard).
+ *
+ * For deep tier (120 items): full facet-based pipeline with 30-facet sub-typing.
  */
 export function buildTestResult(
   answers: Record<string, number>,
   questions: Question[],
-  config: ScoringConfig
+  config: ScoringConfig,
+  tier?: OceanTier
 ): Omit<TestResult, 'testId'> {
-  const facetScores = calculateFacetScores(answers, questions, config);
-  const scores = aggregateFactorScoresFromFacets(facetScores);
+  let scores: Partial<Record<FactorKey, number>>;
+  let facetScores: Partial<Record<FacetKey, number>>;
+  let subTypeCode: string;
+
+  if (tier === 'core') {
+    scores = calculateScores(answers, questions, config);
+    facetScores = calculateFacetScores(answers, questions, config);
+    subTypeCode = '';
+  } else {
+    facetScores = calculateFacetScores(answers, questions, config);
+    scores = aggregateFactorScoresFromFacets(facetScores);
+    const profileCode = determineProfileCode(scores);
+    const suffix = determineSubTypeSuffix(facetScores, profileCode);
+    subTypeCode = `${profileCode}-${suffix}`;
+  }
+
   const levels = getLevels(scores, config);
-  const profileCode = determineProfileCode(scores);
-  const suffix = determineSubTypeSuffix(facetScores, profileCode);
-  const subTypeCode = `${profileCode}-${suffix}`;
 
   return {
     timestamp: Date.now(),
@@ -300,6 +319,7 @@ export function buildTestResult(
     levels,
     facetScores,
     subTypeCode,
+    ...(tier ? { tier } : {}),
   };
 }
 
