@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>الشيفرة الفارسية - المحطة الأولى</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap');
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 10mm auto;
+            background: #ffffff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            position: relative;
+            page-break-after: always;
+        }
+        /* الغلاف */
+        .cover {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .cover h1 {
+            font-size: 42px;
+            font-weight: 900;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+        .cover h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            opacity: 0.9;
+        }
+        .music-icon {
+            font-size: 80px;
+            color: #d4af37;
+            margin: 40px 0;
+        }
+        .quote-box {
+            border-right: 5px solid #d4af37;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 4px;
+            max-width: 80%;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+        /* العناوين والترتيب */
+        h3.section-title {
+            color: #0f2027;
+            border-bottom: 3px solid #d4af37;
+            padding-bottom: 8px;
+            margin-top: 0;
+            font-size: 22px;
+        }
+        .badge {
+            background-color: #d4af37;
+            color: #0f2027;
+            padding: 5px 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        /* الجداول */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th {
+            background-color: #0f2027;
+            color: #ffffff;
+            padding: 12px;
+            text-align: right;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        /* كتل النص والملاحظات */
+        .poem-block {
+            font-family: 'Amiri', serif;
+            font-size: 22px;
+            text-align: center;
+            background: #fdfaf2;
+            border: 1px dashed #d4af37;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #2c5364;
+        }
+        .phonetics {
+            font-size: 14px;
+            color: #777;
+            display: block;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        .qr-placeholder {
+            border: 2px solid #0f2027;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+        }
+        .card {
+            background: #fff;
+            border-right: 4px solid #0f2027;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .card strong {
+            color: #e67e22;
+        }
+        @media print {
+            body { background: none; }
+            .page { margin: 0; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة 1: الغلاف -->
+    <div class="page cover">
+        <h1>الشيفرة الفارسية</h1>
+        <h2>المحطة 1: التحدث من اليوم الأول بالاستفادة من لغتك العربية</h2>
+        <div class="music-icon">🎵</div>
+        <div class="quote-box">
+            "أنت تعرف الفارسية بالفعل لكنك لم تضبط اللحن بعد!<br>
+            دعنا نغنيها معاً لتتحدث وتطوع لغتك من الدقيقة الأولى."
+        </div>
+    </div>
+
+    <!-- الصفحة 2: الدرس الأول -->
+    <div class="page">
+        <div class="flex-container">
+            <div>
+                <span class="badge">الدرس الأول</span>
+                <h3 class="section-title">كيف تنطق الكلمات التي تعرفها مسبقاً باللكنة الإيرانية؟</h3>
+            </div>
+            <div class="qr-placeholder">🔊 باركود الدندنة الافتتاحية</div>
+        </div>
+
+        <div class="poem-block">
+            «حُضُورِ خَلْوَتِ أُنْس اسْت و شَمْع و مَجْلِس و سَاقِي»<br>
+            «حَدِيثِ تَوْبَه مَگُو كِإِنْ حَدِيثِ بِي‌خَبَرِي اسْت»
+            <span class="phonetics">النطق: هُوزُورِ خَلْڤَاتِ أُونْس اسْتْ و شَمْع و مَجْلِيس و سَاقِي...</span>
+        </div>
+
+        <p><strong>قاعدة التسهيل الإيراني:</strong> يميل الإيرانيون لتنعيم الأصوات اللثوية، حيث تتحول الحروف المشتركة (ث، ذ، ض، ظ) إلى سين أو زاء ناعمة:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>الكلمة الأصلية</th>
+                    <th>باللحن الإيراني</th>
+                    <th>القاعدة الصوتية الذهبية</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>مريض</strong></td>
+                    <td>مريز (Mariz)</td>
+                    <td>حرف (الضاد) العربي ينطق دائماً (زاء) ناعمة وخفيفة.</td>
+                </tr>
+                <tr>
+                    <td><strong>حديث</strong></td>
+                    <td>هاديس (Hadis)</td>
+                    <td>حرف (الثاء) اللثوي يتحول إلى (سين) مريحة للشارع.</td>
+                </tr>
+                <tr>
+                    <td><strong>خلوة</strong></td>
+                    <td>خَلْڤَات (Khalvat)</td>
+                    <td>الواو تنطق مثل (V) الإنجليزية، والتاء المربوطة تفتح.</td>
+                </tr>
+                <tr>
+                    <td><strong>مجلس</strong></td>
+                    <td>مَجْلِيس (Majlis)</td>
+                    <td>إشباع الكسرة ومدّها لتصبح ياءً صريحة وسلسة.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>🎵 ترنيمة الحروف الأربعة الزائدة:</strong> انطقها متسارعة بإيقاع غنائي:</p>
+        <p style="text-align: center; word-spacing: 15px; font-size: 18px;">
+            <strong>پ</strong> (پپسي) &nbsp;&nbsp;&nbsp; <strong>چ</strong> (چاي) &nbsp;&nbsp;&nbsp; <strong>گ</strong> (گوگل) &nbsp;&nbsp;&nbsp; <strong>ژ</strong> (پژو)
+        </p>
+    </div>
+
+    <!-- الصفحة 3: الدرس الثاني -->
+    <div class="page">
+        <span class="badge">الدرس الثاني</span>
+        <h3 class="section-title">احذر الفخ: كلمات عربية تستخدم في إيران بمعنى مختلف تماماً!</h3>
+
+        <p style="background-color: #e8f4f8; padding: 10px; border-radius: 4px;">
+            🎭 <strong>الموقف التمثيلي:</strong> لا تقل "هذه الغرفة كثيفة" للإيراني ظناً منك أنها تعني ممتلئة، فالكثافة هناك هي قمة الاتساخ!
+        </p>
+
+        <div class="card">
+            <strong>1. کثیف (Kasif):</strong>
+            <p>❌ تظنها: غليظة أو متراكمة.<br>✅ معناها الحقيقي في الشارع: <strong>متسخ / وسخ</strong>.</p>
+        </div>
+
+        <div class="card">
+            <strong>2. جمعیت (Jam'iyat):</strong>
+            <p>❌ تظنها: مؤسسة خيرية أو منظمة.<br>✅ معناها الحقيقي في الشارع: <strong>عدد السكان أو الزحام الشديد</strong>.</p>
+        </div>
+
+        <div class="card">
+            <strong>3. رابطه (Rabete):</strong>
+            <p>❌ تظنها: رابطاً رسمياً أو ورق العمل.<br>✅ معناها الحقيقي بين الشباب: <strong>علاقة عاطفية (Love relationship)</strong>.</p>
+        </div>
+
+        <div class="card">
+            <strong>4. تشریف بیاورید (Tashrif Biyavarid):</strong>
+            <p>✅ قمة اللباقة الاجتماعية والثقافية في لغة التعارف والترحيب، وتعني: <strong>تفضل بالدخول / شرفنا في بيتنا</strong>.</p>
+        </div>
+    </div>
+
+    <!-- الصفحة 4: الدرس الثالث -->
+    <div class="page">
+        <span class="badge">الدرس الثالث</span>
+        <h3 class="section-title">شيفرة طهران: كيف تحول الفارسية الرسمية إلى لكنة عامية وسلسة؟</h3>
+
+        <p><strong>القاعدة السحرية الفورية:</strong> لتسريع الكلام في شوارع طهران، يتم تحويل مقطع <strong>(آن)</strong> ومقطع <strong>(ام)</strong> في أواخر الكلمات إلى <strong>(ون)</strong> بشكل تلقائي وعفوي.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>الفارسية الرسمية (الكتب)</th>
+                    <th>الفارسية العامية (الشارع)</th>
+                    <th>المعنى بالعربية</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>باران (Baran)</td>
+                    <td><strong>بارون (Baroon)</strong></td>
+                    <td>المطر</td>
+                </tr>
+                <tr>
+                    <td>تهران (Tehran)</td>
+                    <td><strong>تهرون (Tehroon)</strong></td>
+                    <td>العاصمة طهران</td>
+                </tr>
+                <tr>
+                    <td>نان (Nan)</td>
+                    <td><strong>نون (Noon)</strong></td>
+                    <td>الخبز</td>
+                </tr>
+                <tr>
+                    <td>خانه (Khaneh)</td>
+                    <td><strong>خونه (Khooneh)</strong></td>
+                    <td>البيت / المنزل</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top: 40px; border-top: 2px solid #ddd; padding-top: 2px;">
+            <p>🎵 <strong>دندنة ختام المحطة الأولى (مقطع الأغنية التريند):</strong></p>
+            <div class="poem-block" style="background: #0f2027; color: #fff; border: none;">
+                "بارون داره ريز ريز مى‌باره..."<br>
+                <span style="font-size: 16px; color: #d4af37;">(المطر يسقط رذاذاً خفيفاً...)</span>
+            </div>
+            <p style="font-size: 14px; text-align: center; color: #555;">💡 لاحظ كيف غناها الفنان "بارون" وليس "باران" تطبيقاً لقاعدة الشارع التي سحرت أذنك!</p>
+        </div>
+    </div>
+
+</body>
+</html>
