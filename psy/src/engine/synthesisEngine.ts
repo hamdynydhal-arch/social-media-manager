@@ -257,6 +257,9 @@ export function runSynthesis(): SynthesisResult {
   const vector = buildTraitVector();
   const completedTestsArray = Array.from(vector.completedTests) as ('ocean' | 'attachment' | 'schema')[];
 
+  const oceanHistory = loadHistory();
+  const oceanTier = oceanHistory.length > 0 ? ((oceanHistory[0].tier ?? 'deep') as 'core' | 'deep') : undefined;
+
   // Raw dimension scores from trait vector
   const rawScores: Record<PersonaDimensionId, number> = {} as Record<PersonaDimensionId, number>;
   for (const rule of DIMENSION_RULES) {
@@ -307,6 +310,7 @@ export function runSynthesis(): SynthesisResult {
     dataCompleteness: computeDataCompleteness(vector.completedTests, demoCompleteness),
     demographicAdjustmentsApplied: demoApplied,
     demographicAdjustments: adjMap,
+    oceanTier,
   };
 }
 

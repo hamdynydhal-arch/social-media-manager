@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useInstallPrompt } from './hooks/useInstallPrompt';
 import InstallPromptBanner from './components/InstallPromptBanner';
-import type { TestResult } from './engine/types';
+import type { TestResult, OceanTier } from './engine/types';
 import type { AttachmentResult } from './engine/attachmentTypes';
 import type { SchemaResult } from './engine/schemaTypes';
 import { buildTestResult, saveResult } from './engine/scoring';
@@ -15,6 +15,7 @@ import schemaData from './data/schema.json';
 import schemaContent from './data/schemaContent';
 import type { SchemaQuestion } from './engine/schemaTypes';
 import AppNavbar from './components/AppNavbar';
+import OceanTierModal from './components/OceanTierModal';
 import HomePage from './pages/HomePage';
 import StartPage from './pages/StartPage';
 import TestPage from './pages/TestPage';
@@ -46,9 +47,11 @@ export default function App() {
     } catch {}
   }, []);
 
-  // OCEAN sub-state — unchanged from before
+  // OCEAN sub-state
   const [oceanPage, setOceanPage] = useState<OceanPage>('start');
   const [oceanResult, setOceanResult] = useState<TestResult | null>(null);
+  const [oceanTier, setOceanTier] = useState<OceanTier>('deep');
+  const [showTierModal, setShowTierModal] = useState(false);
 
   // Attachment sub-state
   const [attachmentPhase, setAttachmentPhase] = useState<AttachmentPhase>('start');
@@ -61,8 +64,19 @@ export default function App() {
   // ── Home ──────────────────────────────────────────────
   function handleSelectOcean() {
     setOceanPage('start');
-    setAppView('ocean');
+    setOceanResult(null);
+    setShowTierModal(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleTierSelect(tier: OceanTier) {
+    setOceanTier(tier);
+    setShowTierModal(false);
+    setAppView('ocean');
+  }
+
+  function handleTierCancel() {
+    setShowTierModal(false);
   }
 
   function handleSelectAttachment() {
@@ -110,11 +124,21 @@ export default function App() {
   }
 
   function handleOceanComplete(answers: Record<string, number>) {
-    const base = buildTestResult(answers, bigfiveData.questions as never, bigfiveData.scoring as never);
+    const activeQs = oceanTier === 'core'
+      ? (bigfiveData.questions as { tier?: string }[]).filter((q) => q.tier === 'core')
+      : bigfiveData.questions;
+    const base = buildTestResult(answers, activeQs as never, bigfiveData.scoring as never, oceanTier);
     const testResult: TestResult = { testId: bigfiveData.id, ...base };
     saveResult(testResult);
     setOceanResult(testResult);
     setOceanPage('result');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleOceanUpgrade() {
+    setOceanTier('deep');
+    setOceanResult(null);
+    setOceanPage('start');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -209,14 +233,17 @@ export default function App() {
     }
 
     if (appView === 'ocean') {
+      const activeOceanQs = oceanTier === 'core'
+        ? (bigfiveData.questions as { tier?: string }[]).filter((q) => q.tier === 'core')
+        : bigfiveData.questions;
       return (
         <>
           {oceanPage === 'start' && (
             <StartPage
               testName={bigfiveData.name}
               description={bigfiveData.description}
-              estimatedMinutes={bigfiveData.estimatedMinutes}
-              questionCount={bigfiveData.questions.length}
+              estimatedMinutes={oceanTier === 'core' ? 6 : bigfiveData.estimatedMinutes}
+              questionCount={activeOceanQs.length}
               onStart={handleOceanStart}
               onHome={goHome}
               disclaimer={bigfiveContent.disclaimer}
@@ -224,7 +251,7 @@ export default function App() {
           )}
           {oceanPage === 'test' && (
             <TestPage
-              questions={bigfiveData.questions as never}
+              questions={activeOceanQs as never}
               onComplete={handleOceanComplete}
               onReset={handleOceanReset}
             />
@@ -234,6 +261,7 @@ export default function App() {
               result={oceanResult}
               content={bigfiveContent}
               onRetake={handleOceanRetake}
+              onUpgrade={oceanResult.tier === 'core' ? handleOceanUpgrade : undefined}
             />
           )}
         </>
@@ -325,6 +353,9 @@ export default function App() {
       {renderPage()}
       {showBanner && (
         <InstallPromptBanner onInstall={handleInstall} onDismiss={handleDismiss} />
+      )}
+      {showTierModal && (
+        <OceanTierModal onSelect={handleTierSelect} onCancel={handleTierCancel} />
       )}
     </>
   );

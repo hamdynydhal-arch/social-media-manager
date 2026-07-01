@@ -69,4 +69,6 @@ export interface SynthesisResult {
   demographicAdjustmentsApplied?: boolean;
   /** Per-dimension adjustment amounts (for transparency) */
   demographicAdjustments?: Partial<Record<PersonaDimensionId, number>>;
+  /** OCEAN tier used when the personality test was taken */
+  oceanTier?: 'core' | 'deep';
 }
