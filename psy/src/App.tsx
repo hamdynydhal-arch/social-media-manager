@@ -4,16 +4,20 @@ import InstallPromptBanner from './components/InstallPromptBanner';
 import type { TestResult, OceanTier } from './engine/types';
 import type { AttachmentResult } from './engine/attachmentTypes';
 import type { SchemaResult } from './engine/schemaTypes';
+import type { SocialPatternsResult } from './engine/socialPatternsTypes';
 import { buildTestResult, saveResult } from './engine/scoring';
 import { calculateAttachmentScores, saveAttachmentResult } from './engine/attachmentScoring';
 import { calculateSchemaScores, saveSchemaResult } from './engine/schemaScoring';
+import { calculateSocialPatternsScores, saveSocialPatternsResult } from './engine/socialPatternsScoring';
 import bigfiveData from './data/bigfive.json';
 import bigfiveContent from './data/bigfiveContent';
 import attachmentData from './data/attachment.json';
 import attachmentContent from './data/attachmentContent';
 import schemaData from './data/schema.json';
 import schemaContent from './data/schemaContent';
+import socialPatternsData from './data/socialPatterns.json';
 import type { SchemaQuestion } from './engine/schemaTypes';
+import type { SocialPatternsQuestion } from './engine/socialPatternsTypes';
 import AppNavbar from './components/AppNavbar';
 import OceanTierModal from './components/OceanTierModal';
 import HomePage from './pages/HomePage';
@@ -26,14 +30,18 @@ import AttachmentResultPage from './pages/AttachmentResultPage';
 import SchemaStartPage from './pages/SchemaStartPage';
 import SchemaTestPage from './pages/SchemaTestPage';
 import SchemaResultPage from './pages/SchemaResultPage';
+import SocialPatternsStartPage from './pages/SocialPatternsStartPage';
+import SocialPatternsTestPage from './pages/SocialPatternsTestPage';
+import SocialPatternsResultPage from './pages/SocialPatternsResultPage';
 import SynthesisPage from './pages/SynthesisPage';
 import IntakePage from './pages/IntakePage';
 import SettingsPage from './pages/SettingsPage';
 
-type AppView = 'home' | 'ocean' | 'attachment' | 'schema' | 'synthesis' | 'intake' | 'settings';
+type AppView = 'home' | 'ocean' | 'attachment' | 'schema' | 'social_patterns' | 'synthesis' | 'intake' | 'settings';
 type OceanPage = 'start' | 'test' | 'result';
 type AttachmentPhase = 'start' | 'test';
 type SchemaPhase = 'start' | 'test';
+type SocialPatternsPhase = 'start' | 'test';
 
 export default function App() {
   const { showBanner, handleInstall, handleDismiss } = useInstallPrompt();
@@ -60,6 +68,10 @@ export default function App() {
   // Schema sub-state
   const [schemaPhase, setSchemaPhase] = useState<SchemaPhase>('start');
   const [schemaResult, setSchemaResult] = useState<SchemaResult | null>(null);
+
+  // Social Patterns sub-state
+  const [socialPatternsPhase, setSocialPatternsPhase] = useState<SocialPatternsPhase>('start');
+  const [socialPatternsResult, setSocialPatternsResult] = useState<SocialPatternsResult | null>(null);
 
   // ── Home ──────────────────────────────────────────────
   function handleSelectOcean() {
@@ -90,6 +102,13 @@ export default function App() {
     setSchemaResult(null);
     setSchemaPhase('start');
     setAppView('schema');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSelectSocialPatterns() {
+    setSocialPatternsResult(null);
+    setSocialPatternsPhase('start');
+    setAppView('social_patterns');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -179,6 +198,31 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // ── Social Patterns flow ──────────────────────────────
+  function handleSocialPatternsComplete(answers: Record<string, number>) {
+    const result = calculateSocialPatternsScores(
+      answers,
+      socialPatternsData.questions as SocialPatternsQuestion[],
+      socialPatternsData.likertMin,
+      socialPatternsData.likertMax,
+    );
+    saveSocialPatternsResult(result);
+    setSocialPatternsResult(result);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSocialPatternsReset() {
+    setSocialPatternsResult(null);
+    setSocialPatternsPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSocialPatternsRetake() {
+    setSocialPatternsResult(null);
+    setSocialPatternsPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   // ── Schema flow ───────────────────────────────────────
   function handleSchemaComplete(answers: Record<string, number>) {
     const result = calculateSchemaScores(
@@ -210,7 +254,8 @@ export default function App() {
   const isTestPhase =
     (appView === 'ocean' && oceanPage === 'test') ||
     (appView === 'attachment' && !attachmentResult && attachmentPhase === 'test') ||
-    (appView === 'schema' && !schemaResult && schemaPhase === 'test');
+    (appView === 'schema' && !schemaResult && schemaPhase === 'test') ||
+    (appView === 'social_patterns' && !socialPatternsResult && socialPatternsPhase === 'test');
 
   function getNavbarProps() {
     if (appView === 'home') return { isHome: true, onSettings: handleSelectSettings, onIntake: handleSelectIntake };
@@ -225,6 +270,7 @@ export default function App() {
           onSelectOcean={handleSelectOcean}
           onSelectAttachment={handleSelectAttachment}
           onSelectSchema={handleSelectSchema}
+          onSelectSocialPatterns={handleSelectSocialPatterns}
           onSelectSynthesis={handleSelectSynthesis}
           onSelectSettings={handleSelectSettings}
           onSelectIntake={handleSelectIntake}
@@ -327,6 +373,37 @@ export default function App() {
           questions={schemaData.questions as SchemaQuestion[]}
           onComplete={handleSchemaComplete}
           onReset={handleSchemaReset}
+          onHome={goHome}
+        />
+      );
+    }
+
+    if (appView === 'social_patterns') {
+      if (socialPatternsResult) {
+        return (
+          <SocialPatternsResultPage
+            result={socialPatternsResult}
+            onRetake={handleSocialPatternsRetake}
+            onHome={goHome}
+            onTakeOcean={handleSelectOcean}
+          />
+        );
+      }
+      if (socialPatternsPhase === 'start') {
+        return (
+          <SocialPatternsStartPage
+            questionCount={socialPatternsData.questions.length}
+            estimatedMinutes={socialPatternsData.estimatedMinutes}
+            onStart={() => { setSocialPatternsPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            onHome={goHome}
+          />
+        );
+      }
+      return (
+        <SocialPatternsTestPage
+          questions={socialPatternsData.questions as SocialPatternsQuestion[]}
+          onComplete={handleSocialPatternsComplete}
+          onReset={handleSocialPatternsReset}
           onHome={goHome}
         />
       );

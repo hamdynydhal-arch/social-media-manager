@@ -4,12 +4,13 @@ interface HomePageProps {
   onSelectOcean: () => void;
   onSelectAttachment: () => void;
   onSelectSchema: () => void;
+  onSelectSocialPatterns: () => void;
   onSelectSynthesis: () => void;
   onSelectSettings: () => void;
   onSelectIntake: () => void;
 }
 
-export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSchema, onSelectSynthesis, onSelectSettings, onSelectIntake }: HomePageProps) {
+export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSchema, onSelectSocialPatterns, onSelectSynthesis, onSelectSettings, onSelectIntake }: HomePageProps) {
   return (
     <div className="min-h-screen bg-nafees-cream flex flex-col items-center">
 
@@ -93,6 +94,30 @@ export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSc
                 <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">49 سؤالاً</span>
                 <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">~12 دقيقة</span>
                 <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">7 مخططات</span>
+              </div>
+            </div>
+            <span className="text-nafees-cream-dark text-2xl flex-shrink-0">←</span>
+          </div>
+        </button>
+
+        {/* Social Patterns */}
+        <button
+          onClick={onSelectSocialPatterns}
+          className="w-full text-right hover:shadow-lg transition-all duration-200 active:scale-[0.98] bg-white rounded-3xl border border-nafees-cream-dark/40 p-6 block shadow-sm"
+        >
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-nafees-navy flex items-center justify-center flex-shrink-0 text-2xl">
+              🐺
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-nafees-navy mb-1">اختبار الأنماط الاجتماعية</h3>
+              <p className="text-sm text-nafees-warm mb-3 leading-relaxed">
+                اكتشف نمطك الاجتماعي (ألفا، سيغما، بيتا، دلتا) وتعرّف على الحقيقة العلمية وراء هذه المصطلحات الشائعة.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-nafees-navy/8 text-nafees-navy text-xs px-2.5 py-1 rounded-full font-semibold">49 سؤالاً</span>
+                <span className="bg-nafees-navy/8 text-nafees-navy text-xs px-2.5 py-1 rounded-full font-semibold">~10 دقائق</span>
+                <span className="bg-nafees-navy/8 text-nafees-navy text-xs px-2.5 py-1 rounded-full font-semibold">4 أنماط</span>
               </div>
             </div>
             <span className="text-nafees-cream-dark text-2xl flex-shrink-0">←</span>
