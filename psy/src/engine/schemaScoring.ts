@@ -9,6 +9,7 @@ export function calculateSchemaScores(
   questions: SchemaQuestion[],
   likertMin: number,
   likertMax: number,
+  tier: 'core' | 'deep' = 'deep',
 ): SchemaResult {
   const sums: Partial<Record<SchemaKey, number>> = {};
   const totalWeights: Partial<Record<SchemaKey, number>> = {};
@@ -50,6 +51,8 @@ export function calculateSchemaScores(
     activeSchemas,
     primarySchema,
     mode,
+    tier,
+    questionCount: questions.length,
   };
 }
 

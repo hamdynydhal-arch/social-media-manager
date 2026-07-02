@@ -7,9 +7,10 @@ interface AttachmentResultPageProps {
   content: AttachmentContent;
   onRetake: () => void;
   onHome: () => void;
+  onUpgrade?: () => void;
 }
 
-export default function AttachmentResultPage({ result, content, onRetake, onHome }: AttachmentResultPageProps) {
+export default function AttachmentResultPage({ result, content, onRetake, onHome, onUpgrade }: AttachmentResultPageProps) {
   const reportRef = useRef<HTMLDivElement>(null);
   const [showRefs, setShowRefs] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
@@ -37,6 +38,15 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
           <div className="text-6xl mb-3">{pattern.icon}</div>
           <h1 className="text-2xl font-extrabold mb-1">{pattern.name}</h1>
           <p className="text-white/80 text-sm">{pattern.subtitle}</p>
+          {result.tier === 'core' ? (
+            <span className="inline-block mt-2 text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-400/25 text-amber-100">
+              ⚡ تقييم أساسي · {result.questionCount ?? 8} أسئلة
+            </span>
+          ) : (
+            <span className="inline-block mt-2 text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/15 text-white/75">
+              🔬 تقييم معمق · {result.questionCount ?? 36} سؤالاً
+            </span>
+          )}
         </div>
       </div>
 
@@ -245,6 +255,17 @@ export default function AttachmentResultPage({ result, content, onRetake, onHome
             🏠 رئيسية
           </button>
         </div>
+
+        {/* Upgrade to deep tier */}
+        {onUpgrade && (
+          <button
+            onClick={onUpgrade}
+            className="w-full py-3 rounded-2xl bg-nafees-blue hover:bg-nafees-navy text-white font-bold text-sm active:scale-95 transition-all flex items-center justify-center gap-2"
+          >
+            <span>🔬</span>
+            ارقَ إلى التقييم المعمق (36 سؤالاً · ~10 دقائق)
+          </button>
+        )}
 
         {/* References toggle for screen */}
         <button

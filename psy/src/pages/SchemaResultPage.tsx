@@ -7,11 +7,12 @@ interface SchemaResultPageProps {
   content: SchemaContent;
   onRetake: () => void;
   onHome: () => void;
+  onUpgrade?: () => void;
 }
 
 const SCHEMA_ORDER: SchemaKey[] = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7'];
 
-export default function SchemaResultPage({ result, content, onRetake, onHome }: SchemaResultPageProps) {
+export default function SchemaResultPage({ result, content, onRetake, onHome, onUpgrade }: SchemaResultPageProps) {
   const reportRef = useRef<HTMLDivElement>(null);
   const [showRefs, setShowRefs] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
@@ -203,6 +204,15 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
               ? `${result.activeSchemas.length} مخطط${result.activeSchemas.length === 1 ? '' : 'ات'} نشطة`
               : 'مخططات في المستوى الطبيعي'}
           </p>
+          {result.tier === 'core' ? (
+            <span className="inline-block mt-2 text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-400/25 text-amber-100">
+              ⚡ تقييم أساسي · {result.questionCount ?? 14} سؤالاً
+            </span>
+          ) : (
+            <span className="inline-block mt-2 text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/15 text-white/75">
+              🔬 تقييم معمق · {result.questionCount ?? 49} سؤالاً
+            </span>
+          )}
         </div>
       </div>
 
@@ -351,6 +361,17 @@ export default function SchemaResultPage({ result, content, onRetake, onHome }: 
             🏠 رئيسية
           </button>
         </div>
+
+        {/* Upgrade to deep tier */}
+        {onUpgrade && (
+          <button
+            onClick={onUpgrade}
+            className="w-full py-3 rounded-2xl bg-nafees-sage hover:bg-nafees-warm-dark text-white font-bold text-sm active:scale-95 transition-all flex items-center justify-center gap-2"
+          >
+            <span>🔬</span>
+            ارقَ إلى التقييم المعمق (49 سؤالاً · ~12 دقيقة)
+          </button>
+        )}
 
         <button
           onClick={() => setShowRefs((v) => !v)}

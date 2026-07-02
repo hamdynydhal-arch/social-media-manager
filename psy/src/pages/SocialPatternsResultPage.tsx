@@ -15,6 +15,7 @@ interface SocialPatternsResultPageProps {
   onRetake: () => void;
   onHome: () => void;
   onTakeOcean?: () => void;
+  onUpgrade?: () => void;
 }
 
 function SectionHeading({ icon, title, subtitle }: { icon: string; title: string; subtitle?: string }) {
@@ -52,6 +53,7 @@ export default function SocialPatternsResultPage({
   onRetake,
   onHome,
   onTakeOcean,
+  onUpgrade,
 }: SocialPatternsResultPageProps) {
   const reportRef = useRef<HTMLDivElement>(null);
   const [showRefs, setShowRefs] = useState(false);
@@ -123,6 +125,19 @@ export default function SocialPatternsResultPage({
         <span className="inline-block text-xs font-bold px-3 py-1 rounded-full" style={{ background: 'rgba(255,255,255,0.20)' }}>
           {intensityLabel} · {Math.round(intensityScore)}٪
         </span>
+        {result.tier === 'core' ? (
+          <div className="mt-2">
+            <span className="inline-block text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-400/25 text-amber-100">
+              ⚡ تقييم أساسي · {result.questionCount ?? 12} سؤالاً
+            </span>
+          </div>
+        ) : (
+          <div className="mt-2">
+            <span className="inline-block text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/15 text-white/75">
+              🔬 تقييم معمق · {result.questionCount ?? 49} سؤالاً
+            </span>
+          </div>
+        )}
       </div>
 
       {/* PDF-capturable content */}
@@ -447,6 +462,17 @@ export default function SocialPatternsResultPage({
             🏠 رئيسية
           </button>
         </div>
+        {/* Upgrade to deep tier */}
+        {onUpgrade && (
+          <button
+            onClick={onUpgrade}
+            className="w-full py-3 rounded-2xl bg-nafees-navy hover:bg-nafees-blue text-white font-bold text-sm active:scale-95 transition-all flex items-center justify-center gap-2"
+          >
+            <span>🔬</span>
+            ارقَ إلى التقييم المعمق (49 سؤالاً · ~10 دقائق)
+          </button>
+        )}
+
         <button
           onClick={() => setShowRefs((v) => !v)}
           className="text-xs text-gray-400 underline w-full text-center"

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useInstallPrompt } from './hooks/useInstallPrompt';
 import InstallPromptBanner from './components/InstallPromptBanner';
 import type { TestResult, OceanTier } from './engine/types';
-import type { AttachmentResult } from './engine/attachmentTypes';
+import type { AttachmentResult, AttachmentQuestion } from './engine/attachmentTypes';
 import type { SchemaResult } from './engine/schemaTypes';
 import type { SocialPatternsResult } from './engine/socialPatternsTypes';
 import { buildTestResult, saveResult } from './engine/scoring';
@@ -218,11 +218,15 @@ export default function App() {
 
   // ── Attachment flow ───────────────────────────────────
   function handleAttachmentComplete(answers: Record<string, number>) {
+    const activeQs = attachmentTier === 'core'
+      ? (attachmentData.questions as AttachmentQuestion[]).filter((q) => q.tier === 'core')
+      : attachmentData.questions as AttachmentQuestion[];
     const result = calculateAttachmentScores(
       answers,
-      attachmentData.questions as never,
+      activeQs,
       attachmentData.likertMin,
-      attachmentData.likertMax
+      attachmentData.likertMax,
+      attachmentTier,
     );
     saveAttachmentResult(result);
     setAttachmentResult(result);
@@ -241,13 +245,24 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function handleAttachmentUpgrade() {
+    setAttachmentTier('deep');
+    setAttachmentResult(null);
+    setAttachmentPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   // ── Social Patterns flow ──────────────────────────────
   function handleSocialPatternsComplete(answers: Record<string, number>) {
+    const activeQs = socialPatternsTier === 'core'
+      ? (socialPatternsData.questions as SocialPatternsQuestion[]).filter((q) => q.tier === 'core')
+      : socialPatternsData.questions as SocialPatternsQuestion[];
     const result = calculateSocialPatternsScores(
       answers,
-      socialPatternsData.questions as SocialPatternsQuestion[],
+      activeQs,
       socialPatternsData.likertMin,
       socialPatternsData.likertMax,
+      socialPatternsTier,
     );
     saveSocialPatternsResult(result);
     setSocialPatternsResult(result);
@@ -266,13 +281,24 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function handleSocialPatternsUpgrade() {
+    setSocialPatternsTier('deep');
+    setSocialPatternsResult(null);
+    setSocialPatternsPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   // ── Schema flow ───────────────────────────────────────
   function handleSchemaComplete(answers: Record<string, number>) {
+    const activeQs = schemaTier === 'core'
+      ? (schemaData.questions as SchemaQuestion[]).filter((q) => q.tier === 'core')
+      : schemaData.questions as SchemaQuestion[];
     const result = calculateSchemaScores(
       answers,
-      schemaData.questions as SchemaQuestion[],
+      activeQs,
       schemaData.likertMin,
       schemaData.likertMax,
+      schemaTier,
     );
     saveSchemaResult(result);
     setSchemaResult(result);
@@ -286,6 +312,13 @@ export default function App() {
   }
 
   function handleSchemaRetake() {
+    setSchemaResult(null);
+    setSchemaPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSchemaUpgrade() {
+    setSchemaTier('deep');
     setSchemaResult(null);
     setSchemaPhase('start');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -370,6 +403,7 @@ export default function App() {
             content={attachmentContent}
             onRetake={handleAttachmentRetake}
             onHome={goHome}
+            onUpgrade={attachmentResult.tier === 'core' ? handleAttachmentUpgrade : undefined}
           />
         );
       }
@@ -409,6 +443,7 @@ export default function App() {
             content={schemaContent}
             onRetake={handleSchemaRetake}
             onHome={goHome}
+            onUpgrade={schemaResult.tier === 'core' ? handleSchemaUpgrade : undefined}
           />
         );
       }
@@ -448,6 +483,7 @@ export default function App() {
             onRetake={handleSocialPatternsRetake}
             onHome={goHome}
             onTakeOcean={handleSelectOcean}
+            onUpgrade={socialPatternsResult.tier === 'core' ? handleSocialPatternsUpgrade : undefined}
           />
         );
       }

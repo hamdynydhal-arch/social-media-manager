@@ -10,7 +10,8 @@ export function calculateAttachmentScores(
   answers: Record<string, number>,
   questions: AttachmentQuestion[],
   likertMin: number,
-  likertMax: number
+  likertMax: number,
+  tier: 'core' | 'deep' = 'deep',
 ): AttachmentResult {
   let anxietySum = 0, anxietyCount = 0;
   let avoidanceSum = 0, avoidanceCount = 0;
@@ -40,7 +41,7 @@ export function calculateAttachmentScores(
 
   const pattern = determinePattern(anxietyScore, avoidanceScore);
 
-  return { anxietyScore, avoidanceScore, anxietyPct, avoidancePct, pattern, answers };
+  return { anxietyScore, avoidanceScore, anxietyPct, avoidancePct, pattern, answers, tier, questionCount: questions.length };
 }
 
 export function determinePattern(

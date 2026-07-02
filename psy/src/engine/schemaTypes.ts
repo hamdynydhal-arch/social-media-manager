@@ -18,6 +18,8 @@ export interface SchemaResult {
   activeSchemas: SchemaKey[];
   primarySchema: SchemaKey;
   mode: SchemaMode;
+  tier?: 'core' | 'deep';
+  questionCount?: number;
 }
 
 export interface SchemaPatternContent {

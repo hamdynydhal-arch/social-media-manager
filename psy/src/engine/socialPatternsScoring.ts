@@ -25,6 +25,7 @@ export function calculateSocialPatternsScores(
   questions: SocialPatternsQuestion[],
   likertMin: number,
   likertMax: number,
+  tier: 'core' | 'deep' = 'deep',
 ): SocialPatternsResult {
   const axisData: Record<SocialAxis, { sum: number; count: number }> = {
     D:  { sum: 0, count: 0 },
@@ -72,6 +73,8 @@ export function calculateSocialPatternsScores(
     patternScores,
     pattern,
     intensity,
+    tier,
+    questionCount: questions.length,
   };
 }
 

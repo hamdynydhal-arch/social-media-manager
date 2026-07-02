@@ -25,4 +25,6 @@ export interface SocialPatternsResult {
   };
   pattern: SocialPattern;
   intensity: PatternIntensity;
+  tier?: 'core' | 'deep';
+  questionCount?: number;
 }

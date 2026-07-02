@@ -30,6 +30,8 @@ export interface AttachmentResult {
   avoidancePct: number;    // 0–100 for display
   pattern: AttachmentPattern;
   answers: Record<string, number>;
+  tier?: 'core' | 'deep';
+  questionCount?: number;
 }
 
 export interface PatternRecommendations {
