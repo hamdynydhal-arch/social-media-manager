@@ -253,8 +253,17 @@ function computeDataCompleteness(
 
 // ── Main synthesis entry point ───────────────────────────────────────────────
 
-export function runSynthesis(): SynthesisResult {
+/**
+ * Returns null when zero tests are completed — the engine must never produce
+ * a persona label from empty data (anti-hallucination guard).
+ */
+export function runSynthesis(): SynthesisResult | null {
   const vector = buildTraitVector();
+
+  // Hard guard: zero data → no synthesis. Returning null forces the UI to show
+  // an explicit empty state instead of a default-fallback persona.
+  if (vector.completedTests.size === 0) return null;
+
   const completedTestsArray = Array.from(vector.completedTests) as ('ocean' | 'attachment' | 'schema')[];
 
   const oceanHistory = loadHistory();

@@ -691,38 +691,142 @@ function MethodologyModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+// ── Locked Synthesis Gate ──────────────────────────────────────────────────────
+
+const TEST_LABELS: Record<string, string> = {
+  ocean: 'الشخصية 🧠',
+  attachment: 'التعلق 💙',
+  schema: 'المخططات 🌱',
+};
+
+function LockedSynthesisGate({
+  completedTests,
+  onHome,
+}: {
+  completedTests: string[];
+  onHome: () => void;
+}) {
+  const remaining = 3 - completedTests.length;
+  return (
+    <section className="max-w-md mx-auto px-4 pt-6 pb-4">
+      <div
+        className="relative rounded-3xl overflow-hidden border border-white/10"
+        style={{ background: 'linear-gradient(135deg, #0F2D45 0%, #1B4A6B 100%)' }}
+      >
+        {/* Blurred ghost content */}
+        <div className="blur-sm pointer-events-none select-none opacity-40 p-6 text-center">
+          <p className="text-white text-2xl font-bold mb-1">هويتك النفسية الكاملة</p>
+          <p className="text-white/70 text-sm">النمط المتكيف · الاستقرار الانفعالي · الإنجاز الاستراتيجي</p>
+        </div>
+
+        {/* Lock overlay */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center"
+          style={{ backdropFilter: 'blur(2px)' }}>
+          <span className="text-3xl mb-3">🔒</span>
+          <h3 className="text-lg font-bold text-white mb-2">التوليف الشامل مقفل</h3>
+          <p className="text-white/75 text-sm leading-relaxed mb-4">
+            أكمل {remaining} اختبار{remaining === 1 ? '' : 'ات'} {remaining === 1 ? 'إضافياً' : 'إضافية'} لكشف هويتك النفسية المتعددة الأبعاد
+          </p>
+          <div className="flex gap-2 justify-center flex-wrap mb-4">
+            {(['ocean', 'attachment', 'schema'] as const).map((id) => {
+              const done = completedTests.includes(id);
+              return (
+                <span
+                  key={id}
+                  className={`text-[11px] font-bold px-3 py-1.5 rounded-full ${
+                    done ? 'bg-nafees-sage text-white' : 'bg-white/15 text-white/60'
+                  }`}
+                >
+                  {done ? '✓' : '○'} {TEST_LABELS[id]}
+                </span>
+              );
+            })}
+          </div>
+          <button
+            onClick={onHome}
+            className="bg-white text-nafees-navy font-bold text-sm px-6 py-2.5 rounded-full active:scale-95 transition-transform duration-150"
+          >
+            استكمال الاختبارات
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function SynthesisPage({ onHome }: SynthesisPageProps) {
-  const result: SynthesisResult = useMemo(() => {
+  // All hooks must be declared before any conditional return
+  const result = useMemo(() => {
     const r = runSynthesis();
-    saveSynthesisResult(r);
+    if (r) saveSynthesisResult(r);
     return r;
   }, []);
 
   const [visible, setVisible] = useState(false);
   const [showMethodology, setShowMethodology] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setVisible(true));
     return () => cancelAnimationFrame(id);
   }, []);
 
-  const allPatterns = useMemo(
-    () => result.dimensions.flatMap((d) => d.patterns),
-    [result],
-  );
+  // ── Zero-data guard — anti-hallucination hard stop ──────────────────────────
+  // runSynthesis() returns null when completedTests === 0. Never display a
+  // default persona name when there is no data to support it.
+  if (!result) {
+    return (
+      <div className="min-h-screen bg-nafees-cream flex flex-col" dir="rtl">
+        <div
+          className={`flex-1 flex flex-col items-center justify-center px-4 pb-24 transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}
+        >
+          <div className="max-w-md w-full bg-white rounded-3xl p-8 text-center shadow-sm border border-nafees-cream-dark/30">
+            <p className="text-5xl mb-5">📋</p>
+            <h1 className="text-xl font-bold text-nafees-navy mb-3">لا توجد بيانات كافية</h1>
+            <p className="text-nafees-warm text-sm leading-relaxed mb-6">
+              يرجى إكمال الاختبارات للبدء في تحليل شخصيتك. أكمل الاختبارات الثلاثة (الشخصية · التعلق · المخططات) لتفعيل محرك التوليف النفسي وتحليل التقاطعات.
+            </p>
+            <div className="flex gap-2 justify-center flex-wrap mb-6">
+              {(['ocean', 'attachment', 'schema'] as const).map((id) => (
+                <span key={id} className="text-[11px] px-3 py-1.5 rounded-full bg-nafees-cream border border-nafees-cream-dark/40 text-nafees-warm">
+                  ○ {TEST_LABELS[id]}
+                </span>
+              ))}
+            </div>
+            <button
+              onClick={onHome}
+              className="bg-nafees-navy text-nafees-cream text-sm font-bold px-8 py-3 rounded-2xl active:scale-95 transition-transform duration-150"
+            >
+              ابدأ الاختبارات
+            </button>
+          </div>
+        </div>
+        <div className="max-w-md mx-auto w-full px-4 pb-10">
+          <button
+            onClick={onHome}
+            className="w-full py-3 rounded-2xl border-2 border-nafees-cream-dark text-nafees-navy font-semibold text-sm active:scale-95 transition-transform duration-150"
+          >
+            ← العودة إلى الرئيسية
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-  const persona = useMemo(
-    () => derivePersona(result.dimensions, allPatterns),
-    [result, allPatterns],
-  );
+  // ── Derived values (after null guard) ──────────────────────────────────────
+  const fullSynthesis = result.completedTests.length === 3;
+
+  const allPatterns = result.dimensions.flatMap((d) => d.patterns);
+
+  // Persona is only derived (and shown) when all 3 tests are complete.
+  // With partial data the scores are valid but assigning a named persona
+  // from an incomplete profile would be a form of hallucination.
+  const persona = fullSynthesis ? derivePersona(result.dimensions, allPatterns) : null;
 
   const confidence = CONFIDENCE_META[result.confidence];
-  const noTests = result.completedTests.length === 0;
-
-  const [pdfLoading, setPdfLoading] = useState(false);
-  const reportRef = useRef<HTMLDivElement>(null);
 
   async function handlePdfExport() {
     if (!reportRef.current || pdfLoading) return;
@@ -734,17 +838,18 @@ export default function SynthesisPage({ onHome }: SynthesisPageProps) {
     }
   }
 
+  // Hero gradient: use persona colours when available, otherwise neutral navy
+  const heroGradFrom = persona?.gradientFrom ?? '#1B4A6B';
+  const heroGradTo   = persona?.gradientTo   ?? '#0F2D45';
+
   return (
     <div className="min-h-screen bg-nafees-cream" dir="rtl" ref={reportRef}>
 
       {/* ── Hero / Header ── */}
       <div
         className={`transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}
-        style={{
-          background: `linear-gradient(180deg, ${persona.gradientFrom} 0%, ${persona.gradientTo} 100%)`,
-        }}
+        style={{ background: `linear-gradient(180deg, ${heroGradFrom} 0%, ${heroGradTo} 100%)` }}
       >
-        {/* Glassmorphism persona card */}
         <div className="max-w-md mx-auto px-4 pt-8 pb-8">
           <div
             className="rounded-3xl p-6 text-center shadow-2xl border border-white/15"
@@ -754,20 +859,29 @@ export default function SynthesisPage({ onHome }: SynthesisPageProps) {
               WebkitBackdropFilter: 'blur(12px)',
             }}
           >
-            {/* Persona name */}
-            <h1
-              className="text-3xl font-bold text-nafees-cream mb-1"
-              style={{
-                fontFamily: '"Cormorant Garamond", Georgia, serif',
-                letterSpacing: '0.04em',
-                color: persona.accentColor === '#9CCCE8' ? '#F7F5F2' : '#F7F5F2',
-              }}
-            >
-              {persona.name}
-            </h1>
-            <p className="text-nafees-cream-dark/80 text-sm mb-5 leading-relaxed">
-              {persona.subtitle}
-            </p>
+            {/* Persona name — only when full synthesis is unlocked */}
+            {fullSynthesis && persona ? (
+              <>
+                <h1
+                  className="text-3xl font-bold text-nafees-cream mb-1"
+                  style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', letterSpacing: '0.04em' }}
+                >
+                  {persona.name}
+                </h1>
+                <p className="text-nafees-cream-dark/80 text-sm mb-5 leading-relaxed">
+                  {persona.subtitle}
+                </p>
+              </>
+            ) : (
+              <>
+                <h1 className="text-2xl font-bold text-nafees-cream mb-1">
+                  توليفك النفسي قيد الاكتمال
+                </h1>
+                <p className="text-nafees-cream-dark/70 text-sm mb-5 leading-relaxed">
+                  أكمل {3 - result.completedTests.length} اختبار{result.completedTests.length === 2 ? '' : 'ات'} إضافية لكشف هويتك الكاملة
+                </p>
+              </>
+            )}
 
             {/* Confidence + tests */}
             <div className="flex items-center justify-center gap-2 flex-wrap mb-4">
@@ -856,8 +970,8 @@ export default function SynthesisPage({ onHome }: SynthesisPageProps) {
               </div>
             )}
 
-            {/* Matched patterns */}
-            {allPatterns.length > 0 && (
+            {/* Matched patterns — only show when full synthesis is available */}
+            {fullSynthesis && allPatterns.length > 0 && persona && (
               <div className="mt-4 pt-4 border-t border-white/15">
                 <p className="text-[10px] text-nafees-cream-dark/60 mb-2">الأنماط المُكتشَفة</p>
                 <div className="flex flex-wrap justify-center gap-2">
@@ -882,147 +996,127 @@ export default function SynthesisPage({ onHome }: SynthesisPageProps) {
         </div>
       </div>
 
-      {/* ── No-tests state ── */}
-      {noTests ? (
-        <div
-          className={`max-w-md mx-auto px-4 pt-8 pb-24 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-        >
-          <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-nafees-cream-dark/30">
-            <p className="text-4xl mb-3">📋</p>
-            <p className="text-nafees-navy font-bold mb-2">لم تُكمل أي اختبار بعد</p>
-            <p className="text-nafees-warm text-sm leading-relaxed">
-              أكمل الاختبارات الثلاثة (الشخصية · التعلق · المخططات) لتفعيل محرك التوليف النفسي
-              وتحليل التقاطعات بين أبعاد شخصيتك.
-            </p>
-            <button
-              onClick={onHome}
-              className="mt-4 bg-nafees-navy text-nafees-cream text-sm font-semibold px-6 py-2.5 rounded-full active:scale-95 transition-transform duration-150"
-            >
-              ابدأ من هنا
-            </button>
-          </div>
+      {/* ── Neural Radar Graph ── */}
+      <section
+        className={`max-w-md mx-auto px-4 pt-7 transition-all duration-700 delay-100 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+      >
+        <div className="flex items-center justify-between mb-3 px-1">
+          <h2 className="text-sm font-bold text-nafees-navy">الخريطة النفسية</h2>
+          <span className="text-[10px] text-nafees-warm">اضغط على النقاط للتفاصيل</span>
         </div>
-      ) : (
-        <>
-          {/* ── Neural Radar Graph ── */}
-          <section
-            className={`max-w-md mx-auto px-4 pt-7 transition-all duration-700 delay-100 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-          >
-            <div className="flex items-center justify-between mb-3 px-1">
-              <h2 className="text-sm font-bold text-nafees-navy">الخريطة النفسية</h2>
-              <span className="text-[10px] text-nafees-warm">اضغط على النقاط للتفاصيل</span>
-            </div>
-            <div className="bg-white rounded-2xl shadow-sm border border-nafees-cream-dark/30 py-4 px-2">
-              <RadarChart dims={result.dimensions} />
-            </div>
-          </section>
+        <div className="bg-white rounded-2xl shadow-sm border border-nafees-cream-dark/30 py-4 px-2">
+          <RadarChart dims={result.dimensions} />
+        </div>
+      </section>
 
-          {/* ── Clinical Insight Smart Cards ── */}
-          <section
-            className={`max-w-md mx-auto px-4 pt-6 pb-4 transition-all duration-700 delay-200 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-          >
-            <h2 className="text-sm font-bold text-nafees-navy mb-3 px-1">التحليل النفسي التفصيلي</h2>
-            <div className="space-y-3">
-              {result.dimensions.map((dim, i) => (
-                <SmartCard key={dim.id} dim={dim} visible={visible} index={i} />
+      {/* ── Clinical Insight Smart Cards ── */}
+      <section
+        className={`max-w-md mx-auto px-4 pt-6 pb-4 transition-all duration-700 delay-200 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+      >
+        <h2 className="text-sm font-bold text-nafees-navy mb-3 px-1">التحليل النفسي التفصيلي</h2>
+        <div className="space-y-3">
+          {result.dimensions.map((dim, i) => (
+            <SmartCard key={dim.id} dim={dim} visible={visible} index={i} />
+          ))}
+        </div>
+      </section>
+
+      {/* ── Key Insights (only meaningful with full data) ── */}
+      {fullSynthesis && result.keyInsights.length > 0 && (
+        <section
+          className={`max-w-md mx-auto px-4 pt-2 pb-2 transition-all duration-700 delay-300 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+        >
+          <div className="bg-nafees-navy/5 rounded-2xl p-4 border border-nafees-navy/10">
+            <h2 className="text-sm font-bold text-nafees-navy mb-3">✦ رؤى جوهرية</h2>
+            <ul className="space-y-2">
+              {result.keyInsights.map((insight, i) => (
+                <li
+                  key={i}
+                  className="flex gap-2 text-xs text-nafees-warm-dark leading-relaxed"
+                >
+                  <span className="text-nafees-copper flex-shrink-0 mt-px">◆</span>
+                  <span>{insight}</span>
+                </li>
               ))}
-            </div>
-          </section>
-
-          {/* ── Key Insights ── */}
-          {result.keyInsights.length > 0 && (
-            <section
-              className={`max-w-md mx-auto px-4 pt-2 pb-2 transition-all duration-700 delay-300 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-            >
-              <div className="bg-nafees-navy/5 rounded-2xl p-4 border border-nafees-navy/10">
-                <h2 className="text-sm font-bold text-nafees-navy mb-3">✦ رؤى جوهرية</h2>
-                <ul className="space-y-2">
-                  {result.keyInsights.map((insight, i) => (
-                    <li
-                      key={i}
-                      className="flex gap-2 text-xs text-nafees-warm-dark leading-relaxed"
-                    >
-                      <span className="text-nafees-copper flex-shrink-0 mt-px">◆</span>
-                      <span>{insight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-          )}
-
-          {/* ── Invite to complete ── */}
-          {(result.dataCompleteness ?? 100) < 80 && (
-            <section
-              className={`max-w-md mx-auto px-4 pt-2 pb-2 transition-all duration-700 delay-[350ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-            >
-              <div className="bg-nafees-blue/5 rounded-2xl p-4 border border-nafees-blue/15 flex items-start gap-3">
-                <span className="text-xl flex-shrink-0">📊</span>
-                <div className="flex-1">
-                  <p className="text-xs font-bold text-nafees-navy mb-1">لرفع دقة التحليل</p>
-                  <p className="text-[10px] text-nafees-warm leading-relaxed mb-2">
-                    {result.completedTests.length < 3 && 'أكمل الاختبارات الثلاثة '}
-                    {!result.demographicAdjustmentsApplied && 'وأضف ملفك السياقي (العمر، الحالة الاجتماعية...) '}
-                    لرفع دقة التوليف النفسي إلى الحد الأقصى.
-                  </p>
-                  {result.completedTests.length < 3 && (
-                    <button
-                      onClick={onHome}
-                      className="text-[10px] bg-nafees-navy text-nafees-cream px-3 py-1.5 rounded-full font-semibold active:scale-95 transition-transform duration-150"
-                    >
-                      استكمال الاختبارات
-                    </button>
-                  )}
-                </div>
-              </div>
-            </section>
-          )}
-
-          {/* ── Scientific Integrity Guard ── */}
-          <section
-            className={`max-w-md mx-auto px-4 pt-4 pb-8 transition-all duration-700 delay-[400ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-          >
-            {/* Methodology trigger */}
-            <button
-              onClick={() => setShowMethodology(true)}
-              className="w-full flex items-center justify-between bg-nafees-cream-dark/40 hover:bg-nafees-cream-dark/60 rounded-2xl p-4 border border-nafees-cream-dark/50 transition-colors duration-200 active:scale-[0.99] transition-transform"
-            >
-              <span className="text-xs text-nafees-warm-dark">عرض المعادلة والمصادر العلمية</span>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-nafees-blue">المنهجية</span>
-                <span className="w-6 h-6 rounded-full bg-nafees-blue/10 flex items-center justify-center text-nafees-blue text-xs font-bold">
-                  ⚗
-                </span>
-              </div>
-            </button>
-
-            {/* Sources preview */}
-            <div className="mt-3 bg-nafees-cream-dark/25 rounded-2xl p-4">
-              <p className="text-[10px] font-bold text-nafees-navy mb-2">المصادر الأساسية</p>
-              <div className="space-y-1 text-[9px] text-nafees-warm leading-relaxed">
-                <p>• Noftle & Shaver (2006) — J. Research in Personality, 40(2)</p>
-                <p>• Thimm (2010) — J. Behavior Therapy, 41(4)</p>
-                <p>• Mikulincer & Shaver (2007) — Attachment in Adulthood, Guilford</p>
-                <p>• Barrick & Mount (1991) — Personnel Psychology, 44(1)</p>
-                <p>• Young, Klosko & Weishaar (2003) — Schema Therapy, Guilford</p>
-              </div>
-              <p className="text-[9px] text-nafees-warm mt-2 leading-relaxed">
-                جميع معاملات الترجيح مُشتقة مباشرة من معاملات الارتباط المنشورة — لا تخمين في المنهجية.
-              </p>
-            </div>
-
-            {/* Disclaimer */}
-            <p className="text-[10px] text-nafees-warm text-center px-2 leading-relaxed mt-4">
-              🔒 هذا التحليل لأغراض التوعية الذاتية فقط وليس تشخيصاً سريرياً.
-              للحصول على تقييم متخصص، يُرشد للتواصل مع معالج نفسي مرخص.
-            </p>
-          </section>
-        </>
+            </ul>
+          </div>
+        </section>
       )}
+
+      {/* ── Locked Synthesis Gate — shown when < 3 tests complete ── */}
+      {!fullSynthesis && (
+        <div className={`transition-all duration-700 delay-300 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <LockedSynthesisGate completedTests={result.completedTests} onHome={onHome} />
+        </div>
+      )}
+
+      {/* ── Invite to complete / demographic nudge ── */}
+      {(result.dataCompleteness ?? 100) < 80 && (
+        <section
+          className={`max-w-md mx-auto px-4 pt-2 pb-2 transition-all duration-700 delay-[350ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+        >
+          <div className="bg-nafees-blue/5 rounded-2xl p-4 border border-nafees-blue/15 flex items-start gap-3">
+            <span className="text-xl flex-shrink-0">📊</span>
+            <div className="flex-1">
+              <p className="text-xs font-bold text-nafees-navy mb-1">لرفع دقة التحليل</p>
+              <p className="text-[10px] text-nafees-warm leading-relaxed mb-2">
+                {result.completedTests.length < 3 && 'أكمل الاختبارات الثلاثة '}
+                {!result.demographicAdjustmentsApplied && 'وأضف ملفك السياقي (العمر، الحالة الاجتماعية...) '}
+                لرفع دقة التوليف النفسي إلى الحد الأقصى.
+              </p>
+              {result.completedTests.length < 3 && (
+                <button
+                  onClick={onHome}
+                  className="text-[10px] bg-nafees-navy text-nafees-cream px-3 py-1.5 rounded-full font-semibold active:scale-95 transition-transform duration-150"
+                >
+                  استكمال الاختبارات
+                </button>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Scientific Integrity Guard ── */}
+      <section
+        className={`max-w-md mx-auto px-4 pt-4 pb-8 transition-all duration-700 delay-[400ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+      >
+        <button
+          onClick={() => setShowMethodology(true)}
+          className="w-full flex items-center justify-between bg-nafees-cream-dark/40 hover:bg-nafees-cream-dark/60 rounded-2xl p-4 border border-nafees-cream-dark/50 transition-colors duration-200 active:scale-[0.99]"
+        >
+          <span className="text-xs text-nafees-warm-dark">عرض المعادلة والمصادر العلمية</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-nafees-blue">المنهجية</span>
+            <span className="w-6 h-6 rounded-full bg-nafees-blue/10 flex items-center justify-center text-nafees-blue text-xs font-bold">
+              ⚗
+            </span>
+          </div>
+        </button>
+
+        <div className="mt-3 bg-nafees-cream-dark/25 rounded-2xl p-4">
+          <p className="text-[10px] font-bold text-nafees-navy mb-2">المصادر الأساسية</p>
+          <div className="space-y-1 text-[9px] text-nafees-warm leading-relaxed">
+            <p>• Noftle & Shaver (2006) — J. Research in Personality, 40(2)</p>
+            <p>• Thimm (2010) — J. Behavior Therapy, 41(4)</p>
+            <p>• Mikulincer & Shaver (2007) — Attachment in Adulthood, Guilford</p>
+            <p>• Barrick & Mount (1991) — Personnel Psychology, 44(1)</p>
+            <p>• Young, Klosko & Weishaar (2003) — Schema Therapy, Guilford</p>
+          </div>
+          <p className="text-[9px] text-nafees-warm mt-2 leading-relaxed">
+            جميع معاملات الترجيح مُشتقة مباشرة من معاملات الارتباط المنشورة — لا تخمين في المنهجية.
+          </p>
+        </div>
+
+        <p className="text-[10px] text-nafees-warm text-center px-2 leading-relaxed mt-4">
+          🔒 هذا التحليل لأغراض التوعية الذاتية فقط وليس تشخيصاً سريرياً.
+          للحصول على تقييم متخصص، يُرشد للتواصل مع معالج نفسي مرخص.
+        </p>
+      </section>
 
       {/* PDF Export + Back buttons */}
       <div className="max-w-md mx-auto px-4 pb-10 space-y-3">
-        {!noTests && (
+        {fullSynthesis && (
           <button
             onClick={handlePdfExport}
             disabled={pdfLoading}

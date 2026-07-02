@@ -21,6 +21,8 @@ const RESET_KEYS = [
   'nafees_synthesis_result',
   'nafees_demographic_profile',
   'ocean_test_progress',
+  'attachment_test_progress',
+  'schema_test_progress',
   'nafees_font_size',
 ];
 
