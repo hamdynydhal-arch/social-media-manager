@@ -32,30 +32,32 @@ jobs:
         working-directory: psy
         run: npm ci
 
-      - name: Get Vercel org ID and link project
-        working-directory: psy
+      - name: Get Vercel org ID, set rootDirectory, link project
         run: |
           ORG_ID=$(curl -sf \
             -H "Authorization: Bearer $VERCEL_TOKEN" \
             "https://api.vercel.com/v2/user" | jq -r '.user.id')
           echo "ORG_ID=$ORG_ID" >> $GITHUB_ENV
 
+          # Ensure Vercel project has rootDirectory=psy so it finds dist/ correctly
+          curl -s -X PATCH \
+            "https://api.vercel.com/v9/projects/$PROJECT_ID" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"rootDirectory":"psy","framework":"vite"}' > /dev/null
+
+          # Write link file at REPO ROOT so vercel CLI resolves rootDirectory correctly
           mkdir -p .vercel
-          cat > .vercel/project.json <<JSON
-          {"orgId":"$ORG_ID","projectId":"$PROJECT_ID"}
-          JSON
+          printf '{"orgId":"%s","projectId":"%s"}\n' "$ORG_ID" "$PROJECT_ID" > .vercel/project.json
           echo "Linked to org=$ORG_ID project=$PROJECT_ID"
 
       - name: Pull Vercel environment
-        working-directory: psy
         run: vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
 
-      - name: Build psy app
-        working-directory: psy
+      - name: Build psy app via Vercel CLI (from repo root, rootDirectory=psy)
         run: vercel build --prod --token "$VERCEL_TOKEN"
 
       - name: Deploy prebuilt output to Vercel
-        working-directory: psy
         run: |
           DEPLOY_URL=$(vercel deploy --prebuilt --prod --token "$VERCEL_TOKEN")
           echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_ENV
