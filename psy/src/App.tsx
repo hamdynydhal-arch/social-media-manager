@@ -395,7 +395,7 @@ export default function App() {
       const activeAttachmentQs = attachmentTier === 'core'
         ? (attachmentData.questions as { tier?: string }[]).filter((q) => q.tier === 'core')
         : attachmentData.questions;
-      const attachmentMinutes = attachmentTier === 'core' ? 2 : attachmentData.estimatedMinutes;
+      const attachmentMinutes = attachmentTier === 'core' ? 10 : 18;
       if (attachmentResult) {
         return (
           <AttachmentResultPage
@@ -435,7 +435,7 @@ export default function App() {
       const activeSchemaQs = schemaTier === 'core'
         ? (schemaData.questions as SchemaQuestion[]).filter((q) => q.tier === 'core')
         : schemaData.questions as SchemaQuestion[];
-      const schemaMinutes = schemaTier === 'core' ? 4 : schemaData.estimatedMinutes;
+      const schemaMinutes = schemaTier === 'core' ? 12 : 20;
       if (schemaResult) {
         return (
           <SchemaResultPage
@@ -475,7 +475,7 @@ export default function App() {
       const activeSocialQs = socialPatternsTier === 'core'
         ? (socialPatternsData.questions as SocialPatternsQuestion[]).filter((q) => q.tier === 'core')
         : socialPatternsData.questions as SocialPatternsQuestion[];
-      const socialMinutes = socialPatternsTier === 'core' ? 3 : socialPatternsData.estimatedMinutes;
+      const socialMinutes = socialPatternsTier === 'core' ? 10 : 20;
       if (socialPatternsResult) {
         return (
           <SocialPatternsResultPage

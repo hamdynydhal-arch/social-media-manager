@@ -67,9 +67,9 @@ export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSc
                 اكتشف نمط تعلقك في العلاقات عبر مقياس ECR-R المبني على نظرية بولبي وأينسورث.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="bg-nafees-copper/10 text-nafees-copper text-xs px-2.5 py-1 rounded-full font-semibold">36 سؤالاً</span>
-                <span className="bg-nafees-copper/10 text-nafees-copper text-xs px-2.5 py-1 rounded-full font-semibold">~10 دقائق</span>
-                <span className="bg-nafees-copper/10 text-nafees-copper text-xs px-2.5 py-1 rounded-full font-semibold">4 أنماط</span>
+                <span className="bg-nafees-copper/10 text-nafees-copper text-xs px-2.5 py-1 rounded-full font-semibold">36 – 72 سؤالاً</span>
+                <span className="bg-nafees-copper/10 text-nafees-copper text-xs px-2.5 py-1 rounded-full font-semibold">10 – 18 دقيقة</span>
+                <span className="bg-nafees-copper/10 text-nafees-copper text-xs px-2.5 py-1 rounded-full font-semibold">مستويان</span>
               </div>
             </div>
             <span className="text-nafees-cream-dark text-2xl flex-shrink-0">←</span>
@@ -91,9 +91,9 @@ export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSc
                 اكتشف المخططات التي شكّلتها طفولتك وكيف تؤثر على علاقاتك اليوم — مبني على علاج المخططات (Schema Therapy).
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">49 سؤالاً</span>
-                <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">~12 دقيقة</span>
-                <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">7 مخططات</span>
+                <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">49 – 98 سؤالاً</span>
+                <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">12 – 20 دقيقة</span>
+                <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">مستويان</span>
               </div>
             </div>
             <span className="text-nafees-cream-dark text-2xl flex-shrink-0">←</span>
@@ -115,9 +115,9 @@ export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSc
                 اكتشف نمطك الاجتماعي (ألفا، سيغما، بيتا، دلتا) وتعرّف على الحقيقة العلمية وراء هذه المصطلحات الشائعة.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="bg-nafees-navy/8 text-nafees-navy text-xs px-2.5 py-1 rounded-full font-semibold">49 سؤالاً</span>
-                <span className="bg-nafees-navy/8 text-nafees-navy text-xs px-2.5 py-1 rounded-full font-semibold">~10 دقائق</span>
-                <span className="bg-nafees-navy/8 text-nafees-navy text-xs px-2.5 py-1 rounded-full font-semibold">4 أنماط</span>
+                <span className="bg-nafees-navy/8 text-nafees-navy text-xs px-2.5 py-1 rounded-full font-semibold">49 – 98 سؤالاً</span>
+                <span className="bg-nafees-navy/8 text-nafees-navy text-xs px-2.5 py-1 rounded-full font-semibold">10 – 20 دقيقة</span>
+                <span className="bg-nafees-navy/8 text-nafees-navy text-xs px-2.5 py-1 rounded-full font-semibold">مستويان</span>
               </div>
             </div>
             <span className="text-nafees-cream-dark text-2xl flex-shrink-0">←</span>
