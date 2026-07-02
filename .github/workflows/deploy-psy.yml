@@ -1,0 +1,77 @@
+name: Deploy psy.prtnh.com to Vercel
+
+on:
+  push:
+    branches: [main, claude/session-description-unavailable-ta2oqf]
+    paths: ['psy/**']
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      PROJECT_ID: prj_6UDvT5b4HaS33l6OtR0zSeE0bb9g
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: psy/package-lock.json
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Install psy dependencies
+        working-directory: psy
+        run: npm ci
+
+      - name: Get Vercel org ID and link project
+        working-directory: psy
+        run: |
+          ORG_ID=$(curl -sf \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "https://api.vercel.com/v2/user" | jq -r '.user.id')
+          echo "ORG_ID=$ORG_ID" >> $GITHUB_ENV
+
+          mkdir -p .vercel
+          cat > .vercel/project.json <<JSON
+          {"orgId":"$ORG_ID","projectId":"$PROJECT_ID"}
+          JSON
+          echo "Linked to org=$ORG_ID project=$PROJECT_ID"
+
+      - name: Pull Vercel environment
+        working-directory: psy
+        run: vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
+
+      - name: Build psy app
+        working-directory: psy
+        run: vercel build --prod --token "$VERCEL_TOKEN"
+
+      - name: Deploy prebuilt output to Vercel
+        working-directory: psy
+        run: |
+          DEPLOY_URL=$(vercel deploy --prebuilt --prod --token "$VERCEL_TOKEN")
+          echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_ENV
+          echo "Deployed: $DEPLOY_URL"
+
+      - name: Ensure domain psy.prtnh.com is bound
+        run: |
+          RESULT=$(curl -s -X POST \
+            "https://api.vercel.com/v9/projects/$PROJECT_ID/domains" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"psy.prtnh.com"}' | jq -r '.name // .error.message')
+          echo "Domain: $RESULT"
+
+      - name: Summary
+        run: |
+          echo "### psy.prtnh.com Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "- Vercel URL: $DEPLOY_URL" >> $GITHUB_STEP_SUMMARY
+          echo "- Custom domain: https://psy.prtnh.com" >> $GITHUB_STEP_SUMMARY
