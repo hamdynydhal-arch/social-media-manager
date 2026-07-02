@@ -16,6 +16,8 @@ const RESET_KEYS = [
   'psy_results',
   'attachment_results',
   'schema_results',
+  'nafees_social_patterns_result',
+  'nafees_social_patterns_progress',
   'nafees_synthesis_result',
   'nafees_demographic_profile',
   'ocean_test_progress',
