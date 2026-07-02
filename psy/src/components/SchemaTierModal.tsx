@@ -38,11 +38,11 @@ export default function SchemaTierModal({ onSelect, onCancel }: SchemaTierModalP
               <div className="flex-1 min-w-0">
                 <h4 className="text-base font-bold text-nafees-navy mb-1">التقييم الأساسي</h4>
                 <p className="text-xs text-nafees-warm leading-relaxed mb-3">
-                  14 سؤالاً (سؤالان لكل مخطط) — الأعلى تمييزاً عبر المخططات السبعة.
+                  49 سؤالاً (7 لكل مخطط) — تغطي المخططات السبعة عبر سياقات الطفولة والحاضر.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">14 سؤالاً</span>
-                  <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">~4 دقائق</span>
+                  <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">49 سؤالاً</span>
+                  <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">~12 دقيقة</span>
                   <span className="bg-nafees-sage/15 text-nafees-sage text-xs px-2.5 py-1 rounded-full font-semibold">7 مخططات</span>
                 </div>
               </div>
@@ -61,11 +61,11 @@ export default function SchemaTierModal({ onSelect, onCancel }: SchemaTierModalP
               <div className="flex-1 min-w-0">
                 <h4 className="text-base font-bold text-nafees-cream mb-1">التقييم الشامل</h4>
                 <p className="text-xs text-nafees-sky/80 leading-relaxed mb-3">
-                  49 سؤالاً — الغوص الكامل في جذور الطفولة والمواقف البالغة عبر 4 بيئات سياقية.
+                  98 سؤالاً — الغوص الكامل في جذور الطفولة والمواقف البالغة عبر 4 بيئات سياقية.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">49 سؤالاً</span>
-                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">~12 دقيقة</span>
+                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">98 سؤالاً</span>
+                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">~20 دقيقة</span>
                   <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">جذور الطفولة</span>
                 </div>
               </div>

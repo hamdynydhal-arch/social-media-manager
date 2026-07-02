@@ -38,11 +38,11 @@ export default function AttachmentTierModal({ onSelect, onCancel }: AttachmentTi
               <div className="flex-1 min-w-0">
                 <h4 className="text-base font-bold text-nafees-navy mb-1">التقييم الأساسي</h4>
                 <p className="text-xs text-nafees-warm leading-relaxed mb-3">
-                  8 أسئلة بأعلى قيمة تشخيصية — تغطي محوري القلق والتجنب بكفاءة عالية.
+                  36 سؤالاً — النسخة الكاملة من ECR-R تغطي محوري القلق والتجنب بدقة عالية.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="bg-nafees-copper/15 text-nafees-copper text-xs px-2.5 py-1 rounded-full font-semibold">8 أسئلة</span>
-                  <span className="bg-nafees-copper/15 text-nafees-copper text-xs px-2.5 py-1 rounded-full font-semibold">~2 دقائق</span>
+                  <span className="bg-nafees-copper/15 text-nafees-copper text-xs px-2.5 py-1 rounded-full font-semibold">36 سؤالاً</span>
+                  <span className="bg-nafees-copper/15 text-nafees-copper text-xs px-2.5 py-1 rounded-full font-semibold">~10 دقائق</span>
                   <span className="bg-nafees-copper/15 text-nafees-copper text-xs px-2.5 py-1 rounded-full font-semibold">محوران</span>
                 </div>
               </div>
@@ -61,11 +61,11 @@ export default function AttachmentTierModal({ onSelect, onCancel }: AttachmentTi
               <div className="flex-1 min-w-0">
                 <h4 className="text-base font-bold text-nafees-cream mb-1">التقييم الشامل</h4>
                 <p className="text-xs text-nafees-sky/80 leading-relaxed mb-3">
-                  36 سؤالاً — النسخة الكاملة من ECR-R لأدق تشخيص لنمط التعلق العاطفي.
+                  72 سؤالاً — نسخة موسّعة من ECR-R لأدق تشخيص لنمط التعلق العاطفي.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">36 سؤالاً</span>
-                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">~10 دقائق</span>
+                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">72 سؤالاً</span>
+                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">~18 دقيقة</span>
                   <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">تشخيص دقيق</span>
                 </div>
               </div>

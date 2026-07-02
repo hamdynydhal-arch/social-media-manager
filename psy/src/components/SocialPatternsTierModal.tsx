@@ -38,11 +38,11 @@ export default function SocialPatternsTierModal({ onSelect, onCancel }: SocialPa
               <div className="flex-1 min-w-0">
                 <h4 className="text-base font-bold text-nafees-navy mb-1">التقييم الأساسي</h4>
                 <p className="text-xs text-nafees-warm leading-relaxed mb-3">
-                  12 سؤالاً (3 لكل بُعد) — المؤشرات الأكثر تمييزاً لبصمتك الاجتماعية.
+                  49 سؤالاً (~12 لكل بُعد) — المؤشرات الكاملة للبصمة الاجتماعية الأربعية.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="bg-nafees-sky/20 text-nafees-blue text-xs px-2.5 py-1 rounded-full font-semibold">12 سؤالاً</span>
-                  <span className="bg-nafees-sky/20 text-nafees-blue text-xs px-2.5 py-1 rounded-full font-semibold">~3 دقائق</span>
+                  <span className="bg-nafees-sky/20 text-nafees-blue text-xs px-2.5 py-1 rounded-full font-semibold">49 سؤالاً</span>
+                  <span className="bg-nafees-sky/20 text-nafees-blue text-xs px-2.5 py-1 rounded-full font-semibold">~10 دقائق</span>
                   <span className="bg-nafees-sky/20 text-nafees-blue text-xs px-2.5 py-1 rounded-full font-semibold">4 أبعاد</span>
                 </div>
               </div>
@@ -61,11 +61,11 @@ export default function SocialPatternsTierModal({ onSelect, onCancel }: SocialPa
               <div className="flex-1 min-w-0">
                 <h4 className="text-base font-bold text-nafees-cream mb-1">التقييم الشامل</h4>
                 <p className="text-xs text-nafees-sky/80 leading-relaxed mb-3">
-                  49 سؤالاً — التحليل الكامل لبصمتك الاجتماعية: السيطرة، الاستقلالية، التكيف، والظهور.
+                  98 سؤالاً — التحليل الكامل لبصمتك الاجتماعية: السيطرة، الاستقلالية، التكيف، والظهور.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">49 سؤالاً</span>
-                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">~10 دقائق</span>
+                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">98 سؤالاً</span>
+                  <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">~20 دقيقة</span>
                   <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">تحليل شامل</span>
                 </div>
               </div>
