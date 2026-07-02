@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
+    text-align: right;
+    -webkit-font-smoothing: antialiased;
+    background-color: #F7F5F2;
+    color: #2C2420;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-nafees-blue hover:bg-nafees-navy text-white font-semibold py-3 px-8 rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 text-lg;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-nafees-cream text-nafees-blue font-semibold py-3 px-6 rounded-2xl transition-all duration-200 border-2 border-nafees-sky hover:border-nafees-blue text-base;
+  }
+
+  .card {
+    @apply bg-white rounded-3xl shadow-sm border border-nafees-cream-dark/40 p-6;
+  }
+
+  .likert-btn {
+    @apply flex flex-col items-center gap-1 cursor-pointer transition-all duration-150 group;
+  }
+}
