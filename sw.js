@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nafees-v5';
+const CACHE_NAME = 'nafees-v6';
 const STATIC_ASSETS = ['/icon-192.png', '/icon-512.png', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
