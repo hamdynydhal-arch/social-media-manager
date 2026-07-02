@@ -9,6 +9,7 @@ export interface AttachmentQuestion {
   text: string;
   axis: AttachmentAxis;
   direction: 'direct' | 'reverse';
+  tier?: 'core' | 'deep';
 }
 
 export interface AttachmentTestData {

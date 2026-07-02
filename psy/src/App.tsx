@@ -21,6 +21,12 @@ import type { SocialPatternsQuestion } from './engine/socialPatternsTypes';
 import AppNavbar from './components/AppNavbar';
 import InProgressBanner from './components/InProgressBanner';
 import OceanTierModal from './components/OceanTierModal';
+import AttachmentTierModal from './components/AttachmentTierModal';
+import SchemaTierModal from './components/SchemaTierModal';
+import SocialPatternsTierModal from './components/SocialPatternsTierModal';
+import type { AttachmentTier } from './components/AttachmentTierModal';
+import type { SchemaTier } from './components/SchemaTierModal';
+import type { SocialPatternsTier } from './components/SocialPatternsTierModal';
 import HomePage from './pages/HomePage';
 import StartPage from './pages/StartPage';
 import TestPage from './pages/TestPage';
@@ -65,14 +71,20 @@ export default function App() {
   // Attachment sub-state
   const [attachmentPhase, setAttachmentPhase] = useState<AttachmentPhase>('start');
   const [attachmentResult, setAttachmentResult] = useState<AttachmentResult | null>(null);
+  const [attachmentTier, setAttachmentTier] = useState<AttachmentTier>('deep');
+  const [showAttachmentTierModal, setShowAttachmentTierModal] = useState(false);
 
   // Schema sub-state
   const [schemaPhase, setSchemaPhase] = useState<SchemaPhase>('start');
   const [schemaResult, setSchemaResult] = useState<SchemaResult | null>(null);
+  const [schemaTier, setSchemaTier] = useState<SchemaTier>('deep');
+  const [showSchemaTierModal, setShowSchemaTierModal] = useState(false);
 
   // Social Patterns sub-state
   const [socialPatternsPhase, setSocialPatternsPhase] = useState<SocialPatternsPhase>('start');
   const [socialPatternsResult, setSocialPatternsResult] = useState<SocialPatternsResult | null>(null);
+  const [socialPatternsTier, setSocialPatternsTier] = useState<SocialPatternsTier>('deep');
+  const [showSocialPatternsTierModal, setShowSocialPatternsTierModal] = useState(false);
 
   // ── Home ──────────────────────────────────────────────
   function handleSelectOcean() {
@@ -95,22 +107,52 @@ export default function App() {
   function handleSelectAttachment() {
     setAttachmentResult(null);
     setAttachmentPhase('start');
-    setAppView('attachment');
+    setShowAttachmentTierModal(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleAttachmentTierSelect(tier: AttachmentTier) {
+    setAttachmentTier(tier);
+    setShowAttachmentTierModal(false);
+    setAppView('attachment');
+  }
+
+  function handleAttachmentTierCancel() {
+    setShowAttachmentTierModal(false);
   }
 
   function handleSelectSchema() {
     setSchemaResult(null);
     setSchemaPhase('start');
-    setAppView('schema');
+    setShowSchemaTierModal(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSchemaTierSelect(tier: SchemaTier) {
+    setSchemaTier(tier);
+    setShowSchemaTierModal(false);
+    setAppView('schema');
+  }
+
+  function handleSchemaTierCancel() {
+    setShowSchemaTierModal(false);
   }
 
   function handleSelectSocialPatterns() {
     setSocialPatternsResult(null);
     setSocialPatternsPhase('start');
-    setAppView('social_patterns');
+    setShowSocialPatternsTierModal(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleSocialPatternsTierSelect(tier: SocialPatternsTier) {
+    setSocialPatternsTier(tier);
+    setShowSocialPatternsTierModal(false);
+    setAppView('social_patterns');
+  }
+
+  function handleSocialPatternsTierCancel() {
+    setShowSocialPatternsTierModal(false);
   }
 
   function handleSelectSynthesis() {
@@ -317,6 +359,10 @@ export default function App() {
     }
 
     if (appView === 'attachment') {
+      const activeAttachmentQs = attachmentTier === 'core'
+        ? (attachmentData.questions as { tier?: string }[]).filter((q) => q.tier === 'core')
+        : attachmentData.questions;
+      const attachmentMinutes = attachmentTier === 'core' ? 2 : attachmentData.estimatedMinutes;
       if (attachmentResult) {
         return (
           <AttachmentResultPage
@@ -332,8 +378,8 @@ export default function App() {
           <>
             <InProgressBanner currentTestId="attachment" />
             <AttachmentStartPage
-              questionCount={attachmentData.questions.length}
-              estimatedMinutes={attachmentData.estimatedMinutes}
+              questionCount={activeAttachmentQs.length}
+              estimatedMinutes={attachmentMinutes}
               disclaimer={attachmentContent.disclaimer}
               onStart={() => { setAttachmentPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               onHome={goHome}
@@ -343,7 +389,7 @@ export default function App() {
       }
       return (
         <AttachmentTestPage
-          questions={attachmentData.questions as never}
+          questions={activeAttachmentQs as never}
           onComplete={handleAttachmentComplete}
           onReset={handleAttachmentReset}
           onHome={goHome}
@@ -352,6 +398,10 @@ export default function App() {
     }
 
     if (appView === 'schema') {
+      const activeSchemaQs = schemaTier === 'core'
+        ? (schemaData.questions as SchemaQuestion[]).filter((q) => q.tier === 'core')
+        : schemaData.questions as SchemaQuestion[];
+      const schemaMinutes = schemaTier === 'core' ? 4 : schemaData.estimatedMinutes;
       if (schemaResult) {
         return (
           <SchemaResultPage
@@ -367,8 +417,8 @@ export default function App() {
           <>
             <InProgressBanner currentTestId="schema" />
             <SchemaStartPage
-              questionCount={schemaData.questions.length}
-              estimatedMinutes={schemaData.estimatedMinutes}
+              questionCount={activeSchemaQs.length}
+              estimatedMinutes={schemaMinutes}
               disclaimer={schemaContent.disclaimer}
               onStart={() => { setSchemaPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               onHome={goHome}
@@ -378,7 +428,7 @@ export default function App() {
       }
       return (
         <SchemaTestPage
-          questions={schemaData.questions as SchemaQuestion[]}
+          questions={activeSchemaQs}
           onComplete={handleSchemaComplete}
           onReset={handleSchemaReset}
           onHome={goHome}
@@ -387,6 +437,10 @@ export default function App() {
     }
 
     if (appView === 'social_patterns') {
+      const activeSocialQs = socialPatternsTier === 'core'
+        ? (socialPatternsData.questions as SocialPatternsQuestion[]).filter((q) => q.tier === 'core')
+        : socialPatternsData.questions as SocialPatternsQuestion[];
+      const socialMinutes = socialPatternsTier === 'core' ? 3 : socialPatternsData.estimatedMinutes;
       if (socialPatternsResult) {
         return (
           <SocialPatternsResultPage
@@ -402,8 +456,8 @@ export default function App() {
           <>
             <InProgressBanner currentTestId="social_patterns" />
             <SocialPatternsStartPage
-              questionCount={socialPatternsData.questions.length}
-              estimatedMinutes={socialPatternsData.estimatedMinutes}
+              questionCount={activeSocialQs.length}
+              estimatedMinutes={socialMinutes}
               onStart={() => { setSocialPatternsPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               onHome={goHome}
             />
@@ -412,7 +466,7 @@ export default function App() {
       }
       return (
         <SocialPatternsTestPage
-          questions={socialPatternsData.questions as SocialPatternsQuestion[]}
+          questions={activeSocialQs}
           onComplete={handleSocialPatternsComplete}
           onReset={handleSocialPatternsReset}
           onHome={goHome}
@@ -444,6 +498,15 @@ export default function App() {
       )}
       {showTierModal && (
         <OceanTierModal onSelect={handleTierSelect} onCancel={handleTierCancel} />
+      )}
+      {showAttachmentTierModal && (
+        <AttachmentTierModal onSelect={handleAttachmentTierSelect} onCancel={handleAttachmentTierCancel} />
+      )}
+      {showSchemaTierModal && (
+        <SchemaTierModal onSelect={handleSchemaTierSelect} onCancel={handleSchemaTierCancel} />
+      )}
+      {showSocialPatternsTierModal && (
+        <SocialPatternsTierModal onSelect={handleSocialPatternsTierSelect} onCancel={handleSocialPatternsTierCancel} />
       )}
     </>
   );

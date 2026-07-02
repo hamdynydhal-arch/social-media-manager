@@ -7,6 +7,7 @@ export interface SchemaQuestion {
   text: string;
   domain: SchemaDomain;
   weights: Partial<Record<SchemaKey, number>>;
+  tier?: 'core' | 'deep';
 }
 
 export interface SchemaResult {

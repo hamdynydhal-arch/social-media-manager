@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { runSynthesis, saveSynthesisResult } from '../engine/synthesisEngine';
+import { runSynthesis, saveSynthesisResult, buildTraitVector } from '../engine/synthesisEngine';
+import { computeCorrelationMatrix } from '../engine/CorrelationMatrix';
 import { exportToPdf } from '../utils/exportPdf';
 import type {
   PersonaDimension,
@@ -691,6 +692,124 @@ function MethodologyModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+// ── Partner's Guide ───────────────────────────────────────────────────────────
+
+const PARTNER_GUIDE: Record<string, [string, string, string, string, string, string]> = {
+  // [high-icon, high-text, mid-icon, mid-text, low-icon, low-text]
+  emotional_regulation: [
+    '🕊️',
+    'شريك هادئ في العواصف — لن تُخيفه انفعالاتك وسيوفر لك ملاذاً آمناً عاطفياً حتى في أصعب اللحظات.',
+    '🌤️',
+    'مرونة انفعالية معتدلة — يتأثر بالضغوط لكنه يتعافى. أعطِه وقتاً وعودته مضمونة.',
+    '🌊',
+    'يحتاج مساحةً وفهماً حين يمر بلحظات صعبة — الصبر وعدم تفسير ردود فعله شخصياً هو مفتاح العلاقة معه.',
+  ],
+  interpersonal_trust: [
+    '🔓',
+    'يفتح قلبه بشكل نسبي حين تُثبت اتساقك — العلاقة معه شفافة وصريحة حين يتأكد من أمانها.',
+    '🗝️',
+    'يبني الثقة تدريجياً — الاتساق في الأفعال لا الكلام هو ما يفتح بابه.',
+    '🔒',
+    'بحاجة إلى وقت وإثباتات متكررة قبل الانفتاح الكامل — لا تفسّر حذره شخصياً، هو حذرٌ وقائي لا رفضٌ لك.',
+  ],
+  relational_closeness: [
+    '💎',
+    'يبحث عن عمق وتواصل حقيقي — العلاقة السطحية لن تُرضيه. أعطِه مساحة للحديث العميق وسيُكافئك بولاء نادر.',
+    '🌿',
+    'يُقدّر القرب بجرعات معتدلة — يحتاج توازناً بين مساحته الخاصة وتواصل منتظم وأصيل.',
+    '🏔️',
+    'يحتفظ بمساحته الخاصة — احترام حدوده الشخصية هو أقوى لغة يفهمها في العلاقات.',
+  ],
+  self_worth: [
+    '🌟',
+    'يُقدّم نفسه بثقة هادئة — لا يحتاج لتأكيداتك المستمرة لكنه يُقدّرها حين تكون أصيلة ومحددة.',
+    '🌱',
+    'تقدير ذات مرن — يستفيد بشكل ملموس من الاعتراف بجهوده وإنجازاته ولو بجملة صغيرة.',
+    '🌧️',
+    'يحتاج تطمينات دورية أصيلة — الكلمات الطيبة والمحددة تحمل وزناً كبيراً في تجربته معك.',
+  ],
+  autonomy_achievement: [
+    '🧭',
+    'طموح يحتاج مساحةً لأهدافه — دعمه في أحلامه وعدم التنافس معها هو أقوى شكل من أشكال الحب.',
+    '⚖️',
+    'يوازن بين استقلاليته والتواصل — يستمتع بالشراكة حين تُحترم أولوياته وإيقاعه الخاص.',
+    '🤝',
+    'يُفضّل الشراكة والتشاور — القرارات المشتركة والتحقق من رأيه تُشعره بالأمان والتقدير.',
+  ],
+};
+
+const DIM_PARTNER_TITLES: Record<string, string> = {
+  emotional_regulation: 'التنظيم العاطفي',
+  interpersonal_trust:  'بناء الثقة',
+  relational_closeness: 'القرب والمسافة',
+  self_worth:           'التقدير والاعتراف',
+  autonomy_achievement: 'الاستقلالية والطموح',
+};
+
+function PartnerGuide({ dims }: { dims: PersonaDimension[] }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <section className="max-w-md mx-auto px-4 pt-4 pb-4">
+      <button
+        onClick={() => setExpanded((v) => !v)}
+        className="w-full flex items-center justify-between bg-white rounded-2xl p-4 border border-nafees-copper/20 shadow-sm transition-all duration-200 active:scale-[0.99] text-right"
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-xl">💑</span>
+          <div>
+            <p className="text-sm font-bold text-nafees-navy">دليل الشريك</p>
+            <p className="text-[10px] text-nafees-warm">كيف يفهمك شريك حياتك؟</p>
+          </div>
+        </div>
+        <span className={`text-nafees-copper text-lg transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}>
+          ↓
+        </span>
+      </button>
+
+      <div
+        className={`overflow-hidden transition-all duration-500 ${expanded ? 'max-h-[2000px] opacity-100 mt-3' : 'max-h-0 opacity-0'}`}
+      >
+        <div className="space-y-3">
+          {dims.map((dim) => {
+            const guide = PARTNER_GUIDE[dim.id];
+            if (!guide) return null;
+            const score = dim.score;
+            const [hiIcon, hiText, midIcon, midText, loIcon, loText] = guide;
+            const isHigh = score >= 65;
+            const isLow = score < 35;
+            const icon = isHigh ? hiIcon : isLow ? loIcon : midIcon;
+            const text = isHigh ? hiText : isLow ? loText : midText;
+            const levelTag = isHigh ? 'مرتفع' : isLow ? 'منخفض' : 'متوسط';
+            const levelColor = isHigh ? 'text-nafees-sage' : isLow ? 'text-nafees-warm' : 'text-nafees-copper';
+
+            return (
+              <div
+                key={dim.id}
+                className="bg-white rounded-2xl p-4 border border-nafees-cream-dark/30 shadow-sm"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl flex-shrink-0 mt-0.5">{icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-center mb-1">
+                      <p className="text-xs font-bold text-nafees-navy">{DIM_PARTNER_TITLES[dim.id]}</p>
+                      <span className={`text-[10px] font-bold ${levelColor}`}>{levelTag}</span>
+                    </div>
+                    <p className="text-[11px] text-nafees-warm-dark leading-relaxed">{text}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          <p className="text-[9px] text-nafees-warm text-center px-2 pt-1 leading-relaxed">
+            هذا الدليل مشتق من درجاتك على الأبعاد الخمسة. شاركه مع شريكك لفتح حوار أعمق.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Locked Synthesis Gate ──────────────────────────────────────────────────────
 
 const TEST_LABELS: Record<string, string> = {
@@ -820,6 +939,16 @@ export default function SynthesisPage({ onHome }: SynthesisPageProps) {
   const fullSynthesis = result.completedTests.length === 3;
 
   const allPatterns = result.dimensions.flatMap((d) => d.patterns);
+
+  const correlationResult = useMemo(() => {
+    if (!fullSynthesis) return null;
+    try {
+      const vector = buildTraitVector();
+      return computeCorrelationMatrix(vector);
+    } catch {
+      return null;
+    }
+  }, [fullSynthesis]);
 
   // Persona is only derived (and shown) when all 3 tests are complete.
   // With partial data the scores are valid but assigning a named persona
@@ -1039,6 +1168,69 @@ export default function SynthesisPage({ onHome }: SynthesisPageProps) {
                 </li>
               ))}
             </ul>
+          </div>
+        </section>
+      )}
+
+      {/* ── Partner's Guide — gated on full synthesis ── */}
+      {fullSynthesis && (
+        <div className={`transition-all duration-700 delay-[350ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <PartnerGuide dims={result.dimensions} />
+        </div>
+      )}
+
+      {/* ── Cross-Test Coherence — shown when full synthesis and correlation computed ── */}
+      {fullSynthesis && correlationResult && correlationResult.overallCoherence > 0 && (
+        <section
+          className={`max-w-md mx-auto px-4 pt-2 pb-2 transition-all duration-700 delay-[400ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+        >
+          <div className="bg-nafees-navy/5 rounded-2xl p-4 border border-nafees-navy/10">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-sm font-bold text-nafees-navy">⚡ تناسق الاختبارات</h2>
+              <div className="flex items-center gap-1.5">
+                <span className={`text-base font-bold ${
+                  correlationResult.overallCoherence >= 70 ? 'text-nafees-sage' :
+                  correlationResult.overallCoherence >= 50 ? 'text-nafees-copper' : 'text-nafees-warm'
+                }`}>
+                  {correlationResult.overallCoherence}%
+                </span>
+              </div>
+            </div>
+            <div className="h-1.5 bg-nafees-cream-dark/50 rounded-full mb-3 overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-1000 ${
+                  correlationResult.overallCoherence >= 70 ? 'bg-nafees-sage' :
+                  correlationResult.overallCoherence >= 50 ? 'bg-nafees-copper' : 'bg-nafees-warm'
+                }`}
+                style={{ width: visible ? `${correlationResult.overallCoherence}%` : '0%' }}
+              />
+            </div>
+            <p className="text-[10px] text-nafees-warm-dark leading-relaxed mb-3">
+              يقيس مدى توافق نتائج اختباراتك مع بعضها وفق معاملات الارتباط المنشورة في الأدبيات النفسية.
+              التوافق المرتفع يعني أن صورتك النفسية متسقة ومتماسكة عبر المقاييس المختلفة.
+            </p>
+            {correlationResult.amplifiers.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-[10px] font-bold text-nafees-navy mb-1">أنماط متقاطعة بارزة</p>
+                {correlationResult.amplifiers.slice(0, 3).map((amp, i) => (
+                  <div key={i} className="flex gap-2 text-[10px] text-nafees-warm-dark leading-relaxed">
+                    <span className="text-nafees-sage flex-shrink-0">◆</span>
+                    <span>{amp}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {correlationResult.tensions.length > 0 && (
+              <div className="mt-3 space-y-2">
+                <p className="text-[10px] font-bold text-nafees-copper mb-1">توترات نفسية مثيرة للاهتمام</p>
+                {correlationResult.tensions.slice(0, 2).map((ten, i) => (
+                  <div key={i} className="flex gap-2 text-[10px] text-nafees-warm-dark leading-relaxed">
+                    <span className="text-nafees-copper flex-shrink-0">◇</span>
+                    <span>{ten}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       )}

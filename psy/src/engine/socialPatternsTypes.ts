@@ -7,6 +7,7 @@ export interface SocialPatternsQuestion {
   text: string;
   axis: SocialAxis;
   direction: 'direct' | 'reverse';
+  tier?: 'core' | 'deep';
 }
 
 export interface SocialPatternsResult {
