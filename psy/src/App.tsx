@@ -19,6 +19,7 @@ import socialPatternsData from './data/socialPatterns.json';
 import type { SchemaQuestion } from './engine/schemaTypes';
 import type { SocialPatternsQuestion } from './engine/socialPatternsTypes';
 import AppNavbar from './components/AppNavbar';
+import InProgressBanner from './components/InProgressBanner';
 import OceanTierModal from './components/OceanTierModal';
 import HomePage from './pages/HomePage';
 import StartPage from './pages/StartPage';
@@ -284,6 +285,7 @@ export default function App() {
         : bigfiveData.questions;
       return (
         <>
+          {oceanPage === 'start' && <InProgressBanner currentTestId="ocean" />}
           {oceanPage === 'start' && (
             <StartPage
               testName={bigfiveData.name}
@@ -327,13 +329,16 @@ export default function App() {
       }
       if (attachmentPhase === 'start') {
         return (
-          <AttachmentStartPage
-            questionCount={attachmentData.questions.length}
-            estimatedMinutes={attachmentData.estimatedMinutes}
-            disclaimer={attachmentContent.disclaimer}
-            onStart={() => { setAttachmentPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            onHome={goHome}
-          />
+          <>
+            <InProgressBanner currentTestId="attachment" />
+            <AttachmentStartPage
+              questionCount={attachmentData.questions.length}
+              estimatedMinutes={attachmentData.estimatedMinutes}
+              disclaimer={attachmentContent.disclaimer}
+              onStart={() => { setAttachmentPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              onHome={goHome}
+            />
+          </>
         );
       }
       return (
@@ -359,13 +364,16 @@ export default function App() {
       }
       if (schemaPhase === 'start') {
         return (
-          <SchemaStartPage
-            questionCount={schemaData.questions.length}
-            estimatedMinutes={schemaData.estimatedMinutes}
-            disclaimer={schemaContent.disclaimer}
-            onStart={() => { setSchemaPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            onHome={goHome}
-          />
+          <>
+            <InProgressBanner currentTestId="schema" />
+            <SchemaStartPage
+              questionCount={schemaData.questions.length}
+              estimatedMinutes={schemaData.estimatedMinutes}
+              disclaimer={schemaContent.disclaimer}
+              onStart={() => { setSchemaPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              onHome={goHome}
+            />
+          </>
         );
       }
       return (
@@ -391,12 +399,15 @@ export default function App() {
       }
       if (socialPatternsPhase === 'start') {
         return (
-          <SocialPatternsStartPage
-            questionCount={socialPatternsData.questions.length}
-            estimatedMinutes={socialPatternsData.estimatedMinutes}
-            onStart={() => { setSocialPatternsPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            onHome={goHome}
-          />
+          <>
+            <InProgressBanner currentTestId="social_patterns" />
+            <SocialPatternsStartPage
+              questionCount={socialPatternsData.questions.length}
+              estimatedMinutes={socialPatternsData.estimatedMinutes}
+              onStart={() => { setSocialPatternsPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              onHome={goHome}
+            />
+          </>
         );
       }
       return (

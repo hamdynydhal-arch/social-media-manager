@@ -10,8 +10,8 @@
  *  6. matchPatterns fires/withholds correctly based on thresholds and required tests
  */
 
-import { describe, it, expect } from 'vitest';
-import { computeDimensionScore, matchPatterns } from './synthesisEngine';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { computeDimensionScore, matchPatterns, runSynthesis, buildTraitVector } from './synthesisEngine';
 import { DIMENSION_RULES } from './synthesisMatrix';
 import type { TraitVector, PersonaDimension } from './synthesisTypes';
 
@@ -301,5 +301,57 @@ describe('Weighted sum arithmetic', () => {
 
     const score = computeDimensionScore(rule, v);
     expect(score).toBeCloseTo(39.05, 0);
+  });
+});
+
+// ── 7. Zero-data anti-hallucination guard ────────────────────────────────────
+//
+// These tests verify the hard guard clause added to runSynthesis():
+// when no test results exist in localStorage, the engine must return null
+// instead of a default persona label derived from neutral (50,50,50) scores.
+
+describe('Zero-data guard (anti-hallucination)', () => {
+  beforeEach(() => {
+    // Ensure a clean localStorage so loadHistory/loadAttachmentHistory/
+    // loadSchemaHistory all return empty arrays → completedTests.size === 0.
+    try { localStorage.clear(); } catch {}
+  });
+
+  it('runSynthesis() returns null when localStorage is empty', () => {
+    const result = runSynthesis();
+    expect(result).toBeNull();
+  });
+
+  it('buildTraitVector() completedTests is empty when no history exists', () => {
+    const vector = buildTraitVector();
+    expect(vector.completedTests.size).toBe(0);
+  });
+
+  it('matchPatterns fires no patterns when completedTests is empty', () => {
+    const dims = makeDimensions({ emotional_regulation: 20, self_worth: 20 });
+    const emptyVector: TraitVector = {
+      ocean: {},
+      attachmentAnxiety: 50,
+      attachmentAvoidance: 50,
+      schemas: {},
+      completedTests: new Set(),
+    };
+    const patterns = matchPatterns(dims, emptyVector);
+    expect(patterns).toHaveLength(0);
+  });
+
+  it('all dimensions score exactly 50 when only neutral attachment defaults are present', () => {
+    // With empty ocean + schemas and neutral attachment values (50),
+    // all deviations are 0 → score must be 50 for every dimension.
+    const neutralVector: TraitVector = {
+      ocean: {},
+      attachmentAnxiety: 50,
+      attachmentAvoidance: 50,
+      schemas: {},
+      completedTests: new Set(),
+    };
+    for (const rule of DIMENSION_RULES) {
+      expect(computeDimensionScore(rule, neutralVector)).toBeCloseTo(50, 5);
+    }
   });
 });
