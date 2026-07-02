@@ -1,5 +1,5 @@
-const CACHE_NAME = 'psy-v1';
-const STATIC_ASSETS = ['/', '/index.html', '/icon-192.png', '/icon-512.png'];
+const CACHE_NAME = 'nafees-v5';
+const STATIC_ASSETS = ['/icon-192.png', '/icon-512.png', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -22,6 +22,22 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
+  // HTML (app shell): always network-first so users get latest JS bundle references
+  const isHtml = url.pathname === '/' || url.pathname.endsWith('.html');
+  if (isHtml) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // JS/CSS/fonts/images: stale-while-revalidate (Vite hashes filenames so no stale risk)
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const networkFetch = fetch(event.request).then((response) => {
