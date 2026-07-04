@@ -12,6 +12,7 @@ const TESTS: TestMeta[] = [
   { id: 'attachment',      name: 'التعلق العاطفي 💙',        progressKey: 'attachment_test_progress',         resultKey: 'attachment_results'             },
   { id: 'schema',          name: 'المخططات النفسية 🌱',      progressKey: 'schema_test_progress',             resultKey: 'schema_results'                 },
   { id: 'social_patterns', name: 'الأنماط الاجتماعية ⚖️',   progressKey: 'nafees_social_patterns_progress',  resultKey: 'nafees_social_patterns_result'  },
+  { id: 'romantic',        name: 'الشيفرة العاطفية 💌',     progressKey: 'nafees_romantic_progress',         resultKey: 'nafees_romantic_result'         },
 ];
 
 function getInProgressTests(currentTestId: string): string[] {

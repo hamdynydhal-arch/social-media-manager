@@ -5,10 +5,12 @@ import type { TestResult, OceanTier } from './engine/types';
 import type { AttachmentResult, AttachmentQuestion } from './engine/attachmentTypes';
 import type { SchemaResult } from './engine/schemaTypes';
 import type { SocialPatternsResult } from './engine/socialPatternsTypes';
+import type { RomanticResult, RomanticQuestion } from './engine/romanticTypes';
 import { buildTestResult, saveResult } from './engine/scoring';
 import { calculateAttachmentScores, saveAttachmentResult } from './engine/attachmentScoring';
 import { calculateSchemaScores, saveSchemaResult } from './engine/schemaScoring';
 import { calculateSocialPatternsScores, saveSocialPatternsResult } from './engine/socialPatternsScoring';
+import { scoreRomantic, saveRomanticResult } from './engine/romanticScoring';
 import bigfiveData from './data/bigfive.json';
 import bigfiveContent from './data/bigfiveContent';
 import attachmentData from './data/attachment.json';
@@ -16,6 +18,7 @@ import attachmentContent from './data/attachmentContent';
 import schemaData from './data/schema.json';
 import schemaContent from './data/schemaContent';
 import socialPatternsData from './data/socialPatterns.json';
+import romanticData from './data/romantic.json';
 import type { SchemaQuestion } from './engine/schemaTypes';
 import type { SocialPatternsQuestion } from './engine/socialPatternsTypes';
 import AppNavbar from './components/AppNavbar';
@@ -24,9 +27,11 @@ import OceanTierModal from './components/OceanTierModal';
 import AttachmentTierModal from './components/AttachmentTierModal';
 import SchemaTierModal from './components/SchemaTierModal';
 import SocialPatternsTierModal from './components/SocialPatternsTierModal';
+import RomanticTierModal from './components/RomanticTierModal';
 import type { AttachmentTier } from './components/AttachmentTierModal';
 import type { SchemaTier } from './components/SchemaTierModal';
 import type { SocialPatternsTier } from './components/SocialPatternsTierModal';
+import type { RomanticTier } from './components/RomanticTierModal';
 import HomePage from './pages/HomePage';
 import StartPage from './pages/StartPage';
 import TestPage from './pages/TestPage';
@@ -40,15 +45,19 @@ import SchemaResultPage from './pages/SchemaResultPage';
 import SocialPatternsStartPage from './pages/SocialPatternsStartPage';
 import SocialPatternsTestPage from './pages/SocialPatternsTestPage';
 import SocialPatternsResultPage from './pages/SocialPatternsResultPage';
+import RomanticStartPage from './pages/RomanticStartPage';
+import RomanticTestPage from './pages/RomanticTestPage';
+import RomanticResultPage from './pages/RomanticResultPage';
 import SynthesisPage from './pages/SynthesisPage';
 import IntakePage from './pages/IntakePage';
 import SettingsPage from './pages/SettingsPage';
 
-type AppView = 'home' | 'ocean' | 'attachment' | 'schema' | 'social_patterns' | 'synthesis' | 'intake' | 'settings';
+type AppView = 'home' | 'ocean' | 'attachment' | 'schema' | 'social_patterns' | 'romantic' | 'synthesis' | 'intake' | 'settings';
 type OceanPage = 'start' | 'test' | 'result';
 type AttachmentPhase = 'start' | 'test';
 type SchemaPhase = 'start' | 'test';
 type SocialPatternsPhase = 'start' | 'test';
+type RomanticPhase = 'start' | 'test';
 
 export default function App() {
   const { showBanner, handleInstall, handleDismiss } = useInstallPrompt();
@@ -85,6 +94,12 @@ export default function App() {
   const [socialPatternsResult, setSocialPatternsResult] = useState<SocialPatternsResult | null>(null);
   const [socialPatternsTier, setSocialPatternsTier] = useState<SocialPatternsTier>('deep');
   const [showSocialPatternsTierModal, setShowSocialPatternsTierModal] = useState(false);
+
+  // Romantic sub-state
+  const [romanticPhase, setRomanticPhase] = useState<RomanticPhase>('start');
+  const [romanticResult, setRomanticResult] = useState<RomanticResult | null>(null);
+  const [romanticTier, setRomanticTier] = useState<RomanticTier>('deep');
+  const [showRomanticTierModal, setShowRomanticTierModal] = useState(false);
 
   // ── Home ──────────────────────────────────────────────
   function handleSelectOcean() {
@@ -153,6 +168,23 @@ export default function App() {
 
   function handleSocialPatternsTierCancel() {
     setShowSocialPatternsTierModal(false);
+  }
+
+  function handleSelectRomantic() {
+    setRomanticResult(null);
+    setRomanticPhase('start');
+    setShowRomanticTierModal(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleRomanticTierSelect(tier: RomanticTier) {
+    setRomanticTier(tier);
+    setShowRomanticTierModal(false);
+    setAppView('romantic');
+  }
+
+  function handleRomanticTierCancel() {
+    setShowRomanticTierModal(false);
   }
 
   function handleSelectSynthesis() {
@@ -288,6 +320,36 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // ── Romantic flow ─────────────────────────────────────
+  function handleRomanticComplete(answers: Record<string, number>) {
+    const activeQs = romanticTier === 'core'
+      ? (romanticData.questions as RomanticQuestion[]).filter((q) => q.tier === 'core')
+      : romanticData.questions as RomanticQuestion[];
+    const result = scoreRomantic(activeQs, answers);
+    saveRomanticResult(result);
+    setRomanticResult(result);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleRomanticReset() {
+    setRomanticResult(null);
+    setRomanticPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleRomanticRetake() {
+    setRomanticResult(null);
+    setRomanticPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleRomanticUpgrade() {
+    setRomanticTier('deep');
+    setRomanticResult(null);
+    setRomanticPhase('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   // ── Schema flow ───────────────────────────────────────
   function handleSchemaComplete(answers: Record<string, number>) {
     const activeQs = schemaTier === 'core'
@@ -331,7 +393,8 @@ export default function App() {
     (appView === 'ocean' && oceanPage === 'test') ||
     (appView === 'attachment' && !attachmentResult && attachmentPhase === 'test') ||
     (appView === 'schema' && !schemaResult && schemaPhase === 'test') ||
-    (appView === 'social_patterns' && !socialPatternsResult && socialPatternsPhase === 'test');
+    (appView === 'social_patterns' && !socialPatternsResult && socialPatternsPhase === 'test') ||
+    (appView === 'romantic' && !romanticResult && romanticPhase === 'test');
 
   function getNavbarProps() {
     if (appView === 'home') return { isHome: true, onSettings: handleSelectSettings, onIntake: handleSelectIntake };
@@ -347,6 +410,7 @@ export default function App() {
           onSelectAttachment={handleSelectAttachment}
           onSelectSchema={handleSelectSchema}
           onSelectSocialPatterns={handleSelectSocialPatterns}
+          onSelectRomantic={handleSelectRomantic}
           onSelectSynthesis={handleSelectSynthesis}
           onSelectSettings={handleSelectSettings}
           onSelectIntake={handleSelectIntake}
@@ -510,6 +574,44 @@ export default function App() {
       );
     }
 
+    if (appView === 'romantic') {
+      const activeRomanticQs = romanticTier === 'core'
+        ? (romanticData.questions as RomanticQuestion[]).filter((q) => q.tier === 'core')
+        : romanticData.questions as RomanticQuestion[];
+      const romanticMinutes = romanticTier === 'core' ? 8 : 18;
+      if (romanticResult) {
+        return (
+          <RomanticResultPage
+            result={romanticResult}
+            onRetake={handleRomanticRetake}
+            onHome={goHome}
+            onUpgrade={romanticResult.tier === 'core' ? handleRomanticUpgrade : undefined}
+          />
+        );
+      }
+      if (romanticPhase === 'start') {
+        return (
+          <>
+            <InProgressBanner currentTestId="romantic" />
+            <RomanticStartPage
+              questionCount={activeRomanticQs.length}
+              estimatedMinutes={romanticMinutes}
+              onStart={() => { setRomanticPhase('test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              onHome={goHome}
+            />
+          </>
+        );
+      }
+      return (
+        <RomanticTestPage
+          questions={activeRomanticQs}
+          onComplete={handleRomanticComplete}
+          onReset={handleRomanticReset}
+          onHome={goHome}
+        />
+      );
+    }
+
     if (appView === 'synthesis') {
       return <SynthesisPage onHome={goHome} />;
     }
@@ -543,6 +645,9 @@ export default function App() {
       )}
       {showSocialPatternsTierModal && (
         <SocialPatternsTierModal onSelect={handleSocialPatternsTierSelect} onCancel={handleSocialPatternsTierCancel} />
+      )}
+      {showRomanticTierModal && (
+        <RomanticTierModal onSelect={handleRomanticTierSelect} onCancel={handleRomanticTierCancel} />
       )}
     </>
   );

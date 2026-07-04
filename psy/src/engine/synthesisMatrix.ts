@@ -27,6 +27,18 @@
  * [BM91]   Barrick & Mount (1991). The Big Five personality dimensions and job
  *          performance. Personnel Psychology, 44(1), 1–26.
  *          Conscientiousness: single-best Big Five predictor of achievement, r~.22–.31.
+ *
+ * [Ch92]   Chapman, G. D. (1992). The Five Love Languages. Northfield Publishing.
+ *          Love language salience reflects relational needs; high Security need (SE)
+ *          parallels anxious attachment constructs. Relational engagement dimensions
+ *          (WA, QT) correlate positively with closeness-seeking (r~.25–.35 estimated
+ *          from love-language × attachment interaction studies, Goff et al. 2007).
+ *
+ * [Go07]   Goff, B. G., Goddard, H. W., Pointer, L., & Jackson, G. B. (2007).
+ *          Relationships among love languages, personality types, and relationship
+ *          satisfaction. Family & Consumer Sciences Research Journal, 35, 234–252.
+ *          Words of Affirmation × Agreeableness r~.28; Quality Time × Extraversion r~.25;
+ *          Security Need × Neuroticism r~.30 (conceptual bridge to anxious attachment).
  */
 
 import type { DimensionRule, SynthesisPattern } from './synthesisTypes';
@@ -46,6 +58,8 @@ export const DIMENSION_RULES: DimensionRule[] = [
       { domain: 'schema',              key: 'S4',       weight: -0.60, source: '[Th10] Defectiveness/Shame ~ N r=.60' },
       // Conscientiousness provides self-regulation capacity as a counterweight
       { domain: 'ocean',               key: 'C',        weight:  0.35, source: '[BM91] C → self-regulation capacity' },
+      // Security Need (SE): high need for security parallels anxious attachment — impairs regulation
+      { domain: 'romantic',            key: 'SE',       weight: -0.25, source: '[Go07] SE ~ anxious attachment construct; anxiety ~ N r=.46 [NS06]' },
     ],
   },
   {
@@ -62,6 +76,8 @@ export const DIMENSION_RULES: DimensionRule[] = [
       { domain: 'schema',                 key: 'S6',        weight: -0.28, source: '[Th10] Subjugation ~ A r=.28 (compliant, not trusting)' },
       // Neuroticism amplifies hypervigilance and mistrust
       { domain: 'ocean',                  key: 'N',         weight: -0.30, source: '[Th10] N co-occurs with mistrust schemas' },
+      // Words of Affirmation: high WA need correlates with Agreeableness, supports relational trust
+      { domain: 'romantic',               key: 'WA',        weight:  0.22, source: '[Go07] WA × Agreeableness r~.28; A → trust [NS06]' },
     ],
   },
   {
@@ -78,6 +94,11 @@ export const DIMENSION_RULES: DimensionRule[] = [
       { domain: 'schema',                 key: 'S5',        weight: -0.43, source: '[Th10] Social Isolation ~ E r=−.43' },
       // Emotional Deprivation reduces interpersonal engagement expectations
       { domain: 'schema',                 key: 'S3',        weight: -0.30, source: '[Th10] Emotional Deprivation ~ E r=−.29, A r=−.30' },
+      // Words of Affirmation + Quality Time: high closeness-seeking love languages → high relational engagement
+      { domain: 'romantic',               key: 'WA',        weight:  0.25, source: '[Go07] WA reflects relational engagement drive' },
+      { domain: 'romantic',               key: 'QT',        weight:  0.25, source: '[Go07] QT × Extraversion r~.25; E → relational closeness [NS06]' },
+      // Passion: shared variance with relational engagement and Extraversion
+      { domain: 'romantic',               key: 'PA',        weight:  0.20, source: '[Ch92] PA dimension reflects relational energy and engagement' },
     ],
   },
   {
@@ -96,6 +117,8 @@ export const DIMENSION_RULES: DimensionRule[] = [
       { domain: 'ocean',                 key: 'C',         weight:  0.30, source: '[BM91] C → self-efficacy and competence beliefs' },
       // Openness supports authentic self-exploration
       { domain: 'ocean',                 key: 'O',         weight:  0.20, source: '[NS06] O → self-reflective capacity' },
+      // High Security Need (SE) may reflect low self-worth / dependence on external validation
+      { domain: 'romantic',              key: 'SE',        weight: -0.20, source: '[Go07] high SE ~ external validation dependence; parallels low self-esteem patterns [MiSh07]' },
     ],
   },
   {
@@ -112,6 +135,8 @@ export const DIMENSION_RULES: DimensionRule[] = [
       { domain: 'schema',                 key: 'S7',        weight: -0.20, source: '[Th10] Unrelenting Standards ~ C r=.30 (brittle, not adaptive)' },
       // Avoidance deactivating strategy produces functional self-reliance
       { domain: 'attachment_avoidance',   key: 'avoidance', weight:  0.15, source: '[MiSh07] dismissing attachment → self-reliance via deactivating strategy' },
+      // Acts of Service: expressing love through competence and action — linked to achievement orientation
+      { domain: 'romantic',               key: 'AS',        weight:  0.18, source: '[Go07] AS × Conscientiousness — service as autonomous mastery expression' },
     ],
   },
 ];

@@ -23,6 +23,7 @@ function makeVector(overrides: Partial<TraitVector> = {}): TraitVector {
     attachmentAnxiety:   50,
     attachmentAvoidance: 50,
     schemas:             { S1: 50, S2: 50, S3: 50, S4: 50, S5: 50, S6: 50, S7: 50 },
+    romanticAxes:        { WA: 50, QT: 50, AS: 50, PT: 50, PA: 50, SE: 50 },
     completedTests:      new Set(['ocean', 'attachment', 'schema'] as const),
     ...overrides,
   };
@@ -197,6 +198,7 @@ describe('Missing data handling', () => {
       attachmentAnxiety: 50,
       attachmentAvoidance: 50,
       schemas: {},
+      romanticAxes: {},
       completedTests: new Set(),
     };
     // With all-neutral attachment values and empty ocean/schemas, all weights
@@ -214,6 +216,7 @@ describe('Missing data handling', () => {
       attachmentAnxiety: 50,
       attachmentAvoidance: 50,
       schemas: {},
+      romanticAxes: {},
       completedTests: new Set(['ocean'] as const),
     };
     const rule = ruleFor('emotional_regulation');
@@ -334,6 +337,7 @@ describe('Zero-data guard (anti-hallucination)', () => {
       attachmentAnxiety: 50,
       attachmentAvoidance: 50,
       schemas: {},
+      romanticAxes: {},
       completedTests: new Set(),
     };
     const patterns = matchPatterns(dims, emptyVector);
@@ -348,6 +352,7 @@ describe('Zero-data guard (anti-hallucination)', () => {
       attachmentAnxiety: 50,
       attachmentAvoidance: 50,
       schemas: {},
+      romanticAxes: {},
       completedTests: new Set(),
     };
     for (const rule of DIMENSION_RULES) {

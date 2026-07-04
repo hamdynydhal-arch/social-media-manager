@@ -153,9 +153,9 @@ const DIM_TERMS: Record<string, Array<[string, string]>> = {
 };
 
 const CONFIDENCE_META: Record<ConfidenceLevel, { label: string; color: string; detail: string }> = {
-  high:     { label: 'مرتفعة',  color: 'text-nafees-sage',   detail: 'مبني على 3 اختبارات مكتملة' },
-  moderate: { label: 'متوسطة',  color: 'text-nafees-copper', detail: 'اختبارَين — أكمل الثالث لرفع الدقة' },
-  low:      { label: 'منخفضة', color: 'text-nafees-warm',   detail: 'اختبار واحد — أكمل الثلاثة للحصول على توليف كامل' },
+  high:     { label: 'مرتفعة',  color: 'text-nafees-sage',   detail: 'مبني على 3 اختبارات مكتملة أو أكثر' },
+  moderate: { label: 'متوسطة',  color: 'text-nafees-copper', detail: 'اختبارَين — أكمل المزيد لرفع الدقة' },
+  low:      { label: 'منخفضة', color: 'text-nafees-warm',   detail: 'اختبار واحد — أكمل الأربعة للحصول على توليف كامل' },
 };
 
 // Radar dimension order (clockwise from top)

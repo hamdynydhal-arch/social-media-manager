@@ -22,6 +22,8 @@
 import { loadHistory } from './scoring';
 import { loadAttachmentHistory } from './attachmentScoring';
 import { loadSchemaHistory } from './schemaScoring';
+import { loadRomanticResult } from './romanticScoring';
+import type { RomanticAxis } from './romanticTypes';
 import { getLevel } from './scoring';
 import { DIMENSION_RULES, SYNTHESIS_PATTERNS } from './synthesisMatrix';
 import { loadDemographicProfile, profileCompleteness } from './demographicTypes';
@@ -65,6 +67,8 @@ export function computeDimensionScore(rule: DimensionRule, vector: TraitVector):
       traitScore = vector.attachmentAvoidance;
     } else if (w.domain === 'schema') {
       traitScore = vector.schemas[w.key as SchemaKey];
+    } else if (w.domain === 'romantic') {
+      traitScore = vector.romanticAxes[w.key as RomanticAxis];
     }
 
     if (traitScore === undefined) continue;
@@ -81,13 +85,15 @@ export function computeDimensionScore(rule: DimensionRule, vector: TraitVector):
 // ── Trait vector builder ─────────────────────────────────────────────────────
 
 export function buildTraitVector(): TraitVector {
-  const oceanHistory    = loadHistory();
+  const oceanHistory      = loadHistory();
   const attachmentHistory = loadAttachmentHistory();
-  const schemaHistory   = loadSchemaHistory();
+  const schemaHistory     = loadSchemaHistory();
+  const romanticResult    = loadRomanticResult();
 
   const ocean: Partial<Record<FactorKey, number>> = {};
   const schemas: Partial<Record<SchemaKey, number>> = {};
-  const completedTests = new Set<'ocean' | 'attachment' | 'schema'>();
+  const romanticAxes: Partial<Record<RomanticAxis, number>> = {};
+  const completedTests = new Set<'ocean' | 'attachment' | 'schema' | 'romantic'>();
   let attachmentAnxiety = 50;
   let attachmentAvoidance = 50;
 
@@ -109,7 +115,12 @@ export function buildTraitVector(): TraitVector {
     completedTests.add('schema');
   }
 
-  return { ocean, attachmentAnxiety, attachmentAvoidance, schemas, completedTests };
+  if (romanticResult) {
+    Object.assign(romanticAxes, romanticResult.axisPcts);
+    completedTests.add('romantic');
+  }
+
+  return { ocean, attachmentAnxiety, attachmentAvoidance, schemas, romanticAxes, completedTests };
 }
 
 // ── Pattern matching ─────────────────────────────────────────────────────────
@@ -178,6 +189,7 @@ function getConfidence(completedTests: Set<string>): ConfidenceLevel {
   return 'low';
 }
 
+
 function buildNarrative(dims: PersonaDimension[], patterns: SynthesisPattern[], completed: Set<string>): string {
   if (completed.size === 0) {
     return 'لم يتم إكمال أي اختبار حتى الآن. أكمل الاختبارات الثلاثة للحصول على توليف نفسي شامل ودقيق.';
@@ -185,8 +197,8 @@ function buildNarrative(dims: PersonaDimension[], patterns: SynthesisPattern[], 
 
   let text = '';
 
-  if (completed.size < 3) {
-    text += `ملاحظة: التحليل مبني على ${completed.size} من 3 اختبارات — إكمال الاختبارات الثلاثة يرفع دقة التوليف. `;
+  if (completed.size < 4) {
+    text += `ملاحظة: التحليل مبني على ${completed.size} من 4 اختبارات — إكمال الاختبارات الأربعة يرفع دقة التوليف. `;
   }
 
   const emotional  = dims.find(d => d.id === 'emotional_regulation');

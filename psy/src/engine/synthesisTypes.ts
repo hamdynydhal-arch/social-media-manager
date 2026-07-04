@@ -1,5 +1,6 @@
 import type { FactorKey, Level } from './types';
 import type { SchemaKey } from './schemaTypes';
+import type { RomanticAxis } from './romanticTypes';
 
 export type PersonaDimensionId =
   | 'emotional_regulation'
@@ -16,12 +17,13 @@ export interface TraitVector {
   attachmentAnxiety: number;
   attachmentAvoidance: number;
   schemas: Partial<Record<SchemaKey, number>>;
-  completedTests: Set<'ocean' | 'attachment' | 'schema'>;
+  romanticAxes: Partial<Record<RomanticAxis, number>>;
+  completedTests: Set<'ocean' | 'attachment' | 'schema' | 'romantic'>;
 }
 
 // A single entry in the SynthesisMatrix, weight sourced from published literature
 export interface MatrixWeight {
-  domain: 'ocean' | 'attachment_anxiety' | 'attachment_avoidance' | 'schema';
+  domain: 'ocean' | 'attachment_anxiety' | 'attachment_avoidance' | 'schema' | 'romantic';
   key: string;
   // Signed correlation-derived weight (+/-).  Positive = higher trait → higher dimension score.
   weight: number;
@@ -58,7 +60,7 @@ export interface PersonaDimension {
 
 export interface SynthesisResult {
   timestamp: number;
-  completedTests: ('ocean' | 'attachment' | 'schema')[];
+  completedTests: ('ocean' | 'attachment' | 'schema' | 'romantic')[];
   confidence: ConfidenceLevel;
   dimensions: PersonaDimension[];
   primaryNarrative: string;

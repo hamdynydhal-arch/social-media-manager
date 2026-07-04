@@ -20,6 +20,7 @@ function makeVector(overrides: Partial<TraitVector> = {}): TraitVector {
     attachmentAnxiety:   50,
     attachmentAvoidance: 50,
     schemas:             { S1: 50, S2: 50, S3: 50, S4: 50, S5: 50, S6: 50, S7: 50 },
+    romanticAxes:        { WA: 50, QT: 50, AS: 50, PT: 50, PA: 50, SE: 50 },
     completedTests:      new Set(['ocean', 'attachment', 'schema'] as const),
     ...overrides,
   };
@@ -101,6 +102,7 @@ describe('computeCorrelationMatrix', () => {
       attachmentAnxiety: 50,
       attachmentAvoidance: 50,
       schemas: {},
+      romanticAxes: {},
       completedTests: new Set(),
     };
     const result = computeCorrelationMatrix(empty);

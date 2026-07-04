@@ -5,12 +5,13 @@ interface HomePageProps {
   onSelectAttachment: () => void;
   onSelectSchema: () => void;
   onSelectSocialPatterns: () => void;
+  onSelectRomantic: () => void;
   onSelectSynthesis: () => void;
   onSelectSettings: () => void;
   onSelectIntake: () => void;
 }
 
-export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSchema, onSelectSocialPatterns, onSelectSynthesis, onSelectSettings, onSelectIntake }: HomePageProps) {
+export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSchema, onSelectSocialPatterns, onSelectRomantic, onSelectSynthesis, onSelectSettings, onSelectIntake }: HomePageProps) {
   return (
     <div className="min-h-screen bg-nafees-cream flex flex-col items-center">
 
@@ -124,6 +125,30 @@ export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSc
           </div>
         </button>
 
+        {/* Romantic & Intimacy Code */}
+        <button
+          onClick={onSelectRomantic}
+          className="w-full text-right hover:shadow-lg transition-all duration-200 active:scale-[0.98] bg-white rounded-3xl border border-rose-200/60 p-6 block shadow-sm"
+        >
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 text-2xl" style={{ background: 'linear-gradient(135deg, #BE185D, #881337)' }}>
+              💌
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-nafees-navy mb-1">مقياس الشيفرة العاطفية والحميمية</h3>
+              <p className="text-sm text-nafees-warm mb-3 leading-relaxed">
+                اكتشف لغتك في الحب ونمطك الرومانسي — مبني على نظريتَي تشابمان في لغات الحب وستيرنبرغ في المثلث العاطفي.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-rose-50 text-rose-600 text-xs px-2.5 py-1 rounded-full font-semibold">30 – 70 سؤالاً</span>
+                <span className="bg-rose-50 text-rose-600 text-xs px-2.5 py-1 rounded-full font-semibold">8 – 18 دقيقة</span>
+                <span className="bg-rose-50 text-rose-600 text-xs px-2.5 py-1 rounded-full font-semibold">6 أبعاد</span>
+              </div>
+            </div>
+            <span className="text-nafees-cream-dark text-2xl flex-shrink-0">←</span>
+          </div>
+        </button>
+
         {/* Synthesis Engine */}
         <button
           onClick={onSelectSynthesis}
@@ -141,7 +166,7 @@ export default function HomePage({ onSelectOcean, onSelectAttachment, onSelectSc
               <div className="flex flex-wrap gap-2">
                 <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">5 أبعاد مركبة</span>
                 <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">مصادر موثقة</span>
-                <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">تقاطع 3 اختبارات</span>
+                <span className="bg-white/15 text-nafees-sky text-xs px-2.5 py-1 rounded-full font-semibold">تقاطع 4 اختبارات</span>
               </div>
             </div>
             <span className="text-nafees-sky/60 text-2xl flex-shrink-0">←</span>
