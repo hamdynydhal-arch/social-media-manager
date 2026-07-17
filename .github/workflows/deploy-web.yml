@@ -131,6 +131,15 @@ jobs:
             || echo "world-cup not on gh-pages yet — skipping"
         working-directory: .
 
+      # Carry رُكْنٌ شَدِيد into this deploy so force_orphan never deletes it
+      - name: Preserve رُكْنٌ شَدِيد PWA
+        run: |
+          git fetch origin gh-pages 2>/dev/null || true
+          git checkout origin/gh-pages -- rukn-shadid 2>/dev/null \
+            && mv rukn-shadid ./app/dist/ \
+            || echo "rukn-shadid not on gh-pages yet — skipping"
+        working-directory: .
+
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
