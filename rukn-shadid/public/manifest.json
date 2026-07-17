@@ -1,0 +1,20 @@
+{
+  "name": "ركن شديد",
+  "short_name": "ركن شديد",
+  "description": "أداة تدخل نفسي وروحي فوري لتهدئة نوبات القلق الاستباقي",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "lang": "ar",
+  "dir": "rtl",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
